@@ -139,7 +139,7 @@ namespace BiliDMLib
                     var typeId = BitConverter.ToInt32(stableBuffer, 0);
                     typeId = IPAddress.NetworkToHostOrder(typeId);
 
-                    Console.WriteLine(typeId);
+                    //Console.WriteLine(typeId);
                     NetStream.ReadB(stableBuffer, 0, 4);//magic, params?
                     var playloadlength = packetlength - 16;
                     if (playloadlength == 0)
@@ -159,7 +159,7 @@ namespace BiliDMLib
 
 
                             var viewer = BitConverter.ToUInt32(buffer.Take(4).Reverse().ToArray(), 0); //观众人数
-                            Console.WriteLine(viewer);
+                            //Console.WriteLine(viewer);
                             if (ReceivedRoomCount != null)
                             {
                                 ReceivedRoomCount(this, new ReceivedRoomCountArgs() { UserCount = viewer });
@@ -171,11 +171,6 @@ namespace BiliDMLib
                         {
 
                             var json = Encoding.UTF8.GetString(buffer, 0, playloadlength);
-                            if (debuglog)
-                            {
-                                Console.WriteLine(json);
-
-                            }
                             try
                             {
                                 DanmakuModel dama = new DanmakuModel(json, 2);
@@ -270,7 +265,7 @@ namespace BiliDMLib
         {
             if (Connected)
             {
-                Debug.WriteLine("Disconnected");
+                //Debug.WriteLine("Disconnected");
 
                 Connected = false;
 
@@ -288,7 +283,7 @@ namespace BiliDMLib
         private void SendHeartbeatAsync()
         {
             SendSocketData(2);
-            Debug.WriteLine("Message Sent: Heartbeat");
+            //Debug.WriteLine("Message Sent: Heartbeat");
         }
 
         void SendSocketData(int action, string body = "")
