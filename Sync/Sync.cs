@@ -2,8 +2,6 @@
 using Sync.Source;
 using Sync.Tools;
 using System;
-using System.Diagnostics;
-using System.Text;
 using System.Threading;
 
 namespace Sync
