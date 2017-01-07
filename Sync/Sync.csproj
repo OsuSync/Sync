@@ -43,17 +43,13 @@
     <ApplicationIcon>Resources\osu! 001.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BilibiliDM_PluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependence\BilibiliDM_PluginFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="BiliDMLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependence\BiliDMLib.dll</HintPath>
-    </Reference>
     <Reference Include="Meebey.SmartIrc4net, Version=0.4.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependence\Meebey.SmartIrc4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependence\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="StarkSoftProxy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,7 +71,12 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuLoader.cs" />
     <Compile Include="Source\BiliBili\BiliBiliDanmuku.cs" />
+    <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuModel.cs" />
+    <Compile Include="Source\BiliBili\Bilibili_dm\Events.cs" />
+    <Compile Include="Source\BiliBili\Bilibili_dm\GiftRank.cs" />
+    <Compile Include="Source\BiliBili\Bilibili_dm\utils.cs" />
     <Compile Include="Source\SourceBase.cs" />
     <Compile Include="Sync.cs" />
     <Compile Include="Source\BiliBili\BiliBili.cs" />
@@ -104,12 +105,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="Resources\config.ini">
+    <None Include="config.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
