@@ -13,10 +13,12 @@ namespace Sync.IRC
     {
         Sync parent;
         IrcClient client = new IrcClient();
+        
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
         string master = Configuration.TargetIRC;
 
+        public const string STATIC_ACTION_FLAG = "ACTION ";
         public IRCClient(Sync p)
         {
             parent = p;
@@ -66,34 +68,12 @@ namespace Sync.IRC
         {
             if (e.Data.Type == ReceiveType.ChannelAction || e.Data.Type == ReceiveType.QueryAction || e.Data.Type == ReceiveType.QueryMessage || e.Data.Type == ReceiveType.ChannelMessage)
             {
-                if (e.Data.From.Substring(0, master.Length) == master)
-                {
-                    if (e.Data.Message.Length > 7 && e.Data.Message.Substring(0, 8) == "ACTION " && e.Data.Message.IndexOf("osu.ppy.sh/b/") > 0)
-                    {
-                        client.WriteLine("PRIVMSG tillerino :" + e.Data.Message);
-                    }
-                    else
-                    {
-                        if(Program.loginable)
-                        {
-                            ISendable dsender = (ISendable)parent.GetInstanceSource();
-                            if(dsender.LoginStauts())
-                            {
-                                dsender.Send(e.Data.Message);
-                            }
-                        }
-                    }
+                string result = parent.GetMessageFilter().onIRC(e.Data.From, e.Data.Message);
+                if (result == null) return;
+                result = "[IRC] " + result;
 
-                }
-                else if (e.Data.From.Substring(0, 9).ToLower() == "tillerino")
-                {
-                    sendMessage(SendType.Message, "[PP查询] " + e.Data.Message);
-                }
-                else
-                {
-                    ConsoleWriter.Write("[IRC] <" + e.Data.From + "> " + e.Data.Message);
-                    sendMessage(SendType.Message, "[IRC] <" + e.Data.From + "> " + e.Data.Message);
-                }
+                ConsoleWriter.Write(result);
+                sendMessage(SendType.Message, result);
             }
         }
 
@@ -111,6 +91,11 @@ namespace Sync.IRC
         private void Client_OnDisconnected(object sender, EventArgs e)
         {
             isConnected = false;
+        }
+
+        public void sendRawMessage(string user, string msg)
+        {
+            client.WriteLine("PRIVMSG " + user + " :" + msg);
         }
 
         public void sendMessage(SendType type, string msg)

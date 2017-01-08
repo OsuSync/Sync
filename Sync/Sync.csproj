@@ -73,6 +73,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRC\MessageFilter\FilterBase.cs" />
+    <Compile Include="IRC\MessageFilter\Filters\Osu\PPQuery.cs" />
+    <Compile Include="IRC\MessageFilter\MessageFilter.cs" />
     <Compile Include="Source\BiliBili\Bilibili_sender\BiliBiliSender.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuLoader.cs" />
     <Compile Include="Source\BiliBili\BiliBiliDanmuku.cs" />
@@ -134,6 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\osu! 001.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IRC\MessageFilter\Filters\Danmaku\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

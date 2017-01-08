@@ -36,7 +36,7 @@ namespace Sync
                 syncInstance = new Sync(new BiliBili());
             }
 
-            if (syncInstance.GetInstanceSource() is ISendable)
+            if (syncInstance.GetSource() is ISendable)
             {
                 loginable = true;
                 WriteColor("提示:当前弹幕源支持游戏内发送到弹幕源的功能，请输入login [用户名] [密码] 来登录!(用户名、密码二者可选输入)\n\n", ConsoleColor.Yellow);
@@ -67,7 +67,7 @@ namespace Sync
 
                     if (loginable)
                     {
-                        ISendable sender = (ISendable)syncInstance.GetInstanceSource();
+                        ISendable sender = (ISendable)syncInstance.GetSource();
                         if (sender.LoginStauts())
                         {
                             Write("<弹幕>" + cmd.Substring(8));
@@ -115,7 +115,7 @@ namespace Sync
                 {
                     if(loginable)
                     {
-                        ISendable s = (ISendable)syncInstance.GetInstanceSource();
+                        ISendable s = (ISendable)syncInstance.GetSource();
                         var split = cmd.Split(' ');
                         if (split.Length == 1) s.Login(null, null);
                         if (split.Length == 2) s.Login(split[1], null);

@@ -70,7 +70,7 @@ namespace Sync.Tools
             if(Program.loginable)
             {
                 WriteColor("发送弹幕: ", ConsoleColor.Blue, false);
-                if (((Source.ISendable)instance.GetInstanceSource()).LoginStauts())
+                if (((Source.ISendable)instance.GetSource()).LoginStauts())
                     WriteColor("已登录", ConsoleColor.Green, true);
                 else
                     WriteColor("未连接", ConsoleColor.Red, true);

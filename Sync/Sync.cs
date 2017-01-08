@@ -1,4 +1,5 @@
 ﻿using Sync.IRC;
+using Sync.IRC.MessageFilter;
 using Sync.Source;
 using Sync.Tools;
 using System;
@@ -13,6 +14,7 @@ namespace Sync
     {
         private IRCClient IRC;
         private ISourceBase Src;
+        private MessageFilter msgBuider;
 
         private Thread IRCThread;
         private Thread SrcThread;
@@ -27,19 +29,30 @@ namespace Sync
 
         public Thread GetThreadIRC() { return IRCThread; }
         public Thread GetThreadSource() { return SrcThread; }
-        public IRCClient GetInstanceIRC() { return IRC; }
-        public ISourceBase GetInstanceSource() { return Src; }
+        public IRCClient GetIRC() { return IRC; }
+        public ISourceBase GetSource() { return Src; }
+        public MessageFilter GetMessageFilter() { return msgBuider; }
 
+        /// <summary>
+        /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
+        /// </summary>
+        /// <param name="msg">要发送的消息</param>
+        [Obsolete]
         public void IRCSendMessage(string msg)
         {
-            if(IRCStatus)
-            IRC.sendMessage(Meebey.SmartIrc4net.SendType.Message, msg);
+            //if(IRCStatus)
+            //IRC.sendMessage(Meebey.SmartIrc4net.SendType.Message, msg);
         }
 
+        /// <summary>
+        /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
+        /// </summary>
+        /// <param name="msg">要发送的消息</param>
+        [Obsolete]
         public void IRCSendAction(string msg)
         {
-            if(IRCStatus)
-            IRC.sendMessage(Meebey.SmartIrc4net.SendType.Action, msg);
+            //if(IRCStatus)
+            //IRC.sendMessage(Meebey.SmartIrc4net.SendType.Action, msg);
         }
 
         /// <summary>
@@ -48,8 +61,11 @@ namespace Sync
         /// <param name="Source">连接源</param>
         public Sync(ISourceBase Source)
         {
+
             IRC = new IRCClient(this);
             Src = Source;
+
+            msgBuider = new MessageFilter(this);
 
             Src.onConnected += Src_onConnected;
             Src.onDisconnected += Src_onDisconnected;
@@ -74,8 +90,10 @@ namespace Sync
             ConsoleWriter.Write("用户变更:" + lCount);
             if (Math.Abs(usercount - lCount) > 4) 
             {
-                Program.syncInstance.IRCSendAction("直播间围观人数" + (usercount > lCount ? "减少" : "增加" ) +"到" 
-                                                    + lCount + "人");
+                CBaseDanmuku d = new CBaseDanmuku();
+                d.danmuku = "直播间围观人数" + (usercount > lCount ? "减少" : "增加") + "到" + lCount + "人";
+                GetMessageFilter().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(d));
+
                 usercount = lCount;
             }
         }
@@ -89,9 +107,7 @@ namespace Sync
 
         private void Src_onDanmuku(CBaseDanmuku danmuku)
         {
-            string syncText = "[弹幕]<" + danmuku.senderName + "> " + danmuku.danmuku;
-            Console.WriteLine(syncText);
-            IRCSendMessage(syncText);
+            GetMessageFilter().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmuku));
         }
 
         private void Src_onConnected()
