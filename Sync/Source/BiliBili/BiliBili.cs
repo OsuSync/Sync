@@ -1,14 +1,16 @@
 ﻿using BiliDMLib;
 using BilibiliDM_PluginFramework;
+using System;
 
 namespace Sync.Source.BiliBili
 {
     /// <summary>
     /// BiliBili Live的同步源类
     /// </summary>
-    class BiliBili : ISourceBase
+    class BiliBili : ISourceBase, ISendable
     {
         DanmakuLoader client = new DanmakuLoader();
+        BiliBiliSender sender;
         private bool isConnected = false;
 
         public event ConnectedEvt onConnected;
@@ -17,12 +19,17 @@ namespace Sync.Source.BiliBili
         public event GiftEvt onGift;
         public event CurrentOnlineEvt onOnlineChange;
 
+        public BiliBili()
+        {
+            sender = new BiliBiliSender(null, null);
+        }
+
         public bool Connect(int roomId)
         {
             client.ReceivedDanmaku += Dl_ReceivedDanmaku;
             client.ReceivedRoomCount += Dl_ReceivedRoomCount;
             client.Disconnected += Dl_Disconnected;
-            client.ConnectAsync(roomId);
+            System.Threading.Tasks.Task<bool> task = client.ConnectAsync(roomId);
             isConnected = true;
             onConnected();
             return true;
@@ -62,6 +69,30 @@ namespace Sync.Source.BiliBili
         public bool Stauts()
         {
             return isConnected;
+        }
+
+        public void Send(string str)
+        {
+            if(sender.loginStauts)
+            {
+                sender.send(str);
+            }
+        }
+
+        public void Login(string user, string password)
+        {
+            sender = new BiliBiliSender(user, password);
+            sender.login();
+        }
+
+        public Type getSourceType()
+        {
+            return typeof(BiliBili);
+        }
+
+        public bool LoginStauts()
+        {
+            return sender.loginStauts;
         }
     }
 }

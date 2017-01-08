@@ -57,6 +57,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -71,19 +73,26 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\BiliBili\Bilibili_sender\BiliBiliSender.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuLoader.cs" />
     <Compile Include="Source\BiliBili\BiliBiliDanmuku.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuModel.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\Events.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\GiftRank.cs" />
     <Compile Include="Source\BiliBili\Bilibili_dm\utils.cs" />
+    <Compile Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.Designer.cs">
+      <DependentUpon>HTMLViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\SourceBase.cs" />
     <Compile Include="Sync.cs" />
     <Compile Include="Source\BiliBili\BiliBili.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IRC\IRC.cs" />
     <Compile Include="Tools\Configuration.cs" />
-    <Compile Include="Tools\ConfigurationReader.cs" />
+    <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
     <Compile Include="Tools\GiftRecycler.cs" />
   </ItemGroup>
@@ -104,6 +113,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.resx">
+      <DependentUpon>HTMLViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
