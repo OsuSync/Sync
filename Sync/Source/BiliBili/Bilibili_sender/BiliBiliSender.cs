@@ -85,31 +85,38 @@ namespace Sync.Source.BiliBili
         /// <param name="msg">弹幕</param>
         public void send(string msg)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://live.bilibili.com/msg/send");
-            request.Method = "POST";
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(new Uri("http://live.bilibili.com/msg/send"));
             long unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-            string postData = "color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + Configuration.LiveRoomID + "";
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.CookieContainer = new CookieContainer();
-
+            byte[] byteArray = Encoding.UTF8.GetBytes("color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + Configuration.LiveRoomID + "");
             string[] cookies = Configuration.LoginCookie.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             Uri live = new Uri("http://live.bilibili.com/");
+
+            req.Method = "POST";
+            req.ContentType = "application/x-www-form-urlencoded";
+            req.ContentLength = byteArray.Length;
+            req.CookieContainer = new CookieContainer();
 
             foreach (var i in cookies)
             {
                 string[] cookie = i.Split("=".ToCharArray(), 2);
-                request.CookieContainer.Add(live, new Cookie(cookie[0], cookie[1]));
+                req.CookieContainer.Add(live, new Cookie(cookie[0], cookie[1]));
             }
 
-            request.ContentLength = byteArray.Length;
 
-            Stream dataStream = request.GetRequestStream();
-            dataStream.Write(byteArray, 0, byteArray.Length);
-            dataStream.Flush();
-            dataStream.Close();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            using (Stream dataStream = req.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Flush();
+                dataStream.Close();
+            }
+
+#if (DEBUG)
+            using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
+            {
+                ConsoleWriter.Write(sr.ReadToEnd());
+            }
+#endif
+
             ConsoleWriter.Write("发送完成!");
         }
 
