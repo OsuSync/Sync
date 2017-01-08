@@ -134,14 +134,14 @@ namespace Sync
         private void StartSource()
         {
             Src.Connect(Configuration.LiveRoomID);
-            while (Src.Stauts() || SourceStatus || IsConnect) { }
+            while (Src.Stauts() || SourceStatus || IsConnect) {; }
             Src.Disconnect();
         }
 
         private void StartIRC()
         {
             IRC.connect();
-            while (IRC.isConnected || IRCStatus || IsConnect) { Console.Title = "IRC:" + IRC.isConnected; }
+            while (IRC.isConnected || IRCStatus || IsConnect) {; }
             IRC.disconnect();
         }
 

@@ -47,7 +47,6 @@ namespace Sync.Tools
 
                     if (curList.Count > 0)
                     {
-                        string giftUser = string.Empty;
                         string strUsers = string.Empty;
                         CBaseGift mostUser;
                         curList.ForEach(p =>

@@ -29,7 +29,7 @@ namespace Sync.Source.BiliBili
             client.ReceivedDanmaku += Dl_ReceivedDanmaku;
             client.ReceivedRoomCount += Dl_ReceivedRoomCount;
             client.Disconnected += Dl_Disconnected;
-            System.Threading.Tasks.Task<bool> task = client.ConnectAsync(roomId);
+            client.ConnectAsync(roomId);
             isConnected = true;
             onConnected();
             return true;

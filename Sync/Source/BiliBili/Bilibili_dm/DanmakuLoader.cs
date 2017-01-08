@@ -252,11 +252,10 @@ namespace BiliDMLib
             {
                 Client.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                throw e;
             }
-
 
             NetStream = null;
         }
