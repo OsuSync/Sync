@@ -66,6 +66,15 @@ namespace Sync.Tools
                 WriteColor("已连接", ConsoleColor.Green, true);
             else
                 WriteColor("等待连接", ConsoleColor.Red, true);
+
+            if(Program.loginable)
+            {
+                WriteColor("发送弹幕: ", ConsoleColor.Blue, false);
+                if (((Source.ISendable)instance.GetInstanceSource()).LoginStauts())
+                    WriteColor("已登录", ConsoleColor.Green, true);
+                else
+                    WriteColor("未连接", ConsoleColor.Red, true);
+            }
         }
         /// <summary>
         /// 向屏幕输出配置文件状态

@@ -48,7 +48,7 @@ namespace Sync
         /// <param name="Source">连接源</param>
         public Sync(ISourceBase Source)
         {
-            IRC = new IRCClient();
+            IRC = new IRCClient(this);
             Src = Source;
 
             Src.onConnected += Src_onConnected;

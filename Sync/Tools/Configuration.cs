@@ -1,4 +1,4 @@
-﻿using static Sync.Tools.ConfigurationReader;
+﻿using static Sync.Tools.ConfigurationIO;
 
 namespace Sync.Tools
 {
@@ -50,6 +50,19 @@ namespace Sync.Tools
             get
             {
                 return ReadConfig(DefaultConfig.Provider);
+            }
+        }
+
+        public static string LoginCookie
+        {
+            get
+            {
+                return ReadConfig(DefaultConfig.Cookie);
+            }
+
+            set
+            {
+                WriteConfig(DefaultConfig.Cookie, value);
             }
         }
 

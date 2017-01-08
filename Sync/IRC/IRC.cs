@@ -5,14 +5,22 @@ using System.Text;
 using System.Threading;
 using Meebey.SmartIrc4net;
 using Sync.Tools;
+using Sync.Source;
+
 namespace Sync.IRC
 {
     class IRCClient
     {
+        Sync parent;
         IrcClient client = new IrcClient();
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
         string master = Configuration.TargetIRC;
+
+        public IRCClient(Sync p)
+        {
+            parent = p;
+        }
 
         public bool isConnected = false;
         public void connect()
@@ -60,13 +68,22 @@ namespace Sync.IRC
             {
                 if (e.Data.From.Substring(0, master.Length) == master)
                 {
-                    if (e.Data.Message.Length > 7)
+                    if (e.Data.Message.Length > 7 && e.Data.Message.Substring(0, 8) == "ACTION " && e.Data.Message.IndexOf("osu.ppy.sh/b/") > 0)
                     {
-                        if (e.Data.Message.Substring(0, 8) == "ACTION " && e.Data.Message.IndexOf("osu.ppy.sh/b/") > 0)
+                        client.WriteLine("PRIVMSG tillerino :" + e.Data.Message);
+                    }
+                    else
+                    {
+                        if(Program.loginable)
                         {
-                            client.WriteLine("PRIVMSG tillerino :" + e.Data.Message);
+                            ISendable dsender = (ISendable)parent.GetInstanceSource();
+                            if(dsender.LoginStauts())
+                            {
+                                dsender.Send(e.Data.Message);
+                            }
                         }
                     }
+
                 }
                 else if (e.Data.From.Substring(0, 9).ToLower() == "tillerino")
                 {

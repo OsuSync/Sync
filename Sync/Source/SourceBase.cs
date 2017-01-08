@@ -1,4 +1,6 @@
-﻿namespace Sync.Source
+﻿using System;
+
+namespace Sync.Source
 {
     /// <summary>
     /// 礼物基类
@@ -60,6 +62,11 @@
         event CurrentOnlineEvt onOnlineChange;
 
         /// <summary>
+        /// 获得原始类型
+        /// </summary>
+        /// <returns>原始类型</returns>
+        Type getSourceType();
+        /// <summary>
         /// 开始源服务器连接
         /// </summary>
         /// <param name="roomID">指定的房间ID</param>
@@ -80,6 +87,14 @@
 
     }
 
-
+    /// <summary>
+    /// 标识当前弹幕源是支持发送弹幕的
+    /// </summary>
+    interface ISendable
+    {
+        void Send(string str);
+        void Login(string user, string password);
+        bool LoginStauts();
+    }
 
 }
