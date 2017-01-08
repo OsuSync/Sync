@@ -27,7 +27,7 @@ namespace BiliDMLib
         public event ReceivedDanmakuEvt ReceivedDanmaku;
         public event DisconnectEvt Disconnected;
         public event ReceivedRoomCountEvt ReceivedRoomCount;
-        private bool debuglog = true;
+        //private bool debuglog = true;
         private short protocolversion = 1;
         private static int lastroomid;
         private static string lastserver;
