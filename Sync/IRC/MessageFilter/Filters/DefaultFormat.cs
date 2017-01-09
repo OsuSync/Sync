@@ -11,7 +11,7 @@ namespace Sync.IRC.MessageFilter.Filters
         public override void onMsg(ref MessageBase msg)
         {
             msg.user.setPerfix("<");
-            msg.user.setSuffix(">");
+            msg.user.setSuffix(">: ");
         }
     }
 }
