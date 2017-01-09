@@ -14,12 +14,11 @@ namespace Sync.IRC
     {
         Sync parent;
         IrcClient client = new IrcClient();
-        
+        public const string STATIC_ACTION_FLAG = "\x0001ACTION ";
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
         string master = Configuration.TargetIRC;
 
-        public const string STATIC_ACTION_FLAG = "ACTION ";
         public IRCClient(Sync p)
         {
             parent = p;
