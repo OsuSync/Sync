@@ -91,7 +91,7 @@ namespace Sync.IRC.MessageFilter
                 if (newMsg.cancel) return;
                 else
                 {
-                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.user + msg.message.RawText);
+                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
                 }
                 return;
             }
@@ -119,7 +119,7 @@ namespace Sync.IRC.MessageFilter
                     //其他用户则转发到目标IRC
                     else
                     {
-                        parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message);
+                        parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
                     }
                     
                 }
