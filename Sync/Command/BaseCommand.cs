@@ -51,7 +51,7 @@ namespace Sync.Command
             {
                 Write("osu! irc 尚未连接，您还不能发送消息。");
             }
-            syncInstance.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage("", string.Join("", arg)));
+            syncInstance.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage("Console", string.Join("", arg)));
             return true;
             
         }
@@ -86,6 +86,12 @@ namespace Sync.Command
 
         public bool start(Arguments arg)
         {
+            if(syncInstance.IsConnect)
+            {
+                Write("同步实例已经在运行，无法再次启动。");
+                Write("如果您想重启实例，您必须重启软件");
+                return true;
+            }
             syncInstance.Connect();
             return true;
         }
