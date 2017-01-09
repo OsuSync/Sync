@@ -180,8 +180,8 @@ namespace Sync
         public void Disconnect()
         {
             ConsoleWriter.Write("正在停止工作……");
-            StopIRCT();
-            StopSourceT();
+            if(IRCThread.IsAlive) StopIRCT();
+            if(SrcThread.IsAlive) StopSourceT();
         }
 
         /// <summary>
