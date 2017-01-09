@@ -93,6 +93,7 @@ namespace Sync.IRC.MessageFilter
                 {
                     parent.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.user + msg.message.RawText);
                 }
+                return;
             }
 
             //消息来自osu!IRC
@@ -122,6 +123,7 @@ namespace Sync.IRC.MessageFilter
                     }
                     
                 }
+                return;
             }
 
         }
