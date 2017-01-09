@@ -12,7 +12,7 @@ namespace Sync.IRC.MessageFilter.Filters.Osu
     /// </summary>
     class PPQuery : FilterBase, IOsu
     {
-        public void onMsg(ref MessageBase msg)
+        public override void onMsg(ref MessageBase msg)
         {
             
             if (msg.user.RawText == Configuration.TargetIRC)

@@ -45,19 +45,17 @@ namespace Sync.IRC.MessageFilter
 
     interface IDanmaku
     {
-        void onMsg(ref MessageBase msg);
+        //just flag
     }
 
     interface IOsu
     {
-        void onMsg(ref MessageBase msg);
+        //just flag
     }
 
-    public class FilterBase
+    abstract class FilterBase
     {
-        public FilterBase()
-        {
-            // Just flag
-        }
+        public abstract void onMsg(ref MessageBase msg);
+
     }
 }

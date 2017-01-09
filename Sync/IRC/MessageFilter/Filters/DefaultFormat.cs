@@ -8,7 +8,7 @@ namespace Sync.IRC.MessageFilter.Filters
 {
     class DefaultFormat : FilterBase, IDanmaku, IOsu
     {
-        public void onMsg(ref MessageBase msg)
+        public override void onMsg(ref MessageBase msg)
         {
             msg.user.setPerfix("<");
             msg.user.setSuffix(">");

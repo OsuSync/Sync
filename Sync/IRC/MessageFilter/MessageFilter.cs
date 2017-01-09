@@ -9,12 +9,14 @@ namespace Sync.IRC.MessageFilter
 {
     class MessageFilter
     {
-        List<FilterBase> filters;
+        Dictionary<Type, List<FilterBase>> filters;
         Sync parent;
         public MessageFilter(Sync p)
         {
             parent = p;
-            filters = new List<FilterBase>();
+            filters = new Dictionary<Type, List<FilterBase>>();
+            filters.Add(typeof(IOsu), new List<FilterBase>());
+            filters.Add(typeof(IDanmaku), new List<FilterBase>());
 
             addFilter(new PPQuery());
             addFilter(new DefaultFormat());
@@ -44,21 +46,32 @@ namespace Sync.IRC.MessageFilter
 
         public void PassFilterDanmaku(ref MessageBase msg)
         {
-            foreach (IDanmaku filter in filters)
-            {
-                filter.onMsg(ref msg);
-            }
+            PassFilter(typeof(IDanmaku), ref msg);
         }
 
         public void PassFilterOSU(ref MessageBase msg)
         {
-            foreach (IOsu filter in filters)
+            PassFilter(typeof(IOsu), ref msg);
+        }
+
+        public void PassFilter(Type identify, ref MessageBase msg)
+        {
+            foreach (var filter in filters[identify])
             {
                 filter.onMsg(ref msg);
             }
         }
 
-        public void addFilter(FilterBase filter) { filters.Add(filter); }
+        public void addFilter(FilterBase filter)
+        {
+            foreach (var i in filter.GetType().GetInterfaces())
+            {
+                if(filters.ContainsKey(i))
+                {
+                    filters[i].Add(filter);
+                }
+            }
+        }
 
         /// <summary>
         /// 产生一个消息  
@@ -78,7 +91,7 @@ namespace Sync.IRC.MessageFilter
                 if (newMsg.cancel) return;
                 else
                 {
-                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.user + msg.message);
+                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.user + msg.message.RawText);
                 }
             }
 
