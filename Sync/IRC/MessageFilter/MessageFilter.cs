@@ -1,4 +1,5 @@
 ﻿using Sync.IRC.MessageFilter.Filters;
+using Sync.IRC.MessageFilter.Filters.Ban;
 using Sync.IRC.MessageFilter.Filters.Osu;
 using Sync.Source;
 using Sync.Tools;
@@ -20,6 +21,10 @@ namespace Sync.IRC.MessageFilter
 
             addFilter(new PPQuery());
             addFilter(new DefaultFormat());
+
+            BanManager b = new BanManager();
+            addFilter(b.GetServerFliter());
+            addFilter(b.GetClientFliter());
         }
 
         /// <summary>
