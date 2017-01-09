@@ -12,13 +12,24 @@ namespace Sync.Tools
     static class ConsoleWriter
     {
         /// <summary>
+        /// 等待用户输入一个命令
+        /// </summary>
+        /// <returns>输入的字符串</returns>
+        public static string ReadCommand()
+        {
+            WriteColor(">>", ConsoleColor.Green, false, false);
+            return Console.ReadLine();
+        }
+        /// <summary>
         /// 向控制台输出信息
         /// </summary>
         /// <param name="msg">信息</param>
         /// <param name="newline">是否换行</param>
-        public static void Write(string msg, bool newline = true)
+        public static void Write(string msg, bool newline = true, bool time = true)
         {
-            Console.Write(msg + (newline ? "\n" : ""));
+            Console.Write((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "") 
+                           +  msg 
+                           + (newline ? "\n" : ""));
         }
         /// <summary>
         /// 向控制台输出带颜色的信息
@@ -26,10 +37,10 @@ namespace Sync.Tools
         /// <param name="text">信息文本</param>
         /// <param name="color">颜色</param>
         /// <param name="newline">是否换行</param>
-        public static void WriteColor(string text, ConsoleColor color, bool newline = true)
+        public static void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true)
         {
             Console.ForegroundColor = color;
-            Console.Write(text + (newline ? "\n" : ""));
+            Write(text, newline, time);
             Console.ResetColor();
         }
         /// <summary>
@@ -39,9 +50,9 @@ namespace Sync.Tools
         /// <param name="desc">命令描述</param>
         public static void WriteHelp(string cmd, string desc)
         {
-            WriteColor(cmd, ConsoleColor.Green, false);
-            Write(" : ");
-            WriteColor(desc, ConsoleColor.Blue, true);
+            WriteColor(cmd, ConsoleColor.Green, false, false);
+            Write(" : ", false, false);
+            WriteColor(desc, ConsoleColor.Blue, true, false);
         }
         /// <summary>
         /// 向屏幕输出某个Sync实例的状态
@@ -51,29 +62,29 @@ namespace Sync.Tools
         {
             WriteColor("配置文件: ", ConsoleColor.Blue, false);
             if (Configuration.LiveRoomID > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
-                WriteColor("OK", ConsoleColor.Green, true);
+                WriteColor("OK, 房间ID:" + Configuration.LiveRoomID, ConsoleColor.Green, true, false);
             else
-                WriteColor("未配置", ConsoleColor.Red, true);
+                WriteColor("未配置", ConsoleColor.Red, true, false);
 
             WriteColor("BiliBili Live连接: ", ConsoleColor.Blue, false);
             if (instance.SourceStatus)
-                WriteColor("已连接", ConsoleColor.Green, true);
+                WriteColor("已连接", ConsoleColor.Green, true, false);
             else
-                WriteColor("等待连接", ConsoleColor.Red, true);
+                WriteColor("等待连接", ConsoleColor.Red, true, false);
 
             WriteColor("osu! IRC(聊天): ", ConsoleColor.Blue, false);
             if (instance.IRCStatus)
-                WriteColor("已连接", ConsoleColor.Green, true);
+                WriteColor("已连接", ConsoleColor.Green, true, false);
             else
-                WriteColor("等待连接", ConsoleColor.Red, true);
+                WriteColor("等待连接", ConsoleColor.Red, true, false);
 
             if(Program.loginable)
             {
                 WriteColor("发送弹幕: ", ConsoleColor.Blue, false);
                 if (((Source.ISendable)instance.GetSource()).LoginStauts())
-                    WriteColor("已登录", ConsoleColor.Green, true);
+                    WriteColor("已登录", ConsoleColor.Green, true, false);
                 else
-                    WriteColor("未连接", ConsoleColor.Red, true);
+                    WriteColor("未连接", ConsoleColor.Red, true, false);
             }
         }
         /// <summary>
@@ -86,7 +97,7 @@ namespace Sync.Tools
             Write("主号IRC: " + Configuration.TargetIRC);
             Write("机器人IRC: " + Configuration.BotIRC);
             Write("机器人IRC密码长度: " + Configuration.BotIRCPassword.Length);
-            Write("\n完成.\n");
+            Write("完成.\n");
         }
 
         /// <summary>
@@ -106,12 +117,13 @@ namespace Sync.Tools
         /// </summary>
         public static void WriteHelp()
         {
-            WriteHelp("reload", "重新载入配置文件");
             WriteHelp("exit", "停止弹幕同步，并退出软件");
             WriteHelp("start", "开始工作");
             WriteHelp("stop", "停止工作");
             WriteHelp("chat <message>", "发送消息到osu! （用于检测连接是否出问题）");
+            WriteHelp("danmaku <message>", "向直播发送弹幕（仅在支持的时候可用）。");
             WriteHelp("status", "输出当前连接状态。");
+
         }
         /// <summary>
         /// 清空屏幕
