@@ -12,6 +12,7 @@ namespace Sync.Tools
         {
             this.perfix = perfix;
             str = text;
+            if (str == null) str = string.Empty;
             this.suffix = suffix;
         }
 
@@ -19,11 +20,13 @@ namespace Sync.Tools
         {
             this.perfix = perfix;
             str = text;
+            if (str == null) str = string.Empty;
         }
 
         public StringElement(string source)
         {
             str = source;
+            if (str == null) str = string.Empty;
         }
 
         public StringElement()
@@ -74,6 +77,12 @@ namespace Sync.Tools
             if (op1 == null) return op2;
             if (op2 == null) return op1;
             return new StringElement(op1.perfix + op2.perfix, op1.str + op2.str, op1.suffix + op2.suffix);
+        }
+
+        public static string operator +(StringElement op1, string op2)
+        {
+
+            return op1.Result + op2;
         }
 
         public static implicit operator StringElement(string e)
