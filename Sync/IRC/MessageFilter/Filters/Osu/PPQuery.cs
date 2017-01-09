@@ -17,14 +17,14 @@ namespace Sync.IRC.MessageFilter.Filters.Osu
             
             if (msg.user.RawText == Configuration.TargetIRC)
             {
-                if (msg.message.RawText.Substring(0, 8) == "ACTION " && msg.message.RawText.IndexOf("osu.ppy.sh/b/") > 0)
+                if (msg.message.RawText.StartsWith(IRC.IRCClient.STATIC_ACTION_FLAG) && msg.message.RawText.Contains("osu.ppy.sh/b/"))
                 {
                     msg.cancel = true;
                     Program.syncInstance.GetIRC().sendRawMessage("tillerino", msg.message.RawText);
                 }
             }
 
-            if(msg.user.Result.ToLower() == "tillerino")
+            if(msg.user.Result.ToLower().Equals("tillerino"))
             {
                 msg.cancel = true;
                 Program.syncInstance.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message.RawText);
