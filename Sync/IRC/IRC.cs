@@ -6,6 +6,7 @@ using System.Threading;
 using Meebey.SmartIrc4net;
 using Sync.Tools;
 using Sync.Source;
+using Sync.IRC.MessageFilter;
 
 namespace Sync.IRC
 {
@@ -68,18 +69,14 @@ namespace Sync.IRC
         {
             if (e.Data.Type == ReceiveType.ChannelAction || e.Data.Type == ReceiveType.QueryAction || e.Data.Type == ReceiveType.QueryMessage || e.Data.Type == ReceiveType.ChannelMessage)
             {
-                string result = parent.GetMessageFilter().onIRC(e.Data.From, e.Data.Message);
-                if (result == null) return;
-                result = "[IRC] " + result;
-
-                ConsoleWriter.Write(result);
-                sendMessage(SendType.Message, result);
+                parent.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage(e.Data.Nick, e.Data.Message));
             }
         }
 
         private void Client_OnWriteLine(object sender, WriteLineEventArgs e)
         {
-            ConsoleWriter.Write("[IRC] " + e.Line);
+            //ConsoleWriter.Write("[IRC] " + e.Line);
+            return;
         }
 
         public void disconnect()
@@ -98,19 +95,5 @@ namespace Sync.IRC
             client.WriteLine("PRIVMSG " + user + " :" + msg);
         }
 
-        public void sendMessage(SendType type, string msg)
-        {
-            switch (type)
-            {
-                case SendType.Action:
-                    client.WriteLine("PRIVMSG " + master + " :ACTION " + msg);
-                    break;
-                case SendType.Message:
-                    client.WriteLine("PRIVMSG " + master + " :" + msg);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 }

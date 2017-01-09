@@ -42,7 +42,7 @@ namespace Sync.Tools
                     lock (historyGift)
                     {
                         curList = historyGift.ToList();
-                        historyGift.ToList().Clear();
+                        historyGift.Clear();
                     }
 
                     if (curList.Count > 0)
@@ -61,12 +61,15 @@ namespace Sync.Tools
                         curList.Select(p => p.senderName).ToList().ForEach(p => strUsers += p + ",");
                         curList.OrderBy(p => p.giftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
-                        Program.syncInstance.IRCSendAction("3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers);
-                        Program.syncInstance.IRCSendAction("送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个");
+                        //Program.syncInstance.IRCSendAction();
+                        //Program.syncInstance.IRCSendAction("送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个");
+                        Program.syncInstance.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        Program.syncInstance.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }
                     curList.Clear();
+                    
                 }
             }
 

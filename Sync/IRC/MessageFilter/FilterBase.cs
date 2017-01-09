@@ -1,23 +1,20 @@
 ﻿using Sync.Source;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Sync.Tools;
+
 
 namespace Sync.IRC.MessageFilter
 {
     interface MessageBase
     {
-        string user { get; set; }
-        string message { get; set; }
+        StringElement user { get; set; }
+        StringElement message { get; set; }
         bool cancel { get; set; }
     }
 
     class DanmakuMessage : MessageBase
     {
-        public string user { get; set; }
-        public string message { get; set; }
+        public StringElement user { get; set; }
+        public StringElement message { get; set; }
         /// <summary>
         /// cancel标志指示了这条来自弹幕的消息将不会同步到IRC。
         /// </summary>
@@ -32,17 +29,17 @@ namespace Sync.IRC.MessageFilter
 
     class IRCMessage : MessageBase
     {
-        public string user { get; set; }
-        public string message { get; set; }
+        public StringElement user { get; set; }
+        public StringElement message { get; set; }
         /// <summary>
         /// cancel标志指示了这条来自IRC的消息，不会同步到弹幕
         /// </summary>
         public bool cancel { get; set; }
 
-        public IRCMessage(string user, string rawMessage)
+        public IRCMessage(StringElement user, StringElement rawMessage)
         {
             this.user = user;
-            this.message = message;
+            this.message = rawMessage;
         }
     }
 

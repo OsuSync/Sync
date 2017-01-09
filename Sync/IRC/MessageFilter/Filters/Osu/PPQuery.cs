@@ -15,19 +15,19 @@ namespace Sync.IRC.MessageFilter.Filters.Osu
         public void onMsg(ref MessageBase msg)
         {
             
-            if (msg.user == Configuration.TargetIRC)
+            if (msg.user.RawText == Configuration.TargetIRC)
             {
-                if (msg.message.Substring(0, 8) == "ACTION " && msg.message.IndexOf("osu.ppy.sh/b/") > 0)
+                if (msg.message.RawText.Substring(0, 8) == "ACTION " && msg.message.RawText.IndexOf("osu.ppy.sh/b/") > 0)
                 {
                     msg.cancel = true;
-                    Program.syncInstance.GetIRC().sendRawMessage("tillerino", msg.message);
+                    Program.syncInstance.GetIRC().sendRawMessage("tillerino", msg.message.RawText);
                 }
             }
 
-            if(msg.user.ToLower() == "tillerino")
+            if(msg.user.Result.ToLower() == "tillerino")
             {
                 msg.cancel = true;
-                Program.syncInstance.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message);
+                Program.syncInstance.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message.RawText);
             }
         }
     }

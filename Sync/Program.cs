@@ -1,4 +1,5 @@
-﻿using Sync.Source;
+﻿using Sync.IRC.MessageFilter;
+using Sync.Source;
 using Sync.Source.BiliBili;
 using Sync.Tools;
 using System;
@@ -60,7 +61,8 @@ namespace Sync
                 else if(cmd.Length > 5 &&  cmd.Substring(0,4) == "chat")
                 {
                     Write("<控制台>" + cmd.Substring(5));
-                    syncInstance.IRCSendMessage(cmd.Substring(5));
+                    //syncInstance.IRCSendMessage(cmd.Substring(5));
+                    syncInstance.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage("", cmd.Substring(5)));
                 }
                 else if (cmd.Length > 8 && cmd.Substring(0, 7) == "danmaku")
                 {
