@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sync.IRC.MessageFilter.Filters.Danmaku
+namespace Sync.IRC.MessageFilter.Filters
 {
     class DefaultFormat : FilterBase, IDanmaku, IOsu
     {

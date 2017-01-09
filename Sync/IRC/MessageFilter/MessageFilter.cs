@@ -1,4 +1,4 @@
-﻿using Sync.IRC.MessageFilter.Filters.Danmaku;
+﻿using Sync.IRC.MessageFilter.Filters;
 using Sync.IRC.MessageFilter.Filters.Osu;
 using Sync.Source;
 using Sync.Tools;

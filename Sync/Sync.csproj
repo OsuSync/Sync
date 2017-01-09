@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRC\MessageFilter\FilterBase.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Danmaku\DefaultFormat.cs" />
+    <Compile Include="IRC\MessageFilter\Filters\DefaultFormat.cs" />
     <Compile Include="IRC\MessageFilter\Filters\Osu\PPQuery.cs" />
     <Compile Include="IRC\MessageFilter\MessageFilter.cs" />
     <Compile Include="Source\BiliBili\Bilibili_sender\BiliBiliSender.cs" />
@@ -140,7 +140,9 @@
   <ItemGroup>
     <Resource Include="Resources\osu! 001.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="IRC\MessageFilter\Filters\Danmaku\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
