@@ -14,6 +14,21 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,18 +62,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependence\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependence\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="StarkSoftProxy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependence\StarkSoftProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -73,33 +82,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\BaseCommand.cs" />
-    <Compile Include="Command\CommandManager.cs" />
-    <Compile Include="IRC\MessageFilter\FilterBase.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Ban\BanInfo.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Ban\BanManager.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Ban\IBanMessageFilters.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Danmaku\BanClientFilter.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\DefaultFormat.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Osu\BanServerFilter.cs" />
-    <Compile Include="IRC\MessageFilter\Filters\Osu\PPQuery.cs" />
-    <Compile Include="IRC\MessageFilter\MessageFilter.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_sender\BiliBiliSender.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuLoader.cs" />
-    <Compile Include="Source\BiliBili\BiliBiliDanmuku.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_dm\DanmakuModel.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_dm\Events.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_dm\GiftRank.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_dm\utils.cs" />
-    <Compile Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.Designer.cs">
-      <DependentUpon>HTMLViewForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Plugins\CommandManager.cs" />
+    <Compile Include="MessageFilter\FilterBase.cs" />
+    <Compile Include="Plugins\FilterManager.cs" />
+    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Plugins\SourceManager.cs" />
     <Compile Include="Source\SourceBase.cs" />
-    <Compile Include="Sync.cs" />
-    <Compile Include="Source\BiliBili\BiliBili.cs" />
+    <Compile Include="SyncManager.cs" />
+    <Compile Include="SyncConnector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="IRC\IRC.cs" />
     <Compile Include="Command\CommandDispatch.cs" />
@@ -127,9 +118,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\BiliBili\Bilibili_sender\HTMLViewForm.resx">
-      <DependentUpon>HTMLViewForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -148,7 +136,18 @@
   <ItemGroup>
     <Resource Include="Resources\osu! 001.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

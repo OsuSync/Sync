@@ -1,31 +1,33 @@
-﻿using Sync.IRC.MessageFilter.Filters;
-using Sync.IRC.MessageFilter.Filters.Ban;
-using Sync.IRC.MessageFilter.Filters.Osu;
+﻿using Sync.MessageFilter;
 using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
-
-namespace Sync.IRC.MessageFilter
+using System.Linq;
+namespace Sync.Plugins
 {
-    class MessageFilter
+    public class FilterManager
     {
         Dictionary<Type, List<FilterBase>> filters;
-        Sync parent;
-        public MessageFilter(Sync p)
+        SyncConnector parent;
+        public FilterManager(SyncConnector p)
         {
             parent = p;
             filters = new Dictionary<Type, List<FilterBase>>();
             filters.Add(typeof(IOsu), new List<FilterBase>());
             filters.Add(typeof(IDanmaku), new List<FilterBase>());
 
+            /*
             addFilter(new PPQuery());
             addFilter(new DefaultFormat());
 
             BanManager b = new BanManager();
             addFilter(b.GetServerFliter());
             addFilter(b.GetClientFliter());
+            */
         }
+
+        public int Count { get { return filters.Sum(p => p.Value.Count); } }
 
         /// <summary>
         /// 简易实现直接传递弹幕消息

@@ -61,6 +61,9 @@ namespace Sync.Source
         event GiftEvt onGift;
         event CurrentOnlineEvt onOnlineChange;
 
+        string getSourceName();
+        string getSourceAuthor();
+
         /// <summary>
         /// 获得原始类型
         /// </summary>
@@ -90,7 +93,7 @@ namespace Sync.Source
     /// <summary>
     /// 标识当前弹幕源是支持发送弹幕的
     /// </summary>
-    interface ISendable
+    public interface ISendable
     {
         void Send(string str);
         void Login(string user, string password);

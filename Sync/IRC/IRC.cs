@@ -6,20 +6,20 @@ using System.Threading;
 using Meebey.SmartIrc4net;
 using Sync.Tools;
 using Sync.Source;
-using Sync.IRC.MessageFilter;
+using Sync.MessageFilter;
 
 namespace Sync.IRC
 {
-    class IRCClient
+    public class IRCClient
     {
-        Sync parent;
+        SyncConnector parent;
         IrcClient client = new IrcClient();
         public const string STATIC_ACTION_FLAG = "\x0001ACTION ";
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
         string master = Configuration.TargetIRC;
 
-        public IRCClient(Sync p)
+        public IRCClient(SyncConnector p)
         {
             parent = p;
         }

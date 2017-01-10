@@ -1,5 +1,6 @@
 ﻿using Sync.IRC;
-using Sync.IRC.MessageFilter;
+using Sync.MessageFilter;
+using Sync.Plugins;
 using Sync.Source;
 using Sync.Tools;
 using System;
@@ -10,16 +11,15 @@ namespace Sync
     /// <summary>
     /// 连接逻辑类
     /// </summary>
-    class Sync
+    public class SyncConnector
     {
-        private IRCClient IRC;
-        private ISourceBase Src;
-        private MessageFilter msgBuider;
+        private IRCClient IRC = null;
+        private ISourceBase Src = null;
+        private FilterManager msgBuider = null;
+        private Thread IRCThread = null;
+        private Thread SrcThread = null;
 
-        private Thread IRCThread;
-        private Thread SrcThread;
-
-        private GiftRecycler giftRec;
+        private GiftRecycler giftRec = null;
 
         public bool IRCStatus = false;
         public bool SourceStatus = false;
@@ -31,7 +31,7 @@ namespace Sync
         public Thread GetThreadSource() { return SrcThread; }
         public IRCClient GetIRC() { return IRC; }
         public ISourceBase GetSource() { return Src; }
-        public MessageFilter GetMessageFilter() { return msgBuider; }
+        public FilterManager GetMessageFilter() { return msgBuider; }
 
         /// <summary>
         /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
@@ -59,13 +59,13 @@ namespace Sync
         /// 用连接源实例化一个Sync类
         /// </summary>
         /// <param name="Source">连接源</param>
-        public Sync(ISourceBase Source)
+        public SyncConnector(ISourceBase Source)
         {
 
             IRC = new IRCClient(this);
             Src = Source;
 
-            msgBuider = new MessageFilter(this);
+            msgBuider = new FilterManager(this);
 
             Src.onConnected += Src_onConnected;
             Src.onDisconnected += Src_onDisconnected;
@@ -150,14 +150,14 @@ namespace Sync
         private void StartSource()
         {
             Src.Connect(int.Parse(Configuration.LiveRoomID));
-            while (Src.Stauts() || SourceStatus || IsConnect) {; }
+            while (Src.Stauts() && SourceStatus && IsConnect) { Thread.Sleep(1); }
             Src.Disconnect();
         }
 
         private void StartIRC()
         {
             IRC.connect();
-            while (IRC.isConnected || IRCStatus || IsConnect) {; }
+            while (IRC.isConnected && IRCStatus && IsConnect) { Thread.Sleep(1); }
             IRC.disconnect();
         }
 

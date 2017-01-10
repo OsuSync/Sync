@@ -26,14 +26,20 @@ namespace Sync.Command
         }
     }
 
-    class CommandDispatch
+    public class CommandDispatch
     {
         private Dictionary<string, CommandDelegate> cmdList = new Dictionary<string, CommandDelegate>();
+        private Dictionary<string, string> cmdDest = new Dictionary<string, string>();
+        public int count
+        {
+            get { return cmdList.Count; }
+        }
 
-        public bool bind(string name, CommandDelegate func)
+        public bool bind(string name, CommandDelegate func, string desc)
         {
             if (cmdList.ContainsKey(name)) return false;
             cmdList.Add(name, func);
+            cmdDest.Add(name, desc);
             return true;
         }
 
@@ -41,6 +47,11 @@ namespace Sync.Command
         {
             if (cmdList.ContainsKey(name)) return cmdList[name];
             else return null;
+        }
+
+        public IDictionary<string, string> getCommandsHelp()
+        {
+            return cmdDest;
         }
 
         public bool invoke(string name, params string[] args)

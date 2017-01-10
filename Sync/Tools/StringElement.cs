@@ -2,7 +2,7 @@
 
 namespace Sync.Tools
 {
-    class StringElement
+    public class StringElement
     {
         private string perfix { get; set; }
         private string str { get; set; }

@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace Sync.Command
 {
-    class CommandManager
+    public class CommandManager
     {
         CommandDispatch dispatch;
 
         public CommandManager()
         {
             dispatch = new CommandDispatch();
-
-            new BaseCommand(this);
-
         }
 
         public CommandDispatch Dispatch
@@ -27,12 +24,16 @@ namespace Sync.Command
         public void invokeCmdString(string cmd)
         {
             string[] args = cmd.Split(" ".ToCharArray(), 2);
+
             if(args.Length < 1 )
             {
                 ConsoleWriter.Write("未知命令！ 请输入help查看命令列表。");
                 return;
             }
-            if(!dispatch.invoke(args[0], args.Skip(1).ToArray()))
+            string arg = string.Empty;
+            if (args.Length > 1) arg = args[2];
+            
+            if (!dispatch.invoke(args[0], arg.Split(' ')))
             {
                 ConsoleWriter.Write("命令执行失败！ 请输入help查看命令列表。");
             }

@@ -2,16 +2,16 @@
 using Sync.Tools;
 
 
-namespace Sync.IRC.MessageFilter
+namespace Sync.MessageFilter
 {
-    interface MessageBase
+    public interface MessageBase
     {
         StringElement user { get; set; }
         StringElement message { get; set; }
         bool cancel { get; set; }
     }
 
-    class DanmakuMessage : MessageBase
+    public class DanmakuMessage : MessageBase
     {
         public StringElement user { get; set; }
         public StringElement message { get; set; }
@@ -27,7 +27,7 @@ namespace Sync.IRC.MessageFilter
         }
     }
 
-    class IRCMessage : MessageBase
+    public class IRCMessage : MessageBase
     {
         public StringElement user { get; set; }
         public StringElement message { get; set; }
@@ -43,17 +43,17 @@ namespace Sync.IRC.MessageFilter
         }
     }
 
-    interface IDanmaku
+    public interface IDanmaku
     {
         //just flag
     }
 
-    interface IOsu
+    public interface IOsu
     {
         //just flag
     }
 
-    abstract class FilterBase
+    public abstract class FilterBase
     {
         public abstract void onMsg(ref MessageBase msg);
 

@@ -9,7 +9,7 @@ namespace Sync.Tools
     /// <summary>
     /// 控制台帮助类
     /// </summary>
-    static class ConsoleWriter
+    public static class ConsoleWriter
     {
         /// <summary>
         /// 等待用户输入一个命令
@@ -50,15 +50,15 @@ namespace Sync.Tools
         /// <param name="desc">命令描述</param>
         public static void WriteHelp(string cmd, string desc)
         {
-            WriteColor(cmd, ConsoleColor.Green, false, false);
+            WriteColor(cmd, ConsoleColor.Cyan, false, false);
             Write(" : ", false, false);
-            WriteColor(desc, ConsoleColor.Blue, true, false);
+            WriteColor(desc, ConsoleColor.White, true, false);
         }
         /// <summary>
         /// 向屏幕输出某个Sync实例的状态
         /// </summary>
         /// <param name="instance">指定Sync实例</param>
-        public static void WriteStatus(Sync instance)
+        public static void WriteStatus(SyncConnector instance)
         {
             WriteColor("配置文件: ", ConsoleColor.Blue, false);
             if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
@@ -78,7 +78,7 @@ namespace Sync.Tools
             else
                 WriteColor("等待连接", ConsoleColor.Red, true, false);
 
-            if(Program.loginable)
+            if(SyncManager.loginable)
             {
                 WriteColor("发送弹幕: ", ConsoleColor.Blue, false);
                 if (((Source.ISendable)instance.GetSource()).LoginStauts())
@@ -117,12 +117,10 @@ namespace Sync.Tools
         /// </summary>
         public static void WriteHelp()
         {
-            WriteHelp("exit", "停止弹幕同步，并退出软件");
-            WriteHelp("start", "开始工作");
-            WriteHelp("stop", "停止工作");
-            WriteHelp("chat <message>", "发送消息到osu! （用于检测连接是否出问题）");
-            WriteHelp("danmaku <message>", "向直播发送弹幕（仅在支持的时候可用）。");
-            WriteHelp("status", "输出当前连接状态。");
+            foreach (var item in Program.commands.Dispatch.getCommandsHelp())
+            {
+                WriteHelp(item.Key, item.Value);
+            }
 
         }
         /// <summary>

@@ -5,7 +5,7 @@ namespace Sync.Tools
     /// <summary>
     /// 该类提供直接对配置文件的访问（不可写）
     /// </summary>
-    static class Configuration
+    public static class Configuration
     {
 
         /// <summary>

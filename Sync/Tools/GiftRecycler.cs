@@ -34,7 +34,7 @@ namespace Sync.Tools
             System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
             time.Start();
 
-            while (Program.syncInstance.IsConnect && isRunning)
+            while (Program.sync.Connector.IsConnect && isRunning)
             {
                 if (time.ElapsedMilliseconds / 1000 > 180)
                 {
@@ -63,14 +63,14 @@ namespace Sync.Tools
                         mostUser = curList.Count == 0 ? null : curList.First();
                         //Program.syncInstance.IRCSendAction();
                         //Program.syncInstance.IRCSendAction("送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个");
-                        Program.syncInstance.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        Program.syncInstance.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
+                        Program.sync.Connector.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        Program.sync.Connector.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }
                     curList.Clear();
-                    
                 }
+                Thread.Sleep(1);
             }
 
             ConsoleWriter.WriteColor("礼物统计线程成功结束", ConsoleColor.Cyan);
