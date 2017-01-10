@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace BilibiliDM_PluginFramework
+namespace Sync.Source.BiliBili.BiliBili_dm
 {
-    public class GiftRank : INotifyPropertyChanged
+    class GiftRank : INotifyPropertyChanged
     {
         private string _userName;
         private decimal _coin;

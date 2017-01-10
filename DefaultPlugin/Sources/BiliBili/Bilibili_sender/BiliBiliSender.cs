@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sync.Source.BiliBili
+namespace DefaultPlugin.Source
 {
     /// <summary>
     /// 实现发送弹幕功能

@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Net.Sockets;
 
-namespace BiliDMLib
+namespace Sync.Source.BiliBili.BiliBili_dm
 {
-    public static class utils
+    static class utils
     {
         public static byte[] ToBE(this byte[] b)
         {

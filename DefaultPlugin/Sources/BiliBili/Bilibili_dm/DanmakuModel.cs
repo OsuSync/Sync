@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace BilibiliDM_PluginFramework
+namespace Sync.Source.BiliBili.BiliBili_dm
 {
-    public enum MsgTypeEnum
+    enum MsgTypeEnum
     {
         /// <summary>
         /// 彈幕
@@ -42,7 +42,7 @@ namespace BilibiliDM_PluginFramework
         Unknown
     }
 
-    public class DanmakuModel
+    class DanmakuModel
     {
         /// <summary>
         /// 彈幕內容
@@ -82,7 +82,7 @@ namespace BilibiliDM_PluginFramework
         /// <summary>
         /// 禮物排行
         /// </summary>
-        public List<GiftRank> GiftRanking { get; set; }
+        List<GiftRank> GiftRanking { get; set; }
 
         /// <summary>
         /// 該用戶是否為管理員

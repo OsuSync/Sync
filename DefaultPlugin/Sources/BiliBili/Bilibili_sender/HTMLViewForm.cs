@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Sync.Source.BiliBili
+namespace DefaultPlugin.Source
 {
     /// <summary>
     /// 用于模仿bilibili登录实现，抓取cookies的窗体

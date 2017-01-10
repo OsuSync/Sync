@@ -8,12 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using BilibiliDM_PluginFramework;
 using Newtonsoft.Json;
 
-namespace BiliDMLib
+namespace Sync.Source.BiliBili.BiliBili_dm
 {
-    public class DanmakuLoader
+    class DanmakuLoader
     {
         private string[] defaulthosts = new string[] { "livecmt-2.bilibili.com", "livecmt-1.bilibili.com" };
         private string ChatHost = "chat.bilibili.com";

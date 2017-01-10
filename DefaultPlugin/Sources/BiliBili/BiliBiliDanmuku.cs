@@ -1,7 +1,8 @@
-﻿using System;
-using BilibiliDM_PluginFramework;
+﻿using Sync.Source;
+using Sync.Source.BiliBili.BiliBili_dm;
+using System;
 
-namespace Sync.Source.BiliBili
+namespace DefaultPlugin.Source
 {
     class BiliBiliDanmuku : CBaseDanmuku
     {

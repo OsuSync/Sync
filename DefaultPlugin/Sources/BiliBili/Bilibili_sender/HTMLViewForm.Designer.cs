@@ -1,4 +1,4 @@
-﻿namespace Sync.Source.BiliBili
+﻿namespace DefaultPlugin.Source
 {
     partial class HTMLViewForm
     {

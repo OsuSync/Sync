@@ -1,19 +1,22 @@
-﻿using BiliDMLib;
-using BilibiliDM_PluginFramework;
-using System;
+﻿using System;
+using Sync.Source.BiliBili.BiliBili_dm;
+using Sync.Source;
+using System.Threading.Tasks;
 
-namespace Sync.Source.BiliBili
+namespace DefaultPlugin.Source.BiliBili
 {
     /// <summary>
     /// BiliBili Live的同步源类
     /// </summary>
     class BiliBili : ISourceBase, ISendable
     {
+        public const string SOURCE_NAME = "Bilibili";
+        public const string SOURCE_AUTHOR = "Deliay (admin@remiliascarlet.com)";
         DanmakuLoader client = new DanmakuLoader();
         BiliBiliSender sender;
         private bool isConnected = false;
 
-        public event ConnectedEvt onConnected;
+        public event Sync.Source.ConnectedEvt onConnected;
         public event DisconnectedEvt onDisconnected;
         public event DanmukuEvt onDanmuku;
         public event GiftEvt onGift;
@@ -29,7 +32,11 @@ namespace Sync.Source.BiliBili
             client.ReceivedDanmaku += Dl_ReceivedDanmaku;
             client.ReceivedRoomCount += Dl_ReceivedRoomCount;
             client.Disconnected += Dl_Disconnected;
-            client.ConnectAsync(roomId);
+            Task<bool> task = client.ConnectAsync(roomId);
+            if(task.Status == TaskStatus.Running)
+            {
+                isConnected = true;
+            }
             isConnected = true;
             onConnected();
             return true;
@@ -93,6 +100,16 @@ namespace Sync.Source.BiliBili
         public bool LoginStauts()
         {
             return sender.loginStauts;
+        }
+
+        public string getSourceName()
+        {
+            return SOURCE_NAME;
+        }
+
+        public string getSourceAuthor()
+        {
+            return SOURCE_AUTHOR;
         }
     }
 }
