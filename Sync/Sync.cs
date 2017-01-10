@@ -149,7 +149,7 @@ namespace Sync
 
         private void StartSource()
         {
-            Src.Connect(Configuration.LiveRoomID);
+            Src.Connect(int.Parse(Configuration.LiveRoomID));
             while (Src.Stauts() || SourceStatus || IsConnect) {; }
             Src.Disconnect();
         }

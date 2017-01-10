@@ -21,7 +21,7 @@ namespace Sync
             WriteConfig();
             Write("Config loaded.");
 
-            if (Configuration.LiveRoomID == 0)
+            if (Configuration.LiveRoomID.Length == 0)
             {
                 WriteColor("请配置 'config.ini' 后再开始进行同步操作。\n", ConsoleColor.DarkRed);
                 Process.Start(ConfigurationIO.ConfigFile);

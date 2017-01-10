@@ -61,7 +61,7 @@ namespace Sync.Tools
         public static void WriteStatus(Sync instance)
         {
             WriteColor("配置文件: ", ConsoleColor.Blue, false);
-            if (Configuration.LiveRoomID > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
+            if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
                 WriteColor("OK, 房间ID:" + Configuration.LiveRoomID, ConsoleColor.Green, true, false);
             else
                 WriteColor("未配置", ConsoleColor.Red, true, false);

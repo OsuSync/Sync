@@ -13,11 +13,11 @@ namespace Sync.Tools
         /// </summary>
         public const string PROVIDER_BILIBILI = "BiliBili";
 
-        public static int LiveRoomID
+        public static string LiveRoomID
         {
             get
             {
-                return int.Parse(ReadConfig(DefaultConfig.LiveRoomID));
+                return ReadConfig(DefaultConfig.LiveRoomID);
             }
         }
 
