@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Sync.IRC.MessageFilter.Filters.Ban
+namespace BanManagerPlugin.Ban
 {
     enum BanAccessType
     {

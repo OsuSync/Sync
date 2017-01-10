@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sync.IRC.MessageFilter;
+﻿using Sync.MessageFilter;
 
-namespace Sync.IRC.MessageFilter.Filters.Ban
+namespace BanManagerPlugin.Ban
 {
     class BanServerFilter : IBanMessageFilters, IOsu
     {
