@@ -70,9 +70,7 @@ namespace BanManagerPlugin.Ban
         /// <returns></returns>
         private bool IsCommand(string command, string message)
         {
-            if (message.Substring(0, command.Length).CompareTo(command) == 0)
-                return true;
-            return false;
+            return (message.StartsWith(command));
         }
     }
 }
