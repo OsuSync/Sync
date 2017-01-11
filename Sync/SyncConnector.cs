@@ -15,7 +15,6 @@ namespace Sync
     {
         private IRCClient IRC = null;
         private ISourceBase Src = null;
-        private FilterManager msgBuider = null;
         private Thread IRCThread = null;
         private Thread SrcThread = null;
 
@@ -31,7 +30,6 @@ namespace Sync
         public Thread GetThreadSource() { return SrcThread; }
         public IRCClient GetIRC() { return IRC; }
         public ISourceBase GetSource() { return Src; }
-        public FilterManager GetMessageFilter() { return msgBuider; }
 
         /// <summary>
         /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
@@ -65,8 +63,6 @@ namespace Sync
             IRC = new IRCClient(this);
             Src = Source;
 
-            msgBuider = new FilterManager(this);
-
             Src.onConnected += Src_onConnected;
             Src.onDisconnected += Src_onDisconnected;
             Src.onDanmuku += Src_onDanmuku;
@@ -92,7 +88,7 @@ namespace Sync
             {
                 CBaseDanmuku d = new CBaseDanmuku();
                 d.danmuku = "直播间围观人数" + (usercount > lCount ? "减少" : "增加") + "到" + lCount + "人";
-                GetMessageFilter().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(d));
+                Program.filters.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(d));
 
                 usercount = lCount;
             }
@@ -107,7 +103,7 @@ namespace Sync
 
         private void Src_onDanmuku(CBaseDanmuku danmuku)
         {
-            GetMessageFilter().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmuku));
+            Program.filters.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmuku));
         }
 
         private void Src_onConnected()

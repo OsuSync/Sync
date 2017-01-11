@@ -10,6 +10,7 @@ namespace DefaultPlugin
     public class DefaultPlugin : IPlugin
     {
         public static SyncManager MainInstance = null;
+        public static FilterManager MainFilters = null;
         public const string PLUGIN_NAME = "Default Plug-ins";
         public const string PLUGIN_AUTHOR = "Deliay";
         public string Author { get { return PLUGIN_NAME; } }
@@ -23,6 +24,7 @@ namespace DefaultPlugin
 
         public void onInitFilter(FilterManager filter)
         {
+            MainFilters = filter;
             filter.addFilter(new DefaultFormat());
 
         }

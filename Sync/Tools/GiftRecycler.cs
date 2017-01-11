@@ -63,8 +63,8 @@ namespace Sync.Tools
                         mostUser = curList.Count == 0 ? null : curList.First();
                         //Program.syncInstance.IRCSendAction();
                         //Program.syncInstance.IRCSendAction("送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个");
-                        Program.sync.Connector.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        Program.sync.Connector.GetMessageFilter().onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
+                        Program.filters.onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        Program.filters.onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }

@@ -1,9 +1,4 @@
 ﻿using Sync.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sync.Command
 {
@@ -31,7 +26,7 @@ namespace Sync.Command
                 return;
             }
             string arg = string.Empty;
-            if (args.Length > 1) arg = args[2];
+            if (args.Length > 1) arg = args[1];
             
             if (!dispatch.invoke(args[0], arg.Split(' ')))
             {

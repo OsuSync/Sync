@@ -53,7 +53,7 @@ namespace DefaultPlugin.Commands
             {
                 Write("osu! irc 尚未连接，您还不能发送消息。");
             }
-            MainInstance.Connector.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage("Console", string.Join("", arg)));
+            MainFilters.RaiseMessage(typeof(IOsu), new IRCMessage("Console", string.Join("", arg)));
             return true;
             
         }

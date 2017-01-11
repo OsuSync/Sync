@@ -68,7 +68,7 @@ namespace Sync.IRC
         {
             if (e.Data.Type == ReceiveType.ChannelAction || e.Data.Type == ReceiveType.QueryAction || e.Data.Type == ReceiveType.QueryMessage || e.Data.Type == ReceiveType.ChannelMessage)
             {
-                parent.GetMessageFilter().RaiseMessage(typeof(IOsu), new IRCMessage(e.Data.Nick, e.Data.Message));
+                Program.filters.RaiseMessage(typeof(IOsu), new IRCMessage(e.Data.Nick, e.Data.Message));
             }
         }
 
