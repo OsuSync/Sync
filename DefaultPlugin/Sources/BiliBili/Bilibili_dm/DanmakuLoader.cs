@@ -105,7 +105,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
             }
             catch (Exception ex)
             {
-                this.Error = ex;
+                Error = ex;
                 return false;
             }
         }
