@@ -55,7 +55,7 @@ namespace BeatmapSuggest
 
         public void onSyncMangerComplete(SyncManager sync)
         {
-            
+
         }
     }
 }

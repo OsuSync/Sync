@@ -36,12 +36,12 @@ namespace BeatmapSuggest.Danmaku
 
                 if (Int32.TryParse(message.Substring(suggestCommand.Length).Trim(), out beatmapSetId))
                 {
-                    SendSuggestMessage(msg,beatmapSetId, msg.user.RawText);
+                    SendSuggestMessage(beatmapSetId, msg.user.RawText);
                 }
             }
         }
 
-        private async void SendSuggestMessage(MessageBase msg,int beatmapSetId, string userName)
+        private async void SendSuggestMessage(int beatmapSetId, string userName)
         {
             string beatmapName = String.Empty;
             try
