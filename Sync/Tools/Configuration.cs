@@ -3,7 +3,7 @@
 namespace Sync.Tools
 {
     /// <summary>
-    /// 该类提供直接对配置文件的访问（不可写）
+    /// 该类提供直接对配置文件的读写
     /// </summary>
     public static class Configuration
     {
@@ -19,6 +19,10 @@ namespace Sync.Tools
             {
                 return ReadConfig(DefaultConfig.LiveRoomID);
             }
+            set
+            {
+                WriteConfig(DefaultConfig.LiveRoomID, value);
+            }
         }
 
         public static string TargetIRC
@@ -26,6 +30,10 @@ namespace Sync.Tools
             get
             {
                 return ReadConfig(DefaultConfig.TargetIRC);
+            }
+            set
+            {
+                WriteConfig(DefaultConfig.TargetIRC, value);
             }
         }
 
@@ -35,6 +43,10 @@ namespace Sync.Tools
             {
                 return ReadConfig(DefaultConfig.BotIRC);
             }
+            set
+            {
+                WriteConfig(DefaultConfig.BotIRC, value);
+            }
         }
 
         public static string BotIRCPassword
@@ -43,6 +55,10 @@ namespace Sync.Tools
             {
                 return ReadConfig(DefaultConfig.BotIRCPassword);
             }
+            set
+            {
+                WriteConfig(DefaultConfig.BotIRCPassword, value);
+            }
         }
 
         public static string Provider
@@ -50,6 +66,10 @@ namespace Sync.Tools
             get
             {
                 return ReadConfig(DefaultConfig.Provider);
+            }
+            set
+            {
+                WriteConfig(DefaultConfig.Provider, value);
             }
         }
 

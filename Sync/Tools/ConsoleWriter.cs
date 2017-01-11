@@ -51,7 +51,7 @@ namespace Sync.Tools
         public static void WriteHelp(string cmd, string desc)
         {
             WriteColor(cmd, ConsoleColor.Cyan, false, false);
-            Write(" : ", false, false);
+            Write("\t  ", false, false);
             WriteColor(desc, ConsoleColor.White, true, false);
         }
         /// <summary>
@@ -93,10 +93,10 @@ namespace Sync.Tools
         public static void WriteConfig()
         {
             Write("正在读取配置文件....\n");
-            Write("BiliBili房间ID: " + Configuration.LiveRoomID);
-            Write("主号IRC: " + Configuration.TargetIRC);
-            Write("机器人IRC: " + Configuration.BotIRC);
-            Write("机器人IRC密码长度: " + Configuration.BotIRCPassword.Length);
+            Write("房间ID: \t\t" + Configuration.LiveRoomID);
+            Write("主号IRC: \t\t" + Configuration.TargetIRC);
+            Write("BotIRC: \t\t" + Configuration.BotIRC);
+            Write("BotIRC密码长度: \t" + Configuration.BotIRCPassword.Length);
             Write("完成.\n");
         }
 
@@ -117,10 +117,14 @@ namespace Sync.Tools
         /// </summary>
         public static void WriteHelp()
         {
+            WriteHelp("命令", "描述");
+            WriteHelp("======", "======");
             foreach (var item in Program.commands.Dispatch.getCommandsHelp())
             {
                 WriteHelp(item.Key, item.Value);
             }
+            WriteHelp("======", "======");
+            Write("", true, false);
 
         }
         /// <summary>
