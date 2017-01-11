@@ -11,6 +11,7 @@ namespace DefaultPlugin
     {
         public static SyncManager MainInstance = null;
         public static FilterManager MainFilters = null;
+        public static SourceManager MainSources = null;
         public const string PLUGIN_NAME = "Default Plug-ins";
         public const string PLUGIN_AUTHOR = "Deliay";
         public string Author { get { return PLUGIN_NAME; } }
@@ -36,6 +37,7 @@ namespace DefaultPlugin
 
         public void onInitSource(SourceManager manager)
         {
+            MainSources = manager;
             manager.AddSource(new BiliBili());
         }
 
