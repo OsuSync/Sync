@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Sync.Command
 {
@@ -54,10 +50,17 @@ namespace Sync.Command
             return cmdDest;
         }
 
-        public bool invoke(string name, params string[] args)
+        public bool invoke(string name, Arguments args)
         {
-            if (cmdList.ContainsKey(name)) return cmdList[name](args);
-            else return false;
+            try
+            {
+                if (cmdList.ContainsKey(name)) return cmdList[name](args);
+                else return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

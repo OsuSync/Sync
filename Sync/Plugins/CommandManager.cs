@@ -28,7 +28,7 @@ namespace Sync.Command
             string arg = string.Empty;
             if (args.Length > 1) arg = args[1];
             
-            if (!dispatch.invoke(args[0], arg.Split(' ')))
+            if (!dispatch.invoke(args[0], (arg == string.Empty ? new Arguments() : arg.Split(' '))))
             {
                 ConsoleWriter.Write("命令执行失败！ 请输入help查看命令列表。");
             }
