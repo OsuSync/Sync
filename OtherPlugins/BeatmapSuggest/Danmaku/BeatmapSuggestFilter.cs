@@ -16,7 +16,7 @@ namespace BeatmapSuggest.Danmaku
 {
     class BeatmapSuggestFilter : FilterBase, IDanmaku
     {
-        private SyncManager manager = null;
+        private FilterManager filterManager = null;
 
         private const string suggestCommand = "?suggest";
 
@@ -30,18 +30,18 @@ namespace BeatmapSuggest.Danmaku
             int beatmapSetId = 0;
             if (message.StartsWith(suggestCommand))
             {
-                if (manager == null)
+                msg.cancel = true;
+                if (filterManager == null)
                     return; //没完全初始化，发送不了信息
 
                 if (Int32.TryParse(message.Substring(suggestCommand.Length).Trim(), out beatmapSetId))
                 {
-                    SendSuggestMessage(beatmapSetId, msg.user.RawText);
-                    msg.cancel = true;
+                    SendSuggestMessage(msg,beatmapSetId, msg.user.RawText);
                 }
             }
         }
 
-        private async void SendSuggestMessage(int beatmapSetId, string userName)
+        private async void SendSuggestMessage(MessageBase msg,int beatmapSetId, string userName)
         {
             string beatmapName = String.Empty;
             try
@@ -58,7 +58,7 @@ namespace BeatmapSuggest.Danmaku
             sb.Append(userName).Append(" want you to play the beatmap [").Append(GetLink(beatmapSetId)).Append(" ").Append(beatmapName).Append("] || [")
                 .Append(GetDownloadLink(beatmapSetId)).Append(" dl] || [").Append(GetMirrorDownloadLink(beatmapSetId)).Append(" mirror]");
             danmaku.danmuku = sb.ToString();
-            manager.Connector.GetMessageFilter().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+            filterManager.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
         }
 
         private string GetLink(int beatmapSetId)
@@ -123,9 +123,9 @@ namespace BeatmapSuggest.Danmaku
             return await task;
         }
 
-        public void SetSyncManager(SyncManager sync)
+        public void SetFilterManager(FilterManager manager)
         {
-            manager = sync;
+            filterManager = manager;
         }
     }
 }

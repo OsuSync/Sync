@@ -39,6 +39,7 @@ namespace BeatmapSuggest
 
         public void onInitFilter(FilterManager filter)
         {
+            this.filter.SetFilterManager(filter);
             filter.addFilter(this.filter);
         }
 
@@ -54,7 +55,7 @@ namespace BeatmapSuggest
 
         public void onSyncMangerComplete(SyncManager sync)
         {
-            filter.SetSyncManager(sync);
+            
         }
     }
 }
