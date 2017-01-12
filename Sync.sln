@@ -14,6 +14,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapSuggest", "OtherPlugins\BeatmapSuggest\BeatmapSuggest.csproj", "{C19A54FA-DC79-4022-9463-DA78F61737D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NowPlaying", "OtherPlugins\NowPlaying\NowPlaying.csproj", "{91ED3FE1-B0F7-44B4-8AB2-A3F6825EEA60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecentlyMessageQuery", "OtherPlugins\RecentlyUserQuery\RecentlyMessageQuery.csproj", "{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +46,10 @@ Global
 		{91ED3FE1-B0F7-44B4-8AB2-A3F6825EEA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91ED3FE1-B0F7-44B4-8AB2-A3F6825EEA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91ED3FE1-B0F7-44B4-8AB2-A3F6825EEA60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
