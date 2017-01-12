@@ -110,13 +110,6 @@ namespace DefaultPlugin.Source
                 dataStream.Close();
             }
 
-#if (DEBUG)
-            using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
-            {
-                ConsoleWriter.Write(sr.ReadToEnd());
-            }
-#endif
-
             ConsoleWriter.Write("发送完成!");
         }
 

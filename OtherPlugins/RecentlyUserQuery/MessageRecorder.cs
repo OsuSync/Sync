@@ -119,7 +119,7 @@ namespace RecentlyUserQuery
                 StringBuilder sb = new StringBuilder();
                 foreach (var pair in result)
                     sb.AppendFormat("{0}->{1} || ", pair.Value, pair.Key);
-                //SendResponseMessage(sb.ToString());
+
                 return sb.ToString();
             });
             task.Start();
