@@ -59,7 +59,7 @@ namespace NowPlaying
         }
     }
 
-    class MSNHandler : IDisposable
+    public class MSNHandler : IDisposable
     {
         #region WIN32API Import
         private const string CONST_CLASS_NAME = "MsnMsgrUIManager";
