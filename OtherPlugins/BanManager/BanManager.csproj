@@ -58,6 +58,10 @@
       <Project>{fbd514c2-2830-479e-b050-d1c383028456}</Project>
       <Name>Sync</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RecentlyUserQuery\RecentlyMessageQuery.csproj">
+      <Project>{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}</Project>
+      <Name>RecentlyMessageQuery</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

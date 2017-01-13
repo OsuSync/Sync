@@ -22,6 +22,7 @@ namespace BanManagerPlugin.Ban
 
         public override void onMsg(ref MessageBase msg)
         {
+
             if (GetInfo().IsBanned(msg.user.RawText))
                 msg.cancel = true;
         }

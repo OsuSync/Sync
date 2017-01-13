@@ -31,12 +31,13 @@ namespace BanManagerPlugin
 
         public void onInitCommand(CommandManager manager)
         {
+
         }
 
         public void onInitFilter(FilterManager filter)
         {
 
-            BanManager b = new BanManager();
+            BanManager b = new BanManager(filter);
             filter.addFilter(b.GetServerFliter());
             filter.addFilter(b.GetClientFliter());
         }

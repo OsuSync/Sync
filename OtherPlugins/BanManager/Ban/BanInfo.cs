@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecentlyUserQuery;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace BanManagerPlugin.Ban
 
     class BanInfo
     {
-        private class Rule
+        public class Rule
         {
             public Rule(string expr, int id)
             {
@@ -34,10 +35,32 @@ namespace BanManagerPlugin.Ban
         string splitString = @"_@!#_";
 
         List<string> banUserName = new List<string>();
+
+        public List<string> GetBanUserList()
+        {
+            return banUserName;
+        }
+
         List<Rule> banRuleRegex = new List<Rule>();
 
+        public List<Rule> GetBanRuleRegexList()
+        {
+            return banRuleRegex;
+        }
+
         List<string> whitelistUserName = new List<string>();
+
+        public List<string> GetWhiteListUserList()
+        {
+            return whitelistUserName;
+        }
+
         List<Rule> whitelistRuleRegex = new List<Rule>();
+
+        public List<Rule> GetWhiteListRuleRegexList()
+        {
+            return whitelistRuleRegex;
+        }
 
         BanAccessType accessType = BanAccessType.NOTBANNED;
 
@@ -116,10 +139,64 @@ namespace BanManagerPlugin.Ban
             return rule.id;
         }
 
+        public void RemoveWhiteListRuleRegex(int ruleId)
+        {
+            for(int i = 0; i < whitelistRuleRegex.Count; i++)
+            {
+                if (whitelistRuleRegex[i].id == ruleId)
+                {
+                    whitelistRuleRegex.RemoveAt(i);
+                    break;
+                }
+                    
+            }
+        }
+
+        public void RemovBanListRuleRegex(int ruleId)
+        {
+            for (int i = 0; i < banRuleRegex.Count; i++)
+            {
+                if (banRuleRegex[i].id == ruleId)
+                {
+                    banRuleRegex.RemoveAt(i);
+                    break;
+                }
+
+            }
+        }
+
         private int AddWhiteListRuleRegex(string ruleRegexExpr, int id)
         {
             whitelistRuleRegex.Add(new Rule(ruleRegexExpr, id));
             return id;
+        }
+
+        public void AddWhiteListId(int id)
+        {
+            string userName = GetUserName(id);
+            if (userName.Length != 0)
+                AddWhiteListUserName(userName);
+        }
+
+        public void RemoveWhiteListId(int id)
+        {
+            string userName = GetUserName(id);
+            if (userName.Length != 0)
+                RemoveWhiteListUserName(userName);
+        }
+
+        public void AddBanId(int id)
+        {
+            string userName = GetUserName(id);
+            if (userName.Length != 0)
+                AddBanUserName(userName);
+        }
+
+        public void RemoveBanId(int id)
+        {
+            string userName = GetUserName(id);
+            if (userName.Length != 0)
+                RemoveBanUserName(userName);
         }
 
         /// <summary>
@@ -257,6 +334,11 @@ namespace BanManagerPlugin.Ban
         public bool IsAllow(string userName)
         {
             return !IsBanned(userName);
+        }
+
+        private string GetUserName(int id)
+        {
+            return UserIdGenerator.GetUserName(id);
         }
     }
 }
