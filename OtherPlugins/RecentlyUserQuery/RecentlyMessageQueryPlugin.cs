@@ -41,6 +41,7 @@ namespace RecentlyUserQuery
         {
             filter.addFilter(new Danmaku.MessageRecorderFilter(recorder));
             filter.addFilter(new Osu.MessageRecorderControlFilter(filter, recorder));
+            filter.addFilter(new Osu.GetUserIdFilter(filter));
         }
 
         public void onInitPlugin()

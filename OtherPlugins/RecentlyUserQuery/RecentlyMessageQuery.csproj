@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Danmaku\MessageRecorderFilter.cs" />
     <Compile Include="MessageRecorder.cs" />
+    <Compile Include="Osu\GetUserIdFilter.cs" />
     <Compile Include="Osu\MessageRecorderControlFilter.cs" />
     <Compile Include="RecentlyMessageQueryPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
