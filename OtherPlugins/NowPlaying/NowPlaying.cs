@@ -53,6 +53,7 @@ namespace NowPlaying
             });
 
             msn.StartHandler();
+            
         }
 
         public void onInitSource(SourceManager manager)

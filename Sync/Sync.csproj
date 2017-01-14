@@ -102,6 +102,8 @@
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
     <Compile Include="Tools\GiftRecycler.cs" />
+    <Compile Include="Tools\IConfigurable.cs" />
+    <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />
   </ItemGroup>
   <ItemGroup>
