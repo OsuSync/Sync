@@ -16,6 +16,21 @@ namespace NowPlaying
         private FilterManager MainFilter = null;
         private OSUStatus osuStat = new OSUStatus();
         private MSNHandler msn;
+
+        public string IdentityName
+        {
+            get
+            {
+                return this.GetType().Name;
+            }
+        }
+
+        public OSUStatus OsuStatus
+        {
+            private set { }
+            get { return osuStat; }
+        }
+
         public string Author
         {
             get
@@ -31,6 +46,8 @@ namespace NowPlaying
                 return PLUGIN_NAME;
             }
         }
+
+
 
         public void onInitCommand(CommandManager manager)
         {

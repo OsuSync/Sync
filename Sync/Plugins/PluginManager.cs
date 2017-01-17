@@ -7,9 +7,12 @@ using System.Linq;
 
 namespace Sync.Plugins
 {
-    class PluginManager
+    public class PluginManager
     {
         List<IPlugin> pluginList;
+
+        static Dictionary<string, IPlugin> pluginMap=new Dictionary<string, IPlugin>();
+
         public PluginManager()
         {
             ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
@@ -77,6 +80,7 @@ namespace Sync.Plugins
                         IPlugin plugin = pluginTest as IPlugin;
                         plugin.onInitPlugin();
                         pluginList.Add(plugin);
+                        pluginMap.Add(plugin.IdentityName, plugin);
                     }
                 }
                 catch (Exception e)
@@ -87,6 +91,11 @@ namespace Sync.Plugins
                 }
             }
             return pluginList.Count;
+        }
+
+        public static IPlugin GetPlugin(string pluginIdentityName)
+        {
+            return pluginMap[pluginIdentityName];
         }
     }
 }

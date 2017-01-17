@@ -31,6 +31,14 @@ namespace PPQuery
             }
         }
 
+        public string IdentityName
+        {
+            get
+            {
+                return this.GetType().Name;
+            }
+        }
+
         public void onInitCommand(CommandManager manager)
         {
         }

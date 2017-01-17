@@ -13,6 +13,7 @@ namespace BanManagerPlugin
     {
         public const string PLUGIN_NAME = "Ban Manager";
         public const string PLUGIN_AUTHOR = "Dark Projector";
+
         public string Author
         {
             get
@@ -26,6 +27,14 @@ namespace BanManagerPlugin
             get
             {
                 return PLUGIN_AUTHOR;
+            }
+        }
+
+        public string IdentityName
+        {
+            get
+            {
+                return this.GetType().Name;
             }
         }
 
