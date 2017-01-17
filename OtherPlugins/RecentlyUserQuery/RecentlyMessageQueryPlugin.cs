@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Sync;
 using Sync.Command;
 using Sync.Plugins;
+using Sync.Tools;
 
 namespace RecentlyUserQuery
 {
-    public class RecentlyMessageQueryPlugin : IPlugin
+    public class RecentlyMessageQueryPlugin : IPlugin,IConfigurable
     {
         MessageRecorder recorder = new MessageRecorder();
 
@@ -72,13 +73,23 @@ namespace RecentlyUserQuery
             if (args.Count != 0 )
                 Sync.Tools.ConsoleWriter.Write(recorder.ProcessCommonCommand(newArgs).Replace(" || ","\n"));
             else
-                Sync.Tools.ConsoleWriter.WriteColor(helpString,ConsoleColor.Yellow);
+                Sync.Tools.ConsoleWriter.WriteColor(helpString,ConsoleColor.Yellow); 
             return true;
         }
 
         private void SendResponseMessage(string message)
         {
             Sync.Tools.ConsoleWriter.Write(message);
+        }
+
+        public void onConfigurationLoad()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void onConfigurationSave()
+        {
+            throw new NotImplementedException();
         }
     }
 
