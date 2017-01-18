@@ -14,7 +14,7 @@ namespace Sync.IRC
     {
         SyncConnector parent;
         IrcClient client = new IrcClient();
-        public const string STATIC_ACTION_FLAG = "\x0001ACTION ";
+        public const string CONST_ACTION_FLAG = "\x0001ACTION ";
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
         string master = Configuration.TargetIRC;
@@ -68,7 +68,7 @@ namespace Sync.IRC
         {
             if (e.Data.Type == ReceiveType.ChannelAction || e.Data.Type == ReceiveType.QueryAction || e.Data.Type == ReceiveType.QueryMessage || e.Data.Type == ReceiveType.ChannelMessage)
             {
-                Program.filters.RaiseMessage(typeof(IOsu), new IRCMessage(e.Data.Nick, e.Data.Message));
+                Program.host.Filters.RaiseMessage<ISourceOsu>(new IRCMessage(e.Data.Nick, e.Data.Message));
             }
         }
 

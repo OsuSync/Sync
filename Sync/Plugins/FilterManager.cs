@@ -6,26 +6,39 @@ using System.Collections.Generic;
 using System.Linq;
 namespace Sync.Plugins
 {
+    /// <summary>
+    /// 提供对消息的发送、管理、过滤功能
+    /// </summary>
     public class FilterManager
     {
-        Dictionary<Type, List<FilterBase>> filters;
+        Dictionary<Type, List<IFilter>> filters;
         SyncConnector parent;
         public FilterManager(SyncConnector p)
         {
             parent = p;
-            filters = new Dictionary<Type, List<FilterBase>>();
-            filters.Add(typeof(IOsu), new List<FilterBase>());
-            filters.Add(typeof(IDanmaku), new List<FilterBase>());
-
-            /*
-            addFilter(new PPQuery());
-            addFilter(new DefaultFormat());
-
-            BanManager b = new BanManager();
-            addFilter(b.GetServerFliter());
-            addFilter(b.GetClientFliter());
-            */
+            filters = new Dictionary<Type, List<IFilter>>();
+            AddSource<ISourceOsu>();
+            AddSource<ISourceDanmaku>();
+            AddSource<ISourceOnlineChange>();
+            AddSource<ISourceGift>();
         }
+
+        private void AddSource<T>()
+        {
+            filters.Add(typeof(T), new List<IFilter>());
+        }
+
+        public IEnumerable<KeyValuePair<Type, IFilter>> GetFiltersEnum()
+        {
+            foreach (var list in filters)
+            {
+                foreach(var item in list.Value)
+                {
+                    yield return new KeyValuePair<Type, IFilter>(list.Key, item);
+                }
+            }
+        }
+
 
         public int Count { get { return filters.Sum(p => p.Value.Count); } }
 
@@ -36,7 +49,7 @@ namespace Sync.Plugins
         public void onDanmaku(CBaseDanmuku danmaku)
         {
             MessageBase msg = new DanmakuMessage(danmaku);
-            RaiseMessage(typeof(IDanmaku), msg);
+            RaiseMessage<ISourceDanmaku>(msg);
         }
 
         /// <summary>
@@ -47,21 +60,36 @@ namespace Sync.Plugins
         public void onIRC(StringElement user, StringElement message)
         {
             MessageBase msg = new IRCMessage(user, message);
-            RaiseMessage(typeof(IOsu), msg);
+            RaiseMessage<ISourceOsu>(msg);
         }
 
 
-        public void PassFilterDanmaku(ref MessageBase msg)
+        internal void PassFilterDanmaku(ref MessageBase msg)
         {
-            PassFilter(typeof(IDanmaku), ref msg);
+            PassFilter<ISourceDanmaku>(ref msg);
         }
 
-        public void PassFilterOSU(ref MessageBase msg)
+        internal void PassFilterOSU(ref MessageBase msg)
         {
-            PassFilter(typeof(IOsu), ref msg);
+            PassFilter<ISourceOsu>(ref msg);
         }
 
-        public void PassFilter(Type identify, ref MessageBase msg)
+        internal void PassFilterGift(ref MessageBase msg)
+        {
+            PassFilter<ISourceGift>(ref msg);
+        }
+
+        internal void PassFilterOnlineChange(ref MessageBase msg)
+        {
+            PassFilter<ISourceGift>(ref msg);
+        }
+
+        private void PassFilter<T>(ref MessageBase msg)
+        {
+            PassFilter(typeof(T), ref msg);
+        }
+
+        private void PassFilter(Type identify, ref MessageBase msg)
         {
             foreach (var filter in filters[identify])
             {
@@ -69,7 +97,7 @@ namespace Sync.Plugins
             }
         }
 
-        public void addFilter(FilterBase filter)
+        public void AddFilter(IFilter filter)
         {
             foreach (var i in filter.GetType().GetInterfaces())
             {
@@ -80,18 +108,32 @@ namespace Sync.Plugins
             }
         }
 
+        public void AddFilters(params IFilter[] filters)
+        {
+            foreach (IFilter filter in filters)
+            {
+                AddFilter(filter);
+            }
+        }
+
+
+        public void RaiseMessage<Source>(MessageBase msg)
+        {
+            RaiseMessage(typeof(Source), msg);
+        }
+
         /// <summary>
         /// 产生一个消息  
         /// 该消息会被按顺序编译
         /// </summary>
         /// <param name="msgType">消息类型，此处传IOsu(来自IRC)和IDanmaku(来自弹幕)</param>
         /// <param name="msg">具体消息实例</param>
-        public void RaiseMessage(Type msgType, MessageBase msg)
+        private void RaiseMessage(Type msgType, MessageBase msg)
         {
             MessageBase newMsg = msg;
 
             //消息来自弹幕
-            if (msgType == typeof(IDanmaku))
+            if (msgType == typeof(ISourceDanmaku))
             {
                 PassFilterDanmaku(ref newMsg);
                 //将消息过滤一遍插件之后，判断是否取消消息（消息是否由插件自行处理拦截）
@@ -104,7 +146,7 @@ namespace Sync.Plugins
             }
 
             //消息来自osu!IRC
-            else if(msgType == typeof(IOsu))
+            else if(msgType == typeof(ISourceOsu))
             {
                 PassFilterOSU(ref newMsg);
                 //同上
@@ -131,6 +173,28 @@ namespace Sync.Plugins
                     
                 }
                 return;
+            }
+
+            //消息来自弹幕礼物
+            else if(msgType == typeof(ISourceGift))
+            {
+                PassFilterGift(ref newMsg);
+                if (newMsg.cancel) return;
+                else
+                {
+                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, IRC.IRCClient.CONST_ACTION_FLAG + newMsg.message);
+                }
+            }
+
+            //观看人数变化
+            else if(msgType == typeof(ISourceOnlineChange))
+            {
+                PassFilterOnlineChange(ref newMsg);
+                if (newMsg.cancel) return;
+                else
+                {
+                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, IRC.IRCClient.CONST_ACTION_FLAG + newMsg.message);
+                }
             }
 
         }
