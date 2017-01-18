@@ -9,8 +9,18 @@ using System.Windows.Forms;
 
 namespace NowPlaying
 {
+    public interface IOSUStatus
+    {
+        string artist { get; set; }
+        string title { get; set; }
+        string diff { get; set; }
+        string status { get; set; }
+        string prefix { get; set; }
+        string mode { get; set; }
 
-    public class OSUStatus
+    }
+
+    public class OSUStatus : IOSUStatus
     {
         public string artist { get; set; }
         public string title { get; set; }
@@ -59,7 +69,12 @@ namespace NowPlaying
         }
     }
 
-    public static class MSNHandler
+    public interface IMSNHandler
+    {
+        void registerCallback(Func<IOSUStatus, Task<bool>> callback);
+    }
+
+    public class MSNHandler : IMSNHandler
     {
         #region WIN32API Import
         private const string CONST_CLASS_NAME = "MsnMsgrUIManager";
@@ -100,12 +115,12 @@ namespace NowPlaying
         private static extern IntPtr DefWindowProcW(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
         #endregion
 
-        private static IntPtr m_hWnd;
-        private static WNDCLASS lpWndClass;
-        private static List<Func<OSUStatus, Task<bool>>> callbacks;
-        private static Thread t;
+        private IntPtr m_hWnd;
+        private WNDCLASS lpWndClass;
+        private List<Func<OSUStatus, Task<bool>>> callbacks;
+        private Thread t;
 
-        public static void Load()
+        public void Load()
         {
             callbacks = new List<Func<OSUStatus, Task<bool>>>();
             t = new Thread(CreateMSNWindow);
@@ -113,24 +128,24 @@ namespace NowPlaying
             t.Name = "ActiveXThread";
         }
 
-        public static void registerCallback(Func<OSUStatus, Task<bool>> callback)
+        public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
         {
             callbacks.Add(callback);
         }
 
-        public static void StartHandler()
+        public void StartHandler()
         {
             t.Start();
         }
 
-        public static void Dispose()
+        public void Dispose()
         {
             DestoryMSNWindow();
         }
 
         #region WIN32Form Implement
         [STAThread]
-        private static void CreateMSNWindow()
+        private void CreateMSNWindow()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -155,7 +170,7 @@ namespace NowPlaying
             return;
         }
 
-        private static bool DestoryMSNWindow()
+        private bool DestoryMSNWindow()
         {
             if(m_hWnd.ToInt32() > 0)
             {
@@ -164,7 +179,7 @@ namespace NowPlaying
             return true;
         }
 
-        private static IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             if(msg == 74)
             {

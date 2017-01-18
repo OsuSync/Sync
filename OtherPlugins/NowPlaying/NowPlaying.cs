@@ -6,34 +6,36 @@ using System.Text;
 using Sync;
 using Sync.Command;
 using Sync.MessageFilter;
+using System.Threading.Tasks;
 
 namespace NowPlaying
 {
-    public class NowPlaying : Plugin, IFilter, ISourceDanmaku
+    public class NowPlaying : Plugin, IFilter, ISourceDanmaku, IMSNHandler
     {
         private FilterManager MainFilter = null;
+        private MSNHandler handler = null;
         private OSUStatus osuStat = new OSUStatus();
-        public const string Author = "Deliay";
-        public const string Name = "Now Playing";
 
-        public NowPlaying() : base(Author, Name)
+        public NowPlaying() : base("Now Playing", "Deliay")
         {
             base.onInitFilter += filter => filter.AddFilter(this);
             base.onInitPlugin += NowPlaying_onInitPlugin;
             base.onLoadComplete += host => MainFilter = host.Filters;
+            handler = new MSNHandler();
         }
 
         private void NowPlaying_onInitPlugin()
         {
-            MSNHandler.Load();
+            handler.Load();
             Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
-            MSNHandler.registerCallback(p =>
+            handler.registerCallback(p =>
             {
                 return new System.Threading.Tasks.Task<bool>(OnOSUStatusChange, p);
             });
 
-            MSNHandler.StartHandler();
+            handler.StartHandler();
         }
+
 
         private bool OnOSUStatusChange(object stat)
         {
@@ -72,6 +74,11 @@ namespace NowPlaying
                 }
             }
 
+        }
+
+        public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
+        {
+            ((IMSNHandler)handler).registerCallback(callback);
         }
     }
 }
