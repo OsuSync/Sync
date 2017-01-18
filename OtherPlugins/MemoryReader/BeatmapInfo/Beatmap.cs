@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MemoryReader.BeatmapInfo
 {
-    class Beatmap
+    public class Beatmap
     {
         public int BeatmapID { get; set; }
 

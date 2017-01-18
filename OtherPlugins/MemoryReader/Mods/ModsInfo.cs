@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MemoryReader.Mods
 {
-    class ModsInfo
+    //被OSU混淆，懒得找了
+    public class ModsInfo
     {
         [Flags]
         public enum Mods

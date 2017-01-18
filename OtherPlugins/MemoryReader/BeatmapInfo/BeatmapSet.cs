@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MemoryReader.BeatmapInfo
 {
-    class BeatmapSet
+    public class BeatmapSet
     {
         public int BeatmapSetID { get; set; }
         public string DownloadLink

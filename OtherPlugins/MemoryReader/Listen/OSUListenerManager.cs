@@ -34,15 +34,15 @@ namespace MemoryReader.Listen
         private IOSUStatus m_now_player_status=new OSUStatus();
         private bool m_stop=false;
         private Thread m_listen_thread;
-        private List<IOSUProcessListener> m_listeners=new List<IOSUProcessListener>();
+        private List<IOSUListener> m_listeners=new List<IOSUListener>();
 
         private BeatmapSet m_last_beatmapset=new BeatmapSet();
         private Beatmap m_last_beatmap=new Beatmap();
         private ModsInfo m_last_mods = new ModsInfo();
         private NowPlaying.NowPlaying m_now_playing;
 
-        private double m_last_hp=200.0;
-        private double m_last_acc=100.0;
+        private double m_last_hp=0;
+        private double m_last_acc=0;
 
         public OSUListenerManager(SyncHost host)
         {
@@ -66,12 +66,12 @@ namespace MemoryReader.Listen
             m_listen_thread = new Thread(ListenLoop);
         }
 
-        public void AddListener(IOSUProcessListener listener)
+        public void AddListener(IOSUListener listener)
         {
             m_listeners.Add(listener);
         }
 
-        public void RemoveListener(IOSUProcessListener listener)
+        public void RemoveListener(IOSUListener listener)
         {
             m_listeners.Remove(listener);
         }
@@ -160,7 +160,7 @@ namespace MemoryReader.Listen
                 }
                 else
                 {
-                    if (count % 120 == 0)
+                    if (count % 1200 == 0)
                     {
                         Sync.Tools.ConsoleWriter.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
                         count = 0;
@@ -240,9 +240,14 @@ namespace MemoryReader.Listen
         private OsuStatus GetCurrentOsuStatus()
         {
             if (Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
-            if (m_now_player_status.status == "Playing"||Process.GetProcessesByName("osu!")[0].MainWindowTitle!="osu!") return OsuStatus.Playing;
+
+            if (m_now_player_status.status == "Playing"||
+                (Process.GetProcessesByName("osu!")[0].MainWindowTitle!="osu!"&& 
+                 Process.GetProcessesByName("osu!")[0].MainWindowTitle!="")) return OsuStatus.Playing;
+
             if (m_now_player_status.status == "Editing"|| 
-                (Process.GetProcessesByName("osu!")[0].MainWindowTitle != "osu!" && Process.GetProcessesByName("osu!")[0].MainWindowTitle.Contains(".osu")))return OsuStatus.Editing;
+                (Process.GetProcessesByName("osu!")[0].MainWindowTitle != "osu!" && 
+                 Process.GetProcessesByName("osu!")[0].MainWindowTitle.Contains(".osu")))return OsuStatus.Editing;
             return OsuStatus.Listening;
         }
     }

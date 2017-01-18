@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MemoryReader.Listen.InterFace
 { 
-    interface IOSUProcessListener
+    public interface IOSUListener
     {
         void OnCurrentBeatmapSetChange(BeatmapSet beatmap);
         void OnCurrentBeatmapChange(Beatmap beatmap);

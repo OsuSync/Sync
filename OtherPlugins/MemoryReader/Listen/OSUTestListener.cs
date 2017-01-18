@@ -9,7 +9,7 @@ using MemoryReader.Mods;
 
 namespace MemoryReader.Listen
 {
-    class OSUTestListener : IOSUProcessListener
+    class OSUTestListener : IOSUListener
     {
         public void OnAccuracyChange(double acc)
         {

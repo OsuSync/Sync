@@ -8,6 +8,7 @@ using Sync;
 using Sync.Command;
 using MemoryReader.Listen;
 using MemoryReader.BeatmapInfo;
+using MemoryReader.Listen.InterFace;
 
 namespace MemoryReader
 {
@@ -21,6 +22,16 @@ namespace MemoryReader
         {
             base.onInitPlugin += OnInitPlugin;
             base.onLoadComplete += OnLoadComplete;
+        }
+
+        public void RegisterOSUListener(IOSUListener listener)
+        {
+            m_osu_listener.AddListener(listener);
+        }
+
+        public void UnregisterOSUListener(IOSUListener listener)
+        {
+            m_osu_listener.RemoveListener(listener);
         }
 
         private void OnInitPlugin()
