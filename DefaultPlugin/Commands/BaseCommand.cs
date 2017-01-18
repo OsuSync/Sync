@@ -134,7 +134,7 @@ namespace DefaultPlugin.Commands
             {
                 Write("osu! irc 尚未连接，您还不能发送消息。");
             }
-            MainFilters.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join("", arg)));
+            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join("", arg)));
             return true;
             
         }

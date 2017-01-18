@@ -74,8 +74,8 @@ namespace DefaultPlugin.Filters
                         curList.Select(p => p.senderName).ToList().ForEach(p => strUsers += p + ",");
                         curList.OrderBy(p => p.giftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
-                        DefaultPlugin.MainFilters.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        DefaultPlugin.MainFilters.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }

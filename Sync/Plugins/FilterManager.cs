@@ -13,6 +13,7 @@ namespace Sync.Plugins
     public class FilterManager
     {
         Dictionary<Type, List<IFilter>> filters;
+<<<<<<< HEAD
         SyncConnector parent;
 
         public FilterManager(SyncConnector p)
@@ -33,6 +34,11 @@ namespace Sync.Plugins
             MessageManager.Init(this);
 			
             
+=======
+        public FilterManager()
+        {
+            filters = new Dictionary<Type, List<IFilter>>();
+>>>>>>> deliay
             AddSource<ISourceOsu>();
             AddSource<ISourceDanmaku>();
             AddSource<ISourceOnlineChange>();
@@ -57,28 +63,6 @@ namespace Sync.Plugins
 
 
         public int Count { get { return filters.Sum(p => p.Value.Count); } }
-
-        /// <summary>
-        /// 简易实现直接传递弹幕消息
-        /// </summary>
-        /// <param name="danmaku">弹幕</param>
-        public void onDanmaku(CBaseDanmuku danmaku)
-        {
-            MessageBase msg = new DanmakuMessage(danmaku);
-            RaiseMessage<ISourceDanmaku>(msg);
-        }
-
-        /// <summary>
-        /// 简易实现的传递IRC消息
-        /// </summary>
-        /// <param name="user">发信人</param>
-        /// <param name="message">信息</param>
-        public void onIRC(StringElement user, StringElement message)
-        {
-            MessageBase msg = new IRCMessage(user, message);
-            RaiseMessage<ISourceOsu>(msg);
-        }
-
 
         internal void PassFilterDanmaku(ref MessageBase msg)
         {
@@ -143,6 +127,7 @@ namespace Sync.Plugins
             }
         }
 
+<<<<<<< HEAD
         public void RaiseMessage<Source>(MessageBase msg)
         {
             RaiseMessage(typeof(Source), msg);
@@ -226,6 +211,8 @@ namespace Sync.Plugins
             }
 
         }
+=======
+>>>>>>> deliay
     }
 
     /// <summary>
