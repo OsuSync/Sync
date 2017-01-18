@@ -54,6 +54,8 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="DefaultPlugin.cs" />
     <Compile Include="Filters\DefaultFormat.cs" />
+    <Compile Include="Filters\GiftReceivePeeker.cs" />
+    <Compile Include="Filters\OnlineChangePeeker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\BiliBili\BiliBili.cs" />
     <Compile Include="Sources\BiliBili\BiliBiliDanmuku.cs" />
