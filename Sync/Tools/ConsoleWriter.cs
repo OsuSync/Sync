@@ -19,7 +19,7 @@ namespace Sync.Tools
         /// <returns>输入的字符串</returns>
         public static string ReadCommand()
         {
-            WriteColor(">>", ConsoleColor.Green, false, false);
+            WriteColor("", ConsoleColor.Green, false, false);
             wait = true;
             return Console.ReadLine();
         }
