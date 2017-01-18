@@ -80,7 +80,6 @@ namespace Sync.Plugins
                         IPlugin plugin = pluginTest as IPlugin;
                         plugin.onInitPlugin();
                         pluginList.Add(plugin);
-                        pluginMap.Add(plugin.IdentityName, plugin);
                     }
                 }
                 catch (Exception e)

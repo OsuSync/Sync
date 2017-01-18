@@ -17,14 +17,6 @@ namespace RecentlyUserQuery
         public const string PLUGIN_NAME = "Recently Message Query Plugin";
         public const string PLUGIN_AUTHOR = "Dark Projector";
 
-        public string IdentityName
-        {
-            get
-            {
-                return this.GetType().Name;
-            }
-        }
-
         public string Author
         {
             get

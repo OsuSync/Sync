@@ -17,14 +17,6 @@ namespace BeatmapSuggest
         public const string PLUGIN_NAME = "Beatmap Suggest Command";
         public const string PLUGIN_AUTHOR = "Dark Projector";
 
-        public string IdentityName
-        {
-            get
-            {
-                return this.GetType().Name;
-            }
-        }
-
         public string Author
         {
             get

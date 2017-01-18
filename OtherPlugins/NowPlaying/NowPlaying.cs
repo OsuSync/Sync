@@ -17,14 +17,6 @@ namespace NowPlaying
         private OSUStatus osuStat = new OSUStatus();
         private MSNHandler msn;
 
-        public string IdentityName
-        {
-            get
-            {
-                return this.GetType().Name;
-            }
-        }
-
         public OSUStatus OsuStatus
         {
             private set { }

@@ -14,7 +14,6 @@ namespace DefaultPlugin
         public static SourceManager MainSources = null;
         public const string PLUGIN_NAME = "Default Plug-ins";
         public const string PLUGIN_AUTHOR = "Deliay";
-        public string IdentityName { get { return this.GetType().Name; } }
         public string Author { get { return PLUGIN_NAME; } }
 
         public string Name { get { return PLUGIN_AUTHOR; } }
