@@ -89,9 +89,10 @@
     <Compile Include="Plugins\CommandManager.cs" />
     <Compile Include="MessageFilter\FilterBase.cs" />
     <Compile Include="Plugins\FilterManager.cs" />
-    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Plugins\SourceManager.cs" />
+    <Compile Include="SyncHost.cs" />
     <Compile Include="Source\SourceBase.cs" />
     <Compile Include="SyncManager.cs" />
     <Compile Include="SyncConnector.cs" />
@@ -101,7 +102,6 @@
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
-    <Compile Include="Tools\GiftRecycler.cs" />
     <Compile Include="Tools\IConfigurable.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />
