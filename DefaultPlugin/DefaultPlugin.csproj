@@ -78,7 +78,6 @@
       <Name>Sync</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Sources\BiliBili\Bilibili_sender\HTMLViewForm.resx">
       <DependentUpon>HTMLViewForm.cs</DependentUpon>

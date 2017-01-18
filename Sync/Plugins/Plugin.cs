@@ -12,10 +12,16 @@ namespace Sync.Plugins
     public delegate void StartSyncEvt(SyncConnector connector);
     public delegate void StopSyncEvt();
 
-    public abstract class Plugin
+    public interface IPlugin
     {
-        internal readonly string Name;
-        internal readonly string Author;
+        string getName();
+        string getAuthor();
+    }
+
+    public abstract class Plugin : IPlugin
+    {
+        public readonly string Name;
+        public readonly string Author;
 
         public Plugin(string Name, string Author)
         {
@@ -23,14 +29,14 @@ namespace Sync.Plugins
             this.Author = Author;
         }
 
-        public event InitPluginEvt onInitPlugin;
-        public event SyncManagerCompleteEvt onSyncMangerComplete;
-        public event InitSourceEvt onInitSource;
-        public event InitFilterEvt onInitFilter;
-        public event InitCommandEvt onInitCommand;
-        public event LoadCompleteEvt onLoadComplete;
-        public event StartSyncEvt onStartSync;
-        public event StopSyncEvt onStopSync;
+        protected event InitPluginEvt onInitPlugin;
+        protected event SyncManagerCompleteEvt onSyncMangerComplete;
+        protected event InitSourceEvt onInitSource;
+        protected event InitFilterEvt onInitFilter;
+        protected event InitCommandEvt onInitCommand;
+        protected event LoadCompleteEvt onLoadComplete;
+        protected event StartSyncEvt onStartSync;
+        protected event StopSyncEvt onStopSync;
         private bool isComplete = false;
 
         /// <summary>
@@ -81,6 +87,16 @@ namespace Sync.Plugins
                 return Program.host;
             else
                 throw new NullReferenceException("当前状态不能立即获得host类实例");
+        }
+
+        public string getName()
+        {
+            return Name;
+        }
+
+        public string getAuthor()
+        {
+            return Author;
         }
     }
 }

@@ -11,11 +11,9 @@ namespace BanManagerPlugin
 {
     public class BanManagerPlugin : Plugin
     {
-        public const string Author = "Dark Projector";
-        public const string Name = "Ban Manager";
         BanManager banManager;
 
-        public BanManagerPlugin() : base(Name, Author)
+        public BanManagerPlugin() : base("Ban Manager", "Dark Projector")
         {
             banManager = new BanManager();
             base.onInitFilter += manager => manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());

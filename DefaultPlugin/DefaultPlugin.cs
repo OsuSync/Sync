@@ -1,5 +1,4 @@
 ﻿using Sync.Plugins;
-using Sync.Command;
 using Sync;
 using DefaultPlugin.Source.BiliBili;
 using DefaultPlugin.Filters;
@@ -9,13 +8,12 @@ namespace DefaultPlugin
 {
     public class DefaultPlugin : Plugin
     {
+
         public static SyncManager MainInstance = null;
         public static FilterManager MainFilters = null;
         public static SourceManager MainSources = null;
-        public const string Author = "Deliay";
-        public const string Name = "Default Plug-ins";
         private GiftReceivePeeker giftPeeker;
-        public DefaultPlugin() : base(Author, Name)
+        public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
 
@@ -29,6 +27,7 @@ namespace DefaultPlugin
             base.onStartSync += connector => giftPeeker.StartRecycler();
 
             base.onLoadComplete += DefaultPlugin_onLoadComplete;
+
         }
 
         private void DefaultPlugin_onLoadComplete(SyncHost host)

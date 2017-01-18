@@ -13,11 +13,7 @@ namespace BeatmapSuggest
     public class BeatmapSuggestPlugin : Plugin
     {
         private Danmaku.BeatmapSuggestFilter filter = new Danmaku.BeatmapSuggestFilter();
-
-        public const string Author = "Dark Projector";
-        public const string Name = "Beatmap Suggest Command";
-
-        public BeatmapSuggestPlugin() : base(Name, Author)
+        public BeatmapSuggestPlugin() : base("Beatmap Suggest Command", "Dark Projector")
         {
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
             base.onInitFilter += BeatmapSuggestPlugin_onInitFilter;
