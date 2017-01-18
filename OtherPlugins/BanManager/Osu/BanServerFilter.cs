@@ -50,7 +50,7 @@ namespace BanManagerPlugin.Ban
                 {
                     CBaseDanmuku danmaku = new CBaseDanmuku();
                     danmaku.danmuku = basecommandHelpArray[i];
-                    bindManager.GetFilterManager().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                 }
                 else {
                     try
@@ -61,7 +61,7 @@ namespace BanManagerPlugin.Ban
                     {
                         CBaseDanmuku danmaku = new CBaseDanmuku();
                         danmaku.danmuku = e.Message;
-                        bindManager.GetFilterManager().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                        bindManager.GetFilterManager().RaiseMessage < ISourceDanmaku >( new DanmakuMessage(danmaku));
                     }
                 }
                 break;
@@ -226,7 +226,7 @@ namespace BanManagerPlugin.Ban
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id,rule.expression);
                     
                     danmaku.danmuku = sb.ToString();
-                    bindManager.GetFilterManager().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
 
                 case "-whitelist":
@@ -236,7 +236,7 @@ namespace BanManagerPlugin.Ban
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id, rule.expression);
                     
                     danmaku.danmuku = sb.ToString();
-                    bindManager.GetFilterManager().RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
             }
         }

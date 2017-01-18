@@ -9,7 +9,7 @@ using Sync.Source;
 
 namespace RecentlyUserQuery.Osu
 {
-    class GetUserIdFilter : FilterBase, IOsu
+    class GetUserIdFilter : IFilter, ISourceOsu
     {
         FilterManager manager = null;
 
@@ -20,7 +20,7 @@ namespace RecentlyUserQuery.Osu
 
         const string queryUserIdCommand= "?userid",queryUserNameCommand="?username";
 
-        public override void onMsg(ref MessageBase msg)
+        public new void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText, param = string.Empty;
             CBaseDanmuku danmaku;
@@ -32,7 +32,7 @@ namespace RecentlyUserQuery.Osu
                 danmaku = new CBaseDanmuku();
                 danmaku.danmuku = String.Format("userid \"{0}\" is {1} ", param, (UserIdGenerator.GetId(param)));
 
-                manager.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                manager.RaiseMessage<ISourceDanmaku>( new DanmakuMessage(danmaku));
                 msg.cancel = true;
                 return;
             }
@@ -48,7 +48,7 @@ namespace RecentlyUserQuery.Osu
 
                 danmaku = new CBaseDanmuku();
                 danmaku.danmuku = String.Format("userName \"{0}\" is {1} ", UserIdGenerator.GetUserName(id), param);
-                manager.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+                manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
             }
         }
     }

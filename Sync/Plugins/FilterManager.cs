@@ -124,7 +124,7 @@ namespace Sync.Plugins
             }
         }
 
-        public void deleteFilter(FilterBase filter)
+        public void deleteFilter(IFilter filter)
         {
             foreach (var i in filter.GetType().GetInterfaces())
             {
@@ -132,6 +132,14 @@ namespace Sync.Plugins
                 {
                     filters[i].Remove(filter);
                 }
+            }
+        }
+
+        public void AddFilters(params IFilter[] filters)
+        {
+            foreach (IFilter filter in filters)
+            {
+                AddFilter(filter);
             }
         }
 
@@ -225,9 +233,9 @@ namespace Sync.Plugins
     /// </summary>
     public class MessageManager
     {
-        class SendFilter : FilterBase, IDanmaku
+        class SendFilter : IFilter, ISourceDanmaku
         {
-            public override void onMsg(ref MessageBase msg)
+            public new void onMsg(ref MessageBase msg)
             {
                 if (!msg.message.RawText.StartsWith("?send"))
                     msg.cancel = true;
@@ -254,7 +262,7 @@ namespace Sync.Plugins
                     if (option == PeekOption.Only_Send_Command)
                         manager.deleteFilter(sendFilter);
                     else if(value==PeekOption.Only_Send_Command)
-                        manager.addFilter(sendFilter);
+                        manager.AddFilter(sendFilter);
                 }
                 isLimit = false;
             }

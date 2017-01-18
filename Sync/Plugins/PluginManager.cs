@@ -136,10 +136,5 @@ namespace Sync.Plugins
             }
             return pluginList.Count;
         }
-
-        public static IPlugin GetPlugin(string pluginIdentityName)
-        {
-            return pluginMap[pluginIdentityName];
-        }
     }
 }
