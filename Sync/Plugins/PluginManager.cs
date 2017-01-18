@@ -10,6 +10,7 @@ namespace Sync.Plugins
     class PluginManager
     {
         List<Plugin> pluginList;
+        private List<Assembly> asmList;
         internal PluginManager()
         {
             ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
@@ -83,16 +84,33 @@ namespace Sync.Plugins
         internal int LoadPlugins()
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
+
             string interfaceName = typeof(Plugin).FullName;
             pluginList = new List<Plugin>();
+            asmList = new List<Assembly>();
 
             if (!Directory.Exists(path)) return 0;
+            Directory.SetCurrentDirectory(path);
 
-            foreach(string file in Directory.GetFiles(path, "*.dll"))
+
+            foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
             {
                 try
                 {
-                    Assembly asm = Assembly.LoadFile(file);
+                    Assembly asm = Assembly.LoadFrom(file);
+                    asmList.Add(asm);
+                }
+                catch(Exception e)
+                {
+                    ConsoleWriter.WriteColor("文件:" + file + " 无法加载(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    continue;
+                }
+            }
+
+            foreach (Assembly asm in asmList)
+            {
+                try
+                {
                     foreach (Type t in asm.GetExportedTypes())
                     {
                         Type it = asm.GetType(t.FullName);
@@ -101,7 +119,7 @@ namespace Sync.Plugins
                             !typeof(Plugin).IsAssignableFrom(it))
                             continue;
 
-                        object pluginTest = Activator.CreateInstance(it);
+                        object pluginTest = asm.CreateInstance(it.FullName);
                         if (pluginTest == null || !(pluginTest is Plugin)) continue;
                         Plugin plugin = pluginTest as Plugin;
                         plugin.onEvent(() => plugin);
@@ -110,8 +128,7 @@ namespace Sync.Plugins
                 }
                 catch (Exception e)
                 {
-
-                    ConsoleWriter.WriteColor(file + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    ConsoleWriter.WriteColor(asm.FullName + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
                     continue;
                 }
             }
