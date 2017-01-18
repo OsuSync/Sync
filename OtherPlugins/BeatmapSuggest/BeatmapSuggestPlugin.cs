@@ -16,14 +16,8 @@ namespace BeatmapSuggest
         public BeatmapSuggestPlugin() : base("Beatmap Suggest Command", "Dark Projector")
         {
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
-            base.onInitFilter += BeatmapSuggestPlugin_onInitFilter;
+            base.onInitFilter += manager => manager.AddFilter(this.filter);
+            base.onLoadComplete += host => this.filter.SetFilterManager(host.Messages);
         }
-
-        private void BeatmapSuggestPlugin_onInitFilter(FilterManager filters)
-        {
-            this.filter.SetFilterManager(filters);
-            filters.AddFilter(this.filter);
-        }
-
     }
 }

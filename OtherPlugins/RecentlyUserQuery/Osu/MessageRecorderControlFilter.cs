@@ -14,9 +14,9 @@ namespace RecentlyUserQuery.Osu
     class MessageRecorderControlFilter : IFilter, ISourceOsu
     {
         MessageRecorder recorder = null;
-        FilterManager manager = null;
+        MessageDispatcher manager = null;
 
-        public MessageRecorderControlFilter(FilterManager manager,MessageRecorder recorder)
+        public MessageRecorderControlFilter(MessageDispatcher manager,MessageRecorder recorder)
         {
             this.recorder = recorder;
             this.manager = manager;

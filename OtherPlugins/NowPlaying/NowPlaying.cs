@@ -12,7 +12,7 @@ namespace NowPlaying
 {
     public class NowPlaying : Plugin, IFilter, ISourceDanmaku, IMSNHandler
     {
-        private FilterManager MainFilter = null;
+        private MessageDispatcher MainMessager = null;
         private MSNHandler handler = null;
         private OSUStatus osuStat = new OSUStatus();
 
@@ -20,7 +20,7 @@ namespace NowPlaying
         {
             base.onInitFilter += filter => filter.AddFilter(this);
             base.onInitPlugin += NowPlaying_onInitPlugin;
-            base.onLoadComplete += host => MainFilter = host.Filters;
+            base.onLoadComplete += host => MainMessager = host.Messages;
             handler = new MSNHandler();
         }
 
@@ -66,11 +66,11 @@ namespace NowPlaying
                 }
                 if (osuStat.title.Length > 17)
                 {
-                    MainFilter.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
+                    MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
                 }
                 else
                 {
-                    MainFilter.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title);
+                    MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title);
                 }
             }
 

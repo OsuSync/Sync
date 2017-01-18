@@ -16,6 +16,7 @@ namespace Sync
         private PluginManager plugins;
         private SourceManager sources;
         private FilterManager filters;
+        private MessageDispatcher messages;
         /// <summary>
         /// 对程序集外不可见，不允许主程序外的程序初始化Host的实例
         /// 
@@ -54,8 +55,10 @@ namespace Sync
             commands = new CommandManager();
             WriteColor("载入了 " + plugins.LoadCommnads() + " 个可用命令。", ConsoleColor.Green);
 
-            filters = new FilterManager(sync.Connector);
+            filters = new FilterManager();
             WriteColor("载入了 " + plugins.LoadFilters() + " 个消息过滤器。\n", ConsoleColor.Green);
+
+            messages = new MessageDispatcher(sync.Connector, filters);
 
             plugins.ReadyProgram();
 
@@ -106,6 +109,11 @@ namespace Sync
             {
                 return sync;
             }
+        }
+
+        public MessageDispatcher Messages
+        {
+            get { return messages; }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace BanManagerPlugin.Ban
 
         public void onMsg(ref MessageBase msg)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
