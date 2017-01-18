@@ -39,7 +39,7 @@ namespace DefaultPlugin.Source
             formThread.Name = "ActiveXThread";
             this.user = user;
             this.password = password;
-            if(Configuration.LoginCookie.Length > 0)
+            if (Configuration.LoginCertification.Length > 0)
             {
                 loginStauts = true;
             }
@@ -54,7 +54,7 @@ namespace DefaultPlugin.Source
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             form = new HTMLViewForm(this);
-            
+
             Application.Run(form);
         }
 
@@ -63,19 +63,18 @@ namespace DefaultPlugin.Source
         /// </summary>
         public void login()
         {
-            var appName = System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName;
-            Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", appName, 11000, RegistryValueKind.DWord);
+            Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", System.Diagnostics.Process.GetCurrentProcess().MainModule.ModuleName, 11000, RegistryValueKind.DWord);
             formThread.Start();
             loginStauts = true;
         }
-        
+
         /// <summary>
         /// 接收回调返回的cookies信息
         /// </summary>
         /// <param name="cookies">Cookies信息</param>
         public void setCookies(string cookies)
         {
-            Configuration.LoginCookie = cookies;
+            Configuration.LoginCertification = cookies;
             ConsoleWriter.WriteColor("登陆信息保存成功！", ConsoleColor.DarkYellow);
         }
 
@@ -88,7 +87,7 @@ namespace DefaultPlugin.Source
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(new Uri("http://live.bilibili.com/msg/send"));
             long unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
             byte[] byteArray = Encoding.UTF8.GetBytes("color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + Configuration.LiveRoomID + "");
-            string[] cookies = Configuration.LoginCookie.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] cookies = Configuration.LoginCertification.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             Uri live = new Uri("http://live.bilibili.com/");
 
             req.Method = "POST";
@@ -107,15 +106,14 @@ namespace DefaultPlugin.Source
             {
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Flush();
+#if (DEBUG)
+                using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
+                {
+                    ConsoleWriter.Write(sr.ReadToEnd());
+                }
+#endif
                 dataStream.Close();
             }
-
-#if (DEBUG)
-            using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
-            {
-                ConsoleWriter.Write(sr.ReadToEnd());
-            }
-#endif
 
             ConsoleWriter.Write("发送完成!");
         }
