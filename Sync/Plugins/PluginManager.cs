@@ -9,53 +9,82 @@ namespace Sync.Plugins
 {
     class PluginManager
     {
-        List<IPlugin> pluginList;
-        public PluginManager()
+        List<Plugin> pluginList;
+        internal PluginManager()
         {
             ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }
 
-        public int LoadCommnads()
+        internal int LoadCommnads()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitCommand(Program.commands);
+                item.onEvent(() => Program.host.Commands);
             }
 
-            return Program.commands.Dispatch.count;
+            return Program.host.Commands.Dispatch.count;
         }
 
-        public int LoadSources()
+        internal int LoadSources()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitSource(Program.sources);
+                item.onEvent(() => Program.host.Sources);
             }
-            return Program.sources.SourceList.Count();
+            return Program.host.Sources.SourceList.Count();
         }
 
-        public int LoadFilters()
+        internal int LoadFilters()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitFilter(Program.filters);
+                item.onEvent(() => Program.host.Filters);
             }
-            return Program.filters.Count;
+            return Program.host.Filters.Count;
         }
 
-        public void ReadySync()
+        internal void ReadySync()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onSyncMangerComplete(Program.sync);
+                item.onEvent(() => Program.host.SyncInstance);
             }
         }
 
-        public int LoadPlugins()
+        internal void StartSync()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent(() => Program.host.SyncInstance.Connector);
+            }
+        }
+
+        internal void StopSync()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent<SyncConnector>(() => null);
+            }
+        }
+
+        public IEnumerable<Plugin> GetPlugins()
+        {
+            return pluginList;
+        }
+
+        internal void ReadyProgram()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent(() => Program.host);
+            }
+        }
+
+        internal int LoadPlugins()
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
-            string interfaceName = typeof(IPlugin).FullName;
-            pluginList = new List<IPlugin>();
+            string interfaceName = typeof(Plugin).FullName;
+            pluginList = new List<Plugin>();
 
             if (!Directory.Exists(path)) return 0;
 
@@ -69,13 +98,13 @@ namespace Sync.Plugins
                         Type it = asm.GetType(t.FullName);
                         if (it == null ||
                             !it.IsClass || !it.IsPublic ||
-                            it.GetInterface(interfaceName) == null)
+                            !typeof(Plugin).IsAssignableFrom(it))
                             continue;
 
                         object pluginTest = Activator.CreateInstance(it);
-                        if (pluginTest == null || !(pluginTest is IPlugin)) continue;
-                        IPlugin plugin = pluginTest as IPlugin;
-                        plugin.onInitPlugin();
+                        if (pluginTest == null || !(pluginTest is Plugin)) continue;
+                        Plugin plugin = pluginTest as Plugin;
+                        plugin.onEvent(() => plugin);
                         pluginList.Add(plugin);
                     }
                 }

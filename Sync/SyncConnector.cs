@@ -9,7 +9,7 @@ using System.Threading;
 namespace Sync
 {
     /// <summary>
-    /// 连接逻辑类
+    /// 连接逻辑类，负责协调IRC和弹幕源的通讯、通讯时事件触发与管理
     /// </summary>
     public class SyncConnector
     {
@@ -17,8 +17,6 @@ namespace Sync
         private ISourceBase Src = null;
         private Thread IRCThread = null;
         private Thread SrcThread = null;
-
-        private GiftRecycler giftRec = null;
 
         public bool IRCStatus = false;
         public bool SourceStatus = false;
@@ -32,10 +30,10 @@ namespace Sync
         public ISourceBase GetSource() { return Src; }
 
         /// <summary>
-        /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
+        /// 使用Message Filter替代直接发送消息（改用IRC类内部方法）
         /// </summary>
         /// <param name="msg">要发送的消息</param>
-        [Obsolete]
+        [Obsolete("使用Message Filter替代直接发送消息（改用IRC类内部方法）", true)]
         public void IRCSendMessage(string msg)
         {
             //if(IRCStatus)
@@ -43,10 +41,10 @@ namespace Sync
         }
 
         /// <summary>
-        /// [未实现] 使用Message Filter替代直接发送消息（改用IRC类内部方法）
+        /// 使用Message Filter替代直接发送消息（改用IRC类内部方法）
         /// </summary>
         /// <param name="msg">要发送的消息</param>
-        [Obsolete]
+        [Obsolete("使用Message Filter替代直接发送消息（改用IRC类内部方法）", true)]
         public void IRCSendAction(string msg)
         {
             //if(IRCStatus)
@@ -69,8 +67,6 @@ namespace Sync
             Src.onOnlineChange += Src_onOnlineChange;
             Src.onGift += Src_onGift;
 
-            giftRec = new GiftRecycler();
-
             SrcThread = new Thread(StartSource);
             IRCThread = new Thread(StartIRC);
         }
@@ -78,7 +74,7 @@ namespace Sync
         #region 连接源的事件
         private void Src_onGift(CBaseGift gift)
         {
-            giftRec.AddGift(gift);
+            Program.host.Filters.RaiseMessage<ISourceGift>(new GiftMessage(gift));
         }
 
         private void Src_onOnlineChange(uint lCount)
@@ -88,7 +84,7 @@ namespace Sync
             {
                 CBaseDanmuku d = new CBaseDanmuku();
                 d.danmuku = "直播间围观人数" + (usercount > lCount ? "减少" : "增加") + "到" + lCount + "人";
-                Program.filters.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(d));
+                Program.host.Filters.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
                 usercount = lCount;
             }
@@ -103,14 +99,13 @@ namespace Sync
 
         private void Src_onDanmuku(CBaseDanmuku danmuku)
         {
-            Program.filters.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmuku));
+            Program.host.Filters.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
         }
 
         private void Src_onConnected()
         {
             SourceStatus = true;
             ConsoleWriter.Write("源服务器连接成功！");
-            giftRec.StartRecycler();
         }
         #endregion
 
@@ -168,6 +163,7 @@ namespace Sync
             IsConnect = true;
             StartIRCT();
             StartSourceT();
+            Program.host.Plugins.StartSync();
         }
 
         /// <summary>
