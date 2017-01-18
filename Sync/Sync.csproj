@@ -39,17 +39,20 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>0</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Sync.Program</StartupObject>
@@ -57,14 +60,18 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\osu! 001.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Meebey.SmartIrc4net, Version=0.4.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependence\Meebey.SmartIrc4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependence\Newtonsoft.Json.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="StarkSoftProxy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -89,9 +96,10 @@
     <Compile Include="Plugins\CommandManager.cs" />
     <Compile Include="MessageFilter\FilterBase.cs" />
     <Compile Include="Plugins\FilterManager.cs" />
-    <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Plugins\SourceManager.cs" />
+    <Compile Include="SyncHost.cs" />
     <Compile Include="Source\SourceBase.cs" />
     <Compile Include="SyncManager.cs" />
     <Compile Include="SyncConnector.cs" />
@@ -101,7 +109,6 @@
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
-    <Compile Include="Tools\GiftRecycler.cs" />
     <Compile Include="Tools\IConfigurable.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />

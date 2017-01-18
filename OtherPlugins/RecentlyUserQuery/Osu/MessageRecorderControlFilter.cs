@@ -11,7 +11,7 @@ using Sync.Plugins;
 
 namespace RecentlyUserQuery.Osu
 {
-    class MessageRecorderControlFilter : FilterBase, IOsu
+    class MessageRecorderControlFilter : IFilter, ISourceOsu
     {
         MessageRecorder recorder = null;
         FilterManager manager = null;
@@ -24,7 +24,7 @@ namespace RecentlyUserQuery.Osu
 
         const string recentlyCommand = "?recently";
 
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText;
 
@@ -60,7 +60,7 @@ namespace RecentlyUserQuery.Osu
         {
             CBaseDanmuku danmaku = new CBaseDanmuku();
             danmaku.danmuku = message;
-            manager.RaiseMessage(typeof(IDanmaku),new DanmakuMessage(danmaku));
+            manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
     }
 }

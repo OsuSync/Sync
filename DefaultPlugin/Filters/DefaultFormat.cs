@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DefaultPlugin.Filters
 {
-    class DefaultFormat : FilterBase, IDanmaku, IOsu
+    class DefaultFormat : IFilter, ISourceDanmaku, ISourceOsu
     {
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             msg.user.setPerfix("<");
             msg.user.setSuffix(">: ");

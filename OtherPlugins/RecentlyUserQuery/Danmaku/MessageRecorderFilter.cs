@@ -8,7 +8,7 @@ using Sync;
 
 namespace RecentlyUserQuery.Danmaku
 {
-    class MessageRecorderFilter : FilterBase, IDanmaku
+    class MessageRecorderFilter : IFilter, ISourceDanmaku
     {
         MessageRecorder recorder = null;
 
@@ -18,7 +18,7 @@ namespace RecentlyUserQuery.Danmaku
         }
 
         //listening messages from Danmaku
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             if (msg.cancel||recorder==null||msg.user.RawText.Length==0)
                 return;

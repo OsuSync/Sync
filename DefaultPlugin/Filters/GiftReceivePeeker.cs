@@ -1,24 +1,37 @@
-﻿using Sync.Source;
+﻿using Sync.MessageFilter;
+using Sync.Source;
+using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace Sync.Tools
+namespace DefaultPlugin.Filters
 {
-    class GiftRecycler
+    class GiftReceivePeeker : IFilter, ISourceGift
     {
         private Thread giftRecyler;
         private List<CBaseGift> historyGift;
         private bool isRunning = false;
 
-        public GiftRecycler()
+        internal GiftReceivePeeker()
         {
             giftRecyler = new Thread(giftShowRecycle);
-            historyGift = new List<CBaseGift>();
+            historyGift = new List<CBaseGift>();        }
+
+        public void onMsg(ref MessageBase msg)
+        {
+            if(msg is GiftMessage)
+            {
+                msg.cancel = true;
+                AddGift((msg as GiftMessage).source);
+            }
         }
 
-        public void StartRecycler()
+
+        internal void StartRecycler()
         {
             giftRecyler.Start();
             isRunning = true;
@@ -34,7 +47,7 @@ namespace Sync.Tools
             System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
             time.Start();
 
-            while (Program.sync.Connector.IsConnect && isRunning)
+            while (DefaultPlugin.MainInstance.Connector.IsConnect && isRunning)
             {
                 if (time.ElapsedMilliseconds / 1000 > 180)
                 {
@@ -61,10 +74,8 @@ namespace Sync.Tools
                         curList.Select(p => p.senderName).ToList().ForEach(p => strUsers += p + ",");
                         curList.OrderBy(p => p.giftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
-                        //Program.syncInstance.IRCSendAction();
-                        //Program.syncInstance.IRCSendAction("送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个");
-                        Program.filters.onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG,  "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        Program.filters.onIRC("", new StringElement(IRC.IRCClient.STATIC_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
+                        DefaultPlugin.MainFilters.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        DefaultPlugin.MainFilters.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }
@@ -72,10 +83,11 @@ namespace Sync.Tools
                 }
                 Thread.Sleep(1);
             }
-
             ConsoleWriter.WriteColor("礼物统计线程成功结束", ConsoleColor.Cyan);
         }
+
     }
+
 
     internal class GiftSenderEqv : IEqualityComparer<CBaseGift>
     {

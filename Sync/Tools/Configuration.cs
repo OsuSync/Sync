@@ -73,16 +73,16 @@ namespace Sync.Tools
             }
         }
 
-        public static string LoginCookie
+        public static string LoginCertification
         {
             get
             {
-                return ReadConfig(DefaultConfig.Cookie);
+                return ReadConfig(DefaultConfig.Certification);
             }
 
             set
             {
-                WriteConfig(DefaultConfig.Cookie, value);
+                WriteConfig(DefaultConfig.Certification, value);
             }
         }
 

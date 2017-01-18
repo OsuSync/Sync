@@ -11,13 +11,16 @@ namespace Sync.Tools
     /// </summary>
     public static class ConsoleWriter
     {
+        private static bool wait = false;
+
         /// <summary>
         /// 等待用户输入一个命令
         /// </summary>
         /// <returns>输入的字符串</returns>
         public static string ReadCommand()
         {
-            WriteColor(">>", ConsoleColor.Green, false, false);
+            WriteColor("", ConsoleColor.Green, false, false);
+            wait = true;
             return Console.ReadLine();
         }
         /// <summary>
@@ -27,9 +30,14 @@ namespace Sync.Tools
         /// <param name="newline">是否换行</param>
         public static void Write(string msg, bool newline = true, bool time = true)
         {
-            Console.Write((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "") 
-                           +  msg 
-                           + (newline ? "\n" : ""));
+            if(wait)
+            {
+                wait = false;
+                Console.SetCursorPosition(0, Console.CursorTop);
+            }
+            Console.Write((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "")
+               + msg
+               + (newline ? "\n" : ""));
         }
         /// <summary>
         /// 向控制台输出带颜色的信息
@@ -50,8 +58,7 @@ namespace Sync.Tools
         /// <param name="desc">命令描述</param>
         public static void WriteHelp(string cmd, string desc)
         {
-            WriteColor(cmd, ConsoleColor.Cyan, false, false);
-            Write("\t  ", false, false);
+            WriteColor(cmd.PadRight(10), ConsoleColor.Cyan, false, false);
             WriteColor(desc, ConsoleColor.White, true, false);
         }
         /// <summary>
@@ -105,9 +112,8 @@ namespace Sync.Tools
         /// </summary>
         public static void WriteWelcome()
         {
-            Write("osu直播弹幕同步工具 ver " +
-                   System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()
-                   + " 载入中..");
+            Write("欢迎使用 osu直播弹幕同步工具 ver " +
+                   System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
             Write("输入 'help' 获得帮助列表\n\n");
         }
@@ -119,7 +125,7 @@ namespace Sync.Tools
         {
             WriteHelp("命令", "描述");
             WriteHelp("======", "======");
-            foreach (var item in Program.commands.Dispatch.getCommandsHelp())
+            foreach (var item in Program.host.Commands.Dispatch.getCommandsHelp())
             {
                 WriteHelp(item.Key, item.Value);
             }

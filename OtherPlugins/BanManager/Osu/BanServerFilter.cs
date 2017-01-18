@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BanManagerPlugin.Ban
 {
-    class BanServerFilter : IBanMessageFilters, IOsu
+    class BanServerFilter : IBanMessageFilters, ISourceOsu
     {
 
         public delegate void CommandExecutor(string[] args);
@@ -27,7 +27,7 @@ namespace BanManagerPlugin.Ban
 
         static char[] split = { ' ' };
 
-        public override void onMsg(ref MessageBase msg)
+        public new void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText;
             string[] args;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BanManagerPlugin.Ban
 {
-    class BanClientFilter : IBanMessageFilters, IDanmaku
+    class BanClientFilter : IBanMessageFilters, ISourceDanmaku
     {
         protected BanClientFilter() {}
         public BanClientFilter(BanManager refManager)
@@ -20,7 +20,7 @@ namespace BanManagerPlugin.Ban
             return bindManager.GetFliterInfo();
         }
 
-        public override void onMsg(ref MessageBase msg)
+        public new void onMsg(ref MessageBase msg)
         {
 
             if (GetInfo().IsBanned(msg.user.RawText))

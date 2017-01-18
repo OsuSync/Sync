@@ -9,83 +9,128 @@ namespace Sync.Plugins
 {
     public class PluginManager
     {
-        List<IPlugin> pluginList;
 
-        static Dictionary<string, IPlugin> pluginMap=new Dictionary<string, IPlugin>();
+        List<Plugin> pluginList;
+        private List<Assembly> asmList;
+        internal PluginManager()
 
-        public PluginManager()
         {
             ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }
 
-        public int LoadCommnads()
+        internal int LoadCommnads()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitCommand(Program.commands);
+                item.onEvent(() => Program.host.Commands);
             }
 
-            return Program.commands.Dispatch.count;
+            return Program.host.Commands.Dispatch.count;
         }
 
-        public int LoadSources()
+        internal int LoadSources()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitSource(Program.sources);
+                item.onEvent(() => Program.host.Sources);
             }
-            return Program.sources.SourceList.Count();
+            return Program.host.Sources.SourceList.Count();
         }
 
-        public int LoadFilters()
+        internal int LoadFilters()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onInitFilter(Program.filters);
+                item.onEvent(() => Program.host.Filters);
             }
-            return Program.filters.Count;
+            return Program.host.Filters.Count;
         }
 
-        public void ReadySync()
+        internal void ReadySync()
         {
-            foreach (IPlugin item in pluginList)
+            foreach (Plugin item in pluginList)
             {
-                item.onSyncMangerComplete(Program.sync);
+                item.onEvent(() => Program.host.SyncInstance);
             }
         }
 
-        public int LoadPlugins()
+        internal void StartSync()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent(() => Program.host.SyncInstance.Connector);
+            }
+        }
+
+        internal void StopSync()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent<SyncConnector>(() => null);
+            }
+        }
+
+        public IEnumerable<Plugin> GetPlugins()
+        {
+            return pluginList;
+        }
+
+        internal void ReadyProgram()
+        {
+            foreach (Plugin item in pluginList)
+            {
+                item.onEvent(() => Program.host);
+            }
+        }
+
+        internal int LoadPlugins()
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
-            string interfaceName = typeof(IPlugin).FullName;
-            pluginList = new List<IPlugin>();
+
+            string interfaceName = typeof(Plugin).FullName;
+            pluginList = new List<Plugin>();
+            asmList = new List<Assembly>();
 
             if (!Directory.Exists(path)) return 0;
+            Directory.SetCurrentDirectory(path);
 
-            foreach(string file in Directory.GetFiles(path, "*.dll"))
+
+            foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
             {
                 try
                 {
-                    Assembly asm = Assembly.LoadFile(file);
+                    Assembly asm = Assembly.LoadFrom(file);
+                    asmList.Add(asm);
+                }
+                catch(Exception e)
+                {
+                    ConsoleWriter.WriteColor("文件:" + file + " 无法加载(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    continue;
+                }
+            }
+
+            foreach (Assembly asm in asmList)
+            {
+                try
+                {
                     foreach (Type t in asm.GetExportedTypes())
                     {
                         Type it = asm.GetType(t.FullName);
                         if (it == null ||
                             !it.IsClass || !it.IsPublic ||
-                            it.GetInterface(interfaceName) == null)
+                            !typeof(Plugin).IsAssignableFrom(it))
                             continue;
 
-                        object pluginTest = Activator.CreateInstance(it);
-                        if (pluginTest == null || !(pluginTest is IPlugin)) continue;
-                        IPlugin plugin = pluginTest as IPlugin;
-                        plugin.onInitPlugin();
+                        object pluginTest = asm.CreateInstance(it.FullName);
+                        if (pluginTest == null || !(pluginTest is Plugin)) continue;
+                        Plugin plugin = pluginTest as Plugin;
+                        plugin.onEvent(() => plugin);
                         pluginList.Add(plugin);
                     }
                 }
                 catch (Exception e)
                 {
-
-                    ConsoleWriter.WriteColor(file + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    ConsoleWriter.WriteColor(asm.FullName + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
                     continue;
                 }
             }

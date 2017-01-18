@@ -33,7 +33,12 @@ namespace Sync.Tools
         }
     }
 
-    public class PluginConfiuration<T, U> where T : IPlugin where U : IConfigurable
+    /// <summary>
+    /// 配置文件类，实例化时传入插件类实例和继承配置文件的实例的类即可享受配置文件服务。
+    /// </summary>
+    /// <typeparam name="T">插件类</typeparam>
+    /// <typeparam name="U">配置文件类</typeparam>
+    public class PluginConfiuration<T, U> where T : Plugin where U : IConfigurable
     {
         private T parentPlugin;
         private U configInstance;
@@ -42,7 +47,12 @@ namespace Sync.Tools
         {
             parentPlugin = plugin;
             configInstance = config;
+            ForceLoad();
+        }
 
+        ~PluginConfiuration()
+        {
+            ForceSave();
         }
 
         public void ForceLoad()

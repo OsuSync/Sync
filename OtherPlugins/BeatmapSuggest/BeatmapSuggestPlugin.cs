@@ -10,53 +10,21 @@ using Sync.Command;
 
 namespace BeatmapSuggest
 {
-    public class BeatmapSuggestPlugin : IPlugin
+    public class BeatmapSuggestPlugin : Plugin
     {
         private Danmaku.BeatmapSuggestFilter filter = new Danmaku.BeatmapSuggestFilter();
 
-        public const string PLUGIN_NAME = "Beatmap Suggest Command";
-        public const string PLUGIN_AUTHOR = "Dark Projector";
-
-        public string Author
+        public BeatmapSuggestPlugin() : base("Beatmap Suggest Command", "Dark Projector")
         {
-            get
-            {
-                return PLUGIN_NAME;
-            }
+            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            base.onInitFilter += BeatmapSuggestPlugin_onInitFilter;
         }
 
-        public string Name
+        private void BeatmapSuggestPlugin_onInitFilter(FilterManager filters)
         {
-            get
-            {
-                return PLUGIN_AUTHOR;
-            }
+            this.filter.SetFilterManager(filters);
+            filters.AddFilter(this.filter);
         }
 
-        public void onInitCommand(CommandManager manager)
-        {
-
-        }
-
-        public void onInitFilter(FilterManager filter)
-        {
-            this.filter.SetFilterManager(filter);
-            filter.addFilter(this.filter);
-        }
-
-        public void onInitPlugin()
-        {
-            Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
-        }
-
-        public void onInitSource(SourceManager manager)
-        {
-
-        }
-
-        public void onSyncMangerComplete(SyncManager sync)
-        {
-
-        }
     }
 }

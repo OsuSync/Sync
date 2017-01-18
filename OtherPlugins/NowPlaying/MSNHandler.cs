@@ -9,8 +9,18 @@ using System.Windows.Forms;
 
 namespace NowPlaying
 {
+    public interface IOSUStatus
+    {
+        string artist { get; set; }
+        string title { get; set; }
+        string diff { get; set; }
+        string status { get; set; }
+        string prefix { get; set; }
+        string mode { get; set; }
 
-    public class OSUStatus
+    }
+
+    public class OSUStatus : IOSUStatus
     {
         public string artist { get; set; }
         public string title { get; set; }
@@ -59,7 +69,12 @@ namespace NowPlaying
         }
     }
 
-    public class MSNHandler : IDisposable
+    public interface IMSNHandler
+    {
+        void registerCallback(Func<IOSUStatus, Task<bool>> callback);
+    }
+
+    public class MSNHandler : IMSNHandler
     {
         #region WIN32API Import
         private const string CONST_CLASS_NAME = "MsnMsgrUIManager";
@@ -100,12 +115,12 @@ namespace NowPlaying
         private static extern IntPtr DefWindowProcW(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
         #endregion
 
-        IntPtr m_hWnd;
-        WNDCLASS lpWndClass;
-        List<Func<OSUStatus, Task<bool>>> callbacks;
-        Thread t;
+        private IntPtr m_hWnd;
+        private WNDCLASS lpWndClass;
+        private List<Func<OSUStatus, Task<bool>>> callbacks;
+        private Thread t;
 
-        public MSNHandler()
+        public void Load()
         {
             callbacks = new List<Func<OSUStatus, Task<bool>>>();
             t = new Thread(CreateMSNWindow);
@@ -113,7 +128,7 @@ namespace NowPlaying
             t.Name = "ActiveXThread";
         }
 
-        public void registerCallback(Func<OSUStatus, Task<bool>> callback)
+        public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
         {
             callbacks.Add(callback);
         }

@@ -19,7 +19,7 @@ namespace Sync.Tools
             BotIRC,
             BotIRCPassword,
             Provider,
-            Cookie
+            Certification
         }
 
         [DllImport("kernel32")]
@@ -39,7 +39,7 @@ namespace Sync.Tools
         private static string IniReadValue(string key, string column = "config")
         {
             StringBuilder temp = new StringBuilder(1536);
-            int i = GetPrivateProfileString(column, key, "", temp, 1536, ConfigFile);
+            GetPrivateProfileString(column, key, "", temp, 1536, ConfigFile);
             return temp.ToString();
         }
         /// <summary>

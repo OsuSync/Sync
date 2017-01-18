@@ -1,6 +1,7 @@
 ﻿using Sync.Source;
 using System;
 using System.Reflection;
+using System.Linq;
 using static Sync.SyncManager;
 using static DefaultPlugin.DefaultPlugin;
 using static Sync.Tools.ConsoleWriter;
@@ -29,6 +30,20 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("irc", setirc, "irc <ircID> 设置目标IRC(空格请替换为下划线)");
             manager.Dispatch.bind("botirc", setbotirc, "botirc <ircID> <irc_password> 设置BotIRC(空格请替换为下划线)");
             manager.Dispatch.bind("msgmgr", msgmgr, "查看或者设置消息控制器相关内容,添加--help参数获取帮助");
+            manager.Dispatch.bind("filters", filters, "列表所有当前可用消息过滤器");
+        }
+
+        private bool filters(Arguments arg)
+        {
+            foreach (var item in MainFilters.GetFiltersEnum())
+            {
+                WriteColor("", ConsoleColor.Gray, false);
+                WriteColor("过滤项 ", ConsoleColor.Cyan, false, false);
+                WriteColor(item.Key.Name.PadRight(22), ConsoleColor.White, false, false);
+                WriteColor("过滤器 ", ConsoleColor.DarkCyan, false, false);
+                WriteColor(item.Value.GetType().Name, ConsoleColor.White, true, false);
+            }
+            return true;
         }
 
         private bool setbotirc(Arguments arg)
@@ -80,8 +95,11 @@ namespace DefaultPlugin.Commands
         {
             foreach(ISourceBase src in MainSources.SourceList)
             {
-                ConsoleWriter.WriteColor("弹幕源:" + src.getSourceName(), ConsoleColor.Cyan, false);
-                ConsoleWriter.WriteColor("\t作者:" + src.getSourceAuthor(), ConsoleColor.DarkCyan, true, false);
+                WriteColor("", ConsoleColor.Gray, false);
+                WriteColor("弹幕源 ", ConsoleColor.Cyan, false, false);
+                WriteColor(src.getSourceName().PadRight(18), ConsoleColor.White, false, false);
+                WriteColor("作者 ", ConsoleColor.DarkCyan, false, false);
+                WriteColor(src.getSourceAuthor(), ConsoleColor.White, true, false);
             }
             return true;
         }
@@ -116,7 +134,7 @@ namespace DefaultPlugin.Commands
             {
                 Write("osu! irc 尚未连接，您还不能发送消息。");
             }
-            MainFilters.RaiseMessage(typeof(IOsu), new IRCMessage("Console", string.Join("", arg)));
+            MainFilters.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join("", arg)));
             return true;
             
         }

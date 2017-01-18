@@ -10,65 +10,30 @@ using Sync.Tools;
 
 namespace PPQuery
 {
-    public class PPQuery : FilterBase, IPlugin, IOsu
+    public class PPQuery : Plugin, IFilter, ISourceOsu
     {
-        public const string PLUGIN_NAME = "PP Query";
-        public const string PLUGIN_AUTHOR = "Deliay";
-        public static SyncManager MainInstance = null;
-        public string Author
+        public PPQuery() : base("PP Query", "Deliay")
         {
-            get
-            {
-                return PLUGIN_AUTHOR;
-            }
+            base.onInitPlugin += () => ConsoleWriter.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
+            base.onInitFilter += filters => filters.AddFilter(this);
+
         }
 
-        public string Name
-        {
-            get
-            {
-                return PLUGIN_NAME;
-            }
-        }
-
-        public void onInitCommand(CommandManager manager)
-        {
-        }
-
-        public void onInitFilter(FilterManager filter)
-        {
-            filter.addFilter(new PPQuery());
-        }
-
-        public void onInitPlugin()
-        {
-            ConsoleWriter.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
-        }
-
-        public void onInitSource(SourceManager manager)
-        {
-        }
-
-        public void onSyncMangerComplete(SyncManager sync)
-        {
-            MainInstance = sync;
-        }
-
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             if (msg.user.RawText == Configuration.TargetIRC)
             {
-                if (msg.message.RawText.StartsWith(Sync.IRC.IRCClient.STATIC_ACTION_FLAG) && msg.message.RawText.Contains("osu.ppy.sh/b/"))
+                if (msg.message.RawText.StartsWith(Sync.IRC.IRCClient.CONST_ACTION_FLAG) && msg.message.RawText.Contains("osu.ppy.sh/b/"))
                 {
                     msg.cancel = true;
-                    MainInstance.Connector.GetIRC().sendRawMessage("tillerino", msg.message.RawText);
+                    getHoster().SyncInstance.Connector.GetIRC().sendRawMessage("tillerino", msg.message.RawText);
                 }
             }
 
             if (msg.user.Result.ToLower().Equals("tillerino"))
             {
                 msg.cancel = true;
-                MainInstance.Connector.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message.RawText);
+                getHoster().SyncInstance.Connector.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message.RawText);
             }
         }
     }
