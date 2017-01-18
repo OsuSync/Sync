@@ -6,8 +6,14 @@ using System.Text;
 
 namespace BanManagerPlugin.Ban
 {
-    class BanServerFilter : IBanMessageFilters, ISourceOsu
+    class BanServerFilter : IFilter, ISourceOsu
     {
+
+        BanManager bindManager = null;
+        public void SetBanManager(BanManager manager)
+        {
+            this.bindManager = manager;
+        }
 
         public delegate void CommandExecutor(string[] args);
 
@@ -27,7 +33,7 @@ namespace BanManagerPlugin.Ban
 
         static char[] split = { ' ' };
 
-        public new void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText;
             string[] args;
@@ -50,7 +56,7 @@ namespace BanManagerPlugin.Ban
                 {
                     CBaseDanmuku danmaku = new CBaseDanmuku();
                     danmaku.danmuku = basecommandHelpArray[i];
-                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
+                    bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                 }
                 else {
                     try
@@ -61,7 +67,7 @@ namespace BanManagerPlugin.Ban
                     {
                         CBaseDanmuku danmaku = new CBaseDanmuku();
                         danmaku.danmuku = e.Message;
-                        bindManager.GetFilterManager().RaiseMessage < ISourceDanmaku >( new DanmakuMessage(danmaku));
+                        bindManager.GetMessageDispatcher().RaiseMessage < ISourceDanmaku >( new DanmakuMessage(danmaku));
                     }
                 }
                 break;
@@ -226,7 +232,7 @@ namespace BanManagerPlugin.Ban
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id,rule.expression);
                     
                     danmaku.danmuku = sb.ToString();
-                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
+                    bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
 
                 case "-whitelist":
@@ -236,7 +242,7 @@ namespace BanManagerPlugin.Ban
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id, rule.expression);
                     
                     danmaku.danmuku = sb.ToString();
-                    bindManager.GetFilterManager().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
+                    bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
             }
         }

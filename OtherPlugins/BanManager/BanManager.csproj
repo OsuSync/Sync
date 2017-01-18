@@ -53,7 +53,6 @@
     <Compile Include="BanManagerPlugin.cs" />
     <Compile Include="Ban\BanInfo.cs" />
     <Compile Include="Ban\BanManager.cs" />
-    <Compile Include="Ban\IBanMessageFilters.cs" />
     <Compile Include="Danmaku\BanClientFilter.cs" />
     <Compile Include="Osu\BanServerFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

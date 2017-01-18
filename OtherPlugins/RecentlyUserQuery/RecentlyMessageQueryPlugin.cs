@@ -20,9 +20,11 @@ namespace RecentlyUserQuery
 
         public RecentlyMessageQueryPlugin() : base(PLUGIN_NAME, PLUGIN_AUTHOR)
         {
+
+
             base.onInitCommand += manager => manager.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
             base.onInitFilter += manager => manager.AddFilters(new Danmaku.MessageRecorderFilter(recorder));
-            base.onLoadComplete += host => host.Filters.AddFilter(new Osu.MessageRecorderControlFilter(host.Messages, recorder));
+            base.onLoadComplete += host => host.Filters.AddFilters(new Osu.MessageRecorderControlFilter(host.Messages, recorder),new Osu.GetUserIdFilter(host.Messages));
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
         }
 
