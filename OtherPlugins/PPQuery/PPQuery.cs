@@ -12,10 +12,7 @@ namespace PPQuery
 {
     public class PPQuery : Plugin, IFilter, ISourceOsu
     {
-        public const string Name = "PP Query";
-        public const string Author = "Deliay";
-
-        public PPQuery() : base(Name, Author)
+        public PPQuery() : base("PP Query", "Deliay")
         {
             base.onInitPlugin += () => ConsoleWriter.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
             base.onInitFilter += filters => filters.AddFilter(this);
