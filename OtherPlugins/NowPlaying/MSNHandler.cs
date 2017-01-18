@@ -59,7 +59,7 @@ namespace NowPlaying
         }
     }
 
-    public class MSNHandler : IDisposable
+    public static class MSNHandler
     {
         #region WIN32API Import
         private const string CONST_CLASS_NAME = "MsnMsgrUIManager";
@@ -100,12 +100,12 @@ namespace NowPlaying
         private static extern IntPtr DefWindowProcW(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
         #endregion
 
-        IntPtr m_hWnd;
-        WNDCLASS lpWndClass;
-        List<Func<OSUStatus, Task<bool>>> callbacks;
-        Thread t;
+        private static IntPtr m_hWnd;
+        private static WNDCLASS lpWndClass;
+        private static List<Func<OSUStatus, Task<bool>>> callbacks;
+        private static Thread t;
 
-        public MSNHandler()
+        public static void Load()
         {
             callbacks = new List<Func<OSUStatus, Task<bool>>>();
             t = new Thread(CreateMSNWindow);
@@ -113,24 +113,24 @@ namespace NowPlaying
             t.Name = "ActiveXThread";
         }
 
-        public void registerCallback(Func<OSUStatus, Task<bool>> callback)
+        public static void registerCallback(Func<OSUStatus, Task<bool>> callback)
         {
             callbacks.Add(callback);
         }
 
-        public void StartHandler()
+        public static void StartHandler()
         {
             t.Start();
         }
 
-        public void Dispose()
+        public static void Dispose()
         {
             DestoryMSNWindow();
         }
 
         #region WIN32Form Implement
         [STAThread]
-        private void CreateMSNWindow()
+        private static void CreateMSNWindow()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -155,7 +155,7 @@ namespace NowPlaying
             return;
         }
 
-        private bool DestoryMSNWindow()
+        private static bool DestoryMSNWindow()
         {
             if(m_hWnd.ToInt32() > 0)
             {
@@ -164,7 +164,7 @@ namespace NowPlaying
             return true;
         }
 
-        private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private static IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             if(msg == 74)
             {
