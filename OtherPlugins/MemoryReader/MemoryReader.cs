@@ -39,8 +39,9 @@ namespace MemoryReader
                 Sync.Tools.ConsoleWriter.WriteColor(e.Message, ConsoleColor.Red);
                 Sync.Tools.ConsoleWriter.WriteColor(e.StackTrace, ConsoleColor.Red);
             }
-
-            m_osu_listener.AddListener(new OSUListener());
+#if DEBUG
+            m_osu_listener.AddListener(new OSUTestListener());
+#endif
             m_osu_listener.Start();
         }
     }

@@ -64,7 +64,7 @@
     <Compile Include="BeatmapInfo\Beatmap.cs" />
     <Compile Include="BeatmapInfo\BeatmapSet.cs" />
     <Compile Include="Listen\Interface\IOSUProcessListener.cs" />
-    <Compile Include="Listen\OSUListener.cs" />
+    <Compile Include="Listen\OSUTestListener.cs" />
     <Compile Include="Listen\OSUListenerManager.cs" />
     <Compile Include="MemoryReader.cs" />
     <Compile Include="Mods\ModsInfo.cs" />
