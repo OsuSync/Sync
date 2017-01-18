@@ -9,61 +9,30 @@ using Sync.MessageFilter;
 
 namespace NowPlaying
 {
-    public class NowPlaying : FilterBase, IPlugin, IDanmaku
+    public class NowPlaying : Plugin, IFilter, ISourceDanmaku
     {
-        public const string PLUGIN_NAME = "Now Playing";
-        public const string PLUGIN_AUTHOR = "Deliay";
         private FilterManager MainFilter = null;
         private OSUStatus osuStat = new OSUStatus();
-        private MSNHandler msn;
-        public string Author
+        public const string Author = "Deliay";
+        public const string Name = "Now Playing";
+
+        public NowPlaying() : base(Author, Name)
         {
-            get
+            base.onInitFilter += filter => filter.AddFilter(this);
+            base.onInitPlugin += NowPlaying_onInitPlugin;
+            base.onLoadComplete += host => MainFilter = host.Filters;
+        }
+
+        private void NowPlaying_onInitPlugin()
+        {
+            MSNHandler.Load();
+            Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            MSNHandler.registerCallback(p =>
             {
-                return PLUGIN_AUTHOR;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return PLUGIN_NAME;
-            }
-        }
-
-        public void onInitCommand(CommandManager manager)
-        {
-
-        }
-
-        public void onInitFilter(FilterManager filter)
-        {
-            MainFilter = filter;
-            filter.addFilter(this);
-        }
-
-        public void onInitPlugin()
-        {
-            msn = new MSNHandler();
-            
-            Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
-            msn.registerCallback(p => {
                 return new System.Threading.Tasks.Task<bool>(OnOSUStatusChange, p);
             });
 
-            msn.StartHandler();
-            
-        }
-
-        public void onInitSource(SourceManager manager)
-        {
-
-        }
-
-        public void onSyncMangerComplete(SyncManager sync)
-        {
-
+            MSNHandler.StartHandler();
         }
 
         private bool OnOSUStatusChange(object stat)
@@ -75,13 +44,12 @@ namespace NowPlaying
             return true;
         }
 
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             if (msg.message.RawText.Equals("?np"))
             {
                 msg.cancel = true;
                 string strMsg = string.Empty;
-                int max = 20;
                 if (osuStat.status == "Playing")
                 {
                     strMsg = "玩";
@@ -103,7 +71,7 @@ namespace NowPlaying
                     MainFilter.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title);
                 }
             }
-            
+
         }
     }
 }

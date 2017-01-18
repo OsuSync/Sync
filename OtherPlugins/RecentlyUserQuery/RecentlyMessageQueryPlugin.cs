@@ -9,56 +9,21 @@ using Sync.Plugins;
 
 namespace RecentlyUserQuery
 {
-    public class RecentlyMessageQueryPlugin : IPlugin
+    public class RecentlyMessageQueryPlugin : Plugin
     {
         MessageRecorder recorder = new MessageRecorder();
 
         public const string PLUGIN_NAME = "Recently Message Query Plugin";
         public const string PLUGIN_AUTHOR = "Dark Projector";
-
-        public string Author
-        {
-            get
-            {
-                return PLUGIN_NAME;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return PLUGIN_AUTHOR;
-            }
-        }
-
-        public void onInitCommand(CommandManager manager)
-        {
-            manager.Dispatch.bind("recently", onProcessCommand,"recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
-        }
-
-        public void onInitFilter(FilterManager filter)
-        {
-            filter.addFilter(new Danmaku.MessageRecorderFilter(recorder));
-            filter.addFilter(new Osu.MessageRecorderControlFilter(filter, recorder));
-        }
-
-        public void onInitPlugin()
-        {
-            Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
-        }
-
-        public void onInitSource(SourceManager manager)
-        {
-            
-        }
-
-        public void onSyncMangerComplete(SyncManager sync)
-        {
-            
-        }
-
         static string helpString = "\n以下指令cmd端和osu!irc端规则通用(在osu!irc端用请在开头加\"?\")\nrecently --status |获取当前消息记录器的状态信息(osu!irc不可用)\nrecently --u <userName> |获取用户<userName>的历史消息(不建议在osu!irc用)\nrecently --i <userId> |获取用户<userId>的历史消息(不建议在osu!irc用)\nrecently |获取近期用户的名字和id,id可以用来执行\"?ban --i\"等指令(osu!irc适用)\nrecently --disable |关闭记录器所有功能并清除数据(osu!irc适用)\nrecently --start |重新开始记录(osu!irc适用)\nrecently --realloc <count> |重新分配记录器储存记录的容量(osu!irc适用)\nrecently --recently |获取近期用户和id\n";
+
+        public RecentlyMessageQueryPlugin() : base(PLUGIN_NAME, PLUGIN_AUTHOR)
+        {
+            base.onInitCommand += manager => manager.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
+            base.onInitFilter += manager => manager.AddFilters(new Danmaku.MessageRecorderFilter(recorder) ,
+                                                               new Osu.MessageRecorderControlFilter(manager, recorder));
+            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
+        }
 
         private bool onProcessCommand(Arguments args)
         {

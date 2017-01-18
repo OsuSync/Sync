@@ -9,51 +9,18 @@ using BanManagerPlugin.Ban;
 
 namespace BanManagerPlugin
 {
-    public class BanManagerPlugin : IPlugin
+    public class BanManagerPlugin : Plugin
     {
-        public const string PLUGIN_NAME = "Ban Manager";
-        public const string PLUGIN_AUTHOR = "Dark Projector";
-        public string Author
+        public const string Author = "Dark Projector";
+        public const string Name = "Ban Manager";
+        BanManager banManager;
+
+        public BanManagerPlugin() : base(Name, Author)
         {
-            get
-            {
-                return PLUGIN_NAME;
-            }
+            banManager = new BanManager();
+            base.onInitFilter += manager => manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
+            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
         }
 
-        public string Name
-        {
-            get
-            {
-                return PLUGIN_AUTHOR;
-            }
-        }
-
-        public void onInitCommand(CommandManager manager)
-        {
-        }
-
-        public void onInitFilter(FilterManager filter)
-        {
-
-            BanManager b = new BanManager();
-            filter.addFilter(b.GetServerFliter());
-            filter.addFilter(b.GetClientFliter());
-        }
-
-        public void onInitPlugin()
-        {
-            Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
-        }
-
-        public void onInitSource(SourceManager manager)
-        {
-
-        }
-
-        public void onSyncMangerComplete(SyncManager sync)
-        {
-
-        }
     }
 }

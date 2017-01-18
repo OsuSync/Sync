@@ -14,7 +14,7 @@ using System.IO;
 
 namespace BeatmapSuggest.Danmaku
 {
-    class BeatmapSuggestFilter : FilterBase, IDanmaku
+    class BeatmapSuggestFilter : IFilter, ISourceDanmaku
     {
         private FilterManager filterManager = null;
 
@@ -24,7 +24,7 @@ namespace BeatmapSuggest.Danmaku
 
         static Regex titleRegex = new Regex(@"Title.+\<a\s+href='/p/beatmaplist\?q=(?<beatmapName>.+)'>\1\</a\>");
 
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText;
             int beatmapSetId = 0;
@@ -58,7 +58,7 @@ namespace BeatmapSuggest.Danmaku
             sb.Append(userName).Append(" want you to play the beatmap [").Append(GetLink(beatmapSetId)).Append(" ").Append(beatmapName).Append("] || [")
                 .Append(GetDownloadLink(beatmapSetId)).Append(" dl] || [").Append(GetMirrorDownloadLink(beatmapSetId)).Append(" mirror]");
             danmaku.danmuku = sb.ToString();
-            filterManager.RaiseMessage(typeof(IDanmaku), new DanmakuMessage(danmaku));
+            filterManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
 
         private string GetLink(int beatmapSetId)

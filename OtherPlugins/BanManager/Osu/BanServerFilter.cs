@@ -2,7 +2,7 @@
 
 namespace BanManagerPlugin.Ban
 {
-    class BanServerFilter : IBanMessageFilters, IOsu
+    class BanServerFilter : IBanMessageFilters, ISourceOsu
     {
         protected BanServerFilter() {}
         public BanServerFilter(BanManager refManager)
@@ -10,7 +10,7 @@ namespace BanManagerPlugin.Ban
             SetBanManager(refManager);
         }
 
-        public override void onMsg(ref MessageBase msg)
+        public new void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText;
             string param;

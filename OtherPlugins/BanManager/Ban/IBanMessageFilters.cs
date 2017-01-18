@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BanManagerPlugin.Ban
 {
-    class IBanMessageFilters : FilterBase
+    class IBanMessageFilters : IFilter
     {
         protected BanManager bindManager = null;
 
@@ -27,7 +27,7 @@ namespace BanManagerPlugin.Ban
             bindManager = manager;
         }
 
-        public override void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             throw new NotImplementedException();
         }
