@@ -106,12 +106,6 @@ namespace DefaultPlugin.Source
             {
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Flush();
-#if (DEBUG)
-                using (StreamReader sr = new StreamReader(req.GetResponse().GetResponseStream()))
-                {
-                    ConsoleWriter.Write(sr.ReadToEnd());
-                }
-#endif
                 dataStream.Close();
             }
 

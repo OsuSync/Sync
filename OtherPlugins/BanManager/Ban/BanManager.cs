@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sync.Plugins;
 
 namespace BanManagerPlugin.Ban
 {
@@ -12,11 +13,16 @@ namespace BanManagerPlugin.Ban
         BanClientFilter clientFliter = null;
         BanServerFilter serverFliter = null;
 
-        public BanManager()
+        FilterManager filterManager = null;
+        MessageDispatcher messageSender = null;
+
+        public BanManager(FilterManager manager,MessageDispatcher dispatcher)
         {
             info = new BanInfo();
+            filterManager = manager;
             clientFliter = new BanClientFilter(this);
             serverFliter = new BanServerFilter(this);
+            messageSender = dispatcher;
         }
 
         /// <summary>
@@ -73,6 +79,21 @@ namespace BanManagerPlugin.Ban
         public BanServerFilter GetServerFliter()
         {
             return serverFliter;
+        }
+
+        public FilterManager GetFilterManager()
+        {
+            return filterManager;
+        }
+
+        public MessageDispatcher GetMessageDispatcher()
+        {
+            return messageSender;
+        }
+
+        public void SetMessageDispatcher(MessageDispatcher messageDispatcher)
+        {
+            messageSender = messageDispatcher;
         }
     }
 }

@@ -2,6 +2,7 @@
 using Sync.Source;
 using Sync.Tools;
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 namespace Sync.Plugins
@@ -12,9 +13,11 @@ namespace Sync.Plugins
     public class FilterManager
     {
         Dictionary<Type, List<IFilter>> filters;
+
         public FilterManager()
         {
             filters = new Dictionary<Type, List<IFilter>>();
+
             AddSource<ISourceOsu>();
             AddSource<ISourceDanmaku>();
             AddSource<ISourceOnlineChange>();
@@ -84,6 +87,17 @@ namespace Sync.Plugins
             }
         }
 
+        public void deleteFilter(IFilter filter)
+        {
+            foreach (var i in filter.GetType().GetInterfaces())
+            {
+                if (filters.ContainsKey(i))
+                {
+                    filters[i].Remove(filter);
+                }
+            }
+        }
+
         public void AddFilters(params IFilter[] filters)
         {
             foreach (IFilter filter in filters)
@@ -91,6 +105,5 @@ namespace Sync.Plugins
                 AddFilter(filter);
             }
         }
-
     }
 }

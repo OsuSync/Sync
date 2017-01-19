@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace BanManagerPlugin.Ban
 {
-    class BanClientFilter : IBanMessageFilters, ISourceDanmaku
+    class BanClientFilter : IFilter, ISourceDanmaku
     {
+        BanManager bindManager = null;
+        public void SetBanManager(BanManager manager)
+        {
+            this.bindManager = manager;
+        }
+
         protected BanClientFilter() {}
         public BanClientFilter(BanManager refManager)
         {
@@ -20,8 +26,9 @@ namespace BanManagerPlugin.Ban
             return bindManager.GetFliterInfo();
         }
 
-        public new void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
+
             if (GetInfo().IsBanned(msg.user.RawText))
                 msg.cancel = true;
         }

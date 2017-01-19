@@ -37,6 +37,10 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RecentlyUserQuery, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Sync\bin\Debug\Plugins\RecentlyUserQuery.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,7 +53,6 @@
     <Compile Include="BanManagerPlugin.cs" />
     <Compile Include="Ban\BanInfo.cs" />
     <Compile Include="Ban\BanManager.cs" />
-    <Compile Include="Ban\IBanMessageFilters.cs" />
     <Compile Include="Danmaku\BanClientFilter.cs" />
     <Compile Include="Osu\BanServerFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

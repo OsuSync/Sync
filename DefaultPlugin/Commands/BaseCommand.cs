@@ -25,10 +25,12 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("help", help, "打印帮助信息");
             manager.Dispatch.bind("danmaku", danmaku, "danmaku <message> 发送弹幕测试");
             manager.Dispatch.bind("chat", chat, "chat <message> 发送IRC信息测试");
+            manager.Dispatch.bind("chatuser", chatuser, "chat <userName> <message> 以某个用户名字发送IRC信息测试");
             manager.Dispatch.bind("sources", listsource, "获得当前所有弹幕源列表");
             manager.Dispatch.bind("target", target, "target <roomID> 设置目标直播地址");
             manager.Dispatch.bind("irc", setirc, "irc <ircID> 设置目标IRC(空格请替换为下划线)");
             manager.Dispatch.bind("botirc", setbotirc, "botirc <ircID> <irc_password> 设置BotIRC(空格请替换为下划线)");
+            manager.Dispatch.bind("msgmgr", msgmgr, "查看或者设置消息控制器相关内容,添加--help参数获取帮助");
             manager.Dispatch.bind("filters", filters, "列表所有当前可用消息过滤器");
         }
 
@@ -133,9 +135,23 @@ namespace DefaultPlugin.Commands
             {
                 Write("osu! irc 尚未连接，您还不能发送消息。");
             }
-            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join("", arg)));
+            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join(" ", arg)));
             return true;
             
+        }
+
+        public bool chatuser(Arguments arg)
+        {
+            if (arg.Count <1 || !MainInstance.Connector.IRCStatus)
+            {
+                Write("osu! irc 尚未连接，您还不能发送消息。");
+            }
+            string message = "";
+            for (int i = 1; i < arg.Count; i++)
+                message += arg[i] + " ";
+            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage(arg[0].Trim(), message));
+            return true;
+
         }
 
         public bool danmaku(Arguments arg)
@@ -195,6 +211,57 @@ namespace DefaultPlugin.Commands
         {
             Clear();
             WriteWelcome();
+            return true;
+        }
+
+        public bool msgmgr(Arguments arg)
+        {
+            int value = 0;
+
+            if (arg.Count == 0)
+                WriteColor("喵喵喵?,你的参数呢", ConsoleColor.Red);
+            else
+            {
+                switch (arg[0].Trim())
+                {
+                    case "--help":
+                        WriteColor("\n--status :查看当前消息管理器的信息\n--limit <数值> :是设置限制发送信息的等级，越低就越容易触发管控\n--option <名称> :是设置管控的方式，其中auto是自动管控，force_all强行全都发送,force_limit是仅发送使用?send命令的消息", ConsoleColor.Yellow);
+                        break;
+                    case "--status":
+                        WriteColor(String.Format("MessageManager mode:{4},status:{0},queueCount/limitCount/recoverTime:{1}/{2}/{3}", MessageManager.IsLimit ? "limiting" : "free", MessageManager.CurrentQueueCount, MessageManager.LimitLevel, MessageManager.RecoverTime, MessageManager.Option.ToString()), ConsoleColor.Yellow);
+                        break;
+                    case "--limit":
+                        if (arg.Count == 2 && Int32.TryParse(arg[1].Trim(), out value))
+                        {
+                            MessageManager.LimitLevel = value;
+                            WriteColor(string.Format("设置限制发送速度等级为{0}",MessageManager.LimitLevel), ConsoleColor.Yellow);
+                        }
+                        else
+                            WriteColor("错误的参数或者并没有输入数值", ConsoleColor.Red);
+                        break;
+
+                    case "--option":
+                        if (arg.Count == 2)
+                        {
+                            switch (arg[1].Trim().ToLower())
+                            {
+                                case "auto":
+                                    MessageManager.Option = MessageManager.PeekOption.Auto;
+                                    break;
+                                case "force_all":
+                                    MessageManager.Option = MessageManager.PeekOption.Force_All;
+                                    break;
+                                case "force_limit":
+                                    MessageManager.Option = MessageManager.PeekOption.Only_Send_Command;
+                                    break;
+                            }
+                            WriteColor(string.Format("设置消息管理器的管制方式为{0}",MessageManager.Option.ToString()), ConsoleColor.Yellow);
+                        }
+                        else
+                            WriteColor("错误的参数或者并没有输入数值", ConsoleColor.Red);
+                        break;
+                }    
+            }
             return true;
         }
     }

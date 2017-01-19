@@ -7,11 +7,13 @@ using System.Linq;
 
 namespace Sync.Plugins
 {
-    class PluginManager
+    public class PluginManager
     {
+
         List<Plugin> pluginList;
         private List<Assembly> asmList;
         internal PluginManager()
+
         {
             ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }

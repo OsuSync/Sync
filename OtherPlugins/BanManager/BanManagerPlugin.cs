@@ -11,14 +11,18 @@ namespace BanManagerPlugin
 {
     public class BanManagerPlugin : Plugin
     {
-        BanManager banManager;
+        BanManager banManager = null;
 
         public BanManagerPlugin() : base("Ban Manager", "Dark Projector")
         {
-            banManager = new BanManager();
-            base.onInitFilter += manager => manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
+            base.onInitFilter += manager => {
+                banManager = new BanManager(manager,null);
+                manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
+            };
+
+            base.onLoadComplete += host=>banManager.SetMessageDispatcher(host.Messages);
+
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
         }
-
     }
 }
