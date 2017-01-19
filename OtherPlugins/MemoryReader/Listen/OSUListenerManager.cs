@@ -205,7 +205,7 @@ namespace MemoryReader.Listen
             Beatmap beatmapinfo = new Beatmap();
             try
             {
-                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x0, 0x1ec, 0x230, 0x270, 0x1b8, 0xc0 });
+                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x188, 0x10c, 0x7c0, 0x500, 0x744, 0xc0 });
             }
             catch (ThreadStackNoFoundException e)
             {
@@ -220,7 +220,7 @@ namespace MemoryReader.Listen
             BeatmapSet beatmapsetset = new BeatmapSet();
             try
             {
-                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x0, 0x1ec, 0x230, 0x270, 0x1b8 ,0xc4});
+                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x188, 0x10c, 0x7c0, 0x500, 0x744 , 0xc4});
             }
             catch (ThreadStackNoFoundException e)
             {
@@ -239,8 +239,7 @@ namespace MemoryReader.Listen
 
         private OsuStatus GetCurrentOsuStatus()
         {
-            if (m_now_player_status.status == null||
-                Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
+            if (Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
 
             if (m_now_player_status.status == "Editing" ||
                 (Process.GetProcessesByName("osu!")[0].MainWindowTitle != "osu!" &&
