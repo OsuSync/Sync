@@ -16,9 +16,11 @@ namespace BanManagerPlugin
         public BanManagerPlugin() : base("Ban Manager", "Dark Projector")
         {
             base.onInitFilter += manager => {
-                banManager = new BanManager(manager);
+                banManager = new BanManager(manager,null);
                 manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
             };
+
+            base.onLoadComplete += host=>banManager.SetMessageDispatcher(host.Messages);
 
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
         }

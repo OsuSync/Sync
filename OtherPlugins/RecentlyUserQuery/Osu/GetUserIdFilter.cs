@@ -11,16 +11,16 @@ namespace RecentlyUserQuery.Osu
 {
     class GetUserIdFilter : IFilter, ISourceOsu
     {
-        FilterManager manager = null;
+        MessageDispatcher messageSender = null;
 
-        public GetUserIdFilter(FilterManager manager)
+        public GetUserIdFilter(MessageDispatcher messageSender)
         {
-            this.manager = manager;
+            this.messageSender = messageSender;
         }
 
         const string queryUserIdCommand= "?userid",queryUserNameCommand="?username";
 
-        public new void onMsg(ref MessageBase msg)
+        public void onMsg(ref MessageBase msg)
         {
             string message = msg.message.RawText, param = string.Empty;
             CBaseDanmuku danmaku;
@@ -32,7 +32,7 @@ namespace RecentlyUserQuery.Osu
                 danmaku = new CBaseDanmuku();
                 danmaku.danmuku = String.Format("userid \"{0}\" is {1} ", param, (UserIdGenerator.GetId(param)));
 
-                manager.RaiseMessage<ISourceDanmaku>( new DanmakuMessage(danmaku));
+                messageSender.RaiseMessage<ISourceDanmaku>( new DanmakuMessage(danmaku));
                 msg.cancel = true;
                 return;
             }
@@ -48,7 +48,7 @@ namespace RecentlyUserQuery.Osu
 
                 danmaku = new CBaseDanmuku();
                 danmaku.danmuku = String.Format("userName \"{0}\" is {1} ", UserIdGenerator.GetUserName(id), param);
-                manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
+                messageSender.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
             }
         }
     }

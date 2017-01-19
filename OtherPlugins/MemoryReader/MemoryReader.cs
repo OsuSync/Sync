@@ -51,7 +51,7 @@ namespace MemoryReader
                 Sync.Tools.ConsoleWriter.WriteColor(e.StackTrace, ConsoleColor.Red);
             }
 #if DEBUG
-            m_osu_listener.AddListener(new OSUTestListener());
+            //m_osu_listener.AddListener(new OSUTestListener());
 #endif
             m_osu_listener.Start();
         }

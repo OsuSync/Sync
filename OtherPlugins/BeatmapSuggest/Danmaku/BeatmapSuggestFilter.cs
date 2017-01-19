@@ -16,7 +16,7 @@ namespace BeatmapSuggest.Danmaku
 {
     class BeatmapSuggestFilter : IFilter, ISourceDanmaku
     {
-        private FilterManager filterManager = null;
+        private MessageDispatcher msgManager = null;
 
         private const string suggestCommand = "?suggest";
 
@@ -31,7 +31,7 @@ namespace BeatmapSuggest.Danmaku
             if (message.StartsWith(suggestCommand))
             {
                 msg.cancel = true;
-                if (filterManager == null)
+                if (msgManager == null)
                     return; //没完全初始化，发送不了信息
 
                 if (Int32.TryParse(message.Substring(suggestCommand.Length).Trim(), out beatmapSetId))
@@ -58,7 +58,7 @@ namespace BeatmapSuggest.Danmaku
             sb.Append(userName).Append(" want you to play the beatmap [").Append(GetLink(beatmapSetId)).Append(" ").Append(beatmapName).Append("] || [")
                 .Append(GetDownloadLink(beatmapSetId)).Append(" dl] || [").Append(GetMirrorDownloadLink(beatmapSetId)).Append(" mirror]");
             danmaku.danmuku = sb.ToString();
-            filterManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
+            msgManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
 
         private string GetLink(int beatmapSetId)
@@ -123,9 +123,9 @@ namespace BeatmapSuggest.Danmaku
             return await task;
         }
 
-        public void SetFilterManager(FilterManager manager)
+        public void SetFilterManager(MessageDispatcher manager)
         {
-            filterManager = manager;
+            msgManager = manager;
         }
     }
 }

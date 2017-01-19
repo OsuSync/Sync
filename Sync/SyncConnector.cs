@@ -74,7 +74,7 @@ namespace Sync
         #region 连接源的事件
         private void Src_onGift(CBaseGift gift)
         {
-            Program.host.Filters.RaiseMessage<ISourceGift>(new GiftMessage(gift));
+            Program.host.Messages.RaiseMessage<ISourceGift>(new GiftMessage(gift));
         }
 
         private void Src_onOnlineChange(uint lCount)
@@ -84,7 +84,7 @@ namespace Sync
             {
                 CBaseDanmuku d = new CBaseDanmuku();
                 d.danmuku = "直播间围观人数" + (usercount > lCount ? "减少" : "增加") + "到" + lCount + "人";
-                Program.host.Filters.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
+                Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
                 usercount = lCount;
             }
@@ -99,7 +99,7 @@ namespace Sync
 
         private void Src_onDanmuku(CBaseDanmuku danmuku)
         {
-            Program.host.Filters.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
+            Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
         }
 
         private void Src_onConnected()

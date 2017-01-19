@@ -10,6 +10,7 @@ namespace DefaultPlugin
     {
 
         public static SyncManager MainInstance = null;
+        public static MessageDispatcher MainMessager = null;
         public static FilterManager MainFilters = null;
         public static SourceManager MainSources = null;
         private GiftReceivePeeker giftPeeker;
@@ -35,6 +36,7 @@ namespace DefaultPlugin
             MainFilters = host.Filters;
             MainSources = host.Sources;
             MainInstance = host.SyncInstance;
+            MainMessager = host.Messages;
         }
     }
 }
