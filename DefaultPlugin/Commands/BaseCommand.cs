@@ -25,6 +25,7 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("help", help, "打印帮助信息");
             manager.Dispatch.bind("danmaku", danmaku, "danmaku <message> 发送弹幕测试");
             manager.Dispatch.bind("chat", chat, "chat <message> 发送IRC信息测试");
+            manager.Dispatch.bind("chatuser", chatuser, "chat <userName> <message> 以某个用户名字发送IRC信息测试");
             manager.Dispatch.bind("sources", listsource, "获得当前所有弹幕源列表");
             manager.Dispatch.bind("target", target, "target <roomID> 设置目标直播地址");
             manager.Dispatch.bind("irc", setirc, "irc <ircID> 设置目标IRC(空格请替换为下划线)");
@@ -137,6 +138,20 @@ namespace DefaultPlugin.Commands
             MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join(" ", arg)));
             return true;
             
+        }
+
+        public bool chatuser(Arguments arg)
+        {
+            if (arg.Count <1 || !MainInstance.Connector.IRCStatus)
+            {
+                Write("osu! irc 尚未连接，您还不能发送消息。");
+            }
+            string message = "";
+            for (int i = 1; i < arg.Count; i++)
+                message += arg[i] + " ";
+            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage(arg[0].Trim(), message));
+            return true;
+
         }
 
         public bool danmaku(Arguments arg)
