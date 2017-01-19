@@ -30,7 +30,7 @@ namespace MemoryReader.Listen
 
         private MemoryFinder m_memory_finder;
 
-        public OsuStatus CurrentOsuStatus { get; set; }
+        private OsuStatus m_last_osu_status = OsuStatus.NoFoundProcess;
         private IOSUStatus m_now_player_status=new OSUStatus();
         private bool m_stop=false;
         private Thread m_listen_thread;
@@ -103,13 +103,13 @@ namespace MemoryReader.Listen
             {
                 OsuStatus status = GetCurrentOsuStatus(); ;
                 //last status
-                if (CurrentOsuStatus == OsuStatus.NoFoundProcess && CurrentOsuStatus != status)
+                if (m_last_osu_status == OsuStatus.NoFoundProcess && m_last_osu_status != status)
                 {
                     LoadMemoryFinder(Process.GetProcessesByName("osu!")[0]);
                 }
-                CurrentOsuStatus = status;
+                m_last_osu_status = status;
 
-                if (CurrentOsuStatus!=OsuStatus.NoFoundProcess)
+                if (m_last_osu_status != OsuStatus.NoFoundProcess)
                 {
                     foreach(var listner in m_listeners)
                     {
@@ -134,7 +134,7 @@ namespace MemoryReader.Listen
                         }
                         m_last_mods = mods;
 
-                        if(CurrentOsuStatus==OsuStatus.Playing)
+                        if(m_last_osu_status == OsuStatus.Playing)
                         {
                             double hp = GetCurrentHP();
                             if (hp != m_last_hp)
@@ -153,8 +153,8 @@ namespace MemoryReader.Listen
                         }
                         else
                         {
-                            m_last_acc = 100.0;
-                            m_last_hp = 200;
+                            m_last_acc = 0;
+                            m_last_hp = 0;
                         }
                     }
                 }
@@ -239,15 +239,17 @@ namespace MemoryReader.Listen
 
         private OsuStatus GetCurrentOsuStatus()
         {
-            if (Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
+            if (m_now_player_status.status == null||
+                Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
+
+            if (m_now_player_status.status == "Editing" ||
+                (Process.GetProcessesByName("osu!")[0].MainWindowTitle != "osu!" &&
+                 Process.GetProcessesByName("osu!")[0].MainWindowTitle.Contains(".osu"))) return OsuStatus.Editing;
 
             if (m_now_player_status.status == "Playing"||
                 (Process.GetProcessesByName("osu!")[0].MainWindowTitle!="osu!"&& 
                  Process.GetProcessesByName("osu!")[0].MainWindowTitle!="")) return OsuStatus.Playing;
 
-            if (m_now_player_status.status == "Editing"|| 
-                (Process.GetProcessesByName("osu!")[0].MainWindowTitle != "osu!" && 
-                 Process.GetProcessesByName("osu!")[0].MainWindowTitle.Contains(".osu")))return OsuStatus.Editing;
             return OsuStatus.Listening;
         }
     }
