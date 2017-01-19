@@ -73,6 +73,8 @@
     <Compile Include="Sources\BiliBili\Bilibili_sender\HTMLViewForm.Designer.cs">
       <DependentUpon>HTMLViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sources\Douyutv\DouyuClient.cs" />
+    <Compile Include="Sources\Douyutv\Douyutv.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sync\Sync.csproj">
