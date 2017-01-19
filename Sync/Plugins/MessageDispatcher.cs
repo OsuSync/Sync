@@ -17,7 +17,7 @@ namespace Sync.Plugins
         public MessageDispatcher(SyncConnector p, FilterManager f)
         {
             parent = p;
-            this.filters = filters;
+            filters = f;
         }
         /// <summary>
         /// 简易实现直接传递弹幕消息
