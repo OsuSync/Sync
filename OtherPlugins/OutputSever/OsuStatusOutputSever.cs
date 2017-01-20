@@ -10,6 +10,7 @@ using Sync.MessageFilter;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.IO;
 using MemoryReader;
 using MemoryReader.Listen.InterFace;
 using MemoryReader.BeatmapInfo;
@@ -125,7 +126,10 @@ namespace OsuStatusOutputSever
         {
             while (true)
             {
-                while ((!isRunning)||currentClient != null) { Thread.Sleep(100); }
+                while (
+                    (!isRunning)|| currentClient != null //并未开始连接
+                                                         //(currentClient != null&&currentClient.Connected) //客户端存在且是连接中的
+                    ) { Thread.Sleep(100); }
                  
                 Sync.Tools.ConsoleWriter.WriteColor("listenning........", ConsoleColor.Blue);
                 currentClient = listenerServer.AcceptTcpClient();
@@ -133,13 +137,20 @@ namespace OsuStatusOutputSever
             }
         }
 
+        const int bufferSize = sizeof(int)*2+sizeof(double)*2;
+
         private void sendStatusTimerRun(object state)
         {
-            byte[] message =Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId,beatmapId,currentHP,currentACC));
+            byte[] message = Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId, beatmapId, currentHP, currentACC));
 
             try
             {
                 currentClient.GetStream().Write(message, 0, message.Length);
+                currentClient.GetStream().Flush();
+                /*
+                BinaryWriter writer = new BinaryWriter(currentClient.GetStream());
+                writer.Write(beatmapSetId);
+                writer.Flush();*/
             }
             catch { }//skip
         }
