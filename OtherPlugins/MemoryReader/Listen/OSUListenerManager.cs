@@ -159,12 +159,14 @@ namespace MemoryReader.Listen
                 }
                 else
                 {
-                    if (count % 1200 == 0)
-                    {
-                        Sync.Tools.ConsoleWriter.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
-                        count = 0;
+                    if (m_last_osu_status == OsuStatus.NoFoundProcess) {
+                        if (count % 1200 == 0)
+                        {
+                            Sync.Tools.ConsoleWriter.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
+                            count = 0;
+                        }
+                        count++;
                     }
-                    count++;
                 }
 
                 Thread.Sleep(100);

@@ -9,6 +9,7 @@ using System.Threading;
 using Sync.MessageFilter;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
 using MemoryReader;
 using MemoryReader.Listen.InterFace;
 using MemoryReader.BeatmapInfo;
@@ -18,16 +19,18 @@ namespace OsuStatusOutputSever
 {
     public class OsuStatusOutputSever : Plugin, IOSUListener, IFilter, ISourceOsu
     {
+        int beatmapSetId = -1,beatmapId=-1;
+        double currentHP = -1,currentACC=-1;
+
+        Timer senderTimer = null;
+
         static int PORT = 7582;
         TcpListener listenerServer = null;
         Thread socketThread = null;
 
-        List<TcpClient> clientList = new List<TcpClient>();
+        TcpClient currentClient = null;
 
-        object lockObj = new object();
-        Mutex mutexLock = new Mutex();
-
-        bool isRunning = false;
+        volatile bool isRunning = false;
         public bool IsRun { private set { } get { return isRunning; } }
 
         public void Stop()
@@ -35,17 +38,10 @@ namespace OsuStatusOutputSever
             if (!isRunning)
                 return;
 
-            mutexLock.WaitOne();//hold up socketThreadRun()
+            currentClient.Close();
+            listenerServer.Stop();
 
-            TcpClient client = null;
-            for (int i = 0; i < clientList.Count; i++)
-            {
-                client = clientList[i];
-                client.Close();
-            }
-
-            clientList.Clear();
-
+            currentClient = null;
             isRunning = false;
         }
 
@@ -53,11 +49,10 @@ namespace OsuStatusOutputSever
         {
             if (isRunning)
                 return;
-            mutexLock.ReleaseMutex();
             isRunning = true;
         }
 
-        public OsuStatusOutputSever() : base("Ban Manager", "Dark Projector")
+        public OsuStatusOutputSever() : base("OsuStatusOutputSever", "Dark Projector")
         {
             base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
 
@@ -66,11 +61,23 @@ namespace OsuStatusOutputSever
                 commandManager.Dispatch.bind("syncserver", commandProcess, "将本程序部分数据通过TCP分发到其他程序供使用");
             };
 
-            listenerServer = new TcpListener(PORT);
-            mutexLock.WaitOne();
+            base.onLoadComplete += host => {
+                foreach(var itor in host.EnumPluings())
+                {
+                    if (itor is MemoryReader.MemoryReader)
+                    {
+                        ((MemoryReader.MemoryReader)itor).RegisterOSUListener(this);
+                        Sync.Tools.ConsoleWriter.WriteColor("注册osuStatus侦听器成功", ConsoleColor.Yellow);
+                        break;
+                    }
+                }
+            };
+
+            listenerServer = new TcpListener(IPAddress.Parse("127.0.0.1"),PORT);
             socketThread = new Thread(socketThreadRun);
-
-
+            senderTimer=new Timer(sendStatusTimerRun, null, 0, 250);
+            listenerServer.Start();
+            socketThread.Start();
         }
 
         #region finish
@@ -89,6 +96,9 @@ namespace OsuStatusOutputSever
                     case "-stop":
                         Stop();
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
+                        break;
+                    case "-status":
+                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId, beatmapId, currentHP, currentACC), ConsoleColor.Yellow);
                         break;
                     default:
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver未知参数", ConsoleColor.Red);
@@ -113,27 +123,36 @@ namespace OsuStatusOutputSever
 
         private void socketThreadRun(object state)
         {
-            if (!isRunning)
-                return;
             while (true)
             {
-                mutexLock.WaitOne();
-
-                clientList.Add(listenerServer.AcceptTcpClient());
-
-                mutexLock.ReleaseMutex();
+                while ((!isRunning)||currentClient != null) { Thread.Sleep(100); }
+                 
+                Sync.Tools.ConsoleWriter.WriteColor("listenning........", ConsoleColor.Blue);
+                currentClient = listenerServer.AcceptTcpClient();
+                Sync.Tools.ConsoleWriter.WriteColor("got client.", ConsoleColor.Blue);
             }
+        }
+
+        private void sendStatusTimerRun(object state)
+        {
+            byte[] message =Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId,beatmapId,currentHP,currentACC));
+
+            try
+            {
+                currentClient.GetStream().Write(message, 0, message.Length);
+            }
+            catch { }//skip
         }
         #endregion
 
         public void OnCurrentBeatmapSetChange(BeatmapSet beatmap)
         {
-            throw new NotImplementedException();
+            beatmapSetId = beatmap.BeatmapSetID;
         }
 
         public void OnCurrentBeatmapChange(Beatmap beatmap)
         {
-            throw new NotImplementedException();
+            beatmapId = beatmap.BeatmapID;
         }
 
         public void OnCurrentModsChange(ModsInfo mod)
@@ -143,12 +162,12 @@ namespace OsuStatusOutputSever
 
         public void OnHPChange(double hp)
         {
-            throw new NotImplementedException();
+            currentHP = hp;
         }
 
         public void OnAccuracyChange(double acc)
         {
-            throw new NotImplementedException();
+            currentACC = acc;
         }
     }
 }
