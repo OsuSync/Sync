@@ -43,6 +43,7 @@ namespace MemoryReader.Listen
 
         private double m_last_hp=0;
         private double m_last_acc=0;
+        private int m_last_combo = 0;
 
         public OSUListenerManager(SyncHost host)
         {
@@ -149,6 +150,13 @@ namespace MemoryReader.Listen
                                 listner.OnAccuracyChange(acc);
                             }
                             m_last_acc = acc;
+
+                            int cb = GetCurrentCombo();
+                            if(cb!=m_last_combo)
+                            {
+                                listner.OnComboChange(cb);
+                            }
+                            m_last_combo = cb;
                         }
                         else
                         {
@@ -160,7 +168,7 @@ namespace MemoryReader.Listen
                 else
                 {
                     if (m_last_osu_status == OsuStatus.NoFoundProcess) {
-                        if (count % 1200 == 0)
+                        if (count % (Setting.NoFoundOSUHintInterval*Setting.ListenInterval) == 0)
                         {
                             Sync.Tools.ConsoleWriter.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
                             count = 0;
@@ -169,7 +177,7 @@ namespace MemoryReader.Listen
                     }
                 }
 
-                Thread.Sleep(100);
+                Thread.Sleep(Setting.ListenInterval);
             }
         }
 
@@ -201,6 +209,20 @@ namespace MemoryReader.Listen
             return hp;
         }
 
+        private int GetCurrentCombo()
+        {
+            int cb = 0;
+            try
+            {
+                cb = m_memory_finder.GetMemoryInt(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x34, 0x18 });
+            }
+            catch (ThreadStackNoFoundException e)
+            {
+                cb = -1;
+            }
+            return cb;
+        }
+
         private Beatmap GetCurrentBeatmap()
         {
             Beatmap beatmapinfo = new Beatmap();
@@ -221,7 +243,7 @@ namespace MemoryReader.Listen
             BeatmapSet beatmapsetset = new BeatmapSet();
             try
             {
-                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744 , 0xc4});
+                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744, 0xc4});
             }
             catch (ThreadStackNoFoundException e)
             {
