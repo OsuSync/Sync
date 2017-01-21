@@ -13,6 +13,7 @@ namespace MemoryReader.Listen.InterFace
     {
         void OnCurrentBeatmapSetChange(BeatmapSet beatmap);
         void OnCurrentBeatmapChange(Beatmap beatmap);
+        void OnComboChange(int combo);
         void OnCurrentModsChange(ModsInfo mod);
         void OnHPChange(double hp);
         void OnAccuracyChange(double acc);

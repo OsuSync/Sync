@@ -16,6 +16,11 @@ namespace MemoryReader.Listen
             Sync.Tools.ConsoleWriter.Write(String.Format("当前Acc:{0}", acc));
         }
 
+        public void OnComboChange(int combo)
+        {
+            Sync.Tools.ConsoleWriter.Write(String.Format("当前Combo:{0}", combo));
+        }
+
         public void OnCurrentBeatmapChange(Beatmap beatmap)
         {
             Sync.Tools.ConsoleWriter.Write(String.Format("当前Beatmap ID:{0}", beatmap.BeatmapID));
