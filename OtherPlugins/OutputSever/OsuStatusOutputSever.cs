@@ -20,12 +20,12 @@ namespace OsuStatusOutputSever
 {
     public class OsuStatusOutputSever : Plugin, IOSUListener, IFilter, ISourceOsu
     {
-        int beatmapSetId = -1,beatmapId=-1;
+        int beatmapSetId = -1,beatmapId=-1,combo=-1;
         double currentHP = -1,currentACC=-1;
 
         Timer senderTimer = null;
 
-        static int PORT = 7582;
+        static int PORT = 8073;
         TcpListener listenerServer = null;
         Thread socketThread = null;
 
@@ -99,7 +99,7 @@ namespace OsuStatusOutputSever
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
                         break;
                     case "-status":
-                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId, beatmapId, currentHP, currentACC), ConsoleColor.Yellow);
+                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4}", beatmapSetId, beatmapId, currentHP, currentACC,combo), ConsoleColor.Yellow);
                         break;
                     default:
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver未知参数", ConsoleColor.Red);
@@ -127,10 +127,16 @@ namespace OsuStatusOutputSever
             while (true)
             {
                 while (
-                    (!isRunning)|| currentClient != null //并未开始连接
-                                                         //(currentClient != null&&currentClient.Connected) //客户端存在且是连接中的
-                    ) { Thread.Sleep(100); }
-                 
+                                    (!isRunning) || currentClient != null && currentClient.Connected)
+                {
+                    Thread.Sleep(100);
+                    if (currentClient != null && (!currentClient.Connected))
+                    {
+                        Sync.Tools.ConsoleWriter.WriteColor("client lost.", ConsoleColor.Blue);
+                        currentClient = null;
+                    }
+                }
+
                 Sync.Tools.ConsoleWriter.WriteColor("listenning........", ConsoleColor.Blue);
                 currentClient = listenerServer.AcceptTcpClient();
                 Sync.Tools.ConsoleWriter.WriteColor("got client.", ConsoleColor.Blue);
@@ -141,7 +147,7 @@ namespace OsuStatusOutputSever
 
         private void sendStatusTimerRun(object state)
         {
-            byte[] message = Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3}", beatmapSetId, beatmapId, currentHP, currentACC));
+            byte[] message = Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3} c{4}", beatmapSetId, beatmapId, currentHP, currentACC,combo));
 
             try
             {
@@ -169,6 +175,11 @@ namespace OsuStatusOutputSever
         public void OnCurrentModsChange(ModsInfo mod)
         {
             //throw new NotImplementedException();
+        }
+
+        public void OnComboChange(int combo)
+        {
+            this.combo = combo;
         }
 
         public void OnHPChange(double hp)
