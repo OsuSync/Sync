@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecentlyMessageQuery", "Oth
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryReader", "OtherPlugins\MemoryReader\MemoryReader.csproj", "{D518DC59-CC9A-4886-839F-7691D5EFAE56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuStatusOutputSever", "OtherPlugins\OutputSever\OsuStatusOutputSever.csproj", "{5F5EC585-AFFF-4383-8204-F76769FDF849}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{D518DC59-CC9A-4886-839F-7691D5EFAE56}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D518DC59-CC9A-4886-839F-7691D5EFAE56}.Release|x86.ActiveCfg = Release|x86
 		{D518DC59-CC9A-4886-839F-7691D5EFAE56}.Release|x86.Build.0 = Release|x86
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F5EC585-AFFF-4383-8204-F76769FDF849}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
