@@ -206,7 +206,7 @@ namespace MemoryReader.Listen
             Beatmap beatmapinfo = new Beatmap();
             try
             {
-                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x6d4, 0x338, 0x218, 0x40, 0x778, 0xc0 });
+                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744, 0xc0 });
             }
             catch (ThreadStackNoFoundException e)
             {
@@ -221,7 +221,7 @@ namespace MemoryReader.Listen
             BeatmapSet beatmapsetset = new BeatmapSet();
             try
             {
-                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x6d4, 0x338, 0x218, 0x40, 0x778 , 0xc4});
+                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744 , 0xc4});
             }
             catch (ThreadStackNoFoundException e)
             {
