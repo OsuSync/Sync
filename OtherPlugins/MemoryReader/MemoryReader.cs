@@ -9,6 +9,7 @@ using Sync.Command;
 using MemoryReader.Listen;
 using MemoryReader.BeatmapInfo;
 using MemoryReader.Listen.InterFace;
+using System.IO;
 
 namespace MemoryReader
 {
@@ -41,6 +42,13 @@ namespace MemoryReader
 
         private void OnLoadComplete(SyncHost host)
         {
+            if(!File.Exists(@"..\MemoryRenderSetting.json"))
+            {
+                Setting.SaveSetting();
+            }
+
+            Setting.LoadSetting();
+
             try
             {
                 m_osu_listener = new OSUListenerManager(host);
