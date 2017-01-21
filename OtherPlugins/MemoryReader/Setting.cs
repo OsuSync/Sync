@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MemoryReader.BeatmapInfo;
-using System.IO;
-using Sync.Tools;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
+﻿using Sync.Tools;
+
 
 namespace MemoryReader
 {
-    [DataContract]
-    class SettingJson
+    class SettingIni:IConfigurable
     {
-        [DataMember(Order = 0)]
-        public int listen_interval;
-        [DataMember(Order = 1)]
-        public int no_found_osu_hint_interval;
+        public ConfigurationElement ListenInterval { set; get; }
+        public ConfigurationElement NoFoundOsuHintInterval { set; get; }
+
+        public void onConfigurationLoad(){}
+
+        public void onConfigurationSave(){}
     }
 
 
@@ -26,26 +19,35 @@ namespace MemoryReader
         public static int ListenInterval=33;//ms
         public static int NoFoundOSUHintInterval = 120;//s
 
+        private static SettingIni setting_output =new SettingIni(); 
+        private static PluginConfiuration<MemoryReader, SettingIni> plugin_config=null;
+        public static MemoryReader PluginInstance
+        {
+            set
+            {
+                plugin_config = new PluginConfiuration<MemoryReader, SettingIni>(value,setting_output);
+            }
+        }
+
         public static void SaveSetting()
         {
-            FileStream fs=File.Open(@"..\MemoryRenderSetting.json", FileMode.OpenOrCreate);
-            SettingJson json = new SettingJson()
-            {
-                listen_interval = ListenInterval,
-                no_found_osu_hint_interval = NoFoundOSUHintInterval
-            };
-            new DataContractJsonSerializer(typeof(SettingJson)).WriteObject(fs, json);
-            fs.Close();
+            setting_output.ListenInterval = ListenInterval.ToString();
+            setting_output.NoFoundOsuHintInterval = NoFoundOSUHintInterval.ToString();
+            plugin_config.ForceSave();
         }
 
         public static void LoadSetting()
         {
-            FileStream fs = File.Open(@"..\MemoryRenderSetting.json", FileMode.Open);
-            SettingJson json = new SettingJson();
-            json=(SettingJson)new DataContractJsonSerializer(typeof(SettingJson)).ReadObject(fs);
-            ListenInterval = json.listen_interval;
-            NoFoundOSUHintInterval = json.no_found_osu_hint_interval;
-            fs.Close();
+            plugin_config.ForceLoad();
+            if (setting_output.NoFoundOsuHintInterval == null && setting_output.ListenInterval == null)
+            {
+                SaveSetting();
+            }
+            else
+            {
+                ListenInterval = int.Parse(setting_output.ListenInterval);
+                NoFoundOSUHintInterval = int.Parse(setting_output.NoFoundOsuHintInterval);
+            }
         }
     }
 }
