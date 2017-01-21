@@ -127,9 +127,14 @@ namespace OsuStatusOutputSever
             while (true)
             {
                 while (
-                    (!isRunning)|| currentClient != null //并未开始连接
-                                                         //(currentClient != null&&currentClient.Connected) //客户端存在且是连接中的
-                    ) { Thread.Sleep(100); }
+                    (!isRunning)|| currentClient != null&&currentClient.Connected) {
+                    Thread.Sleep(100);
+                    if(currentClient != null && (!currentClient.Connected) )
+                    {
+                        Sync.Tools.ConsoleWriter.WriteColor("client lost.", ConsoleColor.Blue);
+                        currentClient = null;
+                    }
+                }
                  
                 Sync.Tools.ConsoleWriter.WriteColor("listenning........", ConsoleColor.Blue);
                 currentClient = listenerServer.AcceptTcpClient();
