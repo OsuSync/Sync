@@ -29,11 +29,19 @@ namespace MemoryReader
         public static void SaveSetting()
         {
             FileStream fs=File.Open(@"..\MemoryRenderSetting.json", FileMode.OpenOrCreate);
+<<<<<<< HEAD
             SettingJson json = new SettingJson()
             {
                 listen_interval = ListenInterval,
                 no_found_osu_hint_interval = NoFoundOSUHintInterval
             };
+=======
+            SettingJson json = new SettingJson()
+            {
+                listen_interval = ListenInterval,
+                no_found_osu_hint_interval = NoFoundOSUHintInterval
+            };
+>>>>>>> dcf85a747c52fdb14d51bc8a3ce81cb87a552fde
             new DataContractJsonSerializer(typeof(SettingJson)).WriteObject(fs, json);
             fs.Close();
         }
@@ -41,10 +49,17 @@ namespace MemoryReader
         public static void LoadSetting()
         {
             FileStream fs = File.Open(@"..\MemoryRenderSetting.json", FileMode.Open);
+<<<<<<< HEAD
             SettingJson json = new SettingJson();
             json=(SettingJson)new DataContractJsonSerializer(typeof(SettingJson)).ReadObject(fs);
             ListenInterval = json.listen_interval;
             NoFoundOSUHintInterval = json.no_found_osu_hint_interval;
+=======
+            SettingJson json = new SettingJson();
+            json=(SettingJson)new DataContractJsonSerializer(typeof(SettingJson)).ReadObject(fs);
+            ListenInterval = json.listen_interval;
+            NoFoundOSUHintInterval = json.no_found_osu_hint_interval;
+>>>>>>> dcf85a747c52fdb14d51bc8a3ce81cb87a552fde
             fs.Close();
         }
     }
