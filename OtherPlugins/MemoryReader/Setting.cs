@@ -39,7 +39,8 @@ namespace MemoryReader
         public static void LoadSetting()
         {
             plugin_config.ForceLoad();
-            if (setting_output.NoFoundOsuHintInterval == null && setting_output.ListenInterval == null)
+            if ((setting_output.NoFoundOsuHintInterval == null && setting_output.ListenInterval == null)||
+                (setting_output.NoFoundOsuHintInterval == "" && setting_output.ListenInterval == ""))
             {
                 SaveSetting();
             }
