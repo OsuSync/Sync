@@ -42,11 +42,7 @@ namespace MemoryReader
 
         private void OnLoadComplete(SyncHost host)
         {
-            if(!File.Exists(@"..\MemoryRenderSetting.json"))
-            {
-                Setting.SaveSetting();
-            }
-
+            Setting.PluginInstance = this;
             Setting.LoadSetting();
 
             try

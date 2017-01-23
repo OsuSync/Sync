@@ -33,7 +33,7 @@ namespace MemoryReader.Listen
 
         public void OnCurrentModsChange(ModsInfo mod)
         {
-            //throw new NotImplementedException();
+            Sync.Tools.ConsoleWriter.Write(String.Format("当前Mods:{0}", mod.ShortName));
         }
 
         public void OnHPChange(double hp)

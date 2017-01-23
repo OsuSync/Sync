@@ -59,9 +59,9 @@ namespace Sync.Tools
         {
             foreach (PropertyInfo item in configInstance.GetType().GetProperties())
             {
-                if (item.GetType() == typeof(ConfigurationElement))
+                if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    item.SetValue(configInstance, ConfigurationIO.Read(item.Name, parentPlugin.Name));
+                    item.SetValue(configInstance, (ConfigurationElement)ConfigurationIO.Read(item.Name, parentPlugin.Name));
                 }
             }
         }
@@ -70,9 +70,9 @@ namespace Sync.Tools
         {
             foreach (PropertyInfo item in configInstance.GetType().GetProperties())
             {
-                if (item.GetType() == typeof(ConfigurationElement))
+                if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationIO.Write(item.Name, (string)item.GetValue(configInstance), parentPlugin.Name);
+                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(configInstance), parentPlugin.Name);
                 }
             }
         }
