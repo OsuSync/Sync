@@ -74,6 +74,7 @@
       <DependentUpon>HTMLViewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Sources\Douyutv\DouyuClient.cs" />
+    <Compile Include="Sources\Douyutv\DouyuDanmaku.cs" />
     <Compile Include="Sources\Douyutv\Douyutv.cs" />
   </ItemGroup>
   <ItemGroup>

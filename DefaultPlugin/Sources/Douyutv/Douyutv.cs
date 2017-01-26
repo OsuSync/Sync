@@ -1,4 +1,5 @@
 ﻿using Sync.Source;
+using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace DefaultPlugin.Sources.Douyutv
 {
+
     class Douyutv : ISourceBase
     {
         public const string SOURCE_NAME = "Douyutv";
@@ -19,13 +21,12 @@ namespace DefaultPlugin.Sources.Douyutv
         public event GiftEvt onGift;
         public event CurrentOnlineEvt onOnlineChange;
 
-        private int groupId = -9999;
-        private string server = "openbarrage.douyutv.com";
-        private short port = 8601;
+        private const string server = "openbarrage.douyutv.com";
+        private const short port = 8601;
         private TcpClient socket;
         private NetworkStream stream;
-        private Douyutv parent;
         private int roomId = 0;
+        private long unix;
 
         private bool isConencted = false;
 
@@ -40,57 +41,152 @@ namespace DefaultPlugin.Sources.Douyutv
                 socket = new TcpClient();
             }
 
+            
             await socket.ConnectAsync(server, port);
-            stream = socket.GetStream();
 
-            Thread heartLoop = new Thread(HeartbeatLoop);
+            if (socket.Connected) stream = socket.GetStream();
+            else return false;
+
             //Login first
-            if(LoginRequest())
-            {
-                //Login success
-
-            }
-            else
+            if (!LoginRequest())
             {
                 //Login Fail
                 return false;
             }
 
+            JoinGroup();
 
+            HeartLoop();
 
+            Thread receive = new Thread(DataReceive);
+            receive.Start();
+
+            return true;
+
+        }
+
+        private void DataReceive()
+        {
+            byte[] buffer = new byte[socket.ReceiveBufferSize];
+
+            while (isConencted)
+            {
+                ServerPacket packet;
+                packet = new ServerPacket(stream.ReadPacket());
+
+                switch (packet.MsgType)
+                {
+                    case ServerPacket.ServerMsg.keeplive:             // heart
+
+                        if (!packet.get("tick").Equals(unix.ToString()))
+                        {
+                            ConsoleWriter.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
+                        }
+
+                    break;
+                    case ServerPacket.ServerMsg.loginres:             // login response
+
+                        ConsoleWriter.WriteColor("斗鱼服务器连接认证成功！", ConsoleColor.Green);
+                        onConnected?.Invoke();
+
+                    break;
+                    case ServerPacket.ServerMsg.chatmsg:              // danmaku
+#if DEBUG
+                        ConsoleWriter.Write("收到弹幕: 来自" + packet.get("nn") + ":" + packet.get("txt"));
+#endif
+                        this.onDanmuku?.Invoke(new DouyuDanmaku(packet.get("nn"), packet.get("txt")));
+
+                    break;
+                    case ServerPacket.ServerMsg.dgb:                  // gift
+
+                        this.onGift?.Invoke(new DouyuGift(packet.get("nn"), packet.get("gs"), packet.get("gfcnt")));
+
+                    break;
+                    case ServerPacket.ServerMsg.dc_buy_deserve:       // gift
+
+                        this.onGift?.Invoke(new DouyuGift((new STT(packet.get("sui"))).get("nick"), "酬勤",  packet.get("cnt")));
+
+                    break;
+                    case ServerPacket.ServerMsg.spbc:                 // gift
+
+                    break;
+                    default:
+                    break;
+                }
+            }
+        }
+
+        private async void HeartLoop()
+        {
+            while (this.isConencted)
+            {
+                unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
+                Heratbeat heartbeat = new Heratbeat(unix);
+                stream.SendPack(heartbeat);
+
+                await Task.Delay(45000);
+            }
+        }
+
+        private void JoinGroup()
+        {
+            GroupReq group = new GroupReq(roomId);
+            stream.Write(group, 0, group.Size);
+
+            stream.Flush();
         }
 
         private bool LoginRequest()
         {
             LoginReq login = new LoginReq(roomId);
-            stream.Write(login.RaiseByte(), 0, login.GetAllSize());
+            stream.SendPack(login);
 
-            return true;
-        }
+            DouyuPacket result = stream.ReadPacket();
+            STT data = result.Data;
 
-        private void HeartbeatLoop()
-        {
+            if (result.Type == DouyuPacket.PacketType.ServerMsg &&
+                data.get("type") == "loginres")
+            {
+                return true;
+            }
+            else
+
+            {
+                return false;
+            }
 
         }
 
         public bool Connect(int roomID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return ConnectAsync(roomID).Result;
+            }
+            catch
+            {
+                return Disconnect();
+            }
         }
 
         public bool Disconnect()
         {
-            throw new NotImplementedException();
+            LogoutReq logout = new LogoutReq();
+            stream.SendPack(logout);
+            socket.Close();
+            isConencted = false;
+            this.onDisconnected?.Invoke();
+            return true;
         }
 
         public string getSourceAuthor()
         {
-            throw new NotImplementedException();
+            return SOURCE_AUTHOR;
         }
 
         public string getSourceName()
         {
-            throw new NotImplementedException();
+            return SOURCE_NAME;
         }
 
         public Type getSourceType()

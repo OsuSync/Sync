@@ -3,6 +3,7 @@ using Sync;
 using DefaultPlugin.Source.BiliBili;
 using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
+using DefaultPlugin.Sources.Douyutv;
 
 namespace DefaultPlugin
 {
@@ -21,7 +22,11 @@ namespace DefaultPlugin
             giftPeeker = new GiftReceivePeeker();
 
             base.onInitCommand += manager => new BaseCommand(manager);
-            base.onInitSource += manager => manager.AddSource(new BiliBili());
+            base.onInitSource += manager => {
+                manager.AddSource(new Douyutv());
+                manager.AddSource(new BiliBili());
+            };
+            
             base.onInitFilter += manager => manager.AddFilters(new DefaultFormat(), 
                                                                new GiftReceivePeeker(),
                                                                new OnlineChangePeeker());
