@@ -69,6 +69,9 @@ namespace Sync
 
             SrcThread = new Thread(StartSource);
             IRCThread = new Thread(StartIRC);
+
+            SrcThread.IsBackground = true;
+            IRCThread.IsBackground = true;
         }
 
         #region 连接源的事件
