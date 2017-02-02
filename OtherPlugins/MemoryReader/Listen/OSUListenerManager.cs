@@ -14,6 +14,7 @@ using System.Reflection;
 using System.IO;
 using Sync;
 using NowPlaying;
+using osu_database_reader;
 
 namespace MemoryReader.Listen
 {
@@ -23,15 +24,19 @@ namespace MemoryReader.Listen
         public enum OsuStatus
         {
             NoFoundProcess,
-            Closing,
+            Unkonw,
             Listening,
             Playing,
             Editing
         }
 
         private MemoryFinder m_memory_finder;
+        private MemoryScanner m_memory_scanner;
+        private OsuDb m_osu_db;
 
-        private OsuStatus m_last_osu_status = OsuStatus.NoFoundProcess;
+        private IntPtr m_beatmap_id_address;
+
+        private OsuStatus m_last_osu_status = OsuStatus.Unkonw;
         private IOSUStatus m_now_player_status = new OSUStatus();
         private bool m_stop = false;
         private Thread m_listen_thread;
@@ -44,6 +49,8 @@ namespace MemoryReader.Listen
         private double m_last_hp = 0;
         private double m_last_acc = 0;
         private int m_last_combo = 0;
+
+        private List<BeatmapEntry> current_map_tmp = new List<BeatmapEntry>();
 
         public OSUListenerManager(SyncHost host)
         {
@@ -87,9 +94,34 @@ namespace MemoryReader.Listen
             m_stop = true;
         }
 
-        private void LoadMemoryFinder(Process osu)
+        private void LoadMemorySearch(Process osu)
         {
             m_memory_finder = new MemoryFinder(osu);
+            m_memory_scanner = new MemoryScanner(osu)
+            {
+                BeginAddress = 0x3004A8C,
+                EndAddress = 0x8004A8C,
+                InterVal = 0x0010000,
+                BufferSize = 4,
+                AddressFilter = (address,target) =>
+                {
+                    byte[] buf = new byte[4];
+                    IntPtr t;
+                    Win32API.ReadProcessMemory(osu.Handle, (IntPtr)(target+0xc4), buf, 4, out t);
+                    Int32 id = BitConverter.ToInt32(buf, 0);
+                    foreach (var map in current_map_tmp)
+                    {
+                        if (map.BeatmapSetId == id)
+                            return true;
+                    }
+                    return false;
+                }
+            };
+
+            if (m_osu_db == null)
+            {
+                m_osu_db = OsuDb.Read(Setting.OsuPath+ @"\osu!.db");
+            }
         }
 
         private void ListenLoop()
@@ -97,19 +129,33 @@ namespace MemoryReader.Listen
             UInt32 count = 0;
 
             if (GetCurrentOsuStatus() != OsuStatus.NoFoundProcess)
-                LoadMemoryFinder(Process.GetProcessesByName("osu!")[0]);
+                LoadMemorySearch(Process.GetProcessesByName("osu!")[0]);
 
             while (!m_stop)
             {
                 OsuStatus status = GetCurrentOsuStatus(); ;
+
+                if(m_last_osu_status!=OsuStatus.Playing&&m_last_osu_status!=status)
+                {
+                    foreach (var map in m_osu_db.Beatmaps)
+                    {
+                        if (map.Title == m_now_player_status.title && map.Artist == m_now_player_status.artist)
+                        {
+                            current_map_tmp.Add(map);
+                        }
+                    }
+
+                    m_beatmap_id_address = (IntPtr)(m_memory_scanner.Scan()[0]);
+                }
+
                 //last status
                 if (m_last_osu_status == OsuStatus.NoFoundProcess && m_last_osu_status != status)
                 {
-                    LoadMemoryFinder(Process.GetProcessesByName("osu!")[0]);
+                    LoadMemorySearch(Process.GetProcessesByName("osu!")[0]);
                 }
                 m_last_osu_status = status;
 
-                if (m_last_osu_status != OsuStatus.NoFoundProcess && m_last_osu_status != OsuStatus.Closing)
+                if (m_last_osu_status != OsuStatus.NoFoundProcess && m_last_osu_status != OsuStatus.Unkonw)
                 {
                     foreach (var listner in m_listeners)
                     {
@@ -229,7 +275,7 @@ namespace MemoryReader.Listen
             Beatmap beatmapinfo = new Beatmap();
             try
             {
-                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744, 0xc0 });
+                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc0 },false);
             }
             catch (ThreadStackNoFoundException e)
             {
@@ -256,11 +302,10 @@ namespace MemoryReader.Listen
 
         private BeatmapSet GetCurrentBeatmapSet()
         {
-            //TODO:通过BeatmapFinder从数据库查找更详细的歌曲信息
             BeatmapSet beatmapsetset = new BeatmapSet();
             try
             {
-                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x110, 0x248, 0x620, 0x6b4, 0x744, 0xc4 });
+                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc4 },false);
             }
             catch (ThreadStackNoFoundException e)
             {
@@ -274,7 +319,7 @@ namespace MemoryReader.Listen
             if (Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
             string osu_title = Process.GetProcessesByName("osu!")[0].MainWindowTitle;
 
-            if (m_now_player_status.status == null) return OsuStatus.Closing;
+            if (m_now_player_status.status == null) return OsuStatus.Unkonw;
 
             if (m_now_player_status.status == "Editing" || (osu_title != "osu!" && osu_title.Contains(".osu"))) return OsuStatus.Editing;
 

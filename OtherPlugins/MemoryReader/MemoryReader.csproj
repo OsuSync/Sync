@@ -51,6 +51,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="osu-database-reader">
+      <HintPath>lib\osu-database-reader.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +70,7 @@
     <Compile Include="Listen\OSUTestListener.cs" />
     <Compile Include="Listen\OSUListenerManager.cs" />
     <Compile Include="MemoryReader.cs" />
+    <Compile Include="Memory\MemoryScanner.cs" />
     <Compile Include="Mods\ModsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Memory\MemoryFinder.cs" />
