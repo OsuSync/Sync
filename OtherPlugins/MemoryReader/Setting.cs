@@ -1,4 +1,4 @@
-using Sync.Tools;
+﻿using Sync.Tools;
 
 
 namespace MemoryReader
@@ -7,6 +7,7 @@ namespace MemoryReader
     {
         public ConfigurationElement ListenInterval { set; get; }
         public ConfigurationElement NoFoundOsuHintInterval { set; get; }
+        public ConfigurationElement OsuPath { set; get; }
 
         public void onConfigurationLoad(){}
 
@@ -18,6 +19,7 @@ namespace MemoryReader
     {
         public static int ListenInterval=33;//ms
         public static int NoFoundOSUHintInterval = 120;//s
+        public static string OsuPath="";
 
         private static SettingIni setting_output =new SettingIni(); 
         private static PluginConfiuration<MemoryReader, SettingIni> plugin_config=null;
@@ -49,26 +51,8 @@ namespace MemoryReader
             {
                 ListenInterval = int.Parse(setting_output.ListenInterval);
                 NoFoundOSUHintInterval = int.Parse(setting_output.NoFoundOsuHintInterval);
+                OsuPath = setting_output.OsuPath;
             }
         }
     }
 }
-{
-    class SettingIni:IConfigurable
-    {
-        public ConfigurationElement ListenInterval { set; get; }
-        public ConfigurationElement NoFoundOsuHintInterval { set; get; }
-        public ConfigurationElement OsuPath { set; get; }
-
-        public void onConfigurationLoad(){}
-
-        public void onConfigurationSave(){}
-        public static int NoFoundOSUHintInterval = 120;//s
-        public static string OsuPath="";
-
-            else
-            {
-                ListenInterval = int.Parse(setting_output.ListenInterval);
-                NoFoundOSUHintInterval = int.Parse(setting_output.NoFoundOsuHintInterval);
-                OsuPath = setting_output.OsuPath;
-            }

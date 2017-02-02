@@ -135,24 +135,29 @@ namespace MemoryReader.Listen
             {
                 OsuStatus status = GetCurrentOsuStatus(); ;
 
-                if(m_last_osu_status!=OsuStatus.Playing&&m_last_osu_status!=status)
-                {
-                    foreach (var map in m_osu_db.Beatmaps)
-                    {
-                        if (map.Title == m_now_player_status.title && map.Artist == m_now_player_status.artist)
-                        {
-                            current_map_tmp.Add(map);
-                        }
-                    }
-
-                    m_beatmap_id_address = (IntPtr)(m_memory_scanner.Scan()[0]);
-                }
-
                 //last status
                 if (m_last_osu_status == OsuStatus.NoFoundProcess && m_last_osu_status != status)
                 {
                     LoadMemorySearch(Process.GetProcessesByName("osu!")[0]);
                 }
+
+                if(m_now_player_status.title!=null&& m_now_player_status.title!=""&& m_last_osu_status!=status)
+                {
+
+                    if (m_last_osu_status != OsuStatus.Playing&& m_last_osu_status!=OsuStatus.Listening)
+                    {
+                        foreach (var map in m_osu_db.Beatmaps)
+                        {
+                            if (map.Title == m_now_player_status.title && map.Artist == m_now_player_status.artist)
+                            {
+                                current_map_tmp.Add(map);
+                            }
+                        }
+
+                        m_beatmap_id_address = (IntPtr)(m_memory_scanner.Scan()[0]);
+                    }
+                }
+
                 m_last_osu_status = status;
 
                 if (m_last_osu_status != OsuStatus.NoFoundProcess && m_last_osu_status != OsuStatus.Unkonw)
@@ -273,15 +278,15 @@ namespace MemoryReader.Listen
         private Beatmap GetCurrentBeatmap()
         {
             Beatmap beatmapinfo = new Beatmap();
-            try
-            {
-                beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc0 },false);
-            }
-            catch (ThreadStackNoFoundException e)
-            {
-                beatmapinfo.BeatmapID = -1;
-            }
+            beatmapinfo.BeatmapID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc0 },false);
             return beatmapinfo;
+        }
+
+        private BeatmapSet GetCurrentBeatmapSet()
+        {
+            BeatmapSet beatmapsetset = new BeatmapSet();
+            beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc4 }, false);
+            return beatmapsetset;
         }
 
         private ModsInfo GetCurrentMods()
@@ -298,20 +303,6 @@ namespace MemoryReader.Listen
                 //mods;
             }
             return mods;
-        }
-
-        private BeatmapSet GetCurrentBeatmapSet()
-        {
-            BeatmapSet beatmapsetset = new BeatmapSet();
-            try
-            {
-                beatmapsetset.BeatmapSetID = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address, 0xc4 },false);
-            }
-            catch (ThreadStackNoFoundException e)
-            {
-                beatmapsetset.BeatmapSetID = -1;
-            }
-            return beatmapsetset;
         }
 
         private OsuStatus GetCurrentOsuStatus()
