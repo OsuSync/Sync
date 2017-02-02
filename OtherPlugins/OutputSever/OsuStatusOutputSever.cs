@@ -20,12 +20,12 @@ namespace OsuStatusOutputSever
 {
     public class OsuStatusOutputSever : Plugin, IOSUListener, IFilter, ISourceOsu
     {
-        int beatmapSetId = -1,beatmapId=-1,combo=-1;
+        int beatmapSetId = -1,beatmapId=-1,combo=0,mods=0;
         double currentHP = -1,currentACC=-1;
 
         Timer senderTimer = null;
 
-        static int PORT = 8073;
+        static int PORT = 7582;
         TcpListener listenerServer = null;
         Thread socketThread = null;
 
@@ -99,7 +99,7 @@ namespace OsuStatusOutputSever
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
                         break;
                     case "-status":
-                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4}", beatmapSetId, beatmapId, currentHP, currentACC,combo), ConsoleColor.Yellow);
+                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4} m{5}", beatmapSetId, beatmapId, currentHP, currentACC, combo, mods), ConsoleColor.Yellow);
                         break;
                     default:
                         Sync.Tools.ConsoleWriter.WriteColor("syncserver未知参数", ConsoleColor.Red);
@@ -146,7 +146,7 @@ namespace OsuStatusOutputSever
 
         private void sendStatusTimerRun(object state)
         {
-            byte[] message = Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3} c{4}", beatmapSetId, beatmapId, currentHP, currentACC,combo));
+            byte[] message = Encoding.Default.GetBytes(string.Format("s{0} b{1} h{2} a{3} c{4} m{5}", beatmapSetId, beatmapId, currentHP, currentACC,combo,mods));
 
             try
             {
@@ -173,7 +173,7 @@ namespace OsuStatusOutputSever
 
         public void OnCurrentModsChange(ModsInfo mod)
         {
-            //throw new NotImplementedException();
+            mods = (int)mod.Mod;
         }
 
         public void OnComboChange(int combo)
