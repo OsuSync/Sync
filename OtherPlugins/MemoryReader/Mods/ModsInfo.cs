@@ -70,7 +70,7 @@ namespace MemoryReader.Mods
         {
             get
             {
-                return Mod.ToString();
+                return Mod.ToString().Replace(" ","");
             }
         }
 
@@ -83,7 +83,9 @@ namespace MemoryReader.Mods
                 string[] mods_arr = mods_str.Replace(" ", "").Split(',');
                 foreach (var str in mods_arr)
                 {
-                    ret += mod_map[str];
+                    if (mod_map.ContainsKey(str))
+                        ret += mod_map[str];
+                    else return "Error";
                     ret += ",";
                 }
                 return ret.Remove(ret.Length - 1);
