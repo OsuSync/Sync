@@ -7,12 +7,12 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("LiveSyncIRC")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SyncLiveIRC")]
+[assembly: AssemblyDescription("Sync Live danmaku and osu! IRC")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RemiliaNetwork")]
-[assembly: AssemblyProduct("LiveSyncIRC")]
-[assembly: AssemblyCopyright("Copyright Free 2017")]
+[assembly: AssemblyProduct("SyncLiveIRC")]
+[assembly: AssemblyCopyright("CopyFree 2017")]
 [assembly: AssemblyTrademark("RemiliaScarlet.com")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.0.3")]
-[assembly: AssemblyFileVersion("1.2.0.3")]
+[assembly: AssemblyVersion("1.2.1.2")]
+[assembly: AssemblyFileVersion("1.2.1.2")]
