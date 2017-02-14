@@ -23,7 +23,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\Release\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -49,10 +49,12 @@
     <ProjectReference Include="..\..\Sync\Sync.csproj">
       <Project>{fbd514c2-2830-479e-b050-d1c383028456}</Project>
       <Name>Sync</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\MemoryReader\MemoryReader.csproj">
       <Project>{d518dc59-cc9a-4886-839f-7691d5efae56}</Project>
       <Name>MemoryReader</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

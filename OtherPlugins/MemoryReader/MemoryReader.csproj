@@ -25,7 +25,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Release\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -82,17 +82,16 @@
     <ProjectReference Include="..\..\Sync\Sync.csproj">
       <Project>{FBD514C2-2830-479E-B050-D1C383028456}</Project>
       <Name>Sync</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NowPlaying\NowPlaying.csproj">
       <Project>{91ed3fe1-b0f7-44b4-8ab2-a3f6825eea60}</Project>
       <Name>NowPlaying</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
