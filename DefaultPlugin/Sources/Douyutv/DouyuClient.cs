@@ -147,7 +147,7 @@ namespace DefaultPlugin.Sources.Douyutv
                 Marshal.FreeHGlobal(buffer);
             }
         }
-        //Byte数组转为Structure，实现了反序列化  
+        
         public static Packet BytesToStruct(byte[] bytes)
         {
             Packet pack = new Packet();

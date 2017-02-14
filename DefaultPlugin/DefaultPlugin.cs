@@ -3,7 +3,6 @@ using Sync;
 using DefaultPlugin.Source.BiliBili;
 using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
-using DefaultPlugin.Sources.Douyutv;
 
 namespace DefaultPlugin
 {
@@ -23,7 +22,6 @@ namespace DefaultPlugin
 
             base.onInitCommand += manager => new BaseCommand(manager);
             base.onInitSource += manager => {
-                manager.AddSource(new Douyutv());
                 manager.AddSource(new BiliBili());
             };
             

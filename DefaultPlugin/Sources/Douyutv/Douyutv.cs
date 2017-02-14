@@ -47,12 +47,7 @@ namespace DefaultPlugin.Sources.Douyutv
             if (socket.Connected) stream = socket.GetStream();
             else return false;
 
-            //Login first
-            if (!LoginRequest())
-            {
-                //Login Fail
-                return false;
-            }
+            LoginRequest();
 
             JoinGroup();
 
@@ -80,6 +75,7 @@ namespace DefaultPlugin.Sources.Douyutv
 
                         if (!packet.get("tick").Equals(unix.ToString()))
                         {
+                            onOnlineChange(0);
                             ConsoleWriter.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
                         }
 
