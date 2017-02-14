@@ -19,7 +19,7 @@ namespace MemoryReader.Memory
             m_threadstack0_address = GetThreadStack0Address();
         }
 
-        public double GetMemoryDouble(List<Int32> offsets)
+        public double GetMemoryDouble(List<Int32> offsets,bool use_threadstack0=true)
         {
             if (m_osu_process == null)
                 throw new OsuProcessNoFoundException();
@@ -30,7 +30,9 @@ namespace MemoryReader.Memory
             int i;
             int size;
             byte[] tmp;
-            IntPtr next_ptr=m_threadstack0_address;
+            IntPtr next_ptr = IntPtr.Zero;
+            if (use_threadstack0)
+                next_ptr = m_threadstack0_address;
 
             for (i=0;i<offsets.Count()-1;++i)
             {
@@ -42,7 +44,7 @@ namespace MemoryReader.Memory
             return BitConverter.ToDouble(tmp,0);
         }
 
-        public Int32 GetMemoryInt(List<Int32> offsets)
+        public Int32 GetMemoryInt(List<Int32> offsets,bool use_threadstack0=true)
         {
             if (m_osu_process == null)
                 throw new OsuProcessNoFoundException();
@@ -53,7 +55,9 @@ namespace MemoryReader.Memory
             int i;
             int size;
             byte[] tmp;
-            IntPtr next_ptr = m_threadstack0_address;
+            IntPtr next_ptr=IntPtr.Zero;
+            if (use_threadstack0)
+                next_ptr = m_threadstack0_address;
 
             for (i = 0; i < offsets.Count() - 1; ++i)
             {

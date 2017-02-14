@@ -17,6 +17,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NowPlaying", "OtherPlugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecentlyMessageQuery", "OtherPlugins\RecentlyUserQuery\RecentlyMessageQuery.csproj", "{472D4D0F-C09B-4D26-8CBA-F8ABABA32220}"
 EndProject
+<<<<<<< HEAD
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryReader", "OtherPlugins\MemoryReader\MemoryReader.csproj", "{D518DC59-CC9A-4886-839F-7691D5EFAE56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuStatusOutputSever", "OtherPlugins\OutputSever\OsuStatusOutputSever.csproj", "{5F5EC585-AFFF-4383-8204-F76769FDF849}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

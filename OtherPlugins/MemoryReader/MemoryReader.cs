@@ -9,6 +9,7 @@ using Sync.Command;
 using MemoryReader.Listen;
 using MemoryReader.BeatmapInfo;
 using MemoryReader.Listen.InterFace;
+using System.IO;
 
 namespace MemoryReader
 {
@@ -41,6 +42,9 @@ namespace MemoryReader
 
         private void OnLoadComplete(SyncHost host)
         {
+            Setting.PluginInstance = this;
+            Setting.LoadSetting();
+
             try
             {
                 m_osu_listener = new OSUListenerManager(host);
@@ -51,7 +55,7 @@ namespace MemoryReader
                 Sync.Tools.ConsoleWriter.WriteColor(e.StackTrace, ConsoleColor.Red);
             }
 #if DEBUG
-            //m_osu_listener.AddListener(new OSUTestListener());
+            m_osu_listener.AddListener(new OSUTestListener());
 #endif
             m_osu_listener.Start();
         }

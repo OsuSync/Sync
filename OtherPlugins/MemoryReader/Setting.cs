@@ -1,36 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MemoryReader.BeatmapInfo;
-using System.IO;
-using Sync.Tools;
+﻿using Sync.Tools;
+
 
 namespace MemoryReader
 {
+    class SettingIni:IConfigurable
+    {
+        public ConfigurationElement ListenInterval { set; get; }
+        public ConfigurationElement NoFoundOsuHintInterval { set; get; }
+        public ConfigurationElement OsuPath { set; get; }
+
+        public void onConfigurationLoad(){}
+
+        public void onConfigurationSave(){}
+    }
+
+
     static class Setting
     {
-        public static bool IsFirstRun=true;
-        public static string OSU_Path;
-        public static Dictionary<int,Beatmap> Beatmaps=new Dictionary<int,Beatmap>();
+        public static int ListenInterval=33;//ms
+        public static int NoFoundOSUHintInterval = 120;//s
+        public static string OsuPath="";
 
-        //TODO:
-        //-----Header-----
-        //IsFirstRun
-        //OSU_path
-        //---Beatmaps---
-
-
-        static void SaveSetting()
+        private static SettingIni setting_output =new SettingIni(); 
+        private static PluginConfiuration<MemoryReader, SettingIni> plugin_config=null;
+        public static MemoryReader PluginInstance
         {
-            FileStream fs=File.Open("MemoryScanner.db", FileMode.OpenOrCreate);
-            
+            set
+            {
+                plugin_config = new PluginConfiuration<MemoryReader, SettingIni>(value,setting_output);
+            }
         }
 
-        static void LoadSetting()
+        public static void SaveSetting()
         {
-            FileStream fs = File.Open("MemoryScanner.db", FileMode.Open);
+            setting_output.ListenInterval = ListenInterval.ToString();
+            setting_output.NoFoundOsuHintInterval = NoFoundOSUHintInterval.ToString();
+            setting_output.OsuPath = OsuPath;
+            plugin_config.ForceSave();
+        }
+
+        public static void LoadSetting()
+        {
+            plugin_config.ForceLoad();
+            if ((setting_output.NoFoundOsuHintInterval == null && setting_output.ListenInterval == null)||
+                (setting_output.NoFoundOsuHintInterval == "" && setting_output.ListenInterval == ""))
+            {
+                SaveSetting();
+            }
+            else
+            {
+                ListenInterval = int.Parse(setting_output.ListenInterval);
+                NoFoundOSUHintInterval = int.Parse(setting_output.NoFoundOsuHintInterval);
+                OsuPath = setting_output.OsuPath;
+            }
         }
     }
 }
