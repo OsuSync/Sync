@@ -11,7 +11,7 @@ namespace DefaultPlugin.Source.BiliBili
     class BiliBili : ISourceBase, ISendable
     {
         public const string SOURCE_NAME = "Bilibili";
-        public const string SOURCE_AUTHOR = "Deliay (admin@remiliascarlet.com)";
+        public const string SOURCE_AUTHOR = "Sender: Deliay, Receive: copyliu";
         DanmakuLoader client = new DanmakuLoader();
         BiliBiliSender sender;
         private bool isConnected = false;

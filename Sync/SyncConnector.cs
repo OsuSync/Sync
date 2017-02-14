@@ -69,6 +69,9 @@ namespace Sync
 
             SrcThread = new Thread(StartSource);
             IRCThread = new Thread(StartIRC);
+
+            SrcThread.IsBackground = true;
+            IRCThread.IsBackground = true;
         }
 
         #region 连接源的事件
@@ -92,8 +95,19 @@ namespace Sync
 
         private void Src_onDisconnected()
         {
-            SourceStatus = false;
-            ConsoleWriter.Write("源服务器断开连接成功！");
+            if (IsConnect)
+            {
+                IsConnect = false;
+                ConsoleWriter.Write("服务器连接被断开，3秒后重连！");
+                System.Threading.Tasks.Task.Delay(3000);
+                Connect();
+            }
+            else
+            {
+                IsConnect = false;
+                ConsoleWriter.Write("源服务器断开连接成功！");
+            }
+            
             
         }
 

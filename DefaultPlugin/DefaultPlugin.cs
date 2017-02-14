@@ -21,7 +21,10 @@ namespace DefaultPlugin
             giftPeeker = new GiftReceivePeeker();
 
             base.onInitCommand += manager => new BaseCommand(manager);
-            base.onInitSource += manager => manager.AddSource(new BiliBili());
+            base.onInitSource += manager => {
+                manager.AddSource(new BiliBili());
+            };
+            
             base.onInitFilter += manager => manager.AddFilters(new DefaultFormat(), 
                                                                new GiftReceivePeeker(),
                                                                new OnlineChangePeeker());

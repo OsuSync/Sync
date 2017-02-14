@@ -17,7 +17,8 @@ namespace Sync.Plugins
         public MessageDispatcher(SyncConnector p, FilterManager f)
         {
             parent = p;
-            this.filters = f;
+
+            filters = f;
 
             MessageManager.LimitLevel = 3;
             MessageManager.Option = MessageManager.PeekOption.Auto;
@@ -25,6 +26,7 @@ namespace Sync.Plugins
             MessageManager.SetSendMessageAction(new MessageManager.SendMessageAction((target,message) =>{
                 parent.GetIRC().sendRawMessage(Configuration.TargetIRC, message);
             }));
+
         }
         /// <summary>
         /// 简易实现直接传递弹幕消息
