@@ -129,7 +129,16 @@ namespace MemoryReader.Listen
             UInt32 count = 0;
 
             if (GetCurrentOsuStatus() != OsuStatus.NoFoundProcess)
-                LoadMemorySearch(Process.GetProcessesByName("osu!")[0]);
+            {
+                Process[] process_list;
+                do
+                {
+                    process_list = Process.GetProcessesByName("osu!");
+                    Thread.Sleep(100);
+                }
+                while (process_list.Length == 0);
+                LoadMemorySearch(process_list[0]);
+            }
 
             while (!m_stop)
             {
@@ -138,7 +147,14 @@ namespace MemoryReader.Listen
                 //last status
                 if (m_last_osu_status == OsuStatus.NoFoundProcess && m_last_osu_status != status)
                 {
-                    LoadMemorySearch(Process.GetProcessesByName("osu!")[0]);
+                    Process[] process_list;
+                    do
+                    {
+                        process_list = Process.GetProcessesByName("osu!");
+                        Thread.Sleep(100);
+                    }
+                    while (process_list.Length == 0);
+                    LoadMemorySearch(process_list[0]);
                 }
 
                 if(m_now_player_status.title!=null&& m_now_player_status.title!=""&& m_last_osu_status!=status)
