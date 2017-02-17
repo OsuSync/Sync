@@ -67,7 +67,21 @@ namespace DefaultGUI
         delegate void AppendTextDelegate(string text);
         delegate void SetColorDelegate(Color text);
         delegate void SetHeightDelegate(int change);
-        
+        delegate void UpdateStautsDelegate(bool danmaku, bool irc);
+
+        public void UpdateStatus(bool danma, bool irc)
+        {
+            Invoke(new UpdateStautsDelegate((a, b) => {
+                lblTipsLiveStatus.ForeColor = a ? Color.Green : Color.Red;
+                lblTipsOSUStatus.ForeColor = b ? Color.Green : Color.Red;
+            }), new object[] { danma, irc });
+        }
+
+        public void UpdateStautsAuto()
+        {
+            UpdateStatus(DefaultGUI.hoster.SyncInstance.Connector.SourceStatus, DefaultGUI.hoster.SyncInstance.Connector.IRCStatus);
+        }
+
         public void ShowMe()
         {
             Invoke(new MethodInvoker(() => Show()));
@@ -111,6 +125,7 @@ namespace DefaultGUI
 
         public void Write(string msg, bool newline = true, bool time = true)
         {
+            UpdateStautsAuto();
             AppendText((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "") + msg + (newline ? "\n" : ""));
         }
 
@@ -278,6 +293,27 @@ namespace DefaultGUI
             base.OnMouseUp(e);
         }
 
+        private void cmdStart_Click(object sender, EventArgs e)
+        {
+            DefaultGUI.hoster.SyncInstance.Connector.Connect();
+            cmdStart.Enabled = false;
+            cmdStop.Enabled = true;
+        }
 
+        private void cmdStop_Click(object sender, EventArgs e)
+        {
+            DefaultGUI.hoster.SyncInstance.Connector.Disconnect();
+            cmdStart.Enabled = true;
+            cmdStop.Enabled = false;
+        }
+
+        private void cmdLogin_Click(object sender, EventArgs e)
+        {
+            if(SyncManager.loginable)
+            {
+                ISendable s = DefaultGUI.hoster.SyncInstance.Connector.GetSource() as ISendable;
+                s.Login(null, null);
+            }
+        }
     }
 }

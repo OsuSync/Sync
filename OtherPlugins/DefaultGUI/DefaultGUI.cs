@@ -31,6 +31,8 @@ namespace DefaultGUI
             frmThread.Start();
             onLoadComplete += (t) => { hoster = t; frmUI.ready(); };
             onInitCommand += cmd => cmd.Dispatch.bind("gui", (t) => { frmUI.ShowMe(); return true; }, "显示UI");
+            onStartSync += t => frmUI.UpdateStautsAuto();
+            onStopSync += () => frmUI.UpdateStautsAuto();
         }
 
         [STAThread]

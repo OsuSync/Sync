@@ -195,6 +195,7 @@
             this.cmdStart.TabIndex = 12;
             this.cmdStart.Text = "开始工作";
             this.cmdStart.UseVisualStyleBackColor = false;
+            this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
             // 
             // cmdStop
             // 
@@ -212,6 +213,7 @@
             this.cmdStop.TabIndex = 13;
             this.cmdStop.Text = "停止工作";
             this.cmdStop.UseVisualStyleBackColor = false;
+            this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
             // 
             // cmdLogin
             // 
@@ -229,6 +231,7 @@
             this.cmdLogin.TabIndex = 14;
             this.cmdLogin.Text = "登录到直播";
             this.cmdLogin.UseVisualStyleBackColor = false;
+            this.cmdLogin.Click += new System.EventHandler(this.cmdLogin_Click);
             // 
             // cmdConsole
             // 
