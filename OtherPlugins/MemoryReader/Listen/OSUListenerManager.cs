@@ -133,7 +133,7 @@ namespace MemoryReader.Listen
 
             while (!m_stop)
             {
-                OsuStatus status = GetCurrentOsuStatus(); ;
+                OsuStatus status = GetCurrentOsuStatus();
 
                 //last status
                 if (m_last_osu_status == OsuStatus.NoFoundProcess && m_last_osu_status != status)

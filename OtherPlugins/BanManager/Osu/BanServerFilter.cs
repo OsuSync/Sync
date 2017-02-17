@@ -120,7 +120,7 @@ namespace BanManagerPlugin.Ban
 
                 case "-regex":
                     if(message.Length < 2)
-                        ThrowErrorMessage();;
+                        ThrowErrorMessage();
                     bindManager.GetFliterInfo().AddBanRuleRegex(message[1]);
                     break;
 

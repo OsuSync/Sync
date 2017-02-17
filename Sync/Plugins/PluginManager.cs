@@ -87,7 +87,6 @@ namespace Sync.Plugins
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
-            string interfaceName = typeof(Plugin).FullName;
             pluginList = new List<Plugin>();
             asmList = new List<Assembly>();
 
