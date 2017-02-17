@@ -32,7 +32,7 @@ namespace OsuStatusOutputSever
         TcpClient currentClient = null;
 
         volatile bool isRunning = false;
-        public bool IsRun { private set { } get { return isRunning; } }
+        public bool IsRun { get { return isRunning; } }
 
         public void Stop()
         {
@@ -157,7 +157,7 @@ namespace OsuStatusOutputSever
                 writer.Write(beatmapSetId);
                 writer.Flush();*/
             }
-            catch { }//skip
+            catch { return; }//skip
         }
         #endregion
 

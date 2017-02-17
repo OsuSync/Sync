@@ -198,13 +198,11 @@ namespace Sync.Plugins
         static float recoverTime = 60000;
         public static float RecoverTime
         {
-            private set { }
             get { return recoverTime; }
         }
 
         public static int CurrentQueueCount
         {
-            private set { }
             get { return MessageQueue.Count; }
         }
 
@@ -215,7 +213,6 @@ namespace Sync.Plugins
         static volatile int sendCount = 0;
         public int CurrentCount
         {
-            private set { }
             get
             {
                 return sendCount;
@@ -236,7 +233,6 @@ namespace Sync.Plugins
         private static volatile bool isLimit = false;
         public static bool IsLimit
         {
-            private set { }
             get
             {
                 return isLimit;
