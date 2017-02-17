@@ -82,7 +82,7 @@ namespace Sync
 
         private void Src_onOnlineChange(uint lCount)
         {
-            ConsoleWriter.Write("用户变更:" + lCount);
+            IO.CurrentIO.Write("用户变更:" + lCount);
             if (Math.Abs(usercount - lCount) > 4) 
             {
                 CBaseDanmuku d = new CBaseDanmuku();
@@ -98,14 +98,14 @@ namespace Sync
             if (IsConnect)
             {
                 IsConnect = false;
-                ConsoleWriter.Write("服务器连接被断开，3秒后重连！");
+                IO.CurrentIO.Write("服务器连接被断开，3秒后重连！");
                 System.Threading.Tasks.Task.Delay(3000);
                 Connect();
             }
             else
             {
                 IsConnect = false;
-                ConsoleWriter.Write("源服务器断开连接成功！");
+                IO.CurrentIO.Write("源服务器断开连接成功！");
             }
             
             
@@ -119,35 +119,35 @@ namespace Sync
         private void Src_onConnected()
         {
             SourceStatus = true;
-            ConsoleWriter.Write("源服务器连接成功！");
+            IO.CurrentIO.Write("源服务器连接成功！");
         }
         #endregion
 
         #region 连接方法
         private void StartSourceT()
         {
-            ConsoleWriter.Write("正在连接弹幕源服务器....");
+            IO.CurrentIO.Write("正在连接弹幕源服务器....");
             SourceStatus = true;
             SrcThread.Start();
         }
 
         private void StopSourceT()
         {
-            ConsoleWriter.Write("正在断开弹幕源服务器的连接....");
+            IO.CurrentIO.Write("正在断开弹幕源服务器的连接....");
             SourceStatus = false;
             Src.Disconnect();
         }
 
         private void StartIRCT()
         {
-            ConsoleWriter.Write("正在连接IRC服务器....");
+            IO.CurrentIO.Write("正在连接IRC服务器....");
             IRCStatus = true;
             IRCThread.Start();
         }
 
         private void StopIRCT()
         {
-            ConsoleWriter.Write("正在断开IRC服务器的连接....");
+            IO.CurrentIO.Write("正在断开IRC服务器的连接....");
             IRCStatus = false;
             IRC.disconnect();
         }
@@ -173,7 +173,7 @@ namespace Sync
         /// </summary>
         public void Connect()
         {
-            ConsoleWriter.Write("开始工作");
+            IO.CurrentIO.Write("开始工作");
             IsConnect = true;
             StartIRCT();
             StartSourceT();
@@ -185,7 +185,7 @@ namespace Sync
         /// </summary>
         public void Disconnect()
         {
-            ConsoleWriter.Write("正在停止工作……");
+            IO.CurrentIO.Write("正在停止工作……");
             if(IRCThread.IsAlive) StopIRCT();
             if(SrcThread.IsAlive) StopSourceT();
         }
@@ -196,7 +196,7 @@ namespace Sync
         [Obsolete]
         public void Reconnect()
         {
-            ConsoleWriter.Write("重新开始工作中……");
+            IO.CurrentIO.Write("重新开始工作中……");
             Disconnect();
             Connect();
         }

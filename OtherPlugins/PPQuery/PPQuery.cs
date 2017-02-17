@@ -14,7 +14,7 @@ namespace PPQuery
     {
         public PPQuery() : base("PP Query", "Deliay")
         {
-            base.onInitPlugin += () => ConsoleWriter.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
+            base.onInitPlugin += () => IO.CurrentIO.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
             base.onInitFilter += filters => filters.AddFilter(this);
 
         }

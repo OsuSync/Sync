@@ -222,7 +222,7 @@ namespace MemoryReader.Listen
                     {
                         if (count % (Setting.NoFoundOSUHintInterval * Setting.ListenInterval) == 0)
                         {
-                            Sync.Tools.ConsoleWriter.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
+                            Sync.Tools.IO.CurrentIO.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
                             count = 0;
                         }
                         count++;
@@ -240,7 +240,7 @@ namespace MemoryReader.Listen
             {
                 acc = m_memory_finder.GetMemoryDouble(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x48, 0x14 });
             }
-            catch (ThreadStackNoFoundException e)
+            catch (ThreadStackNoFoundException)
             {
                 acc = -1.0;
             }
@@ -254,7 +254,7 @@ namespace MemoryReader.Listen
             {
                 hp = m_memory_finder.GetMemoryDouble(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x40, 0x1c });
             }
-            catch (ThreadStackNoFoundException e)
+            catch (ThreadStackNoFoundException)
             {
                 hp = -1.0;
             }
@@ -268,7 +268,7 @@ namespace MemoryReader.Listen
             {
                 cb = m_memory_finder.GetMemoryInt(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x34, 0x18 });
             }
-            catch (ThreadStackNoFoundException e)
+            catch (ThreadStackNoFoundException)
             {
                 cb = -1;
             }
@@ -298,7 +298,7 @@ namespace MemoryReader.Listen
                 int mod = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x38, 0x1c, 0xc });//混淆后的mods
                 mods.Mod = (ModsInfo.Mods)(mod ^ salt);
             }
-            catch (ThreadStackNoFoundException e)
+            catch (ThreadStackNoFoundException)
             {
                 //mods;
             }

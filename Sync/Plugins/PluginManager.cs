@@ -15,7 +15,7 @@ namespace Sync.Plugins
         internal PluginManager()
 
         {
-            ConsoleWriter.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
+            IO.CurrentIO.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }
 
         internal int LoadCommnads()
@@ -104,7 +104,7 @@ namespace Sync.Plugins
                 }
                 catch(Exception e)
                 {
-                    ConsoleWriter.WriteColor("文件:" + file + " 无法加载(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    IO.CurrentIO.WriteColor("文件:" + file + " 无法加载(加载错误:" + e.Message + ")", ConsoleColor.Red);
                     continue;
                 }
             }
@@ -124,13 +124,14 @@ namespace Sync.Plugins
                         object pluginTest = asm.CreateInstance(it.FullName);
                         if (pluginTest == null || !(pluginTest is Plugin)) continue;
                         Plugin plugin = pluginTest as Plugin;
+                        IO.CurrentIO.WriteColor($"Loading {plugin.Name} ...", ConsoleColor.White);
                         plugin.onEvent(() => plugin);
                         pluginList.Add(plugin);
                     }
                 }
                 catch (Exception e)
                 {
-                    ConsoleWriter.WriteColor(asm.FullName + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
+                    IO.CurrentIO.WriteColor(asm.FullName + " 不是有效插件(加载错误:" + e.Message + ")", ConsoleColor.Red);
                     continue;
                 }
             }

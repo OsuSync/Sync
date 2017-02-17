@@ -5,7 +5,7 @@ using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Diagnostics;
-using static Sync.Tools.ConsoleWriter;
+using static Sync.Tools.IO;
 
 namespace Sync
 {
@@ -25,12 +25,12 @@ namespace Sync
             host = new SyncHost();
             host.Load();
 
-            WriteConfig();
-            WriteWelcome();
+            CurrentIO.WriteConfig();
+            CurrentIO.WriteWelcome();
 
             while (true)
             {
-                host.Commands.invokeCmdString(ReadCommand());
+                host.Commands.invokeCmdString(CurrentIO.ReadCommand());
             }
         }
 

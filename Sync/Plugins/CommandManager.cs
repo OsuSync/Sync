@@ -22,7 +22,7 @@ namespace Sync.Command
 
             if(args.Length < 1 )
             {
-                ConsoleWriter.Write("未知命令！ 请输入help查看命令列表。");
+                IO.CurrentIO.Write("未知命令！ 请输入help查看命令列表。");
                 return;
             }
             string arg = string.Empty;
@@ -30,7 +30,7 @@ namespace Sync.Command
             
             if (!dispatch.invoke(args[0], (arg == string.Empty ? new Arguments() : arg.Split(' '))))
             {
-                ConsoleWriter.Write("命令执行失败！ 请输入help查看命令列表。");
+                IO.CurrentIO.Write("命令执行失败！ 请输入help查看命令列表。");
             }
         }
     }

@@ -2,7 +2,7 @@
 using Sync.Plugins;
 using System;
 using System.Collections.Generic;
-using static Sync.Tools.ConsoleWriter;
+using static Sync.Tools.IO;
 
 namespace Sync
 {
@@ -33,36 +33,36 @@ namespace Sync
         /// </summary>
         internal void Load()
         {
-            Write("Loading......");
+            CurrentIO.Write("Loading......");
 
             plugins = new PluginManager();
 
             sources = new SourceManager();
-            WriteColor("读取了 " + plugins.LoadSources() + " 个直播源。", ConsoleColor.Green);
+            CurrentIO.WriteColor("读取了 " + plugins.LoadSources() + " 个直播源。", ConsoleColor.Green);
 
             sync = new SyncManager(sources);
 
             if (sync.Connector == null)
             {
-                Write("");
-                WriteColor("程序无法继续工作，请向上查找错误原因！", ConsoleColor.Red);
-                ReadCommand();
+                CurrentIO.Write("");
+                CurrentIO.WriteColor("程序无法继续工作，请向上查找错误原因！", ConsoleColor.Red);
+                CurrentIO.ReadCommand();
                 throw new NullReferenceException("无法初始化Sync Manager实例!");
             }
 
             plugins.ReadySync();
 
             commands = new CommandManager();
-            WriteColor("载入了 " + plugins.LoadCommnads() + " 个可用命令。", ConsoleColor.Green);
+            CurrentIO.WriteColor("载入了 " + plugins.LoadCommnads() + " 个可用命令。", ConsoleColor.Green);
 
             filters = new FilterManager();
-            WriteColor("载入了 " + plugins.LoadFilters() + " 个消息过滤器。\n", ConsoleColor.Green);
+            CurrentIO.WriteColor("载入了 " + plugins.LoadFilters() + " 个消息过滤器。\n", ConsoleColor.Green);
 
             messages = new MessageDispatcher(sync.Connector, filters);
 
             plugins.ReadyProgram();
 
-            WriteColor("同步已准备就绪！", ConsoleColor.Cyan);
+            CurrentIO.WriteColor("同步已准备就绪！", ConsoleColor.Cyan);
         }
 
         /// <summary>

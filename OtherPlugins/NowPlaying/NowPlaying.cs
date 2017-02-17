@@ -27,7 +27,7 @@ namespace NowPlaying
         private void NowPlaying_onInitPlugin()
         {
             handler.Load();
-            Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
             handler.registerCallback(p =>
             {
                 return new System.Threading.Tasks.Task<bool>(OnOSUStatusChange, p);
@@ -41,7 +41,7 @@ namespace NowPlaying
         {
             osuStat = (OSUStatus)stat;
 #if (DEBUG)
-            Sync.Tools.ConsoleWriter.WriteColor(osuStat.status + " " + osuStat.artist + " - " + osuStat.title, ConsoleColor.DarkCyan);
+            Sync.Tools.IO.CurrentIO.WriteColor(osuStat.status + " " + osuStat.artist + " - " + osuStat.title, ConsoleColor.DarkCyan);
 #endif
             return true;
         }

@@ -76,19 +76,19 @@ namespace DefaultPlugin.Sources.Douyutv
                         if (!packet.get("tick").Equals(unix.ToString()))
                         {
                             onOnlineChange(0);
-                            ConsoleWriter.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
+                            IO.CurrentIO.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
                         }
 
                     break;
                     case ServerPacket.ServerMsg.loginres:             // login response
 
-                        ConsoleWriter.WriteColor("斗鱼服务器连接认证成功！", ConsoleColor.Green);
+                        IO.CurrentIO.WriteColor("斗鱼服务器连接认证成功！", ConsoleColor.Green);
                         onConnected?.Invoke();
 
                     break;
                     case ServerPacket.ServerMsg.chatmsg:              // danmaku
 #if DEBUG
-                        ConsoleWriter.Write("收到弹幕: 来自" + packet.get("nn") + ":" + packet.get("txt"));
+                        IO.CurrentIO.Write("收到弹幕: 来自" + packet.get("nn") + ":" + packet.get("txt"));
 #endif
                         this.onDanmuku?.Invoke(new DouyuDanmaku(packet.get("nn"), packet.get("txt")));
 

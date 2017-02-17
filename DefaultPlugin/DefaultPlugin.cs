@@ -16,7 +16,7 @@ namespace DefaultPlugin
         private GiftReceivePeeker giftPeeker;
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
-            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
+            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
 
             giftPeeker = new GiftReceivePeeker();
 

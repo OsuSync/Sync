@@ -63,7 +63,7 @@ namespace NowPlaying
             }
             catch (Exception e)
             {
-                Sync.Tools.ConsoleWriter.WriteColor("错误:" + e.Message, ConsoleColor.Red);
+                Sync.Tools.IO.CurrentIO.WriteColor("错误:" + e.Message, ConsoleColor.Red);
                 return new OSUStatus();
             }
         }
@@ -157,13 +157,13 @@ namespace NowPlaying
 
             if (RegisterClass(lpWndClass).ToInt32() == 0 && Marshal.GetLastWin32Error() != 1410)
             {
-                Sync.Tools.ConsoleWriter.WriteColor("无法注册MSN类", ConsoleColor.Red);
+                Sync.Tools.IO.CurrentIO.WriteColor("无法注册MSN类", ConsoleColor.Red);
                 return;
             }
             m_hWnd = CreateWindowEx(0, CONST_CLASS_NAME, string.Empty, 0, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
             if(m_hWnd.ToInt32() > 0)
             {
-                Sync.Tools.ConsoleWriter.WriteColor("MSN类注册成功！", ConsoleColor.Green);
+                Sync.Tools.IO.CurrentIO.WriteColor("MSN类注册成功！", ConsoleColor.Green);
             }
 
             Application.Run();

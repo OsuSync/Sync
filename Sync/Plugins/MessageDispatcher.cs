@@ -285,7 +285,7 @@ namespace Sync.Plugins
                 if (!isLimit && (float)sendCount / (60000.0f / time_inv) >= sendLimit_pre)
                 {
                     isLimit = true;
-                    ConsoleWriter.WriteColor("isLimit is true now", ConsoleColor.Yellow);
+                    IO.CurrentIO.WriteColor("isLimit is true now", ConsoleColor.Yellow);
                     currentRecoverTime = 0;
                 }
 
@@ -295,7 +295,7 @@ namespace Sync.Plugins
                 {
                     currentRecoverTime = 0;
                     isLimit = false;
-                    ConsoleWriter.WriteColor("isLimit is false now", ConsoleColor.Yellow);
+                    IO.CurrentIO.WriteColor("isLimit is false now", ConsoleColor.Yellow);
                 }
             }
 

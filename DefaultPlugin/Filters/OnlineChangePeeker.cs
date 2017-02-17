@@ -16,7 +16,7 @@ namespace DefaultPlugin.Filters
         {
             OnlineChangeMessage castMsg = msg as OnlineChangeMessage;
 
-            ConsoleWriter.Write("用户变更:" + castMsg.count);
+            IO.CurrentIO.Write("用户变更:" + castMsg.count);
             if (Math.Abs(usercount - castMsg.count) > 4)
             {
                 CBaseDanmuku d = new CBaseDanmuku();

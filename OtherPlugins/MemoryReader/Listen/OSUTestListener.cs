@@ -13,32 +13,32 @@ namespace MemoryReader.Listen
     {
         public void OnAccuracyChange(double acc)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前Acc:{0}", acc));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前Acc:{0}", acc));
         }
 
         public void OnComboChange(int combo)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前Combo:{0}", combo));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前Combo:{0}", combo));
         }
 
         public void OnCurrentBeatmapChange(Beatmap beatmap)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前Beatmap ID:{0}", beatmap.BeatmapID));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前Beatmap ID:{0}", beatmap.BeatmapID));
         }
 
         public void OnCurrentBeatmapSetChange(BeatmapSet beatmap)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前BeatmapSet ID:{0}", beatmap.BeatmapSetID));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前BeatmapSet ID:{0}", beatmap.BeatmapSetID));
         }
 
         public void OnCurrentModsChange(ModsInfo mod)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前Mods:{0}", mod.ShortName));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前Mods:{0}", mod.ShortName));
         }
 
         public void OnHPChange(double hp)
         {
-            Sync.Tools.ConsoleWriter.Write(String.Format("当前HP:{0}",hp));
+            Sync.Tools.IO.CurrentIO.Write(String.Format("当前HP:{0}",hp));
         }
     }
 }

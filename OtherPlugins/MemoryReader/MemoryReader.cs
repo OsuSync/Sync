@@ -37,7 +37,7 @@ namespace MemoryReader
 
         private void OnInitPlugin()
         {
-            Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
+            Sync.Tools.IO.CurrentIO.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
         }
 
         private void OnLoadComplete(SyncHost host)
@@ -51,8 +51,8 @@ namespace MemoryReader
             }
             catch (Exception e)
             {
-                Sync.Tools.ConsoleWriter.WriteColor(e.Message, ConsoleColor.Red);
-                Sync.Tools.ConsoleWriter.WriteColor(e.StackTrace, ConsoleColor.Red);
+                Sync.Tools.IO.CurrentIO.WriteColor(e.Message, ConsoleColor.Red);
+                Sync.Tools.IO.CurrentIO.WriteColor(e.StackTrace, ConsoleColor.Red);
             }
 #if DEBUG
             m_osu_listener.AddListener(new OSUTestListener());

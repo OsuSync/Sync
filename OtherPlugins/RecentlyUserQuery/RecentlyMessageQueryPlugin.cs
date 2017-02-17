@@ -25,7 +25,7 @@ namespace RecentlyUserQuery
             base.onInitCommand += manager => manager.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
             base.onInitFilter += manager => manager.AddFilters(new Danmaku.MessageRecorderFilter(recorder));
             base.onLoadComplete += host => host.Filters.AddFilters(new Osu.MessageRecorderControlFilter(host.Messages, recorder),new Osu.GetUserIdFilter(host.Messages));
-            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
+            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
         }
 
         private bool onProcessCommand(Arguments args)
@@ -37,15 +37,15 @@ namespace RecentlyUserQuery
                 newArgs[1 + i++]=argv;
 
             if (args.Count != 0 )
-                Sync.Tools.ConsoleWriter.Write(recorder.ProcessCommonCommand(newArgs).Replace(" || ","\n"));
+                Sync.Tools.IO.CurrentIO.Write(recorder.ProcessCommonCommand(newArgs).Replace(" || ","\n"));
             else
-                Sync.Tools.ConsoleWriter.WriteColor(helpString,ConsoleColor.Yellow); 
+                Sync.Tools.IO.CurrentIO.WriteColor(helpString,ConsoleColor.Yellow); 
             return true;
         }
 
         private void SendResponseMessage(string message)
         {
-            Sync.Tools.ConsoleWriter.Write(message);
+            Sync.Tools.IO.CurrentIO.Write(message);
         }
 
         public void onConfigurationLoad()

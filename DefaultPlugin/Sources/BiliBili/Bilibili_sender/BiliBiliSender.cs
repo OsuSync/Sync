@@ -75,7 +75,7 @@ namespace DefaultPlugin.Source
         public void setCookies(string cookies)
         {
             Configuration.LoginCertification = cookies;
-            ConsoleWriter.WriteColor("登陆信息保存成功！", ConsoleColor.DarkYellow);
+            IO.CurrentIO.WriteColor("登陆信息保存成功！", ConsoleColor.DarkYellow);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace DefaultPlugin.Source
                 dataStream.Close();
             }
 
-            ConsoleWriter.Write("发送完成!");
+            IO.CurrentIO.Write("发送完成!");
         }
 
     }
