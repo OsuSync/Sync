@@ -152,10 +152,6 @@ namespace OsuStatusOutputSever
             {
                 currentClient.GetStream().Write(message, 0, message.Length);
                 currentClient.GetStream().Flush();
-                /*
-                BinaryWriter writer = new BinaryWriter(currentClient.GetStream());
-                writer.Write(beatmapSetId);
-                writer.Flush();*/
             }
             catch { return; }//skip
         }

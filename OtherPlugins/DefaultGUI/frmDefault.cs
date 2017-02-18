@@ -120,7 +120,9 @@ namespace DefaultGUI
                 Task.Delay(1);
             }
             DefaultGUI.InputFlag = true;
-            return txtCmd.Text;
+            var command = txtCmd.Text;
+            Invoke(new MethodInvoker(() => txtCmd.Text = ""));
+            return command;
         }
 
         public void Write(string msg, bool newline = true, bool time = true)
