@@ -47,31 +47,31 @@
             this.txtLiveID = new System.Windows.Forms.TextBox();
             this.lblTipsLiveID = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
-            this.lblClose = new System.Windows.Forms.Label();
-            this.lblMin = new System.Windows.Forms.Label();
-            this.lblCollapse = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.cbSources = new System.Windows.Forms.ComboBox();
             this.txtCmd = new System.Windows.Forms.TextBox();
+            this.lblClose = new System.Windows.Forms.Button();
+            this.lblMin = new System.Windows.Forms.Button();
+            this.lblCollapse = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtLog
             // 
-            this.txtLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.txtLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtLog.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.txtLog.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtLog.ForeColor = System.Drawing.Color.White;
             this.txtLog.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtLog.Location = new System.Drawing.Point(12, 57);
+            this.txtLog.Location = new System.Drawing.Point(12, 60);
             this.txtLog.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
             this.txtLog.ShortcutsEnabled = false;
-            this.txtLog.Size = new System.Drawing.Size(555, 246);
+            this.txtLog.Size = new System.Drawing.Size(559, 243);
             this.txtLog.TabIndex = 0;
             this.txtLog.Text = "";
             this.txtLog.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txtLog_PreviewKeyDown);
@@ -89,13 +89,14 @@
             // 
             // txtTargetIRC
             // 
-            this.txtTargetIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.txtTargetIRC.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtTargetIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
+            this.txtTargetIRC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTargetIRC.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtTargetIRC.ForeColor = System.Drawing.SystemColors.Info;
             this.txtTargetIRC.Location = new System.Drawing.Point(366, 13);
             this.txtTargetIRC.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtTargetIRC.Name = "txtTargetIRC";
-            this.txtTargetIRC.Size = new System.Drawing.Size(180, 22);
+            this.txtTargetIRC.Size = new System.Drawing.Size(180, 29);
             this.txtTargetIRC.TabIndex = 2;
             this.txtTargetIRC.TextChanged += new System.EventHandler(this.txtTargetIRC_TextChanged);
             // 
@@ -112,25 +113,27 @@
             // 
             // txtBotIRC
             // 
-            this.txtBotIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.txtBotIRC.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBotIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
+            this.txtBotIRC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBotIRC.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtBotIRC.ForeColor = System.Drawing.SystemColors.Info;
             this.txtBotIRC.Location = new System.Drawing.Point(112, 13);
             this.txtBotIRC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtBotIRC.Name = "txtBotIRC";
-            this.txtBotIRC.Size = new System.Drawing.Size(180, 22);
+            this.txtBotIRC.Size = new System.Drawing.Size(180, 29);
             this.txtBotIRC.TabIndex = 4;
             this.txtBotIRC.TextChanged += new System.EventHandler(this.txtBotIRC_TextChanged);
             // 
             // txtBotIRCPassword
             // 
-            this.txtBotIRCPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.txtBotIRCPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtBotIRCPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
+            this.txtBotIRCPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBotIRCPassword.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
-            this.txtBotIRCPassword.Location = new System.Drawing.Point(113, 43);
+            this.txtBotIRCPassword.ForeColor = System.Drawing.SystemColors.Info;
+            this.txtBotIRCPassword.Location = new System.Drawing.Point(112, 43);
             this.txtBotIRCPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtBotIRCPassword.Name = "txtBotIRCPassword";
-            this.txtBotIRCPassword.Size = new System.Drawing.Size(180, 22);
+            this.txtBotIRCPassword.Size = new System.Drawing.Size(180, 29);
             this.txtBotIRCPassword.TabIndex = 6;
             this.txtBotIRCPassword.UseSystemPasswordChar = true;
             this.txtBotIRCPassword.TextChanged += new System.EventHandler(this.txtBotIRCPassword_TextChanged);
@@ -183,7 +186,8 @@
             // 
             this.cmdStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.cmdStart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.cmdStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.cmdStart.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.cmdStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdStart.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -201,7 +205,8 @@
             // 
             this.cmdStop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.cmdStop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.cmdStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.cmdStop.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.cmdStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdStop.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -219,7 +224,8 @@
             // 
             this.cmdLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.cmdLogin.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.cmdLogin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.cmdLogin.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.cmdLogin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdLogin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdLogin.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -237,7 +243,8 @@
             // 
             this.cmdConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.cmdConsole.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.cmdConsole.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.cmdConsole.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.cmdConsole.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdConsole.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdConsole.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdConsole.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -255,7 +262,8 @@
             // 
             this.cmdExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
             this.cmdExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.cmdExit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(55)))), ((int)(((byte)(55)))));
+            this.cmdExit.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.cmdExit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdExit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdExit.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -271,13 +279,14 @@
             // 
             // txtLiveID
             // 
-            this.txtLiveID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.txtLiveID.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtLiveID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
+            this.txtLiveID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtLiveID.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtLiveID.ForeColor = System.Drawing.SystemColors.Info;
             this.txtLiveID.Location = new System.Drawing.Point(366, 43);
             this.txtLiveID.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtLiveID.Name = "txtLiveID";
-            this.txtLiveID.Size = new System.Drawing.Size(180, 22);
+            this.txtLiveID.Size = new System.Drawing.Size(180, 29);
             this.txtLiveID.TabIndex = 18;
             this.txtLiveID.TextChanged += new System.EventHandler(this.txtLiveID_TextChanged);
             // 
@@ -297,57 +306,18 @@
             this.lblTitle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblTitle.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTitle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblTitle.Location = new System.Drawing.Point(15, 1);
+            this.lblTitle.Location = new System.Drawing.Point(12, 4);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(415, 51);
+            this.lblTitle.Size = new System.Drawing.Size(567, 52);
             this.lblTitle.TabIndex = 19;
             this.lblTitle.Text = "osu! Sync GUI";
             this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblTitle_MouseDown);
             this.lblTitle.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lblTitle_MouseUp);
             // 
-            // lblClose
-            // 
-            this.lblClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.lblClose.Font = new System.Drawing.Font("微软雅黑", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblClose.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblClose.Location = new System.Drawing.Point(527, -1);
-            this.lblClose.Name = "lblClose";
-            this.lblClose.Size = new System.Drawing.Size(42, 54);
-            this.lblClose.TabIndex = 20;
-            this.lblClose.Text = "×";
-            this.lblClose.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblClose.Click += new System.EventHandler(this.lblClose_Click);
-            // 
-            // lblMin
-            // 
-            this.lblMin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.lblMin.Font = new System.Drawing.Font("微软雅黑", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblMin.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblMin.Location = new System.Drawing.Point(478, -1);
-            this.lblMin.Name = "lblMin";
-            this.lblMin.Size = new System.Drawing.Size(42, 54);
-            this.lblMin.TabIndex = 21;
-            this.lblMin.Text = "-";
-            this.lblMin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblMin.Click += new System.EventHandler(this.lblMin_Click);
-            // 
-            // lblCollapse
-            // 
-            this.lblCollapse.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.lblCollapse.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblCollapse.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.lblCollapse.Location = new System.Drawing.Point(437, 1);
-            this.lblCollapse.Name = "lblCollapse";
-            this.lblCollapse.Size = new System.Drawing.Size(42, 51);
-            this.lblCollapse.TabIndex = 22;
-            this.lblCollapse.Text = "♂";
-            this.lblCollapse.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblCollapse.Click += new System.EventHandler(this.lblCollapse_Click);
-            // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(42)))), ((int)(((byte)(44)))));
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.cbSources);
             this.panel1.Controls.Add(this.lblTipsStauts);
@@ -366,10 +336,10 @@
             this.panel1.Controls.Add(this.txtTargetIRC);
             this.panel1.Controls.Add(this.lblTipsTargetIRC);
             this.panel1.Controls.Add(this.lblTipsOSUStatus);
-            this.panel1.Location = new System.Drawing.Point(0, 347);
+            this.panel1.Location = new System.Drawing.Point(2, 347);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(586, 173);
+            this.panel1.Size = new System.Drawing.Size(580, 175);
             this.panel1.TabIndex = 23;
             // 
             // label1
@@ -385,9 +355,10 @@
             // 
             // cbSources
             // 
+            this.cbSources.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.cbSources.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSources.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cbSources.FormattingEnabled = true;
+            this.cbSources.ForeColor = System.Drawing.SystemColors.Info;
             this.cbSources.Location = new System.Drawing.Point(366, 71);
             this.cbSources.Name = "cbSources";
             this.cbSources.Size = new System.Drawing.Size(180, 25);
@@ -398,31 +369,88 @@
             // 
             this.txtCmd.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.txtCmd.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtCmd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.txtCmd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCmd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
+            this.txtCmd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCmd.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtCmd.ForeColor = System.Drawing.Color.White;
-            this.txtCmd.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.txtCmd.Location = new System.Drawing.Point(14, 309);
+            this.txtCmd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.txtCmd.Location = new System.Drawing.Point(12, 309);
             this.txtCmd.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtCmd.Name = "txtCmd";
-            this.txtCmd.Size = new System.Drawing.Size(555, 23);
+            this.txtCmd.Size = new System.Drawing.Size(559, 30);
             this.txtCmd.TabIndex = 24;
             this.txtCmd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCmd_KeyDown);
+            // 
+            // lblClose
+            // 
+            this.lblClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.lblClose.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.lblClose.FlatAppearance.BorderSize = 0;
+            this.lblClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.lblClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.lblClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lblClose.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblClose.ForeColor = System.Drawing.Color.White;
+            this.lblClose.Location = new System.Drawing.Point(537, 1);
+            this.lblClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.lblClose.Name = "lblClose";
+            this.lblClose.Size = new System.Drawing.Size(44, 33);
+            this.lblClose.TabIndex = 25;
+            this.lblClose.Text = "×";
+            this.lblClose.UseVisualStyleBackColor = false;
+            this.lblClose.Click += new System.EventHandler(this.lblClose_Click);
+            // 
+            // lblMin
+            // 
+            this.lblMin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.lblMin.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.lblMin.FlatAppearance.BorderSize = 0;
+            this.lblMin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.lblMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.lblMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lblMin.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblMin.ForeColor = System.Drawing.Color.White;
+            this.lblMin.Location = new System.Drawing.Point(493, 1);
+            this.lblMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.lblMin.Name = "lblMin";
+            this.lblMin.Size = new System.Drawing.Size(44, 33);
+            this.lblMin.TabIndex = 26;
+            this.lblMin.Text = "-";
+            this.lblMin.UseVisualStyleBackColor = false;
+            this.lblMin.Click += new System.EventHandler(this.lblMin_Click);
+            // 
+            // lblCollapse
+            // 
+            this.lblCollapse.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
+            this.lblCollapse.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.lblCollapse.FlatAppearance.BorderSize = 0;
+            this.lblCollapse.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.lblCollapse.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.lblCollapse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lblCollapse.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCollapse.ForeColor = System.Drawing.Color.White;
+            this.lblCollapse.Location = new System.Drawing.Point(449, 1);
+            this.lblCollapse.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.lblCollapse.Name = "lblCollapse";
+            this.lblCollapse.Size = new System.Drawing.Size(44, 33);
+            this.lblCollapse.TabIndex = 27;
+            this.lblCollapse.Text = "♂";
+            this.lblCollapse.UseVisualStyleBackColor = false;
+            this.lblCollapse.Click += new System.EventHandler(this.lblCollapse_Click);
             // 
             // frmDefault
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(583, 525);
-            this.Controls.Add(this.txtCmd);
             this.Controls.Add(this.lblCollapse);
             this.Controls.Add(this.lblMin);
             this.Controls.Add(this.lblClose);
-            this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.txtCmd);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lblTitle);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("微软雅黑 Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -433,6 +461,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "osu! Sync GUI";
             this.Load += new System.EventHandler(this.frmDefault_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ControlsPaint);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -460,12 +489,12 @@
         private System.Windows.Forms.TextBox txtLiveID;
         private System.Windows.Forms.Label lblTipsLiveID;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.Label lblClose;
-        private System.Windows.Forms.Label lblMin;
-        private System.Windows.Forms.Label lblCollapse;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox txtCmd;
-        private System.Windows.Forms.ComboBox cbSources;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button lblClose;
+        private System.Windows.Forms.Button lblMin;
+        private System.Windows.Forms.Button lblCollapse;
+        private System.Windows.Forms.ComboBox cbSources;
     }
 }

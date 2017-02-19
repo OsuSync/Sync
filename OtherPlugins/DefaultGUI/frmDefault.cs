@@ -11,6 +11,7 @@ using Sync;
 using Sync.Tools;
 using System.Runtime.InteropServices;
 using Sync.Source;
+using System.Drawing.Drawing2D;
 
 namespace DefaultGUI
 {
@@ -28,6 +29,8 @@ namespace DefaultGUI
 
         [DllImport("user32.dll")]
         static extern bool ReleaseCapture();
+
+        private static Color BorderColor = Color.FromArgb(0, 122, 204);
 
         public frmDefault()
         {
@@ -225,7 +228,7 @@ namespace DefaultGUI
 
         private async void lblCollapse_Click(object sender, EventArgs e)
         {
-            await Task.Run(new Action(()=> {
+            await Task.Run(new Action(() => {
                 if (Height == 345)
                 {
                     while (Height != 525) { SetHeight(5); Task.Delay(2); };
@@ -314,6 +317,30 @@ namespace DefaultGUI
                 ISendable s = DefaultGUI.hoster.SyncInstance.Connector.GetSource() as ISendable;
                 s.Login(null, null);
             }
+        }
+
+        private void DrawRoundRect(Graphics graphics, Control targer, Color color)
+        {
+            float X = float.Parse(targer.Width.ToString()) - 1;
+            float Y = float.Parse(targer.Height.ToString()) - 1;
+            PointF[] points =
+            {
+                new PointF(0,0),
+                new PointF(X,0),
+                new PointF(X,Y),
+                new PointF(0,Y),
+                new PointF(0,0)
+            };
+            GraphicsPath path = new GraphicsPath();
+            path.AddLines(points);
+            Pen pen = new Pen(color, 1);
+            pen.DashStyle = DashStyle.Solid;
+            graphics.DrawPath(pen, path);
+        }
+
+        private void ControlsPaint(object sender, PaintEventArgs e)
+        {
+            DrawRoundRect(e.Graphics, (Control)sender, BorderColor);
         }
     }
 }
