@@ -198,13 +198,11 @@ namespace Sync.Plugins
         static float recoverTime = 60000;
         public static float RecoverTime
         {
-            private set { }
             get { return recoverTime; }
         }
 
         public static int CurrentQueueCount
         {
-            private set { }
             get { return MessageQueue.Count; }
         }
 
@@ -215,7 +213,6 @@ namespace Sync.Plugins
         static volatile int sendCount = 0;
         public int CurrentCount
         {
-            private set { }
             get
             {
                 return sendCount;
@@ -236,7 +233,6 @@ namespace Sync.Plugins
         private static volatile bool isLimit = false;
         public static bool IsLimit
         {
-            private set { }
             get
             {
                 return isLimit;
@@ -285,7 +281,7 @@ namespace Sync.Plugins
                 if (!isLimit && (float)sendCount / (60000.0f / time_inv) >= sendLimit_pre)
                 {
                     isLimit = true;
-                    ConsoleWriter.WriteColor("isLimit is true now", ConsoleColor.Yellow);
+                    IO.CurrentIO.WriteColor("isLimit is true now", ConsoleColor.Yellow);
                     currentRecoverTime = 0;
                 }
 
@@ -295,7 +291,7 @@ namespace Sync.Plugins
                 {
                     currentRecoverTime = 0;
                     isLimit = false;
-                    ConsoleWriter.WriteColor("isLimit is false now", ConsoleColor.Yellow);
+                    IO.CurrentIO.WriteColor("isLimit is false now", ConsoleColor.Yellow);
                 }
             }
 

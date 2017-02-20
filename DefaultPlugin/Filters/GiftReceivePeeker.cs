@@ -83,7 +83,7 @@ namespace DefaultPlugin.Filters
                 }
                 Thread.Sleep(1);
             }
-            ConsoleWriter.WriteColor("礼物统计线程成功结束", ConsoleColor.Cyan);
+            IO.CurrentIO.WriteColor("礼物统计线程成功结束", ConsoleColor.Cyan);
         }
 
     }

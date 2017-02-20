@@ -22,7 +22,7 @@ namespace BanManagerPlugin
 
             base.onLoadComplete += host=>banManager.SetMessageDispatcher(host.Messages);
 
-            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
         }
     }
 }

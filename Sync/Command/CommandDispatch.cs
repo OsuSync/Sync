@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Sync.Command
 {
@@ -57,8 +58,11 @@ namespace Sync.Command
                 if (cmdList.ContainsKey(name)) return cmdList[name](args);
                 else return false;
             }
-            catch
+            catch(Exception e)
             {
+                Tools.IO.CurrentIO.Write(e.Message);
+                Tools.IO.CurrentIO.Write(e.StackTrace);
+                Tools.IO.CurrentIO.Write(e.Source);
                 return false;
             }
         }

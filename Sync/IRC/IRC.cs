@@ -34,8 +34,8 @@ namespace Sync.IRC
             }
             catch
             {
-                ConsoleWriter.WriteColor("osu! IRC连接错误，无法连接到老板小霸王服务器 !!", ConsoleColor.Red);
-                ConsoleWriter.WriteColor("请稍后重试或者开一个VPN。", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor("osu! IRC连接错误，无法连接到老板小霸王服务器 !!", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor("请稍后重试或者开一个VPN。", ConsoleColor.Red);
                 return;
             }
             username = Configuration.BotIRC;
@@ -56,12 +56,12 @@ namespace Sync.IRC
 
         private void Client_OnConnected(object sender, EventArgs e)
         {
-            ConsoleWriter.Write("[IRC] osu! IRC 已经准备就绪!");
+            IO.CurrentIO.Write("[IRC] osu! IRC 已经准备就绪!");
         }
 
         private void Client_OnConnecting(object sender, EventArgs e)
         {
-            ConsoleWriter.Write("[IRC] osu! IRC正在连接中..");
+            IO.CurrentIO.Write("[IRC] osu! IRC正在连接中..");
         }
 
         private void Client_OnRawMessage(object sender, IrcEventArgs e)
@@ -74,7 +74,7 @@ namespace Sync.IRC
 
         private void Client_OnWriteLine(object sender, WriteLineEventArgs e)
         {
-            //ConsoleWriter.Write("[IRC] " + e.Line);
+            //IO.CurrentIO.Write("[IRC] " + e.Line);
             return;
         }
 

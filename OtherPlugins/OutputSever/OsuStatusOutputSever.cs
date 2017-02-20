@@ -32,7 +32,7 @@ namespace OsuStatusOutputSever
         TcpClient currentClient = null;
 
         volatile bool isRunning = false;
-        public bool IsRun { private set { } get { return isRunning; } }
+        public bool IsRun { get { return isRunning; } }
 
         public void Stop()
         {
@@ -55,7 +55,7 @@ namespace OsuStatusOutputSever
 
         public OsuStatusOutputSever() : base("OsuStatusOutputSever", "Dark Projector")
         {
-            base.onInitPlugin += () => Sync.Tools.ConsoleWriter.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
 
             base.onInitCommand += commandManager =>
             {
@@ -68,7 +68,7 @@ namespace OsuStatusOutputSever
                     if (itor is MemoryReader.MemoryReader)
                     {
                         ((MemoryReader.MemoryReader)itor).RegisterOSUListener(this);
-                        Sync.Tools.ConsoleWriter.WriteColor("注册osuStatus侦听器成功", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor("注册osuStatus侦听器成功", ConsoleColor.Yellow);
                         break;
                     }
                 }
@@ -85,24 +85,24 @@ namespace OsuStatusOutputSever
         private bool commandProcess(Arguments args)
         {
             if (args.Count == 0)
-                Sync.Tools.ConsoleWriter.WriteColor("syncserver <参数>\n-start 开始将内容传发到监听指定端口的客户端上\n-stop 终止传送", ConsoleColor.Yellow);
+                Sync.Tools.IO.CurrentIO.WriteColor("syncserver <参数>\n-start 开始将内容传发到监听指定端口的客户端上\n-stop 终止传送", ConsoleColor.Yellow);
             else
             {
                 switch (args[0].Trim())
                 {
                     case "-start":
                         Start();
-                        Sync.Tools.ConsoleWriter.WriteColor("syncserver开始运行", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver开始运行", ConsoleColor.Yellow);
                         break;
                     case "-stop":
                         Stop();
-                        Sync.Tools.ConsoleWriter.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
                         break;
                     case "-status":
-                        Sync.Tools.ConsoleWriter.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4} m{5}", beatmapSetId, beatmapId, currentHP, currentACC, combo, mods), ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4} m{5}", beatmapSetId, beatmapId, currentHP, currentACC, combo, mods), ConsoleColor.Yellow);
                         break;
                     default:
-                        Sync.Tools.ConsoleWriter.WriteColor("syncserver未知参数", ConsoleColor.Red);
+                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver未知参数", ConsoleColor.Red);
                         break;
                 }
             }
@@ -131,14 +131,14 @@ namespace OsuStatusOutputSever
                     Thread.Sleep(100);
                     if(currentClient != null && (!currentClient.Connected) )
                     {
-                        Sync.Tools.ConsoleWriter.WriteColor("client lost.", ConsoleColor.Blue);
+                        Sync.Tools.IO.CurrentIO.WriteColor("client lost.", ConsoleColor.Blue);
                         currentClient = null;
                     }
                 }
                  
-                Sync.Tools.ConsoleWriter.WriteColor("listenning........", ConsoleColor.Blue);
+                Sync.Tools.IO.CurrentIO.WriteColor("listenning........", ConsoleColor.Blue);
                 currentClient = listenerServer.AcceptTcpClient();
-                Sync.Tools.ConsoleWriter.WriteColor("got client.", ConsoleColor.Blue);
+                Sync.Tools.IO.CurrentIO.WriteColor("got client.", ConsoleColor.Blue);
             }
         }
 
@@ -152,12 +152,8 @@ namespace OsuStatusOutputSever
             {
                 currentClient.GetStream().Write(message, 0, message.Length);
                 currentClient.GetStream().Flush();
-                /*
-                BinaryWriter writer = new BinaryWriter(currentClient.GetStream());
-                writer.Write(beatmapSetId);
-                writer.Flush();*/
             }
-            catch { }//skip
+            catch { return; }//skip
         }
         #endregion
 
