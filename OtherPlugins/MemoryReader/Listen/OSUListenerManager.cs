@@ -162,52 +162,49 @@ namespace MemoryReader.Listen
 
                 if (m_last_osu_status != OsuStatus.NoFoundProcess && m_last_osu_status != OsuStatus.Unkonw)
                 {
+                    BeatmapSet beatmapset = GetCurrentBeatmapSet();
+                    Beatmap beatmap = GetCurrentBeatmap();
+                    ModsInfo mods = GetCurrentMods();
+                    double hp = GetCurrentHP();
+                    double acc = GetCurrentAcc();
+                    int cb = GetCurrentCombo();
+
                     foreach (var listner in m_listeners)
                     {
-                        BeatmapSet beatmapset = GetCurrentBeatmapSet();
+
                         if (beatmapset.BeatmapSetID != m_last_beatmapset.BeatmapSetID)
                         {
                             listner.OnCurrentBeatmapSetChange(beatmapset);
                         }
-                        m_last_beatmapset = beatmapset;
 
-                        Beatmap beatmap = GetCurrentBeatmap();
+                        
                         if (beatmap.BeatmapID != m_last_beatmap.BeatmapID)
                         {
                             listner.OnCurrentBeatmapChange(beatmap);
                         }
-                        m_last_beatmap = beatmap;
 
                         if (m_last_osu_status == OsuStatus.Playing)
                         {
-                            ModsInfo mods = GetCurrentMods();
                             if (mods.Mod != m_last_mods.Mod)
                             {
                                 listner.OnCurrentModsChange(mods);
                             }
-                            m_last_mods = mods;
 
-                            double hp = GetCurrentHP();
                             if (hp != m_last_hp)
                             {
                                 listner.OnHPChange(hp);
                             }
 
-                            m_last_hp = hp;
 
-                            double acc = GetCurrentAcc();
                             if (acc != m_last_acc)
                             {
                                 listner.OnAccuracyChange(acc);
                             }
-                            m_last_acc = acc;
 
-                            int cb = GetCurrentCombo();
                             if (cb != m_last_combo)
                             {
                                 listner.OnComboChange(cb);
                             }
-                            m_last_combo = cb;
                         }
                         else
                         {
@@ -215,6 +212,14 @@ namespace MemoryReader.Listen
                             m_last_hp = 0;
                         }
                     }
+
+                    m_last_beatmapset = beatmapset;
+                    m_last_beatmap = beatmap;
+                    m_last_mods = mods;
+                    m_last_hp = hp;
+                    m_last_acc = acc;
+                    m_last_combo = cb;
+
                 }
                 else
                 {
