@@ -99,8 +99,8 @@ namespace MemoryReader.Listen
             m_memory_finder = new MemoryFinder(osu);
             m_memory_scanner = new MemoryScanner(osu)
             {
-                BeginAddress = 0x3004A8C,
-                EndAddress = 0x8004A8C,
+                BeginAddress = 0x3004430,
+                EndAddress = 0x8004430,
                 InterVal = 0x0010000,
                 BufferSize = 4,
                 AddressFilter = (address,target) =>
@@ -259,7 +259,7 @@ namespace MemoryReader.Listen
             double acc = 0.0;
             try
             {
-                acc = m_memory_finder.GetMemoryDouble(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x48, 0x14 });
+                acc = m_memory_finder.GetMemoryDouble(new List<int>() { (Int32)m_beatmap_id_address+0x214, 0x48, 0x14 },false);
             }
             catch (ThreadStackNoFoundException)
             {
@@ -273,7 +273,7 @@ namespace MemoryReader.Listen
             double hp = 0.0;
             try
             {
-                hp = m_memory_finder.GetMemoryDouble(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x40, 0x1c });
+                hp = m_memory_finder.GetMemoryDouble(new List<int>() { (Int32)m_beatmap_id_address + 0x214, 0x40, 0x1c },false);
             }
             catch (ThreadStackNoFoundException)
             {
@@ -287,7 +287,7 @@ namespace MemoryReader.Listen
             int cb = 0;
             try
             {
-                cb = m_memory_finder.GetMemoryInt(new List<int>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x34, 0x18 });
+                cb = m_memory_finder.GetMemoryInt(new List<int>() { (Int32)m_beatmap_id_address + 0x214, 0x34, 0x18 },false);
             }
             catch (ThreadStackNoFoundException)
             {
@@ -315,8 +315,8 @@ namespace MemoryReader.Listen
             ModsInfo mods = new ModsInfo();
             try
             {
-                int salt = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x38, 0x1c, 0x8 });
-                int mod = m_memory_finder.GetMemoryInt(new List<Int32>() { -0x320, 0x124, 0x384, 0x3c, 0x24, 0x25c, 0x38, 0x1c, 0xc });//混淆后的mods
+                int salt = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address + 0x214, 0x38, 0x1c, 0x8 },false);
+                int mod = m_memory_finder.GetMemoryInt(new List<Int32>() { (Int32)m_beatmap_id_address + 0x214, 0x38, 0x1c, 0xc },false);//混淆后的mods
                 mods.Mod = (ModsInfo.Mods)(mod ^ salt);
             }
             catch (ThreadStackNoFoundException)
