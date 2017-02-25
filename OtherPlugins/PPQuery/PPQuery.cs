@@ -21,7 +21,7 @@ namespace PPQuery
 
         public override void Dispose()
         {
-            throw new NotImplementedException();
+            //nothing to do
         }
 
         public void onMsg(ref MessageBase msg)

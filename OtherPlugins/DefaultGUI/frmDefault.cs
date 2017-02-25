@@ -55,7 +55,7 @@ namespace DefaultGUI
                 txtTargetIRC.Text = Configuration.TargetIRC;
                 txtLiveID.Text = Configuration.LiveRoomID;
                 cbSources.Items.Clear();
-                foreach (var item in DefaultGUI.hoster.Sources.SourceList)
+                foreach (var item in DefaultGUI.hoster.Sources?.SourceList)
                 {
                     cbSources.Items.Add(item);
                 }
@@ -90,6 +90,11 @@ namespace DefaultGUI
         {
             Invoke(new MethodInvoker(() => Show()));
             ready();
+        }
+
+        public void CloseMe()
+        {
+            Invoke(new MethodInvoker(() => Close()));
         }
 
         public void RefreshDelegate()

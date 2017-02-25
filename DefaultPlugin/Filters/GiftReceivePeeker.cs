@@ -16,6 +16,13 @@ namespace DefaultPlugin.Filters
         private List<CBaseGift> historyGift;
         private bool isRunning = false;
 
+        public void Dispose()
+        {
+            isRunning = false;
+            historyGift.Clear();
+            giftRecyler.Abort();
+        }
+
         internal GiftReceivePeeker()
         {
             giftRecyler = new Thread(giftShowRecycle);

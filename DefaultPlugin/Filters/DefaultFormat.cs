@@ -9,6 +9,11 @@ namespace DefaultPlugin.Filters
 {
     class DefaultFormat : IFilter, ISourceDanmaku, ISourceOsu
     {
+        public void Dispose()
+        {
+            //nothing todo
+        }
+
         public void onMsg(ref MessageBase msg)
         {
             msg.user.setPerfix("<");

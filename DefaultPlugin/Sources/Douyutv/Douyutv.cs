@@ -68,7 +68,7 @@ namespace DefaultPlugin.Sources.Douyutv
             {
                 ServerPacket packet;
                 packet = new ServerPacket(stream.ReadPacket());
-                ConsoleWriter.Write(Enum.GetName(packet.GetType(), packet.MsgType));
+                IO.CurrentIO.Write(Enum.GetName(packet.GetType(), packet.MsgType));
                 switch (packet.MsgType)
                 {
                     case ServerPacket.ServerMsg.keeplive:             // heart

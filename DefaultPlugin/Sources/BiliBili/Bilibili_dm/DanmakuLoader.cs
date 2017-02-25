@@ -249,7 +249,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
             Connected = false;
             try
             {
-                Client.Close();
+                Client?.Close();
             }
             catch (Exception e)
             {

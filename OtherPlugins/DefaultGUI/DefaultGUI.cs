@@ -44,5 +44,10 @@ namespace DefaultGUI
             Application.Run(frmUI);
         }
 
+        public override void Dispose()
+        {
+            frmUI.CloseMe();
+            frmThread.Abort();
+        }
     }
 }

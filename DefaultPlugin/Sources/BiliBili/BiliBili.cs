@@ -114,7 +114,7 @@ namespace DefaultPlugin.Source.BiliBili
 
         public void Dispose()
         {
-            client.Disconnect();
+            client?.Disconnect();
         }
     }
 }
