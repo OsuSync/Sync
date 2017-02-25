@@ -97,7 +97,7 @@ namespace Sync.IRC
 
         public void Dispose()
         {
-            client.Disconnect();
+            if(client.IsConnected) client.Disconnect();
         }
 
         ~IRCClient()

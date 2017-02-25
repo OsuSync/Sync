@@ -208,8 +208,8 @@ namespace Sync
         {
             if(IRCThread.ThreadState == ThreadState.Running) IRCThread.Abort();
             if(SrcThread.ThreadState == ThreadState.Running) SrcThread.Abort();
-            if (IRC != null) IRC.Dispose();
-            if (Src != null) Src.Dispose();
+            if (IRC != null) IRC?.Dispose();
+            if (Src != null) Src?.Dispose();
 
         }
 
