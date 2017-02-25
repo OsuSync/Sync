@@ -7,13 +7,12 @@ using System.Linq;
 
 namespace Sync.Plugins
 {
-    public class PluginManager
+    public class PluginManager : IDisposable
     {
 
         List<Plugin> pluginList;
         private List<Assembly> asmList;
         internal PluginManager()
-
         {
             IO.CurrentIO.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }
@@ -135,6 +134,15 @@ namespace Sync.Plugins
                 }
             }
             return pluginList.Count;
+        }
+
+        public void Dispose()
+        {
+            foreach(Plugin p in pluginList)
+            {
+                p.Dispose();
+            }
+
         }
     }
 }

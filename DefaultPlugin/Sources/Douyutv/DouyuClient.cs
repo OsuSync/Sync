@@ -122,24 +122,24 @@ namespace DefaultPlugin.Sources.Douyutv
 
         public static implicit operator byte[](Packet pack)
         {
-            return StructToBytes(pack);
+            return ToBytes(pack);
         }
 
         public static implicit operator Packet(byte[] src)
         {
-            return BytesToStruct(src);
+            return ToPacket(src);
         }
 
-        public static byte[] StructToBytes(Packet structure)
+        public static byte[] ToBytes(Packet packet)
         {
-            int size = structure.size;
+            int size = packet.size;
             IntPtr buffer = Marshal.AllocHGlobal(size);
             try
             {
-                Marshal.StructureToPtr(structure, buffer, false);
+                Marshal.StructureToPtr(packet, buffer, false);
                 byte[] bytes = new byte[size];
                 Marshal.Copy(buffer, bytes, 0, size);
-                Buffer.BlockCopy(structure.data, 0, bytes, 8, structure.data.Length);
+                Buffer.BlockCopy(packet.data, 0, bytes, 8, packet.data.Length);
                 return bytes;
             }
             finally
@@ -148,7 +148,7 @@ namespace DefaultPlugin.Sources.Douyutv
             }
         }
         
-        public static Packet BytesToStruct(byte[] bytes)
+        public static Packet ToPacket(byte[] bytes)
         {
             Packet pack = new Packet();
             pack.size = bytes.Length + 4;
@@ -198,6 +198,7 @@ namespace DefaultPlugin.Sources.Douyutv
         public static void Send(this NetworkStream stream, byte[] buffer, int offset, int size)
          {
             stream.Write(buffer, offset, size);
+            stream.Flush();
         }
 
         public static void SendPack(this NetworkStream stream, DouyuPacket packet)

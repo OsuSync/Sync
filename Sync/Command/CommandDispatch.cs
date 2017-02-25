@@ -5,7 +5,7 @@ namespace Sync.Command
 {
     public delegate bool CommandDelegate(Arguments arg);
 
-    public class Arguments : List<string>
+    public class Arguments : List<string>, IDisposable
     {
         public Arguments()
         {
@@ -17,13 +17,18 @@ namespace Sync.Command
             AddRange(args);
         }
 
+        public void Dispose()
+        {
+            Clear();
+        }
+
         public static implicit operator Arguments(string[] args)
         {
             return new Arguments(args);
         }
     }
 
-    public class CommandDispatch
+    public class CommandDispatch : IDisposable
     {
         private Dictionary<string, CommandDelegate> cmdList = new Dictionary<string, CommandDelegate>();
         private Dictionary<string, string> cmdDest = new Dictionary<string, string>();
@@ -65,6 +70,11 @@ namespace Sync.Command
                 Tools.IO.CurrentIO.Write(e.Source);
                 return false;
             }
+        }
+
+        public void Dispose()
+        {
+            cmdList.Clear();
         }
     }
 }

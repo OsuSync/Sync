@@ -19,6 +19,11 @@ namespace PPQuery
 
         }
 
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
         public void onMsg(ref MessageBase msg)
         {
             if (msg.user.RawText == Configuration.TargetIRC)

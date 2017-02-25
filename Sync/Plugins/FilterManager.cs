@@ -10,7 +10,7 @@ namespace Sync.Plugins
     /// <summary>
     /// 提供对消息的发送、管理、过滤功能
     /// </summary>
-    public class FilterManager
+    public class FilterManager : IDisposable
     {
         Dictionary<Type, List<IFilter>> filters;
 
@@ -104,6 +104,18 @@ namespace Sync.Plugins
             {
                 AddFilter(filter);
             }
+        }
+
+        public void Dispose()
+        {
+            foreach (var item in filters)
+            {
+                foreach (var f in item.Value)
+                {
+                    f.Dispose();
+                }
+            }
+
         }
     }
 }

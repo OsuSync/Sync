@@ -11,7 +11,7 @@ namespace Sync
     /// <summary>
     /// 连接逻辑类，负责协调IRC和弹幕源的通讯、通讯时事件触发与管理
     /// </summary>
-    public class SyncConnector
+    public class SyncConnector : IDisposable
     {
         private IRCClient IRC = null;
         private ISourceBase Src = null;
@@ -199,6 +199,26 @@ namespace Sync
             IO.CurrentIO.Write("重新开始工作中……");
             Disconnect();
             Connect();
+        }
+
+        /// <summary>
+        /// IDisposeable
+        /// </summary>
+        public void Dispose()
+        {
+            if(IRCThread.ThreadState == ThreadState.Running) IRCThread.Abort();
+            if(SrcThread.ThreadState == ThreadState.Running) SrcThread.Abort();
+            if (IRC != null) IRC.Dispose();
+            if (Src != null) Src.Dispose();
+
+        }
+
+        /// <summary>
+        /// finalize
+        /// </summary>
+        ~SyncConnector()
+        {
+            Dispose();
         }
     }
 }

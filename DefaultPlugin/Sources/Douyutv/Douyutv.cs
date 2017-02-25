@@ -47,28 +47,28 @@ namespace DefaultPlugin.Sources.Douyutv
             if (socket.Connected) stream = socket.GetStream();
             else return false;
 
+            //Login first
             LoginRequest();
-
+            //Proceed to join group
             JoinGroup();
-
+            //And first heartbeat loop
             HeartLoop();
-
-            Thread receive = new Thread(DataReceive);
-            receive.Start();
-
+            //Final, start new receive thread
+            //Thread receive = new Thread(DataReceive);
+            //receive.Start();
+            isConencted = true;
+            DataReceive();
             return true;
 
         }
 
         private void DataReceive()
         {
-            byte[] buffer = new byte[socket.ReceiveBufferSize];
-
             while (isConencted)
             {
                 ServerPacket packet;
                 packet = new ServerPacket(stream.ReadPacket());
-
+                ConsoleWriter.Write(Enum.GetName(packet.GetType(), packet.MsgType));
                 switch (packet.MsgType)
                 {
                     case ServerPacket.ServerMsg.keeplive:             // heart
@@ -78,6 +78,7 @@ namespace DefaultPlugin.Sources.Douyutv
                             onOnlineChange(0);
                             IO.CurrentIO.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
                         }
+                    
 
                     break;
                     case ServerPacket.ServerMsg.loginres:             // login response
@@ -127,29 +128,27 @@ namespace DefaultPlugin.Sources.Douyutv
         private void JoinGroup()
         {
             GroupReq group = new GroupReq(roomId);
-            stream.Write(group, 0, group.Size);
-
-            stream.Flush();
+            stream.SendPack(group);
         }
 
         private bool LoginRequest()
         {
             LoginReq login = new LoginReq(roomId);
             stream.SendPack(login);
+            return true;
+            //DouyuPacket result = stream.ReadPacket();
+            //STT data = result.Data;
 
-            DouyuPacket result = stream.ReadPacket();
-            STT data = result.Data;
+            //if (result.Type == DouyuPacket.PacketType.ServerMsg &&
+            //    data.get("type") == "loginres")
+            //{
+            //    return true;
+            //}
+            //else
 
-            if (result.Type == DouyuPacket.PacketType.ServerMsg &&
-                data.get("type") == "loginres")
-            {
-                return true;
-            }
-            else
-
-            {
-                return false;
-            }
+            //{
+            //    return false;
+            //}
 
         }
 
@@ -193,6 +192,17 @@ namespace DefaultPlugin.Sources.Douyutv
         public bool Stauts()
         {
             return isConencted;
+        }
+
+        public void Dispose()
+        {
+            if(socket != null)
+            {
+                stream.Dispose();
+                socket.Close();
+            }
+
+            
         }
     }
 }
