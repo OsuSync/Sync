@@ -3,6 +3,7 @@ using Sync;
 using DefaultPlugin.Source.BiliBili;
 using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
+using System;
 
 namespace DefaultPlugin
 {
@@ -13,22 +14,29 @@ namespace DefaultPlugin
         public static MessageDispatcher MainMessager = null;
         public static FilterManager MainFilters = null;
         public static SourceManager MainSources = null;
-        private GiftReceivePeeker giftPeeker;
+        private BiliBili srcBili;
+        private DefaultFormat fltFormat;
+        private GiftReceivePeeker fltGift;
+        private OnlineChangePeeker fltOnline;
+
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
             base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
 
-            giftPeeker = new GiftReceivePeeker();
+            srcBili = new BiliBili();
+            
 
             base.onInitCommand += manager => new BaseCommand(manager);
             base.onInitSource += manager => {
-                manager.AddSource(new BiliBili());
+                manager.AddSource(srcBili);
             };
-            
-            base.onInitFilter += manager => manager.AddFilters(new DefaultFormat(), 
-                                                               new GiftReceivePeeker(),
-                                                               new OnlineChangePeeker());
-            base.onStartSync += connector => giftPeeker.StartRecycler();
+
+            fltFormat = new DefaultFormat();
+            fltGift = new GiftReceivePeeker();
+            fltOnline = new OnlineChangePeeker();
+
+            base.onInitFilter += manager => manager.AddFilters(fltFormat, fltGift, fltOnline);
+            base.onStartSync += connector => fltGift.StartRecycler();
 
             base.onLoadComplete += DefaultPlugin_onLoadComplete;
 
@@ -40,6 +48,13 @@ namespace DefaultPlugin
             MainSources = host.Sources;
             MainInstance = host.SyncInstance;
             MainMessager = host.Messages;
+        }
+
+        public override void Dispose()
+        {
+            fltFormat.Dispose();
+            fltGift.Dispose();
+            fltOnline.Dispose();
         }
     }
 }

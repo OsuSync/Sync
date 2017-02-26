@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,8 +22,9 @@ namespace Sync.Tools
 
     public class IO
     {
+        public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
         public static SyncIO CurrentIO { get { return currIO; } private set { currIO = value; } }
-        private static SyncIO currIO = new NConsoleWriter();
+        private static SyncIO currIO = DefaultIO;
         public static void SetIO(SyncIO specIO)
         {
             CurrentIO = specIO;
@@ -166,6 +168,12 @@ namespace Sync.Tools
     [Obsolete("[已弃用]请使用IO类替代")]
     public class ConsoleWriter
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool ShowWindow(IntPtr hWnd, uint nCmdShow);
+
         private static bool wait = false;
 
         /// <summary>
@@ -292,6 +300,36 @@ namespace Sync.Tools
         public static void Clear()
         {
             Console.Clear();
+        }
+
+        /// <summary>
+        /// 隐藏当前控制台窗口
+        /// </summary>
+        public static void HideConsole()
+        {
+            Console.Title = Guid.NewGuid().ToString();
+            IntPtr hWnd = FindWindow("ConsoleWindowClass", Console.Title);
+
+            if(hWnd != IntPtr.Zero)
+            {
+                ShowWindow(hWnd, 0);
+            }
+        }
+
+        /// <summary>
+        /// 显示当前控制台窗口
+        /// </summary>
+        public static void ShowConsole()
+        {
+            Console.Title = Guid.NewGuid().ToString();
+            IntPtr hWnd = FindWindow("ConsoleWindowClass", Console.Title);
+
+            if (hWnd != IntPtr.Zero)
+            {
+                Console.Title = "osu! Sync";
+                ShowWindow(hWnd, 1);
+            }
+
         }
     }
 }

@@ -7,13 +7,12 @@ using System.Linq;
 
 namespace Sync.Plugins
 {
-    public class PluginManager
+    public class PluginManager : IDisposable
     {
 
         List<Plugin> pluginList;
         private List<Assembly> asmList;
         internal PluginManager()
-
         {
             IO.CurrentIO.WriteColor("载入了 " + LoadPlugins() + " 个插件。", ConsoleColor.Green);
         }
@@ -89,7 +88,7 @@ namespace Sync.Plugins
 
             pluginList = new List<Plugin>();
             asmList = new List<Assembly>();
-
+            asmList.AddRange(AppDomain.CurrentDomain.GetAssemblies());
             if (!Directory.Exists(path)) return 0;
             Directory.SetCurrentDirectory(path);
 
@@ -98,6 +97,8 @@ namespace Sync.Plugins
             {
                 try
                 {
+                    if (asmList.Where(a => a.Location == file).Count() != 0)
+                        continue;
                     Assembly asm = Assembly.LoadFrom(file);
                     asmList.Add(asm);
                 }
@@ -117,7 +118,8 @@ namespace Sync.Plugins
                         Type it = asm.GetType(t.FullName);
                         if (it == null ||
                             !it.IsClass || !it.IsPublic ||
-                            !typeof(Plugin).IsAssignableFrom(it))
+                            !typeof(Plugin).IsAssignableFrom(it) ||
+                            typeof(Plugin) == it)
                             continue;
 
                         object pluginTest = asm.CreateInstance(it.FullName);
@@ -135,6 +137,15 @@ namespace Sync.Plugins
                 }
             }
             return pluginList.Count;
+        }
+
+        public void Dispose()
+        {
+            foreach(Plugin p in pluginList)
+            {
+                p.Dispose();
+            }
+            pluginList = null;
         }
     }
 }

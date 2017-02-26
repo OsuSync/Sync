@@ -62,7 +62,7 @@
             this.txtLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
             this.txtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtLog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtLog.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtLog.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtLog.ForeColor = System.Drawing.Color.White;
             this.txtLog.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.txtLog.Location = new System.Drawing.Point(12, 60);
@@ -78,7 +78,7 @@
             // 
             // lblTipsTargetIRC
             // 
-            this.lblTipsTargetIRC.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsTargetIRC.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsTargetIRC.ForeColor = System.Drawing.Color.White;
             this.lblTipsTargetIRC.Location = new System.Drawing.Point(300, 13);
             this.lblTipsTargetIRC.Name = "lblTipsTargetIRC";
@@ -91,7 +91,7 @@
             // 
             this.txtTargetIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.txtTargetIRC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtTargetIRC.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtTargetIRC.Font = new System.Drawing.Font("Microsoft YaHei Light", 12F);
             this.txtTargetIRC.ForeColor = System.Drawing.SystemColors.Info;
             this.txtTargetIRC.Location = new System.Drawing.Point(366, 13);
             this.txtTargetIRC.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
@@ -102,7 +102,7 @@
             // 
             // lblTipsBotIRC
             // 
-            this.lblTipsBotIRC.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsBotIRC.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsBotIRC.ForeColor = System.Drawing.Color.White;
             this.lblTipsBotIRC.Location = new System.Drawing.Point(12, 14);
             this.lblTipsBotIRC.Name = "lblTipsBotIRC";
@@ -115,7 +115,7 @@
             // 
             this.txtBotIRC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.txtBotIRC.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBotIRC.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtBotIRC.Font = new System.Drawing.Font("Microsoft YaHei Light", 12F);
             this.txtBotIRC.ForeColor = System.Drawing.SystemColors.Info;
             this.txtBotIRC.Location = new System.Drawing.Point(112, 13);
             this.txtBotIRC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -128,7 +128,7 @@
             // 
             this.txtBotIRCPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.txtBotIRCPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBotIRCPassword.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtBotIRCPassword.Font = new System.Drawing.Font("Microsoft YaHei Light", 12F);
             this.txtBotIRCPassword.ForeColor = System.Drawing.SystemColors.Info;
             this.txtBotIRCPassword.Location = new System.Drawing.Point(112, 43);
             this.txtBotIRCPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -140,7 +140,7 @@
             // 
             // lblTipsBotIRCPass
             // 
-            this.lblTipsBotIRCPass.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsBotIRCPass.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsBotIRCPass.ForeColor = System.Drawing.Color.White;
             this.lblTipsBotIRCPass.Location = new System.Drawing.Point(9, 43);
             this.lblTipsBotIRCPass.Name = "lblTipsBotIRCPass";
@@ -151,7 +151,7 @@
             // 
             // lblTipsStauts
             // 
-            this.lblTipsStauts.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsStauts.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsStauts.ForeColor = System.Drawing.Color.White;
             this.lblTipsStauts.Location = new System.Drawing.Point(38, 79);
             this.lblTipsStauts.Name = "lblTipsStauts";
@@ -162,7 +162,7 @@
             // 
             // lblTipsLiveStatus
             // 
-            this.lblTipsLiveStatus.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsLiveStatus.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsLiveStatus.ForeColor = System.Drawing.Color.Red;
             this.lblTipsLiveStatus.Location = new System.Drawing.Point(42, 79);
             this.lblTipsLiveStatus.Name = "lblTipsLiveStatus";
@@ -173,7 +173,7 @@
             // 
             // lblTipsOSUStatus
             // 
-            this.lblTipsOSUStatus.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsOSUStatus.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsOSUStatus.ForeColor = System.Drawing.Color.Red;
             this.lblTipsOSUStatus.Location = new System.Drawing.Point(103, 79);
             this.lblTipsOSUStatus.Name = "lblTipsOSUStatus";
@@ -191,7 +191,7 @@
             this.cmdStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdStart.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmdStart.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cmdStart.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cmdStart.ForeColor = System.Drawing.Color.White;
             this.cmdStart.Location = new System.Drawing.Point(35, 108);
             this.cmdStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -211,7 +211,7 @@
             this.cmdStop.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdStop.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmdStop.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cmdStop.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cmdStop.ForeColor = System.Drawing.Color.White;
             this.cmdStop.Location = new System.Drawing.Point(137, 108);
             this.cmdStop.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -231,7 +231,7 @@
             this.cmdLogin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdLogin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmdLogin.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cmdLogin.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cmdLogin.ForeColor = System.Drawing.Color.White;
             this.cmdLogin.Location = new System.Drawing.Point(238, 108);
             this.cmdLogin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -251,7 +251,7 @@
             this.cmdConsole.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdConsole.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdConsole.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmdConsole.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cmdConsole.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cmdConsole.ForeColor = System.Drawing.Color.White;
             this.cmdConsole.Location = new System.Drawing.Point(340, 108);
             this.cmdConsole.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -271,7 +271,7 @@
             this.cmdExit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.cmdExit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.cmdExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmdExit.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cmdExit.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cmdExit.ForeColor = System.Drawing.Color.White;
             this.cmdExit.Location = new System.Drawing.Point(441, 108);
             this.cmdExit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -286,7 +286,7 @@
             // 
             this.txtLiveID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.txtLiveID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtLiveID.Font = new System.Drawing.Font("微软雅黑 Light", 12F);
+            this.txtLiveID.Font = new System.Drawing.Font("Microsoft YaHei Light", 12F);
             this.txtLiveID.ForeColor = System.Drawing.SystemColors.Info;
             this.txtLiveID.Location = new System.Drawing.Point(366, 43);
             this.txtLiveID.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -297,7 +297,7 @@
             // 
             // lblTipsLiveID
             // 
-            this.lblTipsLiveID.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTipsLiveID.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTipsLiveID.ForeColor = System.Drawing.Color.White;
             this.lblTipsLiveID.Location = new System.Drawing.Point(300, 44);
             this.lblTipsLiveID.Name = "lblTipsLiveID";
@@ -309,7 +309,7 @@
             // lblTitle
             // 
             this.lblTitle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblTitle.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTitle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.lblTitle.Location = new System.Drawing.Point(12, 4);
             this.lblTitle.Name = "lblTitle";
@@ -349,7 +349,7 @@
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(299, 73);
             this.label1.Name = "label1";
@@ -376,7 +376,7 @@
             this.txtCmd.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.txtCmd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(55)))));
             this.txtCmd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtCmd.Font = new System.Drawing.Font("微软雅黑", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.txtCmd.Font = new System.Drawing.Font("Microsoft YaHei", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.txtCmd.ForeColor = System.Drawing.Color.White;
             this.txtCmd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtCmd.Location = new System.Drawing.Point(12, 309);
@@ -394,7 +394,7 @@
             this.lblClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.lblClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.lblClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblClose.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblClose.Font = new System.Drawing.Font("Microsoft YaHei", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblClose.ForeColor = System.Drawing.Color.White;
             this.lblClose.Location = new System.Drawing.Point(537, 1);
             this.lblClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -413,7 +413,7 @@
             this.lblMin.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.lblMin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.lblMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblMin.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblMin.Font = new System.Drawing.Font("Microsoft YaHei", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblMin.ForeColor = System.Drawing.Color.White;
             this.lblMin.Location = new System.Drawing.Point(493, 1);
             this.lblMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -432,7 +432,7 @@
             this.lblCollapse.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
             this.lblCollapse.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
             this.lblCollapse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lblCollapse.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblCollapse.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblCollapse.ForeColor = System.Drawing.Color.White;
             this.lblCollapse.Location = new System.Drawing.Point(449, 1);
             this.lblCollapse.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -457,7 +457,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lblTitle);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("微软雅黑 Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("Microsoft YaHei Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -465,6 +465,7 @@
             this.Name = "frmDefault";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "osu! Sync GUI";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDefault_FormClosing);
             this.Load += new System.EventHandler(this.frmDefault_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.ControlsPaint);
             this.panel1.ResumeLayout(false);

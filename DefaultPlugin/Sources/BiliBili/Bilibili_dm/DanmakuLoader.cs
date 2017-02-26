@@ -94,7 +94,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
                 {
                     Connected = true;
                     this.HeartbeatLoop();
-                    var thread = new Thread(this.ReceiveMessageLoop);
+                    Thread thread = new Thread(this.ReceiveMessageLoop);
                     thread.IsBackground = true;
                     thread.Start();
                     lastserver = ChatHost;
@@ -249,7 +249,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
             Connected = false;
             try
             {
-                Client.Close();
+                _disconnect();
             }
             catch (Exception e)
             {
@@ -270,10 +270,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
                 Client.Close();
 
                 NetStream = null;
-                if (Disconnected != null)
-                {
-                    Disconnected(this, new DisconnectEvtArgs() { Error = Error });
-                }
+                Disconnected?.Invoke(this, new DisconnectEvtArgs() { Error = Error });
             }
 
         }

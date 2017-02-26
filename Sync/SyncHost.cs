@@ -9,7 +9,7 @@ namespace Sync
     /// <summary>
     /// 程序Host类，用于管理和初始化各个模块的实例与可见性
     /// </summary>
-    public class SyncHost
+    public class SyncHost : IDisposable
     {
         private SyncManager sync;
         private CommandManager commands;
@@ -48,6 +48,7 @@ namespace Sync
                 CurrentIO.WriteColor("程序无法继续工作，请向上查找错误原因！", ConsoleColor.Red);
                 CurrentIO.ReadCommand();
                 throw new NullReferenceException("无法初始化Sync Manager实例!");
+                
             }
 
             plugins.ReadySync();
@@ -77,6 +78,24 @@ namespace Sync
         public IEnumerable<Plugin> EnumPluings()
         {
             return plugins.GetPlugins();
+        }
+
+        public void Dispose()
+        {
+            sync?.Dispose();
+            messages?.Dispose();
+            filters?.Dispose();
+            sources?.Dispose();
+            commands?.Dispose();
+            plugins?.Dispose();
+            sync = null;
+            messages = null;
+            filters = null;
+            sources = null;
+            commands = null;
+            plugins = null;
+
+
         }
 
         public CommandManager Commands

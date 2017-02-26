@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Plugins
 {
-    public class MessageDispatcher
+    public class MessageDispatcher : IDisposable
     {
 
         SyncConnector parent;
@@ -134,6 +134,11 @@ namespace Sync.Plugins
             }
 
         }
+
+        public void Dispose()
+        {
+            //nothing todo
+        }
     }
 
 
@@ -144,6 +149,11 @@ namespace Sync.Plugins
     {
         class SendFilter : IFilter, ISourceDanmaku
         {
+            public void Dispose()
+            {
+                
+            }
+
             public void onMsg(ref MessageBase msg)
             {
                 if (!msg.message.RawText.StartsWith("?send"))

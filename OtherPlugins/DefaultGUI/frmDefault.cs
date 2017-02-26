@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sync;
@@ -15,7 +16,7 @@ using System.Drawing.Drawing2D;
 
 namespace DefaultGUI
 {
-    public partial class frmDefault : Form, SyncIO
+    public partial class frmDefault : Form, SyncIO, IDisposable
     {
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -54,15 +55,16 @@ namespace DefaultGUI
                 txtTargetIRC.Text = Configuration.TargetIRC;
                 txtLiveID.Text = Configuration.LiveRoomID;
                 cbSources.Items.Clear();
-                foreach (var item in DefaultGUI.hoster.Sources.SourceList)
+                if(DefaultGUI.hoster?.Sources != null)
+                foreach (var item in DefaultGUI.hoster?.Sources?.SourceList)
                 {
                     cbSources.Items.Add(item);
                 }
-                cbSources.SelectedItem = DefaultGUI.hoster.SyncInstance.Connector.GetSource();
+                cbSources.SelectedItem = DefaultGUI.hoster?.SyncInstance?.Connector?.GetSource();
                 IO.SetIO(this);
 
                 var c = new AutoCompleteStringCollection();
-                c.AddRange(DefaultGUI.hoster.Commands.Dispatch.getCommandsHelp().Keys.ToArray());
+                if(DefaultGUI.hoster != null) c.AddRange(DefaultGUI.hoster?.Commands?.Dispatch?.getCommandsHelp().Keys.ToArray());
                 txtCmd.AutoCompleteCustomSource = c;
             }));
         }
@@ -82,6 +84,7 @@ namespace DefaultGUI
 
         public void UpdateStautsAuto()
         {
+            if(DefaultGUI.hoster != null)
             UpdateStatus(DefaultGUI.hoster.SyncInstance.Connector.SourceStatus, DefaultGUI.hoster.SyncInstance.Connector.IRCStatus);
         }
 
@@ -89,6 +92,11 @@ namespace DefaultGUI
         {
             Invoke(new MethodInvoker(() => Show()));
             ready();
+        }
+
+        public void CloseMe()
+        {
+            Invoke(new MethodInvoker(() => { Close(); Application.ExitThread(); }));
         }
 
         public void RefreshDelegate()
@@ -120,7 +128,7 @@ namespace DefaultGUI
         {
             while(DefaultGUI.InputFlag)
             { 
-                Task.Delay(1);
+                Thread.Sleep(1);
             }
             DefaultGUI.InputFlag = true;
             var command = txtCmd.Text;
@@ -343,6 +351,11 @@ namespace DefaultGUI
         private void ControlsPaint(object sender, PaintEventArgs e)
         {
             DrawRoundRect(e.Graphics, (Control)sender, BorderColor);
+        }
+
+        private void frmDefault_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cbSources.Items.Clear();
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Sync.Tools;
+using System;
 
 namespace Sync.Command
 {
-    public class CommandManager
+    public class CommandManager : IDisposable
     {
         CommandDispatch dispatch;
 
@@ -14,6 +15,11 @@ namespace Sync.Command
         public CommandDispatch Dispatch
         {
             get { return dispatch; }
+        }
+
+        public void Dispose()
+        {
+            dispatch.Dispose();
         }
 
         public void invokeCmdString(string cmd)

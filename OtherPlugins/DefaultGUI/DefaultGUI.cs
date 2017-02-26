@@ -11,6 +11,7 @@ using Sync.Command;
 
 namespace DefaultGUI
 {
+    [Serializable]
     public class DefaultGUI : Plugin
     {
         public const string PLUGIN_NAME = "Default GUI";
@@ -28,11 +29,22 @@ namespace DefaultGUI
             frmThread = new Thread(ShowForm);
             frmThread.SetApartmentState(ApartmentState.STA);
             frmThread.Name = "STAThreadForm";
+            
+            onLoadComplete += (t) => {
+                hoster = t; frmUI.ready();
+            };
+
+            onInitCommand += cmd => cmd.Dispatch.bind("gui", (t) => {
+                frmUI.ShowMe(); return true;
+            }, "显示UI");
+
+            onStartSync += t => 
+                frmUI.UpdateStautsAuto();
+
+            onStopSync += () => 
+                frmUI.UpdateStautsAuto();
+
             frmThread.Start();
-            onLoadComplete += (t) => { hoster = t; frmUI.ready(); };
-            onInitCommand += cmd => cmd.Dispatch.bind("gui", (t) => { frmUI.ShowMe(); return true; }, "显示UI");
-            onStartSync += t => frmUI.UpdateStautsAuto();
-            onStopSync += () => frmUI.UpdateStautsAuto();
         }
 
         [STAThread]
@@ -44,5 +56,13 @@ namespace DefaultGUI
             Application.Run(frmUI);
         }
 
+        public override void Dispose()
+        {
+            frmUI.CloseMe();
+            frmThread.Abort();
+            frmUI = null;
+            frmThread = null;
+            hoster = null;
+        }
     }
 }

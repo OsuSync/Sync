@@ -10,10 +10,10 @@ using Sync.MessageFilter;
 
 namespace Sync.IRC
 {
-    public class IRCClient
+    public class IRCClient : IDisposable
     {
         SyncConnector parent;
-        IrcClient client = new IrcClient();
+        IrcClient client = null;
         public const string CONST_ACTION_FLAG = "\x0001ACTION ";
         string username = Configuration.BotIRC;
         string password = Configuration.BotIRCPassword;
@@ -22,6 +22,7 @@ namespace Sync.IRC
         public IRCClient(SyncConnector p)
         {
             parent = p;
+            client = new IrcClient();
         }
 
         public bool isConnected = false;
@@ -81,6 +82,7 @@ namespace Sync.IRC
         public void disconnect()
         {
             client.WriteLine("QUIT :quit");
+            isConnected = false;
             if (client.IsConnected) client.Disconnect();
         }
 
@@ -94,5 +96,15 @@ namespace Sync.IRC
             client.WriteLine("PRIVMSG " + user + " :" + msg);
         }
 
+        public void Dispose()
+        {
+            if (client != null && client.IsConnected) disconnect();
+            client = null;
+        }
+
+        ~IRCClient()
+        {
+            Dispose();
+        }
     }
 }

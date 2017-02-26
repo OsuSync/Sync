@@ -12,7 +12,7 @@ namespace Sync.Plugins
     public delegate void StartSyncEvt(SyncConnector connector);
     public delegate void StopSyncEvt();
 
-    public interface IPlugin
+    public interface IPlugin : IDisposable
     {
         string getName();
         string getAuthor();
@@ -98,5 +98,7 @@ namespace Sync.Plugins
         {
             return Author;
         }
+
+        public abstract void Dispose();
     }
 }

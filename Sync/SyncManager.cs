@@ -13,7 +13,7 @@ namespace Sync
     /// 负责从配置文件中实例化指定弹幕源
     /// 并判断其是否支持弹幕发送。
     /// </summary>
-    public class SyncManager
+    public class SyncManager : IDisposable
     {
         public static bool loginable = false;
         private SyncConnector connector = null;
@@ -29,7 +29,7 @@ namespace Sync
 
             if (sources.SourceList.Count() == 0)
             {
-                CurrentIO.WriteColor("无法找到任何直播源！请安装一个直播源之后，再启动程序。", ConsoleColor.Red);
+                CurrentIO.WriteColor("无法找到任何直播源！请安装一个直播源。", ConsoleColor.Red);
                 return;
             }
 
@@ -60,6 +60,11 @@ namespace Sync
                 }
             }
 
+        }
+
+        public void Dispose()
+        {
+            connector.Dispose();
         }
     }
 }

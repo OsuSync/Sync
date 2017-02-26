@@ -16,9 +16,15 @@ namespace DefaultPlugin.Filters
         private List<CBaseGift> historyGift;
         private bool isRunning = false;
 
+        public void Dispose()
+        {
+            isRunning = false;
+            historyGift?.Clear();
+            giftRecyler?.Abort();
+        }
+
         internal GiftReceivePeeker()
         {
-            giftRecyler = new Thread(giftShowRecycle);
             historyGift = new List<CBaseGift>();        }
 
         public void onMsg(ref MessageBase msg)
@@ -33,6 +39,8 @@ namespace DefaultPlugin.Filters
 
         internal void StartRecycler()
         {
+            giftRecyler = new Thread(giftShowRecycle);
+            giftRecyler.IsBackground = true;
             giftRecyler.Start();
             isRunning = true;
         }
