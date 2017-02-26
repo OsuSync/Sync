@@ -75,6 +75,9 @@ namespace Sync.Command
         public void Dispose()
         {
             cmdList.Clear();
+            cmdDest.Clear();
+            cmdList = null;
+            cmdDest = null;
         }
     }
 }

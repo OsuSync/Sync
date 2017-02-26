@@ -82,7 +82,20 @@ namespace Sync
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            sync?.Dispose();
+            messages?.Dispose();
+            filters?.Dispose();
+            sources?.Dispose();
+            commands?.Dispose();
+            plugins?.Dispose();
+            sync = null;
+            messages = null;
+            filters = null;
+            sources = null;
+            commands = null;
+            plugins = null;
+
+
         }
 
         public CommandManager Commands

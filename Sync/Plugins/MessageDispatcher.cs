@@ -137,7 +137,7 @@ namespace Sync.Plugins
 
         public void Dispose()
         {
-            filters.Dispose();
+            //nothing todo
         }
     }
 

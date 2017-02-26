@@ -66,12 +66,6 @@ namespace Sync
             Src.onDanmuku += Src_onDanmuku;
             Src.onOnlineChange += Src_onOnlineChange;
             Src.onGift += Src_onGift;
-
-            SrcThread = new Thread(StartSource);
-            IRCThread = new Thread(StartIRC);
-
-            SrcThread.IsBackground = true;
-            IRCThread.IsBackground = true;
         }
 
         #region 连接源的事件
@@ -128,6 +122,8 @@ namespace Sync
         {
             IO.CurrentIO.Write("正在连接弹幕源服务器....");
             SourceStatus = true;
+            SrcThread = new Thread(StartSource);
+            SrcThread.IsBackground = true;
             SrcThread.Start();
         }
 
@@ -142,6 +138,8 @@ namespace Sync
         {
             IO.CurrentIO.Write("正在连接IRC服务器....");
             IRCStatus = true;
+            IRCThread = new Thread(StartIRC);
+            IRCThread.IsBackground = true;
             IRCThread.Start();
         }
 
@@ -164,6 +162,7 @@ namespace Sync
             IRC.connect();
             while (IRC.isConnected && IRCStatus && IsConnect) { Thread.Sleep(1); }
             IRC.disconnect();
+            IRCStatus = false;
         }
 
         #endregion
@@ -186,8 +185,8 @@ namespace Sync
         public void Disconnect()
         {
             IO.CurrentIO.Write("正在停止工作……");
-            if(IRCThread.IsAlive) StopIRCT();
-            if(SrcThread.IsAlive) StopSourceT();
+            if(IRCThread != null && IRCThread.IsAlive) StopIRCT();
+            if(SrcThread != null && SrcThread.IsAlive) StopSourceT();
         }
 
         /// <summary>
@@ -206,11 +205,14 @@ namespace Sync
         /// </summary>
         public void Dispose()
         {
-            if(IRCThread.ThreadState == ThreadState.Running) IRCThread.Abort();
-            if(SrcThread.ThreadState == ThreadState.Running) SrcThread.Abort();
+            if(IRCThread?.ThreadState == ThreadState.Running) IRCThread.Abort();
+            if(SrcThread?.ThreadState == ThreadState.Running) SrcThread.Abort();
             if (IRC != null) IRC?.Dispose();
             if (Src != null) Src?.Dispose();
-
+            IRCThread = null;
+            SrcThread = null;
+            IRC = null;
+            Src = null;
         }
 
         /// <summary>

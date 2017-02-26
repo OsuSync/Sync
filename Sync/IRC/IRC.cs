@@ -82,6 +82,7 @@ namespace Sync.IRC
         public void disconnect()
         {
             client.WriteLine("QUIT :quit");
+            isConnected = false;
             if (client.IsConnected) client.Disconnect();
         }
 
@@ -97,7 +98,8 @@ namespace Sync.IRC
 
         public void Dispose()
         {
-            if(client.IsConnected) client.Disconnect();
+            if (client != null && client.IsConnected) disconnect();
+            client = null;
         }
 
         ~IRCClient()

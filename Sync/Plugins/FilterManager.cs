@@ -114,8 +114,10 @@ namespace Sync.Plugins
                 {
                     f.Dispose();
                 }
+                item.Value.Clear();
             }
-
+            filters.Clear();
+            
         }
     }
 }

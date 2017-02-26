@@ -42,6 +42,8 @@ namespace Sync.Plugins
             {
                 item.Dispose();
             }
+            listSources.Clear();
+            listSources = null;
         }
     }
 }
