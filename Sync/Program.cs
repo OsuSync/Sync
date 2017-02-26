@@ -26,11 +26,16 @@ namespace Sync
                 string cmd = CurrentIO.ReadCommand();
                 while (true)
                 {
-                    if (cmd == "restart") return;
+                    if (cmd == "restart")
+                    {
+                        IO.SetIO(DefaultIO);
+                        return;
+                    }
                     host.Commands.invokeCmdString(cmd);
                     cmd = CurrentIO.ReadCommand();
                 }
             }
+            host = null;
         }
 
         static void Main(string[] args)

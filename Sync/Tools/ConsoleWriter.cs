@@ -22,8 +22,9 @@ namespace Sync.Tools
 
     public class IO
     {
+        public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
         public static SyncIO CurrentIO { get { return currIO; } private set { currIO = value; } }
-        private static SyncIO currIO = new NConsoleWriter();
+        private static SyncIO currIO = DefaultIO;
         public static void SetIO(SyncIO specIO)
         {
             CurrentIO = specIO;

@@ -60,6 +60,9 @@ namespace DefaultGUI
         {
             frmUI.CloseMe();
             frmThread.Abort();
+            frmUI = null;
+            frmThread = null;
+            hoster = null;
         }
     }
 }

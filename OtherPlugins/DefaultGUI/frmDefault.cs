@@ -55,15 +55,16 @@ namespace DefaultGUI
                 txtTargetIRC.Text = Configuration.TargetIRC;
                 txtLiveID.Text = Configuration.LiveRoomID;
                 cbSources.Items.Clear();
-                foreach (var item in DefaultGUI.hoster.Sources?.SourceList)
+                if(DefaultGUI.hoster?.Sources != null)
+                foreach (var item in DefaultGUI.hoster?.Sources?.SourceList)
                 {
                     cbSources.Items.Add(item);
                 }
-                cbSources.SelectedItem = DefaultGUI.hoster.SyncInstance.Connector.GetSource();
+                cbSources.SelectedItem = DefaultGUI.hoster?.SyncInstance?.Connector?.GetSource();
                 IO.SetIO(this);
 
                 var c = new AutoCompleteStringCollection();
-                c.AddRange(DefaultGUI.hoster.Commands.Dispatch.getCommandsHelp().Keys.ToArray());
+                if(DefaultGUI.hoster != null) c.AddRange(DefaultGUI.hoster?.Commands?.Dispatch?.getCommandsHelp().Keys.ToArray());
                 txtCmd.AutoCompleteCustomSource = c;
             }));
         }
@@ -83,6 +84,7 @@ namespace DefaultGUI
 
         public void UpdateStautsAuto()
         {
+            if(DefaultGUI.hoster != null)
             UpdateStatus(DefaultGUI.hoster.SyncInstance.Connector.SourceStatus, DefaultGUI.hoster.SyncInstance.Connector.IRCStatus);
         }
 
@@ -94,7 +96,7 @@ namespace DefaultGUI
 
         public void CloseMe()
         {
-            Invoke(new MethodInvoker(() => Close()));
+            Invoke(new MethodInvoker(() => { Close(); Application.ExitThread(); }));
         }
 
         public void RefreshDelegate()
