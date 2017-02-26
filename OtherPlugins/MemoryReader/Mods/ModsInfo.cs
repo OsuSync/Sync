@@ -41,11 +41,12 @@ namespace MemoryReader.Mods
             Random = 1 << 21,
             Cinema = 1 << 22,
             Target = 1 << 23,
+            ScoreV2 = 1 << 29
         }
 
         static private List<string> mod_short_str = new List<string>()
-        {"","NF","EZ","HD","HR","SD","DT","NC","RL","HT","FL","AP","SO","PF","RL2","PF","1K","2K","3K","4K","5K","6K","7K","8K","9K","KC",
-         "FI","RD","CE","TG"};
+        {"","NF","EZ","HD","HR","SD","DT","RL","HT","NC","FL","AP","SO","RL2","PF","1K","2K","3K","4K","5K","6K","7K","8K","9K","KC",
+         "FI","RD","CE","TG","V2"};
 
         static private Dictionary<string, string> mod_map = new Dictionary<string, string>();
 
@@ -70,7 +71,7 @@ namespace MemoryReader.Mods
         {
             get
             {
-                return Mod.ToString();
+                return Mod.ToString().Replace(" ","");
             }
         }
 
@@ -83,7 +84,9 @@ namespace MemoryReader.Mods
                 string[] mods_arr = mods_str.Replace(" ", "").Split(',');
                 foreach (var str in mods_arr)
                 {
-                    ret += mod_map[str];
+                    if (mod_map.ContainsKey(str))
+                        ret += mod_map[str];
+                    else return "Error";
                     ret += ",";
                 }
                 return ret.Remove(ret.Length - 1);
