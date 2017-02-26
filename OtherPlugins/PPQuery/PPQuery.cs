@@ -21,7 +21,8 @@ namespace PPQuery
 
         public override void Dispose()
         {
-            //nothing to do
+            onInitPlugin -= null;
+            onInitFilter -= null;
         }
 
         public void onMsg(ref MessageBase msg)

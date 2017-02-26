@@ -125,6 +125,7 @@ namespace NowPlaying
             callbacks = new List<Func<OSUStatus, Task<bool>>>();
             t = new Thread(CreateMSNWindow);
             t.SetApartmentState(ApartmentState.STA);
+            t.IsBackground = true;
             t.Name = "ActiveXThread";
         }
 
@@ -140,7 +141,11 @@ namespace NowPlaying
 
         public void Dispose()
         {
+            if (t != null) t.Abort();
+            t = null;
             DestoryMSNWindow();
+            callbacks.Clear();
+            lpWndClass = null;
         }
 
         #region WIN32Form Implement

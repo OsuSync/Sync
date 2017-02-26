@@ -26,13 +26,12 @@ namespace NowPlaying
 
         private void NowPlaying_onInitPlugin()
         {
-            handler.Load();
             Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            handler.Load();
             handler.registerCallback(p =>
             {
-                return new System.Threading.Tasks.Task<bool>(OnOSUStatusChange, p);
+                return new Task<bool>(OnOSUStatusChange, p);
             });
-
             handler.StartHandler();
         }
 
@@ -83,7 +82,8 @@ namespace NowPlaying
 
         public override void Dispose()
         {
-            handler.Dispose();
+            if(handler != null) handler.Dispose();
+            handler = null;
         }
     }
 }

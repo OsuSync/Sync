@@ -15,7 +15,7 @@ namespace DefaultPlugin.Source
     /// <summary>
     /// 实现发送弹幕功能
     /// </summary>
-    class BiliBiliSender
+    class BiliBiliSender : IDisposable
     {
         private Thread formThread;
         private HTMLViewForm form;
@@ -112,5 +112,10 @@ namespace DefaultPlugin.Source
             IO.CurrentIO.Write("发送完成!");
         }
 
+        public void Dispose()
+        {
+            if (formThread != null) formThread.Abort();
+            formThread = null;
+        }
     }
 }

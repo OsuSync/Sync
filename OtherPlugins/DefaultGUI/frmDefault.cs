@@ -16,7 +16,7 @@ using System.Drawing.Drawing2D;
 
 namespace DefaultGUI
 {
-    public partial class frmDefault : Form, SyncIO
+    public partial class frmDefault : Form, SyncIO, IDisposable
     {
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -349,6 +349,11 @@ namespace DefaultGUI
         private void ControlsPaint(object sender, PaintEventArgs e)
         {
             DrawRoundRect(e.Graphics, (Control)sender, BorderColor);
+        }
+
+        private void frmDefault_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cbSources.Items.Clear();
         }
     }
 }
