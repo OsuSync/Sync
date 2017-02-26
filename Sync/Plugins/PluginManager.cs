@@ -88,7 +88,7 @@ namespace Sync.Plugins
 
             pluginList = new List<Plugin>();
             asmList = new List<Assembly>();
-
+            asmList.AddRange(AppDomain.CurrentDomain.GetAssemblies());
             if (!Directory.Exists(path)) return 0;
             Directory.SetCurrentDirectory(path);
 
@@ -97,6 +97,8 @@ namespace Sync.Plugins
             {
                 try
                 {
+                    if (asmList.Where(a => a.Location == file).Count() != 0)
+                        continue;
                     Assembly asm = Assembly.LoadFrom(file);
                     asmList.Add(asm);
                 }
@@ -116,7 +118,8 @@ namespace Sync.Plugins
                         Type it = asm.GetType(t.FullName);
                         if (it == null ||
                             !it.IsClass || !it.IsPublic ||
-                            !typeof(Plugin).IsAssignableFrom(it))
+                            !typeof(Plugin).IsAssignableFrom(it) ||
+                            typeof(Plugin) == it)
                             continue;
 
                         object pluginTest = asm.CreateInstance(it.FullName);
@@ -142,7 +145,7 @@ namespace Sync.Plugins
             {
                 p.Dispose();
             }
-
+            pluginList = null;
         }
     }
 }
