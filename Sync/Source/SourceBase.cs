@@ -53,7 +53,7 @@ namespace Sync.Source
     /// 弹幕源接口
     /// 实现接口即可用于连接。
     /// </summary>
-    public interface ISourceBase : IDisposable
+    public interface ISourceBase
     {
         event ConnectedEvt onConnected;
         event DisconnectedEvt onDisconnected;

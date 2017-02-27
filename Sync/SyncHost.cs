@@ -9,7 +9,7 @@ namespace Sync
     /// <summary>
     /// 程序Host类，用于管理和初始化各个模块的实例与可见性
     /// </summary>
-    public class SyncHost : IDisposable
+    public class SyncHost
     {
         private SyncManager sync;
         private CommandManager commands;
@@ -78,16 +78,6 @@ namespace Sync
         public IEnumerable<Plugin> EnumPluings()
         {
             return plugins.GetPlugins();
-        }
-
-        public void Dispose()
-        {
-            commands?.Dispose();
-            filters?.Dispose();
-            messages?.Dispose();
-            sync?.Dispose();
-            sources?.Dispose();
-            plugins?.Dispose();
         }
 
         public CommandManager Commands

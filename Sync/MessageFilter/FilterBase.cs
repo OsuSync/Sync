@@ -102,7 +102,7 @@ namespace Sync.MessageFilter
         //just flag
     }
 
-    public interface IFilter : IDisposable
+    public interface IFilter
     {
         void onMsg(ref MessageBase msg);
 

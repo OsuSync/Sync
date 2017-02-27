@@ -12,35 +12,7 @@ namespace Sync
     static class Program
     {
 
-        public static SyncHost host;
-
-        static void Sync()
-        {
-            host = new SyncHost();
-            host.Load();
-
-            CurrentIO.WriteConfig();
-            CurrentIO.WriteWelcome();
-
-            string cmd = CurrentIO.ReadCommand();
-            while (true)
-            {
-                if (cmd == "restart")
-                {
-                    SetIO(DefaultIO);
-                    if (host.SyncInstance.Connector.IsConnect)
-                        host.SyncInstance.Connector.Disconnect();
-                    while (host.SyncInstance.Connector.IRCStatus || host.SyncInstance.Connector.SourceStatus)
-                        System.Threading.Thread.Sleep(1);
-                    break;
-                }
-                host.Commands.invokeCmdString(cmd);
-                cmd = CurrentIO.ReadCommand();
-            }
-            host.Dispose();
-            host = null;
-            return;
-        }
+        internal static SyncHost host;
 
         static void Main(string[] args)
         {
@@ -53,8 +25,18 @@ namespace Sync
 
             while(true)
             {
-                Sync();
-                GC.Collect();
+                host = new SyncHost();
+                host.Load();
+
+                CurrentIO.WriteConfig();
+                CurrentIO.WriteWelcome();
+
+                string cmd = CurrentIO.ReadCommand();
+                while (true)
+                {
+                    host.Commands.invokeCmdString(cmd);
+                    cmd = CurrentIO.ReadCommand();
+                }
             }
 
         }

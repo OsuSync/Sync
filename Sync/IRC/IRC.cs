@@ -10,7 +10,7 @@ using Sync.MessageFilter;
 
 namespace Sync.IRC
 {
-    public class IRCClient : IDisposable
+    public class IRCClient
     {
         SyncConnector parent;
         IrcClient client = null;
@@ -93,16 +93,6 @@ namespace Sync.IRC
         public void sendRawMessage(string user, string msg)
         {
             client.WriteLine("PRIVMSG " + user + " :" + msg);
-        }
-
-        public void Dispose()
-        {
-            if (client != null && client.IsConnected) disconnect();
-        }
-
-        ~IRCClient()
-        {
-            Dispose();
         }
     }
 }

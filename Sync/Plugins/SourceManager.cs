@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Plugins
 {
-    public class SourceManager : IDisposable
+    public class SourceManager
     {
         List<ISourceBase> listSources;
         public SourceManager()
@@ -34,15 +34,6 @@ namespace Sync.Plugins
                 listSources.Add(src);
             }
             return true;
-        }
-
-        public void Dispose()
-        {
-            foreach (var item in listSources)
-            {
-                item.Dispose();
-            }
-            listSources.Clear();
         }
     }
 }

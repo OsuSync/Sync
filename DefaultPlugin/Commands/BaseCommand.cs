@@ -9,6 +9,7 @@ using Sync.MessageFilter;
 using Sync.Command;
 using Sync.Tools;
 using Sync.Plugins;
+using System.Diagnostics;
 
 namespace DefaultPlugin.Commands
 {
@@ -32,6 +33,14 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("botirc", setbotirc, "botirc <ircID> <irc_password> 设置BotIRC(空格请替换为下划线)");
             manager.Dispatch.bind("msgmgr", msgmgr, "查看或者设置消息控制器相关内容,添加--help参数获取帮助");
             manager.Dispatch.bind("filters", filters, "列表所有当前可用消息过滤器");
+            manager.Dispatch.bind("restart", restart, "重新启动应用程序");
+        }
+
+        private bool restart(Arguments arg)
+        {
+            Process.Start(Assembly.GetEntryAssembly().Location);
+            Environment.Exit(0);
+            return true;
         }
 
         private bool filters(Arguments arg)

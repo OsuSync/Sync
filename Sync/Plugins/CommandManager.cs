@@ -3,7 +3,7 @@ using System;
 
 namespace Sync.Command
 {
-    public class CommandManager : IDisposable
+    public class CommandManager
     {
         CommandDispatch dispatch;
 
@@ -15,11 +15,6 @@ namespace Sync.Command
         public CommandDispatch Dispatch
         {
             get { return dispatch; }
-        }
-
-        public void Dispose()
-        {
-            dispatch.Dispose();
         }
 
         public void invokeCmdString(string cmd)

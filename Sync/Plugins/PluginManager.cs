@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Sync.Plugins
 {
-    public class PluginManager : IDisposable
+    public class PluginManager
     {
 
         List<Plugin> pluginList;
@@ -137,14 +137,6 @@ namespace Sync.Plugins
                 }
             }
             return pluginList.Count;
-        }
-
-        public void Dispose()
-        {
-            foreach(Plugin p in pluginList)
-            {
-                p.Dispose();
-            }
         }
     }
 }
