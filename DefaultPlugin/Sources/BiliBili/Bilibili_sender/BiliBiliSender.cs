@@ -115,7 +115,6 @@ namespace DefaultPlugin.Source
         public void Dispose()
         {
             if (formThread != null) formThread.Abort();
-            formThread = null;
         }
     }
 }

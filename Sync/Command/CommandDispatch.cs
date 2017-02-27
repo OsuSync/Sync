@@ -76,8 +76,6 @@ namespace Sync.Command
         {
             cmdList.Clear();
             cmdDest.Clear();
-            cmdList = null;
-            cmdDest = null;
         }
     }
 }

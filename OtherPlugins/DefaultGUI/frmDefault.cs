@@ -127,7 +127,8 @@ namespace DefaultGUI
         public string ReadCommand()
         {
             while(DefaultGUI.InputFlag)
-            { 
+            {
+
                 Thread.Sleep(1);
             }
             DefaultGUI.InputFlag = true;

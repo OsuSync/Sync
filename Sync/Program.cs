@@ -16,26 +16,30 @@ namespace Sync
 
         static void Sync()
         {
-            using (host = new SyncHost())
+            host = new SyncHost();
+            host.Load();
+
+            CurrentIO.WriteConfig();
+            CurrentIO.WriteWelcome();
+
+            string cmd = CurrentIO.ReadCommand();
+            while (true)
             {
-                host.Load();
-
-                CurrentIO.WriteConfig();
-                CurrentIO.WriteWelcome();
-
-                string cmd = CurrentIO.ReadCommand();
-                while (true)
+                if (cmd == "restart")
                 {
-                    if (cmd == "restart")
-                    {
-                        IO.SetIO(DefaultIO);
-                        return;
-                    }
-                    host.Commands.invokeCmdString(cmd);
-                    cmd = CurrentIO.ReadCommand();
+                    SetIO(DefaultIO);
+                    if (host.SyncInstance.Connector.IsConnect)
+                        host.SyncInstance.Connector.Disconnect();
+                    while (host.SyncInstance.Connector.IRCStatus || host.SyncInstance.Connector.SourceStatus)
+                        System.Threading.Thread.Sleep(1);
+                    break;
                 }
+                host.Commands.invokeCmdString(cmd);
+                cmd = CurrentIO.ReadCommand();
             }
+            host.Dispose();
             host = null;
+            return;
         }
 
         static void Main(string[] args)

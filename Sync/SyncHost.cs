@@ -82,20 +82,12 @@ namespace Sync
 
         public void Dispose()
         {
-            sync?.Dispose();
-            messages?.Dispose();
-            filters?.Dispose();
-            sources?.Dispose();
             commands?.Dispose();
+            filters?.Dispose();
+            messages?.Dispose();
+            sync?.Dispose();
+            sources?.Dispose();
             plugins?.Dispose();
-            sync = null;
-            messages = null;
-            filters = null;
-            sources = null;
-            commands = null;
-            plugins = null;
-
-
         }
 
         public CommandManager Commands

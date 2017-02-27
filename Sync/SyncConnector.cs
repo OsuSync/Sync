@@ -5,6 +5,7 @@ using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sync
 {
@@ -132,6 +133,7 @@ namespace Sync
             IO.CurrentIO.Write("正在断开弹幕源服务器的连接....");
             SourceStatus = false;
             Src.Disconnect();
+            while (Src.Stauts()) { Thread.Sleep(1); }
         }
 
         private void StartIRCT()
@@ -148,19 +150,21 @@ namespace Sync
             IO.CurrentIO.Write("正在断开IRC服务器的连接....");
             IRCStatus = false;
             IRC.disconnect();
+            while (IRC.isConnected) { Thread.Sleep(1); }
         }
 
         private void StartSource()
         {
             Src.Connect(int.Parse(Configuration.LiveRoomID));
-            while (Src.Stauts() && SourceStatus && IsConnect) { Thread.Sleep(1); }
+            while (SourceStatus && IsConnect && Src.Stauts()) { Thread.Sleep(1); }
             Src.Disconnect();
+            while (Src.Stauts()) { Thread.Sleep(1); }
         }
 
         private void StartIRC()
         {
             IRC.connect();
-            while (IRC.isConnected && IRCStatus && IsConnect) { Thread.Sleep(1); }
+            while (IRCStatus && IsConnect && IRC.isConnected) { Thread.Sleep(1); }
             IRC.disconnect();
             IRCStatus = false;
         }
@@ -185,8 +189,9 @@ namespace Sync
         public void Disconnect()
         {
             IO.CurrentIO.Write("正在停止工作……");
-            if(IRCThread != null && IRCThread.IsAlive) StopIRCT();
-            if(SrcThread != null && SrcThread.IsAlive) StopSourceT();
+            IsConnect = false;
+            if (IRCThread != null && IRCThread.IsAlive) StopIRCT();
+            if (SrcThread != null && SrcThread.IsAlive) StopSourceT();
         }
 
         /// <summary>
@@ -209,18 +214,6 @@ namespace Sync
             if(SrcThread?.ThreadState == ThreadState.Running) SrcThread.Abort();
             if (IRC != null) IRC?.Dispose();
             if (Src != null) Src?.Dispose();
-            IRCThread = null;
-            SrcThread = null;
-            IRC = null;
-            Src = null;
-        }
-
-        /// <summary>
-        /// finalize
-        /// </summary>
-        ~SyncConnector()
-        {
-            Dispose();
         }
     }
 }

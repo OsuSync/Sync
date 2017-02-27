@@ -246,10 +246,11 @@ namespace Sync.Source.BiliBili.BiliBili_dm
         public void Disconnect()
         {
 
-            Connected = false;
+            
             try
             {
                 _disconnect();
+                Connected = false;
             }
             catch (Exception e)
             {

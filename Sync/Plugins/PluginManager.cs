@@ -145,7 +145,6 @@ namespace Sync.Plugins
             {
                 p.Dispose();
             }
-            pluginList = null;
         }
     }
 }
