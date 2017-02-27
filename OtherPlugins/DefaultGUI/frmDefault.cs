@@ -211,7 +211,7 @@ namespace DefaultGUI
         public void WriteWelcome()
         {
             Write("欢迎使用 osu直播弹幕同步工具 ver " +
-       System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
         }
 
         private void lblClose_Click(object sender, EventArgs e)
@@ -235,6 +235,7 @@ namespace DefaultGUI
         private void txtLog_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             txtCmd.Focus();
+            txtCmd_KeyDown(sender, new KeyEventArgs(e.KeyCode));
         }
 
         private async void lblCollapse_Click(object sender, EventArgs e)
