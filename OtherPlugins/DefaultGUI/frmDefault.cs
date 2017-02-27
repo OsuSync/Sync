@@ -225,6 +225,7 @@ namespace DefaultGUI
             {
                 DefaultGUI.InputFlag = false;
             }
+            if (sender == txtLog) txtCmd.AppendText(e.KeyData.ToString().ToLower());
         }
 
         private void lblMin_Click(object sender, EventArgs e)
@@ -235,7 +236,7 @@ namespace DefaultGUI
         private void txtLog_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             txtCmd.Focus();
-            txtCmd_KeyDown(sender, new KeyEventArgs(e.KeyCode));
+            txtCmd_KeyDown(txtLog, new KeyEventArgs(e.KeyCode));
         }
 
         private async void lblCollapse_Click(object sender, EventArgs e)
