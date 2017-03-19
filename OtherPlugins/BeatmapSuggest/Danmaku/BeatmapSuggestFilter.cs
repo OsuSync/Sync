@@ -127,5 +127,10 @@ namespace BeatmapSuggest.Danmaku
         {
             msgManager = manager;
         }
+
+        public void Dispose()
+        {
+            //nothing to do
+        }
     }
 }

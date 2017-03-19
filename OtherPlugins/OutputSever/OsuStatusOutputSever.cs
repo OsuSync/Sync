@@ -34,6 +34,26 @@ namespace OsuStatusOutputSever
         volatile bool isRunning = false;
         public bool IsRun { get { return isRunning; } }
 
+        public override void Dispose()
+        {
+            ForceStop();
+
+            socketThread.Abort();
+
+            beatmapSetId = -1;
+            beatmapId = -1;
+            combo = 0;
+            mods = 0;
+            currentHP = -1;
+            currentACC = -1;
+        }
+
+        void ForceStop()
+        {
+            isRunning = true;
+            Stop();
+        }
+
         public void Stop()
         {
             if (!isRunning)

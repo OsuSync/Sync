@@ -32,5 +32,10 @@ namespace BanManagerPlugin.Ban
             if (GetInfo().IsBanned(msg.user.RawText))
                 msg.cancel = true;
         }
+
+        public void Dispose()
+        {
+            //nothing to do
+        }
     }
 }

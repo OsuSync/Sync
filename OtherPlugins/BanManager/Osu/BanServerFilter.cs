@@ -246,5 +246,10 @@ namespace BanManagerPlugin.Ban
                     break;
             }
         }
+
+        public void Dispose()
+        {
+            //nothing to do
+        }
     }
 }

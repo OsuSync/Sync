@@ -62,5 +62,10 @@ namespace RecentlyUserQuery.Osu
             danmaku.danmuku = message;
             manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
+
+        public void Dispose()
+        {
+            //nothing to do
+        }
     }
 }

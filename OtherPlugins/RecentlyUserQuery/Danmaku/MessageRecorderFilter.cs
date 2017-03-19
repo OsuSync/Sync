@@ -17,6 +17,11 @@ namespace RecentlyUserQuery.Danmaku
             this.recorder = recoder;
         }
 
+        public void Dispose()
+        {
+            recorder.Clear();
+        }
+
         //listening messages from Danmaku
         public void onMsg(ref MessageBase msg)
         {
