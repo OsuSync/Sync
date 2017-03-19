@@ -24,5 +24,10 @@ namespace BanManagerPlugin
 
             base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
         }
+
+        public override void Dispose()
+        {
+            //nothing to do
+        }
     }
 }
