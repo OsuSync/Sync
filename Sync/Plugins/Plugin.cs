@@ -99,5 +99,10 @@ namespace Sync.Plugins
         {
             return Author;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

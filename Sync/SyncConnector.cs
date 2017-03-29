@@ -94,7 +94,7 @@ namespace Sync
             {
                 IsConnect = false;
                 IO.CurrentIO.Write("服务器连接被断开，3秒后重连！");
-                System.Threading.Tasks.Task.Delay(3000);
+                Task.Delay(3000);
                 Connect();
             }
             else

@@ -112,5 +112,10 @@ namespace DefaultPlugin.Source.BiliBili
             return SOURCE_AUTHOR;
         }
 
+        public override string ToString()
+        {
+            return SOURCE_NAME;
+        }
+
     }
 }
