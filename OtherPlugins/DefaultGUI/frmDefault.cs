@@ -127,7 +127,8 @@ namespace DefaultGUI
         public string ReadCommand()
         {
             while(DefaultGUI.InputFlag)
-            { 
+            {
+
                 Thread.Sleep(1);
             }
             DefaultGUI.InputFlag = true;
@@ -210,7 +211,7 @@ namespace DefaultGUI
         public void WriteWelcome()
         {
             Write("欢迎使用 osu直播弹幕同步工具 ver " +
-       System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
         }
 
         private void lblClose_Click(object sender, EventArgs e)
@@ -224,6 +225,7 @@ namespace DefaultGUI
             {
                 DefaultGUI.InputFlag = false;
             }
+            if (sender == txtLog) txtCmd.AppendText(e.KeyData.ToString().ToLower());
         }
 
         private void lblMin_Click(object sender, EventArgs e)
@@ -234,6 +236,7 @@ namespace DefaultGUI
         private void txtLog_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             txtCmd.Focus();
+            txtCmd_KeyDown(txtLog, new KeyEventArgs(e.KeyCode));
         }
 
         private async void lblCollapse_Click(object sender, EventArgs e)

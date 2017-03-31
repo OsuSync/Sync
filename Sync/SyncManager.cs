@@ -13,7 +13,7 @@ namespace Sync
     /// 负责从配置文件中实例化指定弹幕源
     /// 并判断其是否支持弹幕发送。
     /// </summary>
-    public class SyncManager : IDisposable
+    public class SyncManager
     {
         public static bool loginable = false;
         private SyncConnector connector = null;
@@ -60,11 +60,6 @@ namespace Sync
                 }
             }
 
-        }
-
-        public void Dispose()
-        {
-            connector.Dispose();
         }
     }
 }

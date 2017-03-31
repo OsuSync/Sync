@@ -79,11 +79,5 @@ namespace NowPlaying
         {
             ((IMSNHandler)handler).registerCallback(callback);
         }
-
-        public override void Dispose()
-        {
-            if(handler != null) handler.Dispose();
-            handler = null;
-        }
     }
 }

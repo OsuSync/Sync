@@ -13,11 +13,6 @@ namespace DefaultPlugin.Filters
     {
         private uint usercount = 0;
 
-        public void Dispose()
-        {
-            //nothing to do
-        }
-
         public void onMsg(ref MessageBase msg)
         {
             OnlineChangeMessage castMsg = msg as OnlineChangeMessage;

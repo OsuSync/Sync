@@ -139,15 +139,6 @@ namespace NowPlaying
             t.Start();
         }
 
-        public void Dispose()
-        {
-            if (t != null) t.Abort();
-            t = null;
-            DestoryMSNWindow();
-            callbacks.Clear();
-            lpWndClass = null;
-        }
-
         #region WIN32Form Implement
         [STAThread]
         private void CreateMSNWindow()

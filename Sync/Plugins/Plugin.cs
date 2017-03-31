@@ -1,5 +1,6 @@
 ﻿using Sync.Command;
 using System;
+using System.Reflection;
 
 namespace Sync.Plugins
 {
@@ -12,13 +13,13 @@ namespace Sync.Plugins
     public delegate void StartSyncEvt(SyncConnector connector);
     public delegate void StopSyncEvt();
 
-    public interface IPlugin : IDisposable
+    public interface IPlugin
     {
         string getName();
         string getAuthor();
     }
 
-    public abstract class Plugin : IPlugin
+    public abstract class Plugin
     {
         public readonly string Name;
         public readonly string Author;
@@ -99,6 +100,9 @@ namespace Sync.Plugins
             return Author;
         }
 
-        public abstract void Dispose();
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

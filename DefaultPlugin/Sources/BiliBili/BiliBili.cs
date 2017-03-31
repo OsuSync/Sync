@@ -112,9 +112,10 @@ namespace DefaultPlugin.Source.BiliBili
             return SOURCE_AUTHOR;
         }
 
-        public void Dispose()
+        public override string ToString()
         {
-            client?.Disconnect();
+            return SOURCE_NAME;
         }
+
     }
 }

@@ -193,16 +193,5 @@ namespace DefaultPlugin.Sources.Douyutv
         {
             return isConencted;
         }
-
-        public void Dispose()
-        {
-            if(socket != null)
-            {
-                stream.Dispose();
-                socket.Close();
-            }
-
-            
-        }
     }
 }

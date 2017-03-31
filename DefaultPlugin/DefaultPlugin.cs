@@ -49,12 +49,5 @@ namespace DefaultPlugin
             MainInstance = host.SyncInstance;
             MainMessager = host.Messages;
         }
-
-        public override void Dispose()
-        {
-            fltFormat.Dispose();
-            fltGift.Dispose();
-            fltOnline.Dispose();
-        }
     }
 }

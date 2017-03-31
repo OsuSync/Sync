@@ -5,13 +5,14 @@ using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sync
 {
     /// <summary>
     /// 连接逻辑类，负责协调IRC和弹幕源的通讯、通讯时事件触发与管理
     /// </summary>
-    public class SyncConnector : IDisposable
+    public class SyncConnector
     {
         private IRCClient IRC = null;
         private ISourceBase Src = null;
@@ -93,7 +94,7 @@ namespace Sync
             {
                 IsConnect = false;
                 IO.CurrentIO.Write("服务器连接被断开，3秒后重连！");
-                System.Threading.Tasks.Task.Delay(3000);
+                Task.Delay(3000);
                 Connect();
             }
             else
@@ -132,6 +133,7 @@ namespace Sync
             IO.CurrentIO.Write("正在断开弹幕源服务器的连接....");
             SourceStatus = false;
             Src.Disconnect();
+            while (Src.Stauts()) { Thread.Sleep(1); }
         }
 
         private void StartIRCT()
@@ -148,19 +150,21 @@ namespace Sync
             IO.CurrentIO.Write("正在断开IRC服务器的连接....");
             IRCStatus = false;
             IRC.disconnect();
+            while (IRC.isConnected) { Thread.Sleep(1); }
         }
 
         private void StartSource()
         {
             Src.Connect(int.Parse(Configuration.LiveRoomID));
-            while (Src.Stauts() && SourceStatus && IsConnect) { Thread.Sleep(1); }
+            while (SourceStatus && IsConnect && Src.Stauts()) { Thread.Sleep(1); }
             Src.Disconnect();
+            while (Src.Stauts()) { Thread.Sleep(1); }
         }
 
         private void StartIRC()
         {
             IRC.connect();
-            while (IRC.isConnected && IRCStatus && IsConnect) { Thread.Sleep(1); }
+            while (IRCStatus && IsConnect && IRC.isConnected) { Thread.Sleep(1); }
             IRC.disconnect();
             IRCStatus = false;
         }
@@ -185,8 +189,9 @@ namespace Sync
         public void Disconnect()
         {
             IO.CurrentIO.Write("正在停止工作……");
-            if(IRCThread != null && IRCThread.IsAlive) StopIRCT();
-            if(SrcThread != null && SrcThread.IsAlive) StopSourceT();
+            IsConnect = false;
+            if (IRCThread != null && IRCThread.IsAlive) StopIRCT();
+            if (SrcThread != null && SrcThread.IsAlive) StopSourceT();
         }
 
         /// <summary>
@@ -198,29 +203,6 @@ namespace Sync
             IO.CurrentIO.Write("重新开始工作中……");
             Disconnect();
             Connect();
-        }
-
-        /// <summary>
-        /// IDisposeable
-        /// </summary>
-        public void Dispose()
-        {
-            if(IRCThread?.ThreadState == ThreadState.Running) IRCThread.Abort();
-            if(SrcThread?.ThreadState == ThreadState.Running) SrcThread.Abort();
-            if (IRC != null) IRC?.Dispose();
-            if (Src != null) Src?.Dispose();
-            IRCThread = null;
-            SrcThread = null;
-            IRC = null;
-            Src = null;
-        }
-
-        /// <summary>
-        /// finalize
-        /// </summary>
-        ~SyncConnector()
-        {
-            Dispose();
         }
     }
 }
