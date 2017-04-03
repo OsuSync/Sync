@@ -29,7 +29,7 @@ Certification : B站网页的cookie，如果你想在IRC发送消息到直播间
 ![Example](images/a.png)
 
 ### 启用osuSync
-如果已经配置好了，那么请在程序输入start指令.
+如果已经配置好了，那么请在程序输入`start`指令.
 ![start](images/b.png)
 
 如果成功的话你可以发现你的小号已经登录在IRC了
@@ -37,13 +37,12 @@ Certification : B站网页的cookie，如果你想在IRC发送消息到直播间
 
 这时候你可以测试是否流通了(其实不用
 ![test](images/d.png)
-默认情况下，自己发送的消息会回流到irc，如刚才情况。如果想要禁止回流的话请在IRC里面输入:
-?ban (你直播间ID名)
+默认情况下，自己发送的消息会回流到irc，如刚才情况。如果想要禁止回流的话请在IRC里面输入`ban (你直播间ID名)`
 
 ### 账号登录
 ![cookies](images/e.png)
 
-从IRC发送弹幕到直播间需要账号登录，并提取cookie.那么就拿BILIBILI来举例，你可以在你的浏览器(chrome内核)打开B站直播首页。按F12打开控制台(Console).输入"doucument.cookie"并回车，将出现的红色内容复制，打开config.ini，在Provider变量下面起一行写`Certification=红色内容`,如之前的图所示；或者你也可以直接在软件内容输入
+从IRC发送弹幕到直播间需要账号登录，并提取cookie.那么就拿BILIBILI来举例，你可以在你的浏览器(chrome内核)打开B站直播首页。按F12打开控制台(Console).输入`doucument.cookie`并回车，将出现的红色内容复制，打开config.ini，在Provider变量下面起一行写`Certification=红色内容`,如之前的图所示；或者你也可以直接在软件内容输入
 `login B站用户名 密码(这个可不写)`
 输入回车后会跳出一个框，然后会跳到B站登陆界面，请在那里输入账号密码和验证码，登陆，成功后自动消失。
 
@@ -51,9 +50,7 @@ Certification : B站网页的cookie，如果你想在IRC发送消息到直播间
 
 
 ### 关闭osuSync
-别怂，右上角,或者在程序输入:
-stop
-
+别怂，右上角,或者在程序输入`stop`
 ### 关于以及声明
 1.	本程序本质是一个消息收发程序，其对OSU频道的收发均是通过IRC协议编写轮子使用。对于直播间也是通过模拟环境以及Client接受直播间弹幕信息。所以本软件并非是非法软件(
 
