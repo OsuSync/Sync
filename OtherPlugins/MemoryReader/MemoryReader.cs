@@ -59,10 +59,5 @@ namespace MemoryReader
 #endif
             m_osu_listener.Start();
         }
-
-        public override void Dispose()
-        {
-            m_osu_listener.Stop();
-        }
     }
 }
