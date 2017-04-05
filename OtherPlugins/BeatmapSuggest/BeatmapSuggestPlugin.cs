@@ -20,10 +20,5 @@ namespace BeatmapSuggest
             base.onInitFilter += manager => manager.AddFilter(this.filter);
             base.onLoadComplete += host => this.filter.SetFilterManager(host.Messages);
         }
-
-        public override void Dispose()
-        {
-            //nothing to do
-        }
     }
 }

@@ -34,6 +34,7 @@ namespace OsuStatusOutputSever
         volatile bool isRunning = false;
         public bool IsRun { get { return isRunning; } }
 
+		/*
         public override void Dispose()
         {
             ForceStop();
@@ -47,6 +48,7 @@ namespace OsuStatusOutputSever
             currentHP = -1;
             currentACC = -1;
         }
+		*/
 
         void ForceStop()
         {

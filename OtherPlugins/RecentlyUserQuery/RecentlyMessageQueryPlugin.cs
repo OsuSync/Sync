@@ -57,11 +57,7 @@ namespace RecentlyUserQuery
         {
             throw new NotImplementedException();
         }
-
-        public override void Dispose()
-        {
-            //nothing to do
-        }
+		
     }
 
     public class UserIdGenerator
