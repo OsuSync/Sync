@@ -8,9 +8,19 @@ namespace Sync.Tools
 {
     class IniLanguageFile
     {
-        private Dictionary<string, string> lang = new Dictionary<string, string>();
+        private Dictionary<string, string> lang;
 
         public IniLanguageFile(Dictionary<string, string> collections)
+        {
+            lang = collections;
+        }
+
+        public IniLanguageFile(string FilePath, bool Mode)
+        {
+
+        }
+
+        public IniLanguageFile(string content)
         {
 
         }
@@ -19,6 +29,7 @@ namespace Sync.Tools
     class I18nProvider
     {
         public string Name { get; private set; }
+        public Dictionary<string, string> Langs { get; private set; }
 
     }
 
@@ -28,6 +39,24 @@ namespace Sync.Tools
         static void RegisterProvider(I18nProvider provider)
         {
             providers.Add(provider.Name, provider);
+        }
+
+        static string GetLanguage(string Key)
+        {
+            foreach(var item in providers)
+            {
+                foreach (var p in item.Value.Langs)
+                {
+                    if (p.Key == Key) return p.Value;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        static string GetLanguage(I18nProvider provider, string Key)
+        {
+            return provider.Langs[Key];
         }
 
         static I18nProvider Find(string Name)
