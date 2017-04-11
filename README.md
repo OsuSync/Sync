@@ -2,10 +2,10 @@
 
 ![osuSyncIcon](Sync/Resources/osu!%20001.ico)
 
-## [Releases下载](http://git.oschina.net/remilia/osuSync/releases) [git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档](help_readme/README.md) 
+## [Releases下载](/releases) [CN git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档](help_readme/README.md) 
 
 是的，你可以同步弹幕到osu!中，同时将你的智商同步到osu!里。
-本软件使用[WTFPL协议](LICENSE)授权
+本软件使用[MIT协议](LICENSE)授权
 
 ## 1.IRC
 
