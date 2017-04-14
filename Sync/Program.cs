@@ -13,6 +13,7 @@ namespace Sync
     {
 
         internal static SyncHost host;
+        public static I18n i18n;
 
         static void Main(string[] args)
         {
@@ -22,7 +23,9 @@ namespace Sync
              *    3.初始化Sync类，Sync类检测配置文件，用正确的类初始化SyncInstance
              *    4.程序IO Manager开始工作，等待用户输入
              */
-
+            i18n = new I18n(I18n.CurrentLang);
+            i18n.ApplyLanguage(new DefaultI18n());
+            
             while(true)
             {
                 host = new SyncHost();
