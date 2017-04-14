@@ -25,6 +25,6 @@ namespace Sync.Source.BiliBili.BiliBili_dm
     }
     abstract class ConnectedEvtArgs
     {
-        public int roomid;
+        public int roomid = 0;
     }
 }
