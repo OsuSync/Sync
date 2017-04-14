@@ -4,6 +4,7 @@ using Sync.Tools;
 using System;
 using System.Diagnostics;
 using static Sync.Tools.IO;
+using static Sync.Tools.DefaultI18n;
 using System.Linq;
 
 namespace Sync
@@ -24,12 +25,12 @@ namespace Sync
 
             if (Configuration.LiveRoomID.Length == 0)
             {
-                CurrentIO.WriteColor("请配置 'config.ini' 后再开始进行同步操作。\n", ConsoleColor.DarkRed);
+                CurrentIO.WriteColor(LANG_NotConfig, ConsoleColor.DarkRed);
             }
 
             if (sources.SourceList.Count() == 0)
             {
-                CurrentIO.WriteColor("无法找到任何直播源！请安装一个直播源。", ConsoleColor.Red);
+                CurrentIO.WriteColor(LANG_NoSource, ConsoleColor.Red);
                 return;
             }
 
@@ -43,20 +44,20 @@ namespace Sync
 
             if (connector == null)
             {
-                CurrentIO.WriteColor("找不到默认匹配的直播源，直接使用第一个。", ConsoleColor.DarkRed);
+                CurrentIO.WriteColor(LANG_MissSource, ConsoleColor.DarkRed);
                 connector = new SyncConnector(sources.SourceList.First());
             }
 
-            CurrentIO.WriteColor("设置 " + connector.GetSource().getSourceName() + " 为直播弹幕源", ConsoleColor.Yellow);
+            CurrentIO.WriteColor(String.Format(LANG_SetSource, connector.GetSource().getSourceName()), ConsoleColor.Yellow);
 
             if (connector.GetSource() is ISendable)
             {
                 loginable = true;
-                CurrentIO.WriteColor("提示:当前弹幕源支持游戏内发送到弹幕源的功能，请输入login [用户名] [密码] 来登录!(用户名、密码二者可选输入)\n", ConsoleColor.Yellow);
+                CurrentIO.WriteColor(LANG_SupportSend, ConsoleColor.Yellow);
                 if (Configuration.LoginCertification.Length > 0)
                 {
-                    CurrentIO.Write("Certification长度:" + Configuration.LoginCertification.Length);
-                    CurrentIO.WriteColor("提示：当前已有登录Certification记录，如需覆盖，请输入login [用户名] [密码]进行覆盖！（用户名密码可选输入）\n", ConsoleColor.Red);
+                    CurrentIO.Write(String.Format(LANG_CertLength, Configuration.LoginCertification.Length));
+                    CurrentIO.WriteColor(LANG_CertExist, ConsoleColor.Red);
                 }
             }
 

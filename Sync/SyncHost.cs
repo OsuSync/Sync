@@ -1,9 +1,10 @@
 ﻿using Sync.Command;
 using Sync.Plugins;
+using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using static Sync.Tools.IO;
-
+using static Sync.Tools.DefaultI18n;
 namespace Sync
 {
     /// <summary>
@@ -33,37 +34,38 @@ namespace Sync
         /// </summary>
         internal void Load()
         {
-            CurrentIO.Write("Loading......");
+            CurrentIO.Write(LANG_Loading);
 
             plugins = new PluginManager();
+            CurrentIO.WriteColor(String.Format(LANG_Plugins, plugins.LoadPlugins()), ConsoleColor.Green);
 
             sources = new SourceManager();
-            CurrentIO.WriteColor("读取了 " + plugins.LoadSources() + " 个直播源。", ConsoleColor.Green);
+            CurrentIO.WriteColor(String.Format(LANG_Sources, plugins.LoadSources()), ConsoleColor.Green);
 
             sync = new SyncManager(sources);
 
             if (sync.Connector == null)
             {
                 CurrentIO.Write("");
-                CurrentIO.WriteColor("程序无法继续工作，请向上查找错误原因！", ConsoleColor.Red);
+                CurrentIO.WriteColor(LANG_Error, ConsoleColor.Red);
                 CurrentIO.ReadCommand();
-                throw new NullReferenceException("无法初始化Sync Manager实例!");
+                throw new NullReferenceException(LANG_Error);
                 
             }
 
             plugins.ReadySync();
 
             commands = new CommandManager();
-            CurrentIO.WriteColor("载入了 " + plugins.LoadCommnads() + " 个可用命令。", ConsoleColor.Green);
+            CurrentIO.WriteColor(String.Format(LANG_Commands, plugins.LoadCommnads()), ConsoleColor.Green);
 
             filters = new FilterManager();
-            CurrentIO.WriteColor("载入了 " + plugins.LoadFilters() + " 个消息过滤器。\n", ConsoleColor.Green);
+            CurrentIO.WriteColor(String.Format(LANG_Filters, plugins.LoadFilters()), ConsoleColor.Green);
 
             messages = new MessageDispatcher(sync.Connector, filters);
 
             plugins.ReadyProgram();
 
-            CurrentIO.WriteColor("同步已准备就绪！", ConsoleColor.Cyan);
+            CurrentIO.WriteColor(LANG_Ready, ConsoleColor.Cyan);
         }
 
         /// <summary>

@@ -36,10 +36,10 @@ namespace Sync.Tools
         /// <param name="key">键</param>
         /// <param name="column">索引</param>
         /// <returns>配置信息</returns>
-        private static string IniReadValue(string key, string column = "config")
+        internal static string IniReadValue(string FilePath, string key, string column = "config")
         {
             StringBuilder temp = new StringBuilder(1536);
-            GetPrivateProfileString(column, key, "", temp, 1536, ConfigFile);
+            GetPrivateProfileString(column, key, "", temp, 1536, FilePath);
             return temp.ToString();
         }
         /// <summary>
@@ -50,7 +50,7 @@ namespace Sync.Tools
         /// <returns>配置信息</returns>
         public static string Read(string key, string column = "config")
         {
-            return IniReadValue(key, column);
+            return IniReadValue(ConfigFile, key, column);
         }
         /// <summary>
         /// 按枚举读取配置文件
@@ -59,7 +59,7 @@ namespace Sync.Tools
         /// <returns>配置信息</returns>
         public static string ReadConfig(DefaultConfig key)
         {
-            return IniReadValue(Enum.GetName(typeof(DefaultConfig), key));
+            return IniReadValue(ConfigFile, Enum.GetName(typeof(DefaultConfig), key));
         }
         /// <summary>
         /// 写入配置文件
@@ -68,9 +68,9 @@ namespace Sync.Tools
         /// <param name="value">值</param>
         /// <param name="column">索引</param>
         /// <returns></returns>
-        public static bool Write(string key, string value, string column = "config")
+        public static bool Write(string File, string key, string value, string column = "config")
         {
-            return WritePrivateProfileString(column, key, value, ConfigFile);
+            return WritePrivateProfileString(column, key, value, File);
         }
         /// <summary>
         /// 按枚举写入配置文件
@@ -80,7 +80,7 @@ namespace Sync.Tools
         /// <returns></returns>
         public static bool WriteConfig(DefaultConfig key, string value)
         {
-            return Write(Enum.GetName(typeof(DefaultConfig), key), value);
+            return Write(ConfigFile, Enum.GetName(typeof(DefaultConfig), key), value);
         }
     }
 }

@@ -6,7 +6,7 @@ using Sync.Tools;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
+using static Sync.Tools.DefaultI18n;
 namespace Sync
 {
     /// <summary>
@@ -34,7 +34,7 @@ namespace Sync
         /// 使用Message Filter替代直接发送消息（改用IRC类内部方法）
         /// </summary>
         /// <param name="msg">要发送的消息</param>
-        [Obsolete("使用Message Filter替代直接发送消息（改用IRC类内部方法）", true)]
+        [Obsolete("Using 'Message Filter' to replace sendMessage directly.", true)]
         public void IRCSendMessage(string msg)
         {
             //if(IRCStatus)
@@ -45,7 +45,7 @@ namespace Sync
         /// 使用Message Filter替代直接发送消息（改用IRC类内部方法）
         /// </summary>
         /// <param name="msg">要发送的消息</param>
-        [Obsolete("使用Message Filter替代直接发送消息（改用IRC类内部方法）", true)]
+        [Obsolete("Using 'Message Filter' to replace sendMessage directly.", true)]
         public void IRCSendAction(string msg)
         {
             //if(IRCStatus)
@@ -176,7 +176,7 @@ namespace Sync
         /// </summary>
         public void Connect()
         {
-            IO.CurrentIO.Write("开始工作");
+            IO.CurrentIO.Write(LANG_Start);
             IsConnect = true;
             StartIRCT();
             StartSourceT();
@@ -188,7 +188,7 @@ namespace Sync
         /// </summary>
         public void Disconnect()
         {
-            IO.CurrentIO.Write("正在停止工作……");
+            IO.CurrentIO.Write(LANG_Stopping);
             IsConnect = false;
             if (IRCThread != null && IRCThread.IsAlive) StopIRCT();
             if (SrcThread != null && SrcThread.IsAlive) StopSourceT();
@@ -200,7 +200,7 @@ namespace Sync
         [Obsolete]
         public void Reconnect()
         {
-            IO.CurrentIO.Write("重新开始工作中……");
+            IO.CurrentIO.Write(LANG_Restarting);
             Disconnect();
             Connect();
         }
