@@ -10,6 +10,7 @@ using MemoryReader.Listen;
 using MemoryReader.BeatmapInfo;
 using MemoryReader.Listen.InterFace;
 using System.IO;
+using Sync.Tools;
 
 namespace MemoryReader
 {
@@ -21,6 +22,7 @@ namespace MemoryReader
 
         public MemoryReader():base(PLUGIN_NAME,PLUGIN_AUTHOR)
         {
+            I18n.Instance.ApplyLanguage(new DefaultLanguage());
             base.onInitPlugin += OnInitPlugin;
             base.onLoadComplete += OnLoadComplete;
         }

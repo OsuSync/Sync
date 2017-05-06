@@ -56,6 +56,7 @@
     <Compile Include="Ban\BanInfo.cs" />
     <Compile Include="Ban\BanManager.cs" />
     <Compile Include="Danmaku\BanClientFilter.cs" />
+    <Compile Include="DefaultLanguage.cs" />
     <Compile Include="Osu\BanServerFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +65,10 @@
       <Project>{fbd514c2-2830-479e-b050-d1c383028456}</Project>
       <Name>Sync</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\RecentlyUserQuery\RecentlyMessageQuery.csproj">
+      <Project>{472d4d0f-c09b-4d26-8cba-f8ababa32220}</Project>
+      <Name>RecentlyMessageQuery</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

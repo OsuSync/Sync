@@ -94,7 +94,7 @@ namespace Sync.Tools
     }
 
 
-    interface I18nProvider
+    public interface I18nProvider
     {
     }
 
@@ -118,7 +118,7 @@ namespace Sync.Tools
         }
     }
 
-    class I18n
+    public class I18n
     {
         public static string CurrentLang { get { return System.Globalization.CultureInfo.CurrentCulture.Name; } }
         string Base { get { return AppDomain.CurrentDomain.BaseDirectory; } }
@@ -126,7 +126,19 @@ namespace Sync.Tools
         string SelectLangFolder {  get { return Path.Combine(LangFolder, SelectLang); } }
         public string SelectLang;
 
-        public I18n(string CultureName)
+        static I18n instance = null;
+
+        public static I18n Instance { get
+            {
+                if (instance == null)
+                    instance = new I18n(CurrentLang);
+                return instance;
+            }
+        }
+
+        private I18n() { }
+
+        private I18n(string CultureName)
         {
             SelectLang = CultureName;
             if (!Directory.Exists(LangFolder)) Directory.CreateDirectory(LangFolder);

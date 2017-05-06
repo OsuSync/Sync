@@ -15,6 +15,8 @@ namespace BanManagerPlugin
 
         public BanManagerPlugin() : base("Ban Manager", "Dark Projector")
         {
+            Sync.Tools.I18n.Instance.ApplyLanguage(new DefaultLanguage());
+
             base.onInitFilter += manager => {
                 banManager = new BanManager(manager,null);
                 manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());

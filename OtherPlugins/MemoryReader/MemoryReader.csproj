@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="BeatmapInfo\Beatmap.cs" />
     <Compile Include="BeatmapInfo\BeatmapSet.cs" />
+    <Compile Include="DefaultLanguage.cs" />
     <Compile Include="Listen\Interface\IOSUListener.cs" />
     <Compile Include="Listen\OSUTestListener.cs" />
     <Compile Include="Listen\OSUListenerManager.cs" />

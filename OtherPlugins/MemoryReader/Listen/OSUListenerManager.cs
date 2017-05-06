@@ -15,6 +15,7 @@ using System.IO;
 using Sync;
 using NowPlaying;
 using osu_database_reader;
+using static MemoryReader.DefaultLanguage;
 
 namespace MemoryReader.Listen
 {
@@ -170,7 +171,11 @@ namespace MemoryReader.Listen
                             }
                         }
 
-                        m_beatmap_id_address = (IntPtr)(m_memory_scanner.Scan()[0]);
+                        var scan_result = m_memory_scanner.Scan();
+                        if (scan_result.Count != 0)
+                            m_beatmap_id_address = (IntPtr)(m_memory_scanner.Scan()[0]);
+                        else
+                            Sync.Tools.IO.CurrentIO.WriteColor(LANG_BEATMAP_NOT_FOUND,ConsoleColor.Yellow);
                     }
                 }
 
@@ -243,7 +248,7 @@ namespace MemoryReader.Listen
                     {
                         if (count % (Setting.NoFoundOSUHintInterval * Setting.ListenInterval) == 0)
                         {
-                            Sync.Tools.IO.CurrentIO.WriteColor("没有发现 OSU! 进程，请打开OSU！", ConsoleColor.Red);
+                            Sync.Tools.IO.CurrentIO.WriteColor(LANG_OSU_NOT_FOUND, ConsoleColor.Red);
                             count = 0;
                         }
                         count++;
@@ -329,7 +334,8 @@ namespace MemoryReader.Listen
         private OsuStatus GetCurrentOsuStatus()
         {
             if (Process.GetProcessesByName("osu!").Count() == 0) return OsuStatus.NoFoundProcess;
-            string osu_title = Process.GetProcessesByName("osu!")[0].MainWindowTitle;
+            var result = Process.GetProcessesByName("osu!");
+            string osu_title = result.Length!=0?result[0].MainWindowTitle:"unknown title";
 
             if (m_now_player_status.status == null) return OsuStatus.Unkonw;
 

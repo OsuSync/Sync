@@ -7,6 +7,7 @@ using Sync;
 using Sync.Command;
 using Sync.Plugins;
 using Sync.Tools;
+using static RecentlyUserQuery.DefaultLanguage;
 
 namespace RecentlyUserQuery
 {
@@ -16,11 +17,11 @@ namespace RecentlyUserQuery
 
         public const string PLUGIN_NAME = "Recently Message Query Plugin";
         public const string PLUGIN_AUTHOR = "Dark Projector";
-        static string helpString = "\n以下指令cmd端和osu!irc端规则通用(在osu!irc端用请在开头加\"?\")\nrecently --status |获取当前消息记录器的状态信息(osu!irc不可用)\nrecently --u <userName> |获取用户<userName>的历史消息(不建议在osu!irc用)\nrecently --i <userId> |获取用户<userId>的历史消息(不建议在osu!irc用)\nrecently |获取近期用户的名字和id,id可以用来执行\"?ban --i\"等指令(osu!irc适用)\nrecently --disable |关闭记录器所有功能并清除数据(osu!irc适用)\nrecently --start |重新开始记录(osu!irc适用)\nrecently --realloc <count> |重新分配记录器储存记录的容量(osu!irc适用)\nrecently --recently |获取近期用户和id\n";
-
+        
         public RecentlyMessageQueryPlugin() : base(PLUGIN_NAME, PLUGIN_AUTHOR)
         {
-
+            ///todo
+            I18n.Instance.ApplyLanguage(new DefaultLanguage());
 
             base.onInitCommand += manager => manager.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
             base.onInitFilter += manager => manager.AddFilters(new Danmaku.MessageRecorderFilter(recorder));
@@ -39,7 +40,7 @@ namespace RecentlyUserQuery
             if (args.Count != 0 )
                 Sync.Tools.IO.CurrentIO.Write(recorder.ProcessCommonCommand(newArgs).Replace(" || ","\n"));
             else
-                Sync.Tools.IO.CurrentIO.WriteColor(helpString,ConsoleColor.Yellow); 
+                Sync.Tools.IO.CurrentIO.WriteColor(LANG_HELP,ConsoleColor.Yellow); 
             return true;
         }
 

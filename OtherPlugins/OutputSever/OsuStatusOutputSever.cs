@@ -15,6 +15,8 @@ using MemoryReader;
 using MemoryReader.Listen.InterFace;
 using MemoryReader.BeatmapInfo;
 using MemoryReader.Mods;
+using Sync.Tools;
+using static OsuStatusOutputSever.DefaultLanguage;
 
 namespace OsuStatusOutputSever
 {
@@ -77,11 +79,13 @@ namespace OsuStatusOutputSever
 
         public OsuStatusOutputSever() : base("OsuStatusOutputSever", "Dark Projector")
         {
+            I18n.Instance.ApplyLanguage(new DefaultLanguage());
+
             base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
 
             base.onInitCommand += commandManager =>
             {
-                commandManager.Dispatch.bind("syncserver", commandProcess, "将本程序部分数据通过TCP分发到其他程序供使用");
+                commandManager.Dispatch.bind("syncserver", commandProcess,LANG_COMMAND_DP);
             };
 
             base.onLoadComplete += host => {
@@ -90,7 +94,7 @@ namespace OsuStatusOutputSever
                     if (itor is MemoryReader.MemoryReader)
                     {
                         ((MemoryReader.MemoryReader)itor).RegisterOSUListener(this);
-                        Sync.Tools.IO.CurrentIO.WriteColor("注册osuStatus侦听器成功", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor(LANG_REGISTER_SUCCESS, ConsoleColor.Yellow);
                         break;
                     }
                 }
@@ -107,24 +111,24 @@ namespace OsuStatusOutputSever
         private bool commandProcess(Arguments args)
         {
             if (args.Count == 0)
-                Sync.Tools.IO.CurrentIO.WriteColor("syncserver <参数>\n-start 开始将内容传发到监听指定端口的客户端上\n-stop 终止传送", ConsoleColor.Yellow);
+                Sync.Tools.IO.CurrentIO.WriteColor(LANG_HELP, ConsoleColor.Yellow);
             else
             {
                 switch (args[0].Trim())
                 {
                     case "-start":
                         Start();
-                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver开始运行", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_START, ConsoleColor.Yellow);
                         break;
                     case "-stop":
                         Stop();
-                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver运行终止", ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_STOP, ConsoleColor.Yellow);
                         break;
                     case "-status":
-                        Sync.Tools.IO.CurrentIO.WriteColor(string.Format("s{0} b{1} h{2} a{3} c{4} m{5}", beatmapSetId, beatmapId, currentHP, currentACC, combo, mods), ConsoleColor.Yellow);
+                        Sync.Tools.IO.CurrentIO.WriteColor(string.Format(LANG_MSG_STATUS, beatmapSetId, beatmapId, currentHP, currentACC, combo, mods), ConsoleColor.Yellow);
                         break;
                     default:
-                        Sync.Tools.IO.CurrentIO.WriteColor("syncserver未知参数", ConsoleColor.Red);
+                        Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_UNKNOWN_COMMAND, ConsoleColor.Red);
                         break;
                 }
             }
@@ -153,14 +157,14 @@ namespace OsuStatusOutputSever
                     Thread.Sleep(100);
                     if(currentClient != null && (!currentClient.Connected) )
                     {
-                        Sync.Tools.IO.CurrentIO.WriteColor("client lost.", ConsoleColor.Blue);
+                        Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_LOST_CONNECTION, ConsoleColor.Blue);
                         currentClient = null;
                     }
                 }
                  
-                Sync.Tools.IO.CurrentIO.WriteColor("listenning........", ConsoleColor.Blue);
+                Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_START_LISTENNING, ConsoleColor.Blue);
                 currentClient = listenerServer.AcceptTcpClient();
-                Sync.Tools.IO.CurrentIO.WriteColor("got client.", ConsoleColor.Blue);
+                Sync.Tools.IO.CurrentIO.WriteColor(LANG_MSG_GET_CONNECTION , ConsoleColor.Blue);
             }
         }
 

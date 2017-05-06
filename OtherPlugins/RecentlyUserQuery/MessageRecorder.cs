@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sync.Tools;
+using static RecentlyUserQuery.DefaultLanguage;
 
 namespace RecentlyUserQuery
 {
@@ -73,39 +75,39 @@ namespace RecentlyUserQuery
             switch (args[1])
             {
                 case "--status":
-                    return (string.Format("MessageRecord status: {0} | recordCount/Capacity : {1}/{2}", IsRecording ? "running" : "stopped", GetHistoryList().Count, Capacity));
+                    return string.Format(LANG_MSG_STATUS, IsRecording ? LANG_RUNNING : LANG_STOP, GetHistoryList().Count, Capacity);
 
                 case "--disable":
                     IsRecording = false;
                     Clear();
                     UserIdGenerator.Clear();
-                    return ("消息记录器已禁用，数据已清除");
+                    return LANG_MSG_DISABLE;
 
                 case "--start":
                     IsRecording = true;
-                    return ("消息记录器开启");
+                    return LANG_MSG_START;
 
                 case "--realloc":
                     if (args.Length < 3)
-                        return ("MessageRecord: 错误的指令");
+                        return LANG_MSG_REALLOC_ERR;
                     else
                     {
                         value = Convert.ToInt32(args[2]);
                         Capacity = value;
-                        return ("消息记录器现在可记录" + Capacity + "条历史记录");
+                        return string.Format(LANG_MSG_REALLOC,Capacity);
                     }
 
                 case "--i": //鸽一会
-                    return ("咕咕咕~");
+                    return LANG_MSG_NOTIMPLENT;
 
                 case "--u": //鸽一会
-                    return ("咕咕咕~");
+                    return LANG_MSG_NOTIMPLENT;
 
                 case "--recently":
                     return (EnumRecentUser().Result);
 
                 default:
-                    return ("未知命令");
+                    return LANG_MSG_UNKNOWNCOMMAND;
             }
         }
 

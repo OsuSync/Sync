@@ -1,8 +1,9 @@
-﻿    using Sync.MessageFilter;
+﻿using Sync.MessageFilter;
 using Sync.Source;
 using System.Collections.Generic;
 using System;
 using System.Text;
+using static BanManagerPlugin.DefaultLanguage;
 
 namespace BanManagerPlugin.Ban
 {
@@ -22,12 +23,12 @@ namespace BanManagerPlugin.Ban
         {
             SetBanManager(refManager);
 
-            AddCommand("?ban","禁止某user/id/regex发送信息到irc",banCommand);
-            AddCommand("?unban", "解除禁止某user/id/regex", unbanCommand);
-            AddCommand("?whitelist","添加某user/id/regex到白名单，白名单的人将一直有权限发送信息到irc", whitelistCommand);
-            AddCommand("?remove_whitelist","将某user/id/regex从白名单移除", remove_whitelistCommand);
-            AddCommand("?access","设置发送消息到irc权限", accessCommand);
-            AddCommand("?list", "获取白名单或者禁止名单的用户和规则", listCommand);
+            AddCommand("?ban",LANG_HELP_BAN,banCommand);
+            AddCommand("?unban", LANG_HELP_UNBAN, unbanCommand);
+            AddCommand("?whitelist",LANG_HELP_WHITELIST, whitelistCommand);
+            AddCommand("?remove_whitelist",LANG_HELP_REMOVE_WHITELIST, remove_whitelistCommand);
+            AddCommand("?access",LANG_HELP_ACCESS, accessCommand);
+            AddCommand("?list"  , LANG_HELP_LIST, listCommand);
 
         }
 
@@ -98,8 +99,10 @@ namespace BanManagerPlugin.Ban
             return (message.StartsWith(command));
         }
 
-        private void ThrowErrorMessage(string message= "错误的指令")
+        private void ThrowErrorMessage(string message= null)
         {
+            if (message == null)
+                message = LANG_ERR_COMMAND;
             throw new Exception(message);
         }
 

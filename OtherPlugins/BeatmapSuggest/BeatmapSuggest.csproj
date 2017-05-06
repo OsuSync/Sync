@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="BeatmapSuggestPlugin.cs" />
     <Compile Include="Danmaku\BeatmapSuggestFilter.cs" />
+    <Compile Include="DefaultLanguage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using static MemoryReader.DefaultLanguage;
 
 namespace MemoryReader.Memory
 {
@@ -135,7 +136,7 @@ namespace MemoryReader.Memory
         {
             get
             {
-                return "没有发现 OSU! 进程";
+                return LANG_OSU_NOT_FOUND;
             }
         }
     }
@@ -145,7 +146,7 @@ namespace MemoryReader.Memory
         {
             get
             {
-                return "没有找到ThreadStack0 Base Address";
+                return LANG_ADDRESS_NOT_FOUND;
             }
         }
     }

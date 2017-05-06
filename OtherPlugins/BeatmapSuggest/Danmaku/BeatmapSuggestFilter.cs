@@ -11,6 +11,8 @@ using System.Threading;
 using System.Net;
 using Sync;
 using System.IO;
+using Sync.Tools;
+using static BeatmapSuggest.DefaultLanguage;
 
 namespace BeatmapSuggest.Danmaku
 {
@@ -50,14 +52,17 @@ namespace BeatmapSuggest.Danmaku
             }
             catch (Exception e)
             {
-                Console.WriteLine("获取谱面{0}信息失败,原因:{1}", beatmapSetId, e.Message);
+                Console.WriteLine(LANG_GET_BEATMAP_FAILED, beatmapSetId, e.Message);
                 return;
             }
             CBaseDanmuku danmaku = new CBaseDanmuku();
+            /*
             StringBuilder sb = new StringBuilder();
             sb.Append(userName).Append(" want you to play the beatmap [").Append(GetLink(beatmapSetId)).Append(" ").Append(beatmapName).Append("] || [")
                 .Append(GetDownloadLink(beatmapSetId)).Append(" dl] || [").Append(GetMirrorDownloadLink(beatmapSetId)).Append(" mirror]");
-            danmaku.danmuku = sb.ToString();
+            */
+            string message = string.Format(LANG_SUGGEST_MEG,userName,GetLink(beatmapSetId),beatmapName,GetDownloadLink(beatmapSetId),GetMirrorDownloadLink(beatmapSetId));
+            danmaku.danmuku = /*sb.ToString()*/message;
             msgManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
 
@@ -98,7 +103,7 @@ namespace BeatmapSuggest.Danmaku
                         if (result.Success)
                             return result.Groups["beatmapName"].Value;
                         else
-                            throw new Exception("找不到匹配的内容或者id并不是有效的beatmapSetId");
+                            throw new Exception(LANG_NOT_FOUND_ERR);
                     }
                 }
                 finally
@@ -113,7 +118,7 @@ namespace BeatmapSuggest.Danmaku
 
             timeoutCancellation.Token.Register(() => {
                 if (!task.IsCompleted || task.IsFaulted)
-                    Console.WriteLine("获取谱面{0}信息超时,TaskStatus{1}", beatmapSetId, task.Status.ToString());
+                    Console.WriteLine(LANG_GET_BEATMAP_TIME_OUT, beatmapSetId, task.Status.ToString());
             });
 
             task.Start();
