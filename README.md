@@ -1,6 +1,6 @@
 # osuSync
 
-![osuSyncIcon](https://github.com/Deliay/osuSync/blob/master/Sync/Resources/osu!%20001.ico)
+![osuSyncIcon](Sync/Resources/osu!%20001.ico)
 
 ## [Releases下载](/releases) [CN git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档](help_readme/README.md) 
 
