@@ -159,7 +159,7 @@ namespace BeatmapSuggest.Danmaku
 
         private string GetMirrorDownloadLink(int beatmapSetId)
         {
-            return "http://osu.mengsky.net/api/download/" + beatmapSetId;
+            return /*"http://osu.mengsky.net/api/download/"*/"http://osu.uu.gl/s/" + beatmapSetId;
         }
 
         public void SetFilterManager(MessageDispatcher manager)
