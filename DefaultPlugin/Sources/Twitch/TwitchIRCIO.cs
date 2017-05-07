@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace DefaultPlugin.Sources.Twitch
 {
@@ -20,17 +22,22 @@ namespace DefaultPlugin.Sources.Twitch
     {
         #region 属性字段
         TcpClient clientSocket;
-
-
+        NetworkStream rawSocketStream;
+        StreamReader inputStreamReciever;
+        StreamWriter outputStreamSender;
 
         string oauth = @"oauth:pjaicvg4jon0o0doiwjlo5z9s05a7l";
         string name = @"osuSync";
+        string ircAddress = @"irc.twitch.tv";
+        int ircPort = 6667;
         string channelName = null;
+
+        int sleepInterval = 30;
 
         bool isLooping = false;
 
         Thread outputThread/*发送线程*/, inputThread/*接收线程*/;
-        List<string> rawOutputMsgList=new List<string>(), rawInputMsgList=new List<string>();
+        List<string> rawOutputMsgList = new List<string>();
 
         public delegate void OnRecieveMessageFunc(string rawMessage);
 
@@ -54,42 +61,115 @@ namespace DefaultPlugin.Sources.Twitch
                 return;
             }
 
-            rawInputMsgList.Clear();
             rawOutputMsgList.Clear();
+
+            clientSocket = new TcpClient();
 
             outputThread = new Thread(outputThreadFunc);
             inputThread = new Thread(inputThreadFunc);
 
             isLooping = true;
 
+            clientSocket.Connect(ircAddress, ircPort);
+            if (!clientSocket.Connected)
+            {
+                //failed
+                throw new Exception("Cant connect to server.");
+            }
+
+            rawSocketStream = clientSocket.GetStream();
+            outputStreamSender = new StreamWriter(rawSocketStream);
+            inputStreamReciever = new StreamReader(rawSocketStream);
+
+            outputStreamSender.WriteLine($"PASS {oauth}\nNICK {name.ToLower()}");
+            outputStreamSender.Flush();
+
             outputThread.Start();
             inputThread.Start();
         }
 
         /// <summary>
-        /// 负责发送消息
+        /// 负责接收并处理消息
         /// </summary>
         private void inputThreadFunc()
         {
             while (isLooping)
             {
-                
+                Thread.Sleep(sleepInterval);
+
+                //没消息？吃惊，睡觉
+                if (!rawSocketStream.DataAvailable)
+                    continue;
+
+                string message = inputStreamReciever.ReadLine();
+
+                if (!message.Contains(@"PRIVMSG #"))
+                {
+                    //处理非对话消息
+                    if (message.StartsWith("PING "))
+                        SendRawMessage(message.Replace(@"PING", @"PONG"));
+                    else
+                    {
+                        var result = message.Split(' ');
+                        if (result.Length > 1)
+                            if (result[1] == "001")
+                                SendRawMessage($"JOIN #{channelName}"); //自动进指定频道
+                    }
+                }
+                else
+                    OnRecieveRawMessage?.Invoke(message);
             }
 
             //释放资源?
         }
 
         /// <summary>
-        /// 负责接收并处理消息
+        /// 负责发送消息
         /// </summary>
         private void outputThreadFunc()
         {
+            Stopwatch timer = new Stopwatch();
+            timer.Reset();
+            timer.Start();
+            int sendCount = 0;
+
             while (isLooping)
             {
+                Thread.Sleep(sleepInterval);
 
+                //twitch irc限制每30秒最多能发20条信息否则就是被圣神制裁45分钟
+                if (timer.ElapsedMilliseconds > 30000)
+                {
+                    sendCount = 0;
+                    timer.Reset();
+                    timer.Start();
+                }
+
+                if (sendCount >= 20)
+                    continue;//超过限制，先退出
+
+                if (rawOutputMsgList.Count == 0)
+                    continue;
+
+                lock (rawOutputMsgList)
+                {
+                    while (rawOutputMsgList.Count != 0)
+                    {
+                        var message = rawOutputMsgList[0];
+                        rawOutputMsgList.RemoveAt(0);
+
+                        outputStreamSender.WriteLine(message);
+                        outputStreamSender.Flush();
+
+                        sendCount++;
+                        if (sendCount >= 20)
+                            break;
+                    }
+                }
             }
 
             //释放资源?
+            timer.Stop();
         }
 
         #endregion
@@ -98,7 +178,7 @@ namespace DefaultPlugin.Sources.Twitch
 
         public void Connect()
         {
-            
+            initStart();
         }
 
         public void DisConnect()
@@ -106,15 +186,18 @@ namespace DefaultPlugin.Sources.Twitch
             isLooping = false;
         }
 
-        public void SendMessage(string message,string channel=null) => SendRawMessage($"PRIVMSG #{(channel!=null?channel:this.channelName)} : {message}");
+        public void SendMessage(string message, string channel = null) => SendRawMessage($"PRIVMSG #{(channel != null ? channel : this.channelName)} : {message}");
 
         public void SendRawMessage(string rawMessage)
         {
-
+            lock (rawOutputMsgList)
+            {
+                rawOutputMsgList.Add(rawMessage);
+            }
         }
 
         #endregion
 
-        ~TwitchIRCIO()=>DisConnect();
+        ~TwitchIRCIO() => DisConnect();
     }
 }
