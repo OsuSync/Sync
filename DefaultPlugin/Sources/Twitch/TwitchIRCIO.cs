@@ -34,6 +34,13 @@ namespace DefaultPlugin.Sources.Twitch
 
         int sleepInterval = 30;
 
+        int prev_peopleCount = -1;
+        int tmpCurrent_peopleCount = 0;
+
+        public bool IsConnected { get {
+                return clientSocket!=null&&clientSocket.Connected;
+            } }
+
         bool isLooping = false;
 
         Thread outputThread/*发送线程*/, inputThread/*接收线程*/;
@@ -41,10 +48,13 @@ namespace DefaultPlugin.Sources.Twitch
 
         public delegate void OnRecieveMessageFunc(string rawMessage);
 
+        public delegate void OnNamesCountFunc(int newPeopleCount);
+
         /// <summary>
         /// 触发接收消息事件
         /// </summary>
         public event OnRecieveMessageFunc OnRecieveRawMessage;
+        public event OnNamesCountFunc OnNamesCountUpdate;
         #endregion
 
         public TwitchIRCIO(string channelName)
@@ -112,8 +122,7 @@ namespace DefaultPlugin.Sources.Twitch
                     {
                         var result = message.Split(' ');
                         if (result.Length > 1)
-                            if (result[1] == "001")
-                                SendRawMessage($"JOIN #{channelName}"); //自动进指定频道
+                            processCommandMessage(result[1], message);
                     }
                 }
                 else
@@ -121,6 +130,36 @@ namespace DefaultPlugin.Sources.Twitch
             }
 
             //释放资源?
+        }
+
+        private void processCommandMessage(string messageID,string rawMessage)
+        {
+            switch (messageID)
+            {
+                case "001":
+                    {
+                        SendRawMessage($"JOIN #{channelName}");
+                    }
+                    break;
+
+                case "353":
+                    {
+                        int position = rawMessage.LastIndexOf(':');
+                        int count = rawMessage.Substring(position).Split(' ').Length;
+                        tmpCurrent_peopleCount += count;
+                    }
+                    break;
+
+                case "356":
+                    {
+                        if (tmpCurrent_peopleCount!=prev_peopleCount)
+                        {
+                            OnNamesCountUpdate?.Invoke(tmpCurrent_peopleCount);
+                        }
+                        tmpCurrent_peopleCount = 0;
+                    }
+                    break;
+            }
         }
 
         /// <summary>

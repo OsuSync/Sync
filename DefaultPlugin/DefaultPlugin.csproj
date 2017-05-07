@@ -78,6 +78,7 @@
     <Compile Include="Sources\Douyutv\DouyuClient.cs" />
     <Compile Include="Sources\Douyutv\DouyuDanmaku.cs" />
     <Compile Include="Sources\Douyutv\Douyutv.cs" />
+    <Compile Include="Sources\Twitch\Twitch.cs" />
     <Compile Include="Sources\Twitch\TwitchIRCIO.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,12 +27,12 @@ namespace DefaultPlugin.Source.BiliBili
             sender = new BiliBiliSender(null, null);
         }
 
-        public bool Connect(int roomId)
+        public bool Connect(string roomName)
         {
             client.ReceivedDanmaku += Dl_ReceivedDanmaku;
             client.ReceivedRoomCount += Dl_ReceivedRoomCount;
             client.Disconnected += Dl_Disconnected;
-            Task<bool> task = client.ConnectAsync(roomId);
+            Task<bool> task = client.ConnectAsync(int.Parse(roomName));
             if(task.Status == TaskStatus.Running)
             {
                 isConnected = true;

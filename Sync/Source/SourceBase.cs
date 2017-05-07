@@ -72,9 +72,9 @@ namespace Sync.Source
         /// <summary>
         /// 开始源服务器连接
         /// </summary>
-        /// <param name="roomID">指定的房间ID</param>
+        /// <param name="room">指定的房间名字，既可以是twitch的channelName也可以是bilibili的id</param>
         /// <returns>true为连接成功, false为连接失败</returns>
-        bool Connect(int roomID);
+        bool Connect(string roomName);
 
         /// <summary>
         /// 断开连接

@@ -152,11 +152,11 @@ namespace DefaultPlugin.Sources.Douyutv
 
         }
 
-        public bool Connect(int roomID)
+        public bool Connect(string roomName)
         {
             try
             {
-                return ConnectAsync(roomID).Result;
+                return ConnectAsync(int.Parse(roomName)).Result;
             }
             catch
             {
