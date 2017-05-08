@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace DefaultPlugin.Sources.Twitch
 {
-    class Twitch:ISourceBase/*,ISendable*///未实现
+    public class Twitch:ISourceBase/*,ISendable*///未实现
     {
         public const string SOURCE_NAME = "Twitch";
         public const string SOURCE_AUTHOR = "DarkProjector";
@@ -119,6 +119,11 @@ namespace DefaultPlugin.Sources.Twitch
                 onOnlineChange?.Invoke(Convert.ToUInt32(newPeopleCount));
                 prev_onlineCount = newPeopleCount;
             }
+        }
+
+        public override string ToString()
+        {
+            return SOURCE_NAME;
         }
     }
 }

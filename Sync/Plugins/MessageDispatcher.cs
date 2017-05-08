@@ -309,7 +309,7 @@ namespace Sync.Plugins
                         MessageQueue.RemoveAt(0);
                         if (message == null)
                             break;
-                        sb.AppendFormat("{0}:{1} || ", message.user, message.message.RawText);
+                        sb.AppendFormat("{0}:{1} || ", message.user.Result, message.message.RawText);
                     }
                 }
                 if (sb.Length != 0)

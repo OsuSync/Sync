@@ -75,7 +75,7 @@ namespace RecentlyUserQuery
             switch (args[1])
             {
                 case "--status":
-                    return string.Format(LANG_MSG_STATUS, IsRecording ? LANG_RUNNING : LANG_STOP, GetHistoryList().Count, Capacity);
+                    return string.Format(LANG_MSG_STATUS, (string)(IsRecording ? LANG_RUNNING : LANG_STOP), GetHistoryList().Count, Capacity);
 
                 case "--disable":
                     IsRecording = false;
