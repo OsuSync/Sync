@@ -111,11 +111,13 @@ namespace Sync.Tools
     {
         public static string CurrentLang { get => System.Globalization.CultureInfo.CurrentCulture.Name; }
         string Base { get => AppDomain.CurrentDomain.BaseDirectory; }
-        string LangFolder { get => Path.Combine(Base, "Language"); }
-        string SelectLangFolder {  get => Path.Combine(LangFolder, SelectLang); }
-        public string SelectLang;
+        public string LangFolder { get => Path.Combine(Base, "Language"); }
+        public string SelectLangFolder {  get => Path.Combine(LangFolder, CurrentLanguage); }
+        public string CurrentLanguage;
 
         private static I18n instance;
+
+        private static List<I18nProvider> ApplyedProvider = new List<I18nProvider>();
 
         public static I18n Instance
         {
@@ -143,6 +145,10 @@ namespace Sync.Tools
         public static void SwitchToCulture(string CultureName)
         {
             Instance = new I18n(CultureName);
+            foreach (var item in ApplyedProvider)
+            {
+                Instance.ApplyLanguage(item);
+            }
         }
 
         private I18n() { }
@@ -153,23 +159,24 @@ namespace Sync.Tools
         /// <param name="CultureName">指定区域</param>
         public I18n(string CultureName)
         {
-            SelectLang = CultureName;
+            CurrentLanguage = CultureName;
             if (!Directory.Exists(LangFolder)) Directory.CreateDirectory(LangFolder);
             if (!Directory.Exists(SelectLangFolder)) Directory.CreateDirectory(SelectLangFolder);
         }
 
-        public void ApplyLanguage<T>(T instance) where T : I18nProvider
+        public void ApplyLanguage(I18nProvider instance)
         {
-            string LangFile = Path.Combine(SelectLangFolder, instance.ToString()) + ".lang";
-            foreach (FieldInfo item in typeof(T).GetFields())
+            if (!ApplyedProvider.Exists(p => p == instance)) ApplyedProvider.Add(instance);
+            string LangFile = Path.Combine(SelectLangFolder, instance.GetType().FullName) + ".lang";
+            foreach (FieldInfo item in instance.GetType().GetFields())
             {
                 if(item.FieldType.Equals(typeof(LanguageElement)))
                 {
-                    string value = ConfigurationIO.IniReadValue(LangFile, item.Name, SelectLang);
+                    string value = ConfigurationIO.IniReadValue(LangFile, item.Name, CurrentLanguage);
                     if (value == "")
                     {
                         value = item.GetValue(instance) as LanguageElement;
-                        ConfigurationIO.Write(LangFile, item.Name, value, SelectLang);
+                        ConfigurationIO.Write(LangFile, item.Name, value, CurrentLanguage);
                     }
                     item.SetValue(instance, new LanguageElement(value));
                 }
