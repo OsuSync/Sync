@@ -80,8 +80,10 @@ namespace Sync
             IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
             if (Math.Abs(usercount - lCount) > 4) 
             {
-                CBaseDanmuku d = new CBaseDanmuku();
-                d.danmuku = string.Format(LANG_UserCount_Change, (usercount > lCount ? "减少" : "增加"), lCount);
+                CBaseDanmuku d = new CBaseDanmuku()
+                {
+                    danmuku = string.Format(LANG_UserCount_Change, (usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
+                };
                 Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
                 usercount = lCount;

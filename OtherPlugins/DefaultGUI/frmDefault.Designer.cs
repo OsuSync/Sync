@@ -86,7 +86,7 @@ namespace DefaultGUI
             this.lblTipsTargetIRC.Name = "lblTipsTargetIRC";
             this.lblTipsTargetIRC.Size = new System.Drawing.Size(61, 24);
             this.lblTipsTargetIRC.TabIndex = 1;
-            this.lblTipsTargetIRC.Text = "主号IRC";
+            this.lblTipsTargetIRC.Text = UI_TIPS_TARGET_IRC;
             this.lblTipsTargetIRC.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtTargetIRC
@@ -148,7 +148,7 @@ namespace DefaultGUI
             this.lblTipsBotIRCPass.Name = "lblTipsBotIRCPass";
             this.lblTipsBotIRCPass.Size = new System.Drawing.Size(103, 24);
             this.lblTipsBotIRCPass.TabIndex = 5;
-            this.lblTipsBotIRCPass.Text = "机器人IRC密码";
+            this.lblTipsBotIRCPass.Text = UI_TIPS_BOTIRC_PASS;
             this.lblTipsBotIRCPass.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTipsStauts

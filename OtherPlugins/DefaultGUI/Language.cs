@@ -15,6 +15,7 @@ namespace DefaultGUI
         public static LanguageElement UI_TIPS_STATUS = "连接状态";
         public static LanguageElement UI_TIPS_DANMAKU = "直播弹幕";
         public static LanguageElement UI_TIPS_OSU_IRC = "osu! 聊天";
+        public static LanguageElement UI_TIPS_TARGET_IRC = "主号IRC";
         public static LanguageElement UI_BOTTON_START = "开始工作";
         public static LanguageElement UI_BOTTON_STOP = "停止工作";
         public static LanguageElement UI_BOTTON_LOGIN_DANMAKU = "登录到直播";

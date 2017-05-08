@@ -41,6 +41,8 @@ namespace Sync.Tools
 
         public static LanguageElement LANG_UserCount = "用户总数变更: {0:D}";
         public static LanguageElement LANG_UserCount_Change = "直播间围观人数{0:S}到{1:D}人";
+        public static LanguageElement LANG_UserCount_Change_Increase = "增加";
+        public static LanguageElement LANG_UserCount_Change_Decrease = "减少";
 
         public static LanguageElement LANG_Source_Disconnecting = "正在断开弹幕源服务器的连接....";
         public static LanguageElement LANG_Source_Disconnected = "服务器连接被断开，3秒后重连！";
@@ -58,7 +60,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_Gift_Sent = "我送给你{O:D}份{1:S}!";
 
         public static LanguageElement LANG_Config = "配置文件: ";
-        public static LanguageElement LANG_Config_Status_OK = "OK, 房间ID:";
+        public static LanguageElement LANG_Config_Status_OK = "OK, 房间ID:{0}";
         public static LanguageElement LANG_Config_Status_Fail = "尚未配置成功";
 
         public static LanguageElement LANG_Source = "源{0:S}: ";
