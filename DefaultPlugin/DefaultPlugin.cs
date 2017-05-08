@@ -21,6 +21,7 @@ namespace DefaultPlugin
 
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
+            Sync.Tools.I18n.Instance.ApplyLanguage(new Language());
             base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
 
             srcBili = new BiliBili();

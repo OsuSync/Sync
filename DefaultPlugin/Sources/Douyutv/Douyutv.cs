@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static DefaultPlugin.Language;
 
 namespace DefaultPlugin.Sources.Douyutv
 {
@@ -76,20 +77,20 @@ namespace DefaultPlugin.Sources.Douyutv
                         if (!packet.get("tick").Equals(unix.ToString()))
                         {
                             onOnlineChange(0);
-                            IO.CurrentIO.WriteColor("连接状态检测失败! " + unix.ToString() + " except:" + packet.get("tick"), ConsoleColor.Red);
+                            IO.CurrentIO.WriteColor(string.Format(LANG_DOUYU_FAIL, unix.ToString() ,packet.get("tick")), ConsoleColor.Red);
                         }
                     
 
                     break;
                     case ServerPacket.ServerMsg.loginres:             // login response
 
-                        IO.CurrentIO.WriteColor("斗鱼服务器连接认证成功！", ConsoleColor.Green);
+                        IO.CurrentIO.WriteColor(LANG_DOUYU_AUTH_SUCC, ConsoleColor.Green);
                         onConnected?.Invoke();
 
                     break;
                     case ServerPacket.ServerMsg.chatmsg:              // danmaku
 #if DEBUG
-                        IO.CurrentIO.Write("收到弹幕: 来自" + packet.get("nn") + ":" + packet.get("txt"));
+                        IO.CurrentIO.Write(string.Format(LANG_DOUYU_DANMAKU, packet.get("nn") ,packet.get("txt")));
 #endif
                         this.onDanmuku?.Invoke(new DouyuDanmaku(packet.get("nn"), packet.get("txt")));
 
@@ -101,7 +102,7 @@ namespace DefaultPlugin.Sources.Douyutv
                     break;
                     case ServerPacket.ServerMsg.dc_buy_deserve:       // gift
 
-                        this.onGift?.Invoke(new DouyuGift((new STT(packet.get("sui"))).get("nick"), "酬勤",  packet.get("cnt")));
+                        this.onGift?.Invoke(new DouyuGift((new STT(packet.get("sui"))).get("nick"), LANG_DOUYU_GIFT,  packet.get("cnt")));
 
                     break;
                     case ServerPacket.ServerMsg.spbc:                 // gift

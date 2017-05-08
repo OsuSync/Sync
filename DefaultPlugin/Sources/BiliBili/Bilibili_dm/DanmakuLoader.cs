@@ -128,7 +128,7 @@ namespace Sync.Source.BiliBili.BiliBili_dm
 
                     if (packetlength < 16)
                     {
-                        throw new NotSupportedException("协议失败: (L:" + packetlength + ")");
+                        throw new NotSupportedException("Failed: (L:" + packetlength + ")");
                     }
 
                     NetStream.ReadB(stableBuffer, 0, 2);//magic

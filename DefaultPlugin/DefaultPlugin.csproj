@@ -60,6 +60,7 @@
     <Compile Include="Filters\DefaultFormat.cs" />
     <Compile Include="Filters\GiftReceivePeeker.cs" />
     <Compile Include="Filters\OnlineChangePeeker.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\BiliBili\BiliBili.cs" />
     <Compile Include="Sources\BiliBili\BiliBiliDanmuku.cs" />

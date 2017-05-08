@@ -154,7 +154,7 @@ namespace DefaultPlugin.Sources.Douyutv
             pack.size = bytes.Length + 4;
             if(BitConverter.ToInt32(bytes, 0) != pack.size)
             {
-                throw new InvalidDataException("数据无效！");
+                throw new InvalidDataException("Data Failed");
             }
             pack.msgType = (short)BitConverter.ToInt16(bytes, 4);
             byte[] buffer = new byte[pack.size - 12];

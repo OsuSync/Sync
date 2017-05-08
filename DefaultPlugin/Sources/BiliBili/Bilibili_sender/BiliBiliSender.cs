@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static DefaultPlugin.Language;
 
 namespace DefaultPlugin.Source
 {
@@ -75,7 +76,7 @@ namespace DefaultPlugin.Source
         public void setCookies(string cookies)
         {
             Configuration.LoginCertification = cookies;
-            IO.CurrentIO.WriteColor("登陆信息保存成功！", ConsoleColor.DarkYellow);
+            IO.CurrentIO.WriteColor(LANG_SEND_COOKIE_SAVED, ConsoleColor.DarkYellow);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace DefaultPlugin.Source
                 dataStream.Close();
             }
 
-            IO.CurrentIO.Write("发送完成!");
+            IO.CurrentIO.Write(LANG_SEND_DONE);
         }
     }
 }
