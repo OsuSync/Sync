@@ -7,6 +7,7 @@ using Meebey.SmartIrc4net;
 using Sync.Tools;
 using Sync.Source;
 using Sync.MessageFilter;
+using static Sync.Tools.DefaultI18n;
 
 namespace Sync.IRC
 {
@@ -35,8 +36,7 @@ namespace Sync.IRC
             }
             catch
             {
-                IO.CurrentIO.WriteColor("osu! IRC连接错误，无法连接到老板小霸王服务器 !!", ConsoleColor.Red);
-                IO.CurrentIO.WriteColor("请稍后重试或者开一个VPN。", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(LANG_IRC_Connect_Timeout, ConsoleColor.Red);
                 return;
             }
             username = Configuration.BotIRC;
@@ -57,12 +57,12 @@ namespace Sync.IRC
 
         private void Client_OnConnected(object sender, EventArgs e)
         {
-            IO.CurrentIO.Write("[IRC] osu! IRC 已经准备就绪!");
+            IO.CurrentIO.Write(LANG_IRC_Ready);
         }
 
         private void Client_OnConnecting(object sender, EventArgs e)
         {
-            IO.CurrentIO.Write("[IRC] osu! IRC正在连接中..");
+            IO.CurrentIO.Write(LANG_IRC_Connecting);
         }
 
         private void Client_OnRawMessage(object sender, IrcEventArgs e)

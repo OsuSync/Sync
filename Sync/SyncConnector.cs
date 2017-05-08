@@ -77,11 +77,11 @@ namespace Sync
 
         private void Src_onOnlineChange(uint lCount)
         {
-            IO.CurrentIO.Write("用户变更:" + lCount);
+            IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
             if (Math.Abs(usercount - lCount) > 4) 
             {
                 CBaseDanmuku d = new CBaseDanmuku();
-                d.danmuku = "直播间围观人数" + (usercount > lCount ? "减少" : "增加") + "到" + lCount + "人";
+                d.danmuku = string.Format(LANG_UserCount_Change, (usercount > lCount ? "减少" : "增加"), lCount);
                 Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
                 usercount = lCount;
@@ -93,14 +93,14 @@ namespace Sync
             if (IsConnect)
             {
                 IsConnect = false;
-                IO.CurrentIO.Write("服务器连接被断开，3秒后重连！");
-                Task.Delay(3000);
+                IO.CurrentIO.Write(LANG_Source_Disconnected);
+                System.Threading.Tasks.Task.Delay(3000);
                 Connect();
             }
             else
             {
                 IsConnect = false;
-                IO.CurrentIO.Write("源服务器断开连接成功！");
+                IO.CurrentIO.Write(LANG_Source_Disconnected_Succ);
             }
             
             
@@ -114,14 +114,14 @@ namespace Sync
         private void Src_onConnected()
         {
             SourceStatus = true;
-            IO.CurrentIO.Write("源服务器连接成功！");
+            IO.CurrentIO.Write(LANG_Source_Connected_Succ);
         }
         #endregion
 
         #region 连接方法
         private void StartSourceT()
         {
-            IO.CurrentIO.Write("正在连接弹幕源服务器....");
+            IO.CurrentIO.Write(LANG_Source_Connect);
             SourceStatus = true;
             SrcThread = new Thread(StartSource);
             SrcThread.IsBackground = true;
@@ -130,7 +130,7 @@ namespace Sync
 
         private void StopSourceT()
         {
-            IO.CurrentIO.Write("正在断开弹幕源服务器的连接....");
+            IO.CurrentIO.Write(LANG_Source_Disconnecting);
             SourceStatus = false;
             Src.Disconnect();
             while (Src.Stauts()) { Thread.Sleep(1); }
@@ -138,7 +138,7 @@ namespace Sync
 
         private void StartIRCT()
         {
-            IO.CurrentIO.Write("正在连接IRC服务器....");
+            IO.CurrentIO.Write(LANG_IRC_Connecting);
             IRCStatus = true;
             IRCThread = new Thread(StartIRC);
             IRCThread.IsBackground = true;
@@ -147,7 +147,7 @@ namespace Sync
 
         private void StopIRCT()
         {
-            IO.CurrentIO.Write("正在断开IRC服务器的连接....");
+            IO.CurrentIO.Write(LANG_IRC_Disconnect);
             IRCStatus = false;
             IRC.disconnect();
             while (IRC.isConnected) { Thread.Sleep(1); }

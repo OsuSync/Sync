@@ -8,59 +8,6 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
-    /*
-    //class LangSet
-    //{
-    //    private Dictionary<Guid, string> Langs = new Dictionary<Guid, string>();
-
-    //    Type t;
-    //    public LangSet(Type parent)
-    //    {
-    //        t = parent;
-    //    }
-
-    //    internal virtual string this[Guid uid]
-    //    {
-    //        get
-    //        {
-    //            return Langs[uid];
-    //        }
-    //    }
-
-    //    internal virtual void Add(Guid uid, string defaultValue)
-    //    {
-    //        Langs.Add(uid, defaultValue);
-    //    }
-    //}
-
-    //class IniLangSet : LangSet
-    //{
-    //    string FilePath = string.Empty;
-    //    public IniLangSet(Type parent, string FilePath) : base(parent)
-    //    {
-    //        this.FilePath = FilePath;
-    //    }
-
-    //    internal override string this[Guid uid]
-    //    {
-    //        get { return ConfigurationIO.IniReadValue(FilePath, uid.ToString(), "Language"); }
-    //    }
-
-    //    internal override void Add(Guid uid, string defaultValue)
-    //    {
-    //        ConfigurationIO.Write(FilePath, uid.ToString(), defaultValue, "Language");
-    //    }
-    //}
-
-
-    class DefaultLanguage : Plugins.Plugin
-    {
-        internal DefaultLanguage() : base("DefaultLang", "Deliay")
-        {
-        }
-    }
-    */
-
     public class DefaultI18n : I18nProvider
     {
         public static LanguageElement LANG_Loading = "读取中....";
@@ -91,6 +38,46 @@ namespace Sync.Tools
         public static LanguageElement LANG_CommandFail = "命令执行失败！ 请输入help查看命令列表。";
 
         public static LanguageElement LANG_ConfigFile = "配置文件";
+
+        public static LanguageElement LANG_UserCount = "用户总数变更: {0:D}";
+        public static LanguageElement LANG_UserCount_Change = "直播间围观人数{0:S}到{1:D}人";
+
+        public static LanguageElement LANG_Source_Disconnecting = "正在断开弹幕源服务器的连接....";
+        public static LanguageElement LANG_Source_Disconnected = "服务器连接被断开，3秒后重连！";
+        public static LanguageElement LANG_Source_Disconnected_Succ = "源服务器断开连接成功！";
+        public static LanguageElement LANG_Source_Connect = "正在连接弹幕源服务器....";
+        public static LanguageElement LANG_Source_Connected_Succ = "源服务器连接成功！";
+
+        public static LanguageElement LANG_IRC_Connecting = "[IRC] osu! IRC正在连接中...";
+        public static LanguageElement LANG_IRC_Disconnect = "正在断开IRC服务器的连接....";
+
+        public static LanguageElement LANG_IRC_Connect_Timeout = @"osu! IRC连接错误，无法连接到老板小霸王服务器 !!\n请稍后重试或者开一个VPN。";
+        public static LanguageElement LANG_IRC_Ready = "[IRC] osu! IRC 已经准备就绪!";
+
+        public static LanguageElement LANG_Current_Online = "当前在线人数: {0:D}";
+        public static LanguageElement LANG_Gift_Sent = "我送给你{O:D}份{1:S}!";
+
+        public static LanguageElement LANG_Config = "配置文件: ";
+        public static LanguageElement LANG_Config_Status_OK = "OK, 房间ID:";
+        public static LanguageElement LANG_Config_Status_Fail = "尚未配置成功";
+
+        public static LanguageElement LANG_Source = "源{0:S}: ";
+        public static LanguageElement LANG_IRC = "osu! IRC(聊天):";
+        public static LanguageElement LANG_Danmaku = "弹幕发送:";
+        public static LanguageElement LANG_Status_Connected = "已连接";
+        public static LanguageElement LANG_Status_NotConenct = "未连接";
+
+        public static LanguageElement LANG_Loading_Config = @"正在读取配置文件....\n";
+        public static LanguageElement LANG_Config_RoomID = @"房间ID: \t\t";
+        public static LanguageElement LANG_Config_osuID = @"主号IRC: \t\t";
+        public static LanguageElement LANG_Config_BotID = @"BotIRC: \t\t";
+        public static LanguageElement LANG_Config_BotPassLen = @"BotIRC密码长度: \t";
+
+        public static LanguageElement LANG_Welcome = "欢迎使用 osu直播弹幕同步工具 ver {0:S} ";
+        public static LanguageElement LANG_Help = @"输入 'help' 获得帮助列表\n\n";
+        public static LanguageElement LANG_Command = "命令";
+        public static LanguageElement LANG_Command_Description = "描述";
+
     }
 
 
@@ -117,28 +104,22 @@ namespace Sync.Tools
             return element.value;
         }
     }
-
-    public class I18n
+    /// <summary>
+    /// 特定语言的I18n实现
+    /// </summary>
+    class I18n
     {
-        public static string CurrentLang { get { return System.Globalization.CultureInfo.CurrentCulture.Name; } }
-        string Base { get { return AppDomain.CurrentDomain.BaseDirectory; } }
-        string LangFolder { get { return Path.Combine(Base, "Language"); } }
-        string SelectLangFolder {  get { return Path.Combine(LangFolder, SelectLang); } }
+        public static string CurrentLang { get => System.Globalization.CultureInfo.CurrentCulture.Name; }
+        string Base { get => AppDomain.CurrentDomain.BaseDirectory; }
+        string LangFolder { get => Path.Combine(Base, "Language"); }
+        string SelectLangFolder {  get => Path.Combine(LangFolder, SelectLang); }
         public string SelectLang;
 
-        static I18n instance = null;
-
-        public static I18n Instance { get
-            {
-                if (instance == null)
-                    instance = new I18n(CurrentLang);
-                return instance;
-            }
-        }
-
-        private I18n() { }
-
-        private I18n(string CultureName)
+        /// <summary>
+        ///  实例化一个特定区域语言的I18n实例
+        /// </summary>
+        /// <param name="CultureName">指定区域</param>
+        public I18n(string CultureName)
         {
             SelectLang = CultureName;
             if (!Directory.Exists(LangFolder)) Directory.CreateDirectory(LangFolder);

@@ -87,7 +87,7 @@ namespace Sync.Plugins
             if (isComplete)
                 return Program.host;
             else
-                throw new NullReferenceException("当前状态不能立即获得host类实例");
+                throw new NullReferenceException("Can't get Instance of the Hoster.");
         }
 
         public string getName()

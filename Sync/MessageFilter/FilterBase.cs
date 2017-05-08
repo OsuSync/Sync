@@ -1,7 +1,7 @@
 ﻿using System;
 using Sync.Source;
 using Sync.Tools;
-
+using static Sync.Tools.DefaultI18n;
 
 namespace Sync.MessageFilter
 {
@@ -23,7 +23,7 @@ namespace Sync.MessageFilter
         OnlineChangeMessage(uint count)
         {
             user = "";
-            message = "当前在线人数:" + count;
+            message = string.Format(LANG_Current_Online, count);
             this.count = count;
         }
     }
@@ -46,7 +46,7 @@ namespace Sync.MessageFilter
             this.name = src.giftName;
             this.count = src.giftCount;
             this.source = src;
-            this.message = "我送给你" + count + "份" + name;
+            this.message = string.Format(LANG_Gift_Sent, count, name);
         }
     }
 
