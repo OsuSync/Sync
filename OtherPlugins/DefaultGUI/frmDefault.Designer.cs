@@ -1,4 +1,6 @@
-﻿namespace DefaultGUI
+﻿using static DefaultGUI.Language;
+
+namespace DefaultGUI
 {
     partial class frmDefault
     {
@@ -108,7 +110,7 @@
             this.lblTipsBotIRC.Name = "lblTipsBotIRC";
             this.lblTipsBotIRC.Size = new System.Drawing.Size(98, 28);
             this.lblTipsBotIRC.TabIndex = 3;
-            this.lblTipsBotIRC.Text = "机器人IRC";
+            this.lblTipsBotIRC.Text = UI_TIPS_BOTIRC;
             this.lblTipsBotIRC.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtBotIRC
@@ -157,7 +159,7 @@
             this.lblTipsStauts.Name = "lblTipsStauts";
             this.lblTipsStauts.Size = new System.Drawing.Size(78, 24);
             this.lblTipsStauts.TabIndex = 7;
-            this.lblTipsStauts.Text = "连接状态";
+            this.lblTipsStauts.Text = UI_TIPS_STATUS;
             this.lblTipsStauts.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTipsLiveStatus
@@ -168,7 +170,7 @@
             this.lblTipsLiveStatus.Name = "lblTipsLiveStatus";
             this.lblTipsLiveStatus.Size = new System.Drawing.Size(139, 24);
             this.lblTipsLiveStatus.TabIndex = 8;
-            this.lblTipsLiveStatus.Text = "直播弹幕";
+            this.lblTipsLiveStatus.Text = UI_TIPS_DANMAKU;
             this.lblTipsLiveStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTipsOSUStatus
@@ -179,7 +181,7 @@
             this.lblTipsOSUStatus.Name = "lblTipsOSUStatus";
             this.lblTipsOSUStatus.Size = new System.Drawing.Size(145, 24);
             this.lblTipsOSUStatus.TabIndex = 9;
-            this.lblTipsOSUStatus.Text = "osu! 聊天";
+            this.lblTipsOSUStatus.Text = UI_TIPS_OSU_IRC;
             this.lblTipsOSUStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmdStart
@@ -198,7 +200,7 @@
             this.cmdStart.Name = "cmdStart";
             this.cmdStart.Size = new System.Drawing.Size(94, 55);
             this.cmdStart.TabIndex = 12;
-            this.cmdStart.Text = "开始工作";
+            this.cmdStart.Text = UI_BOTTON_START;
             this.cmdStart.UseVisualStyleBackColor = false;
             this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
             // 
@@ -218,7 +220,7 @@
             this.cmdStop.Name = "cmdStop";
             this.cmdStop.Size = new System.Drawing.Size(94, 55);
             this.cmdStop.TabIndex = 13;
-            this.cmdStop.Text = "停止工作";
+            this.cmdStop.Text = UI_BOTTON_STOP;
             this.cmdStop.UseVisualStyleBackColor = false;
             this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
             // 
@@ -238,7 +240,7 @@
             this.cmdLogin.Name = "cmdLogin";
             this.cmdLogin.Size = new System.Drawing.Size(94, 55);
             this.cmdLogin.TabIndex = 14;
-            this.cmdLogin.Text = "登录到直播";
+            this.cmdLogin.Text = UI_BOTTON_LOGIN_DANMAKU;
             this.cmdLogin.UseVisualStyleBackColor = false;
             this.cmdLogin.Click += new System.EventHandler(this.cmdLogin_Click);
             // 
@@ -258,7 +260,7 @@
             this.cmdConsole.Name = "cmdConsole";
             this.cmdConsole.Size = new System.Drawing.Size(94, 55);
             this.cmdConsole.TabIndex = 15;
-            this.cmdConsole.Text = "切换控制台";
+            this.cmdConsole.Text = UI_BOTTON_SWITCH_CON;
             this.cmdConsole.UseVisualStyleBackColor = false;
             this.cmdConsole.Click += new System.EventHandler(this.cmdConsole_Click);
             // 
@@ -278,7 +280,7 @@
             this.cmdExit.Name = "cmdExit";
             this.cmdExit.Size = new System.Drawing.Size(94, 55);
             this.cmdExit.TabIndex = 16;
-            this.cmdExit.Text = "退出程序";
+            this.cmdExit.Text = UI_BOTTON_EXIT;
             this.cmdExit.UseVisualStyleBackColor = false;
             this.cmdExit.Click += new System.EventHandler(this.cmdExit_Click);
             // 
@@ -303,7 +305,7 @@
             this.lblTipsLiveID.Name = "lblTipsLiveID";
             this.lblTipsLiveID.Size = new System.Drawing.Size(61, 23);
             this.lblTipsLiveID.TabIndex = 17;
-            this.lblTipsLiveID.Text = "直播间";
+            this.lblTipsLiveID.Text = UI_TIPS_LIVE_ID;
             this.lblTipsLiveID.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTitle
@@ -355,7 +357,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 23);
             this.label1.TabIndex = 20;
-            this.label1.Text = "直播源";
+            this.label1.Text = UI_TIPS_LIVE_SOURCE;
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbSources

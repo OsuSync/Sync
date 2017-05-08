@@ -13,6 +13,7 @@ using Sync.Tools;
 using System.Runtime.InteropServices;
 using Sync.Source;
 using System.Drawing.Drawing2D;
+using static Sync.Tools.DefaultI18n;
 
 namespace DefaultGUI
 {
@@ -140,7 +141,17 @@ namespace DefaultGUI
         public void Write(string msg, bool newline = true, bool time = true)
         {
             UpdateStautsAuto();
-            AppendText((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "") + msg + (newline ? "\n" : ""));
+            string ms = System.Text.RegularExpressions.Regex.Replace(msg, @"\\t|\\r|\\n", m =>
+            {
+                switch (m.ToString())
+                {
+                    case @"\t": return "\t";
+                    case @"\r": return "\r";
+                    case @"\n": return "\n";
+                }
+                return m.ToString();
+            });
+            AppendText((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "") + ms + (newline ? "\n" : ""));
         }
 
         public void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true)
@@ -152,17 +163,16 @@ namespace DefaultGUI
 
         public void WriteConfig()
         {
-            Write("正在读取配置文件....\n");
-            Write("房间ID: \t\t" + Configuration.LiveRoomID);
-            Write("主号IRC: \t\t" + Configuration.TargetIRC);
-            Write("BotIRC: \t\t" + Configuration.BotIRC);
-            Write("BotIRC密码长度: \t" + Configuration.BotIRCPassword.Length);
-            Write("完成.\n");
+            Write(LANG_Loading_Config);
+            Write(LANG_Config_RoomID + Configuration.LiveRoomID);
+            Write(LANG_Config_osuID + Configuration.TargetIRC);
+            Write(LANG_Config_BotID + Configuration.BotIRC);
+            Write(LANG_Config_BotPassLen + Configuration.BotIRCPassword.Length);
         }
 
         public void WriteHelp()
         {
-            WriteHelp("命令", "描述");
+            WriteHelp(LANG_Command, LANG_Command_Description);
             WriteHelp("======", "======");
             foreach (var item in DefaultGUI.hoster.Commands.Dispatch.getCommandsHelp())
             {
@@ -180,38 +190,40 @@ namespace DefaultGUI
 
         public void WriteStatus(SyncConnector instance)
         {
-            WriteColor("配置文件: ", ConsoleColor.Blue, false);
+            WriteColor(LANG_Config, ConsoleColor.Blue, false);
             if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
-                WriteColor("OK, 房间ID:" + Configuration.LiveRoomID, ConsoleColor.Green, true, false);
+                WriteColor(string.Format(LANG_Config_Status_OK, Configuration.LiveRoomID), ConsoleColor.Green, true, false);
             else
-                WriteColor("未配置", ConsoleColor.Red, true, false);
+                WriteColor(LANG_Config_Status_Fail, ConsoleColor.Red, true, false);
 
-            WriteColor("BiliBili Live连接: ", ConsoleColor.Blue, false);
+            WriteColor(string.Format(LANG_Source, Configuration.Provider), ConsoleColor.Blue, false);
             if (instance.SourceStatus)
-                WriteColor("已连接", ConsoleColor.Green, true, false);
+                WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
             else
-                WriteColor("等待连接", ConsoleColor.Red, true, false);
+                WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
 
-            WriteColor("osu! IRC(聊天): ", ConsoleColor.Blue, false);
+            WriteColor(LANG_IRC, ConsoleColor.Blue, false);
             if (instance.IRCStatus)
-                WriteColor("已连接", ConsoleColor.Green, true, false);
+                WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
             else
-                WriteColor("等待连接", ConsoleColor.Red, true, false);
+                WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
 
             if (SyncManager.loginable)
             {
-                WriteColor("发送弹幕: ", ConsoleColor.Blue, false);
+                WriteColor(LANG_Danmaku, ConsoleColor.Blue, false);
                 if (((Sync.Source.ISendable)instance.GetSource()).LoginStauts())
-                    WriteColor("已登录", ConsoleColor.Green, true, false);
+                    WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
                 else
-                    WriteColor("未连接", ConsoleColor.Red, true, false);
+                    WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
             }
         }
 
         public void WriteWelcome()
         {
-            Write("欢迎使用 osu直播弹幕同步工具 ver " +
-            System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            Write(string.Format(LANG_Welcome,
+                   System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+
+            Write(LANG_Help);
         }
 
         private void lblClose_Click(object sender, EventArgs e)

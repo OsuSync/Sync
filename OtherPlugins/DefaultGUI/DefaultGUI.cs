@@ -8,6 +8,7 @@ using Sync;
 using System.Threading;
 using System.Windows.Forms;
 using Sync.Command;
+using static DefaultGUI.Language;
 
 namespace DefaultGUI
 {
@@ -26,6 +27,7 @@ namespace DefaultGUI
 
         public DefaultGUI() : base(PLUGIN_NAME, PLUGIN_AUTHOR)
         {
+            Sync.Tools.I18n.Instance.ApplyLanguage(new Language());
             frmThread = new Thread(ShowForm);
             frmThread.SetApartmentState(ApartmentState.STA);
             frmThread.Name = "STAThreadForm";
@@ -36,7 +38,7 @@ namespace DefaultGUI
 
             onInitCommand += cmd => cmd.Dispatch.bind("gui", (t) => {
                 frmUI.ShowMe(); return true;
-            }, "显示UI");
+            }, UI_DISPLAY);
 
             onStartSync += t => 
                 frmUI.UpdateStautsAuto();
