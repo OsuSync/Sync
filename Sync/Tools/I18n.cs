@@ -115,6 +115,38 @@ namespace Sync.Tools
         string SelectLangFolder {  get => Path.Combine(LangFolder, SelectLang); }
         public string SelectLang;
 
+        private static I18n instance;
+
+        public static I18n Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    if(Configuration.Language == Configuration.DEFAULT_LANGUAGE || Configuration.Language.Length == 0)
+                    {
+                        instance = new I18n(CurrentSystemLang);
+                    }
+                    else
+                    {
+                        instance = new I18n(Configuration.Language);
+                    }
+                }
+                return instance;
+            }
+            private set
+            {
+                instance = value;
+            }
+        }
+
+        public static void SwitchToCulture(string CultureName)
+        {
+            Instance = new I18n(CultureName);
+        }
+
+        private I18n() { }
+
         /// <summary>
         ///  实例化一个特定区域语言的I18n实例
         /// </summary>

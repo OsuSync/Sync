@@ -12,7 +12,7 @@ namespace Sync.Tools
         /// BiliBili Live 同步源的标识常数
         /// </summary>
         public const string PROVIDER_BILIBILI = "BiliBili";
-
+        public const string DEFAULT_LANGUAGE = "LocalSettings";
         public static string LiveRoomID
         {
             get
@@ -75,6 +75,7 @@ namespace Sync.Tools
 
         public static string Language
         {
+
             get
             {
                 return ReadConfig(DefaultConfig.Language);
