@@ -17,56 +17,45 @@ namespace Sync.Plugins
 
         }
 
-        internal int LoadCommnads()
+        internal void Loader<T>(T instance)
         {
             foreach (Plugin item in pluginList)
             {
-                item.onEvent(() => Program.host.Commands);
+                item.onEvent(() => instance);
             }
+        }
 
+        internal int LoadCommnads()
+        {
+            Loader(Program.host.Commands);
             return Program.host.Commands.Dispatch.count;
         }
 
         internal int LoadSources()
         {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent(() => Program.host.Sources);
-            }
+            Loader(Program.host.Sources);
             return Program.host.Sources.SourceList.Count();
         }
 
         internal int LoadFilters()
         {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent(() => Program.host.Filters);
-            }
+            Loader(Program.host.Filters);
             return Program.host.Filters.Count;
         }
 
         internal void ReadySync()
         {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent(() => Program.host.SyncInstance);
-            }
+            Loader(Program.host.SyncInstance);
         }
 
         internal void StartSync()
         {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent(() => Program.host.SyncInstance.Connector);
-            }
+            Loader(Program.host.SyncInstance.Connector);
         }
 
         internal void StopSync()
         {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent<SyncConnector>(() => null);
-            }
+            Loader<SyncConnector>(null);
         }
 
         public IEnumerable<Plugin> GetPlugins()
