@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace DefaultPlugin.Sources.Twitch
 {
-    public class Twitch:ISourceBase/*,ISendable*///未实现
+    public class Twitch:ISourceBase,ISendable
     {
         public const string SOURCE_NAME = "Twitch";
         public const string SOURCE_AUTHOR = "DarkProjector";
@@ -59,7 +59,7 @@ namespace DefaultPlugin.Sources.Twitch
 
         public bool Disconnect()
         {
-            currentIRCIO.DisConnect();
+            currentIRCIO?.DisConnect();
             currentIRCIO = null;
             onDisconnected?.Invoke();
             return true;
@@ -83,6 +83,22 @@ namespace DefaultPlugin.Sources.Twitch
         public bool Stauts()
         {
             return currentIRCIO != null && currentIRCIO.IsConnected;
+        }
+
+
+        public void Send(string str)
+        {
+            currentIRCIO?.SendMessage(str);
+        }
+
+        public void Login(string user, string password)
+        {
+            //只需要oauth
+        }
+
+        public bool LoginStauts()
+        {
+            return true;//只需要oauth
         }
 
         #endregion  

@@ -37,9 +37,13 @@ namespace DefaultPlugin.Sources.Twitch
         int prev_peopleCount = -1;
         int tmpCurrent_peopleCount = 0;
 
-        public bool IsConnected { get {
-                return clientSocket!=null&&clientSocket.Connected;
-            } }
+        public bool IsConnected
+        {
+            get
+            {
+                return clientSocket != null && clientSocket.Connected;
+            }
+        }
 
         bool isLooping = false;
 
@@ -94,6 +98,9 @@ namespace DefaultPlugin.Sources.Twitch
             outputStreamSender.WriteLine($"PASS {oauth}\nNICK {name.ToLower()}");
             outputStreamSender.Flush();
 
+            outputStreamSender.WriteLine(@"CAP REQ :twitch.tv/membership");
+            outputStreamSender.Flush();
+
             outputThread.Start();
             inputThread.Start();
         }
@@ -132,7 +139,7 @@ namespace DefaultPlugin.Sources.Twitch
             //释放资源?
         }
 
-        private void processCommandMessage(string messageID,string rawMessage)
+        private void processCommandMessage(string messageID, string rawMessage)
         {
             switch (messageID)
             {
@@ -150,11 +157,12 @@ namespace DefaultPlugin.Sources.Twitch
                     }
                     break;
 
-                case "356":
+                case "366":
                     {
-                        if (tmpCurrent_peopleCount!=prev_peopleCount)
+                        if (tmpCurrent_peopleCount != prev_peopleCount)
                         {
                             OnNamesCountUpdate?.Invoke(tmpCurrent_peopleCount);
+                            prev_peopleCount = tmpCurrent_peopleCount;
                         }
                         tmpCurrent_peopleCount = 0;
                     }
