@@ -5,6 +5,8 @@ using System.Text;
 using Sync.Source;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Net;
+using System.IO;
 
 namespace DefaultPlugin.Sources.Twitch
 {
@@ -17,7 +19,9 @@ namespace DefaultPlugin.Sources.Twitch
 
         TwitchIRCIO currentIRCIO;
 
-        int prev_onlineCount = 0;
+        int prev_ViewersCount = 0;
+
+        int onlineViewersCountInv = 6;
 
         public event ConnectedEvt onConnected;
         public event DisconnectedEvt onDisconnected;
@@ -34,7 +38,6 @@ namespace DefaultPlugin.Sources.Twitch
                 currentIRCIO.DisConnect();
 
                 currentIRCIO.OnRecieveRawMessage -= onRecieveRawMessage;
-                currentIRCIO.OnNamesCountUpdate -= onUpdateChannelPeopleCount;
 
                 currentIRCIO = null;
             }
@@ -44,10 +47,9 @@ namespace DefaultPlugin.Sources.Twitch
                 currentIRCIO.Connect();
 
                 currentIRCIO.OnRecieveRawMessage += onRecieveRawMessage;
-                currentIRCIO.OnNamesCountUpdate += onUpdateChannelPeopleCount;
 
                 onConnected?.Invoke();
-                updateChannelWatcherCount();
+                UpdateChannelViewersCount();
             }
             catch (Exception e)
             {
@@ -84,7 +86,6 @@ namespace DefaultPlugin.Sources.Twitch
         {
             return currentIRCIO != null && currentIRCIO.IsConnected;
         }
-
 
         public void Send(string str)
         {
@@ -123,18 +124,48 @@ namespace DefaultPlugin.Sources.Twitch
         /// <summary>
         /// 更新观众人数并汇报
         /// </summary>
-        public void updateChannelWatcherCount()
+        public async void UpdateChannelViewersCount()
         {
-            currentIRCIO?.SendRawMessage(@"NAMES");
+            //currentIRCIO?.SendRawMessage(@"NAMES");
+            int nowViewersCount = await new Task<int>(() =>
+            {
+                string uri = $"https://api.twitch.tv/kraken/streams/{currentIRCIO.ChannelName}&client_id={currentIRCIO.ClientID}";
+
+                HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
+                request.Method = "GET";
+
+                try
+                {
+                    var response = (HttpWebResponse)request.GetResponse();
+                    StreamReader stream;
+                    using (stream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        string data = stream.ReadToEnd();
+                        string viewers = GetJSONValue(ref data, "viewers");
+                        return int.Parse(viewers);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return prev_ViewersCount;//就当做啥事都没发生(
+                }
+            });
+
+            if (Math.Abs(nowViewersCount - prev_ViewersCount) > onlineViewersCountInv)
+            {
+                onOnlineChange?.Invoke(Convert.ToUInt32(nowViewersCount));
+                prev_ViewersCount = nowViewersCount;
+            }
         }
 
-        public void onUpdateChannelPeopleCount(int newPeopleCount)
+        private string GetJSONValue(ref string text, string key)
         {
-            if (Math.Abs(newPeopleCount - prev_onlineCount) > 6)
-            {
-                onOnlineChange?.Invoke(Convert.ToUInt32(newPeopleCount));
-                prev_onlineCount = newPeopleCount;
-            }
+            var result = Regex.Match(text, $"{key}\":\"(.+?)\"");
+
+            if (!result.Success)
+                return null;
+
+            return result.Groups[1].Value;
         }
 
         public override string ToString()

@@ -16,6 +16,7 @@ namespace DefaultPlugin.Sources.Twitch
     /// TwitchIRC通信类，用于接收/发送Comment
     /// ChannelName指频道，类似于bilibili live的room id
     /// oauth:pjaicvg4jon0o0doiwjlo5z9s05a7l
+    /// Client-ID:esmhw2lcvrgtqw545ourqjwlg7twee
     /// </summary>
 
     public class TwitchIRCIO
@@ -28,6 +29,7 @@ namespace DefaultPlugin.Sources.Twitch
 
         string oauth = @"oauth:pjaicvg4jon0o0doiwjlo5z9s05a7l";
         string name = @"osuSync";
+        string client_id = "esmhw2lcvrgtqw545ourqjwlg7twee";
         string ircAddress = @"irc.twitch.tv";
         int ircPort = 6667;
         string channelName = null;
@@ -44,6 +46,12 @@ namespace DefaultPlugin.Sources.Twitch
                 return clientSocket != null && clientSocket.Connected;
             }
         }
+
+        public string OAuth { get { return oauth; } }
+
+        public string ClientID { get { return client_id; } }
+
+        public string ChannelName { get { return channelName; } }
 
         bool isLooping = false;
 
