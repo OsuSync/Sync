@@ -86,5 +86,16 @@ namespace Sync.Tools
             }
         }
 
+        public static string Language
+        {
+            get
+            {
+                return ReadConfig(DefaultConfig.Language);
+            }
+            set
+            {
+                WriteConfig(DefaultConfig.Language, value);
+            }
+        }
     }
 }

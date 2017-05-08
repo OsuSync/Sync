@@ -19,7 +19,8 @@ namespace Sync.Tools
             BotIRC,
             BotIRCPassword,
             Provider,
-            Certification
+            Certification,
+            Language
         }
 
         [DllImport("kernel32")]
