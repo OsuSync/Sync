@@ -83,5 +83,10 @@ namespace DefaultPlugin.Sources.Twitch
             label4.Visible = checkBox1.Checked;
             linkLabel2.Visible = checkBox1.Checked;
         }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://dev.twitch.tv/docs/v5/guides/authentication/#registration");
+        }
     }
 }

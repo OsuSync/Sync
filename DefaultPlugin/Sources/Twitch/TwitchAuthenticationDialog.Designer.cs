@@ -33,7 +33,6 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.OK = new System.Windows.Forms.Button();
-            this.Cannel = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -95,16 +94,6 @@
             this.OK.UseVisualStyleBackColor = true;
             this.OK.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Cannel
-            // 
-            this.Cannel.Location = new System.Drawing.Point(416, 241);
-            this.Cannel.Name = "Cannel";
-            this.Cannel.Size = new System.Drawing.Size(91, 31);
-            this.Cannel.TabIndex = 5;
-            this.Cannel.Text = "取消";
-            this.Cannel.UseVisualStyleBackColor = true;
-            this.Cannel.Click += new System.EventHandler(this.button2_Click);
-            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -140,6 +129,7 @@
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "我该如何获取ClientID?";
             this.linkLabel2.Visible = false;
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // textBox2
             // 
@@ -171,13 +161,17 @@
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.Cannel);
             this.Controls.Add(this.OK);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TwitchAuthenticationDialog";
+            this.Opacity = 0.9D;
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "TwitchAuthenticationDialog";
             this.Load += new System.EventHandler(this.TwitchAuthenticationDialog_Load);
             this.ResumeLayout(false);
@@ -192,7 +186,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button OK;
-        private System.Windows.Forms.Button Cannel;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel linkLabel2;
