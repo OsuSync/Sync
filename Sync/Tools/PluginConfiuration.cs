@@ -42,7 +42,6 @@ namespace Sync.Tools
     {
         private Plugin instance;
         private IConfigurable config;
-
         public PluginConfiuration(Plugin instance, IConfigurable config)
         {
             this.instance = instance;
