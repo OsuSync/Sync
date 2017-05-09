@@ -155,10 +155,16 @@ namespace Sync
 
         private void StartSource()
         {
-            Src.Connect(/*int.Parse*/(Configuration.LiveRoomID));
-            while (SourceStatus && IsConnect && Src.Stauts()) { Thread.Sleep(1); }
+            bool result = Src.Connect(/*int.Parse*/(Configuration.LiveRoomID));
+            while (SourceStatus && IsConnect && Src.Stauts())
+            {
+                Thread.Sleep(1);
+            }
             Src.Disconnect();
-            while (Src.Stauts()) { Thread.Sleep(1); }
+            while (Src.Stauts())
+            {
+                Thread.Sleep(1);
+            }
         }
 
         private void StartIRC()

@@ -47,11 +47,11 @@ namespace DefaultPlugin.Sources.Twitch
             }
         }
 
-        public string OAuth { get { return oauth; } }
+        public string OAuth { get { return oauth; } set { oauth = value; } }
 
-        public string ClientID { get { return client_id; } }
+        public string ClientID { get { return client_id; } set { client_id = value; } }
 
-        public string ChannelName { get { return channelName; } }
+        public string ChannelName { get { return channelName; } set { channelName = value; } }
 
         bool isLooping = false;
 

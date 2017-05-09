@@ -29,10 +29,29 @@ namespace DefaultPlugin.Sources.Twitch
         public event GiftEvt onGift;
         public event CurrentOnlineEvt onOnlineChange;
 
+        string oauth="", clientId="", channelName="";
+
+        public string OAuth { get { return oauth; } set { oauth = value; } }
+        public string ClientID { get { return clientId; } set { clientId = value; } }
+        public string ChannelName { get { return channelName; } set { channelName = value; } }
+
         #region 接口实现
 
         public bool Connect(string roomName)
         {
+            channelName = roomName;
+
+            if (channelName.Length == 0)
+            {
+                Sync.Tools.IO.CurrentIO.WriteColor("频道名不能为空!",ConsoleColor.Red);
+                return false;
+            }
+
+            while (oauth.Length==0) {
+                TwitchAuthenticationDialog AuthDialog = new TwitchAuthenticationDialog(this);
+                AuthDialog.ShowDialog();
+            }
+
             if (currentIRCIO != null)
             {
                 currentIRCIO.DisConnect();
@@ -44,6 +63,9 @@ namespace DefaultPlugin.Sources.Twitch
             try
             {
                 currentIRCIO = new TwitchIRCIO(roomName);
+                currentIRCIO.OAuth = oauth;
+                currentIRCIO.ChannelName = channelName;
+                currentIRCIO.ClientID = clientId;
                 currentIRCIO.Connect();
 
                 currentIRCIO.OnRecieveRawMessage += onRecieveRawMessage;
@@ -167,6 +189,8 @@ namespace DefaultPlugin.Sources.Twitch
 
             return result.Groups[1].Value;
         }
+
+        public bool Connect() => Connect(channelName);
 
         public override string ToString()
         {
