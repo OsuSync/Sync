@@ -83,12 +83,7 @@ namespace DefaultPlugin.Sources.Twitch
                 return;
             }
 
-            rawOutputMsgList.Clear();
-
             clientSocket = new TcpClient();
-
-            outputThread = new Thread(outputThreadFunc);
-            inputThread = new Thread(inputThreadFunc);
 
             isLooping = true;
 
@@ -108,9 +103,6 @@ namespace DefaultPlugin.Sources.Twitch
 
             outputStreamSender.WriteLine(@"CAP REQ :twitch.tv/membership");
             outputStreamSender.Flush();
-
-            outputThread.Start();
-            inputThread.Start();
         }
 
         /// <summary>
@@ -213,6 +205,11 @@ namespace DefaultPlugin.Sources.Twitch
                         var message = rawOutputMsgList[0];
                         rawOutputMsgList.RemoveAt(0);
 
+                        if (!clientSocket.Connected)
+                        {
+                            Reconnect();
+                        }
+
                         outputStreamSender.WriteLine(message);
                         outputStreamSender.Flush();
 
@@ -231,14 +228,33 @@ namespace DefaultPlugin.Sources.Twitch
 
         #region 公共rbq方法
 
+        public void Reconnect()
+        {
+            if (isLooping)
+                initStart();
+            else
+                Connect();
+        }
+
         public void Connect()
         {
+            if (isLooping)
+                return;
+
+            outputThread = new Thread(outputThreadFunc);
+            inputThread = new Thread(inputThreadFunc);
+
             initStart();
+
+            outputThread.Start();
+            inputThread.Start();
         }
 
         public void DisConnect()
         {
             isLooping = false;
+
+            rawOutputMsgList.Clear();
         }
 
         public void SendMessage(string message, string channel = null) => SendRawMessage($"PRIVMSG #{(channel != null ? channel : this.channelName)} : {message}");
