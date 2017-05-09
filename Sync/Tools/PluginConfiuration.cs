@@ -43,6 +43,8 @@ namespace Sync.Tools
         private T parentPlugin;
         private U configInstance;
 
+        public U ConfigData { get { return configInstance; } }
+
         public PluginConfiuration(T plugin, U config)
         {
             parentPlugin = plugin;

@@ -31,15 +31,39 @@ namespace DefaultPlugin.Sources.Twitch
 
         string oauth="", clientId="", channelName="";
 
+        bool isUsingDefaultChannelID = true;
+
+        DefaultSettingConfiuration config;
+
         public string OAuth { get { return oauth; } set { oauth = value; } }
         public string ClientID { get { return clientId; } set { clientId = value; } }
         public string ChannelName { get { return channelName; } set { channelName = value; } }
-
+        public bool IsUsingDefaultChannelID { get { return isUsingDefaultChannelID; } set { isUsingDefaultChannelID = value; } }
+        
         #region 接口实现
+
+        public void LoadConfig(DefaultSettingConfiuration config)
+        {
+            this.config = config;
+
+            ClientID = config.ConfigData.IsUsingCurrentClientID == "1" ? config.ConfigData.CurrentClientID : config.ConfigData.DefaultClientID;
+            OAuth = config.ConfigData.OAuth;
+            ChannelName = config.ConfigData.HostChannelName;
+        }
+
+        public void SaveConfig()
+        {
+            config.ConfigData.CurrentClientID = (ClientID == config.ConfigData.DefaultClientID ? "" : ClientID);
+            config.ConfigData.HostChannelName = ChannelName;
+            config.ConfigData.OAuth = OAuth;
+            config.ConfigData.IsUsingCurrentClientID = IsUsingDefaultChannelID?"1":"0";
+        }
 
         public bool Connect(string roomName)
         {
             channelName = roomName;
+
+            SaveConfig();
 
             if (channelName.Length == 0)
             {
@@ -78,6 +102,7 @@ namespace DefaultPlugin.Sources.Twitch
                 Sync.Tools.IO.CurrentIO.WriteColor("twitch connect error!" + e.Message, ConsoleColor.Red);
                 return false;
             }
+
             return true;
         }
 

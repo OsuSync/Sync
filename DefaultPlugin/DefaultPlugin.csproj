@@ -62,6 +62,7 @@
     <Compile Include="Filters\OnlineChangePeeker.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="Sources\BiliBili\BiliBili.cs" />
     <Compile Include="Sources\BiliBili\BiliBiliDanmuku.cs" />
     <Compile Include="Sources\BiliBili\Bilibili_dm\DanmakuLoader.cs" />

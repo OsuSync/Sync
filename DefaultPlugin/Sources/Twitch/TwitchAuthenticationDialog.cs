@@ -19,6 +19,7 @@ namespace DefaultPlugin.Sources.Twitch
         {
             this.bindTwitchSource = bindTwitchSource;
             InitializeComponent();
+
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -34,6 +35,7 @@ namespace DefaultPlugin.Sources.Twitch
         private void TwitchAuthenticationDialog_Load(object sender, EventArgs e)
         {
             textBox1.Text = bindTwitchSource.OAuth != null&&bindTwitchSource.OAuth.Length>6 ? bindTwitchSource.OAuth.Substring("oauth:".Length) : "";
+            checkBox1.Checked = !bindTwitchSource.IsUsingDefaultChannelID;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -64,9 +66,12 @@ namespace DefaultPlugin.Sources.Twitch
 
             string clientId = textBox2.Text;
 
+            bindTwitchSource.IsUsingDefaultChannelID = false;
+
             if (clientId.Length != 0)
             {
                 bindTwitchSource.ClientID = clientId;
+                bindTwitchSource.IsUsingDefaultChannelID = true;
             }
 
             //Connect();

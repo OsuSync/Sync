@@ -21,6 +21,8 @@ namespace DefaultPlugin
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
 
+        private DefaultSettingConfiuration config;
+
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
             Sync.Tools.I18n.Instance.ApplyLanguage(new Language());
@@ -52,6 +54,11 @@ namespace DefaultPlugin
             MainSources = host.Sources;
             MainInstance = host.SyncInstance;
             MainMessager = host.Messages;
+
+            //config load
+            config = new DefaultSettingConfiuration(this, new Setting());
+            config.ForceLoad();
+            srcTwitch.LoadConfig(config);
         }
     }
 }
