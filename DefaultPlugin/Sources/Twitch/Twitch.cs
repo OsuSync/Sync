@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.IO;
+using Sync.Tools;
 
 namespace DefaultPlugin.Sources.Twitch
 {
-    public class Twitch:ISourceBase,ISendable
+    public class Twitch : ISourceBase,ISendable, IConfigurable
     {
         public const string SOURCE_NAME = "Twitch";
         public const string SOURCE_AUTHOR = "DarkProjector";
@@ -33,30 +34,33 @@ namespace DefaultPlugin.Sources.Twitch
 
         bool isUsingDefaultChannelID = true;
 
-        DefaultSettingConfiuration config;
-
         public string OAuth { get { return oauth; } set { oauth = value; } }
         public string ClientID { get { return clientId; } set { clientId = value; } }
         public string ChannelName { get { return channelName; } set { channelName = value; } }
         public bool IsUsingDefaultChannelID { get { return isUsingDefaultChannelID; } set { isUsingDefaultChannelID = value; } }
-        
+
+        public ConfigurationElement HostChannelName { get; set; } = "";
+        public ConfigurationElement DefaultClientID { get; set; } = "esmhw2lcvrgtqw545ourqjwlg7twee";
+        public ConfigurationElement CurrentClientID { get; set; } = "";
+        public ConfigurationElement IsUsingCurrentClientID { get; set; } = "1";
+        public ConfigurationElement SOAuth { get; set; } = "";
+
         #region 接口实现
 
-        public void LoadConfig(DefaultSettingConfiuration config)
+        public void LoadConfig()
         {
-            this.config = config;
 
-            ClientID = config.ConfigData.IsUsingCurrentClientID == "1" ? config.ConfigData.CurrentClientID : config.ConfigData.DefaultClientID;
-            OAuth = config.ConfigData.OAuth;
-            ChannelName = config.ConfigData.HostChannelName;
+            ClientID = IsUsingCurrentClientID == "1" ? CurrentClientID : DefaultClientID;
+            OAuth = SOAuth;
+            ChannelName = HostChannelName;
         }
 
         public void SaveConfig()
         {
-            config.ConfigData.CurrentClientID = (ClientID == config.ConfigData.DefaultClientID ? "" : ClientID);
-            config.ConfigData.HostChannelName = ChannelName;
-            config.ConfigData.OAuth = OAuth;
-            config.ConfigData.IsUsingCurrentClientID = IsUsingDefaultChannelID?"1":"0";
+            CurrentClientID = (ClientID == DefaultClientID ? "" : ClientID);
+            HostChannelName = ChannelName;
+            SOAuth = OAuth;
+            IsUsingCurrentClientID = IsUsingDefaultChannelID ? "1" : "0";
         }
 
         public bool Connect(string roomName)
@@ -220,6 +224,16 @@ namespace DefaultPlugin.Sources.Twitch
         public override string ToString()
         {
             return SOURCE_NAME;
+        }
+
+        public void onConfigurationLoad()
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void onConfigurationSave()
+        {
+            //throw new NotImplementedException();
         }
     }
 }

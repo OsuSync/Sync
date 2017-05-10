@@ -31,6 +31,11 @@ namespace Sync.Tools
         {
             return new ConfigurationElement(e);
         }
+
+        public override string ToString()
+        {
+            return _cfg;
+        }
     }
 
     /// <summary>
@@ -56,7 +61,7 @@ namespace Sync.Tools
 
         public void ForceLoad()
         {
-            foreach (PropertyInfo item in instance.GetType().GetProperties())
+            foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
@@ -71,13 +76,13 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(instance), instance.Name + "." + config.GetType().Name);
+                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
                 }
             }
         }
     }
 
-    public sealed class PluginConfigurationManager<T> where T : Plugin
+    public sealed class PluginConfigurationManager
     {
         private List<PluginConfiuration> items;
         private Plugin instance;
@@ -91,5 +96,24 @@ namespace Sync.Tools
         {
             items.Add(new PluginConfiuration(instance, Config));
         }
+
+        public void SaveAll()
+        {
+            foreach (var item in items)
+            {
+                item.ForceSave();
+            }
+        }
+
+        public PluginConfiuration GetInstance(IConfigurable obj)
+        {
+            foreach (var item in items)
+            {
+                if (item.GetType() == obj.GetType()) return item;
+            }
+            return null;
+        }
+
+        ~PluginConfigurationManager () => SaveAll();
     }
 }

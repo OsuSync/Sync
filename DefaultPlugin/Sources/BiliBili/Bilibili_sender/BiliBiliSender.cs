@@ -40,7 +40,7 @@ namespace DefaultPlugin.Source
             formThread.Name = "ActiveXThread";
             this.user = user;
             this.password = password;
-            if (Configuration.LoginCertification.Length > 0)
+            if (BiliBili.BiliBili.Cookies.ToString().Length > 0)
             {
                 loginStauts = true;
             }
@@ -75,7 +75,8 @@ namespace DefaultPlugin.Source
         /// <param name="cookies">Cookies信息</param>
         public void setCookies(string cookies)
         {
-            Configuration.LoginCertification = cookies;
+            BiliBili.BiliBili.Cookies = cookies;
+            DefaultPlugin.Config.SaveAll();
             IO.CurrentIO.WriteColor(LANG_SEND_COOKIE_SAVED, ConsoleColor.DarkYellow);
         }
 
@@ -88,7 +89,7 @@ namespace DefaultPlugin.Source
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(new Uri("http://live.bilibili.com/msg/send"));
             long unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
             byte[] byteArray = Encoding.UTF8.GetBytes("color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + Configuration.LiveRoomID + "");
-            string[] cookies = Configuration.LoginCertification.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] cookies = BiliBili.BiliBili.Cookies.ToString().Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             Uri live = new Uri("http://live.bilibili.com/");
 
             req.Method = "POST";

@@ -5,6 +5,7 @@ using DefaultPlugin.Sources.Twitch;
 using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
 using System;
+using Sync.Tools;
 
 namespace DefaultPlugin
 {
@@ -21,7 +22,7 @@ namespace DefaultPlugin
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
 
-        private DefaultPluginConfiuration config;
+        public static PluginConfigurationManager Config { get; set; }
 
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
@@ -46,6 +47,8 @@ namespace DefaultPlugin
 
             base.onLoadComplete += DefaultPlugin_onLoadComplete;
 
+            base.onStopSync += () => { Config.SaveAll(); };
+
         }
 
         private void DefaultPlugin_onLoadComplete(SyncHost host)
@@ -56,7 +59,9 @@ namespace DefaultPlugin
             MainMessager = host.Messages;
 
             //config load
-            config = new DefaultPluginConfiuration(this);
+            Config = new PluginConfigurationManager(this);
+            Config.AddItem(srcBili);
+            Config.AddItem(srcTwitch);
         }
     }
 }

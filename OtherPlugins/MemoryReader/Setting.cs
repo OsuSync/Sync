@@ -21,13 +21,13 @@ namespace MemoryReader
         public static int NoFoundOSUHintInterval = 120;//s
         public static string OsuPath="";
 
-        private static SettingIni setting_output =new SettingIni(); 
-        private static PluginConfiuration<MemoryReader, SettingIni> plugin_config=null;
+        private static SettingIni setting_output =new SettingIni();
+        private static PluginConfiuration plugin_config = null;
         public static MemoryReader PluginInstance
         {
             set
             {
-                plugin_config = new PluginConfiuration<MemoryReader, SettingIni>(value,setting_output);
+                plugin_config = new PluginConfiuration(value, setting_output);
             }
         }
 

@@ -178,7 +178,7 @@ namespace Sync.Tools
                     if (value == "")
                     {
                         value = item.GetValue(instance) as LanguageElement;
-                        ConfigurationIO.Write(LangFile, item.Name, value, CurrentLanguage);
+                        ConfigurationIO.IniWriteValue(LangFile, item.Name, value, CurrentLanguage);
                     }
                     item.SetValue(instance, new LanguageElement(value));
                 }

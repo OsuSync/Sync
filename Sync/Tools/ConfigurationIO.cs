@@ -43,6 +43,11 @@ namespace Sync.Tools
             GetPrivateProfileString(column, key, "", temp, 1536, FilePath);
             return temp.ToString();
         }
+
+        internal static bool IniWriteValue(string FilePath, string key, string value, string column = "config")
+        {
+            return WritePrivateProfileString(column, key, value, FilePath);
+        }
         /// <summary>
         /// 按需读取配置文件
         /// </summary>
@@ -69,9 +74,9 @@ namespace Sync.Tools
         /// <param name="value">值</param>
         /// <param name="column">索引</param>
         /// <returns></returns>
-        public static bool Write(string File, string key, string value, string column = "config")
+        public static bool Write(string key, string value, string column = "config")
         {
-            return WritePrivateProfileString(column, key, value, File);
+            return IniWriteValue(ConfigFile, key, value, column);
         }
         /// <summary>
         /// 按枚举写入配置文件
@@ -81,7 +86,7 @@ namespace Sync.Tools
         /// <returns></returns>
         public static bool WriteConfig(DefaultConfig key, string value)
         {
-            return Write(ConfigFile, Enum.GetName(typeof(DefaultConfig), key), value);
+            return Write(Enum.GetName(typeof(DefaultConfig), key), value);
         }
     }
 }

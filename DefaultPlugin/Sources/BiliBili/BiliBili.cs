@@ -2,13 +2,14 @@
 using Sync.Source.BiliBili.BiliBili_dm;
 using Sync.Source;
 using System.Threading.Tasks;
+using Sync.Tools;
 
 namespace DefaultPlugin.Source.BiliBili
 {
     /// <summary>
     /// BiliBili Live的同步源类
     /// </summary>
-    class BiliBili : ISourceBase, ISendable
+    class BiliBili : ISourceBase, ISendable , IConfigurable
     {
         public const string SOURCE_NAME = "Bilibili";
         public const string SOURCE_AUTHOR = "Sender: Deliay, Receive: copyliu";
@@ -21,6 +22,8 @@ namespace DefaultPlugin.Source.BiliBili
         public event DanmukuEvt onDanmuku;
         public event GiftEvt onGift;
         public event CurrentOnlineEvt onOnlineChange;
+
+        public static ConfigurationElement Cookies { get; set; } = "";
 
         public BiliBili()
         {
@@ -117,5 +120,14 @@ namespace DefaultPlugin.Source.BiliBili
             return SOURCE_NAME;
         }
 
+        public void onConfigurationLoad()
+        {
+
+        }
+
+        public void onConfigurationSave()
+        {
+
+        }
     }
 }
