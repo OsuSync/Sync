@@ -73,19 +73,6 @@ namespace Sync.Tools
             }
         }
 
-        public static string LoginCertification
-        {
-            get
-            {
-                return ReadConfig(DefaultConfig.Certification);
-            }
-
-            set
-            {
-                WriteConfig(DefaultConfig.Certification, value);
-            }
-        }
-
         public static string Language
         {
             get

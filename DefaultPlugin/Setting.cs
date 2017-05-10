@@ -7,7 +7,7 @@ using Sync.Tools;
 
 namespace DefaultPlugin
 {
-    public class Setting : IConfigurable
+    public class TwitchSetting : IConfigurable
     {
         public ConfigurationElement HostChannelName { get; set; } = "";
         public ConfigurationElement DefaultClientID { get; set; } = "esmhw2lcvrgtqw545ourqjwlg7twee";
@@ -26,10 +26,32 @@ namespace DefaultPlugin
         }
     }
 
-    public class DefaultSettingConfiuration : PluginConfiuration<DefaultPlugin, Setting>
+    public class BilibiliSetting : IConfigurable
     {
-        public DefaultSettingConfiuration(DefaultPlugin plugin, Setting config) : base(plugin, config) { }
+        public static ConfigurationElement Cookies { get; set; } = "";
 
-        ~DefaultSettingConfiuration() =>ForceSave();
+        public void onConfigurationLoad()
+        {
+
+        }
+
+        public void onConfigurationSave()
+        {
+
+        }
+    }
+
+    public class DefaultPluginConfiuration
+    {
+        List<PluginConfiuration<DefaultPlugin, IConfigurable>> storage;
+        public DefaultPluginConfiuration(DefaultPlugin instance)
+        {
+
+        }
+
+        public void AddConfig()
+        {
+
+        }
     }
 }

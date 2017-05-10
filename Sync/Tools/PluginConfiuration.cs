@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
-    public class ConfigurationElement
+    public sealed class ConfigurationElement
     {
         private string _cfg = string.Empty;
         public ConfigurationElement()
@@ -38,17 +38,15 @@ namespace Sync.Tools
     /// </summary>
     /// <typeparam name="T">插件类</typeparam>
     /// <typeparam name="U">配置文件类</typeparam>
-    public class PluginConfiuration<T, U> where T : Plugin where U : IConfigurable
+    public sealed class PluginConfiuration
     {
-        private T parentPlugin;
-        private U configInstance;
+        private Plugin instance;
+        private IConfigurable config;
 
-        public U ConfigData { get { return configInstance; } }
-
-        public PluginConfiuration(T plugin, U config)
+        public PluginConfiuration(Plugin instance, IConfigurable config)
         {
-            parentPlugin = plugin;
-            configInstance = config;
+            this.instance = instance;
+            this.config = config;
             ForceLoad();
         }
 
@@ -59,24 +57,40 @@ namespace Sync.Tools
 
         public void ForceLoad()
         {
-            foreach (PropertyInfo item in configInstance.GetType().GetProperties())
+            foreach (PropertyInfo item in instance.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    item.SetValue(configInstance, (ConfigurationElement)ConfigurationIO.Read(item.Name, parentPlugin.Name));
+                    item.SetValue(config, (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name));
                 }
             }
         }
 
         public void ForceSave()
         {
-            foreach (PropertyInfo item in configInstance.GetType().GetProperties())
+            foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(configInstance), parentPlugin.Name);
+                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(instance), instance.Name + "." + config.GetType().Name);
                 }
             }
+        }
+    }
+
+    public sealed class PluginConfigurationManager<T> where T : Plugin
+    {
+        private List<PluginConfiuration> items;
+        private Plugin instance;
+        public PluginConfigurationManager(Plugin instance)
+        {
+            items = new List<PluginConfiuration>();
+            this.instance = instance;
+        }
+
+        public void AddItem(IConfigurable Config)
+        {
+            items.Add(new PluginConfiuration(instance, Config));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace DefaultPlugin
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
 
-        private DefaultSettingConfiuration config;
+        private DefaultPluginConfiuration config;
 
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
@@ -56,9 +56,7 @@ namespace DefaultPlugin
             MainMessager = host.Messages;
 
             //config load
-            config = new DefaultSettingConfiuration(this, new Setting());
-            config.ForceLoad();
-            srcTwitch.LoadConfig(config);
+            config = new DefaultPluginConfiuration(this);
         }
     }
 }

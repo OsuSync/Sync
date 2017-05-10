@@ -54,11 +54,11 @@ namespace Sync
             {
                 loginable = true;
                 CurrentIO.WriteColor(LANG_SupportSend, ConsoleColor.Yellow);
-                if (Configuration.LoginCertification.Length > 0)
-                {
-                    CurrentIO.Write(String.Format(LANG_CertLength, Configuration.LoginCertification.Length));
-                    CurrentIO.WriteColor(LANG_CertExist, ConsoleColor.Red);
-                }
+                //if (Configuration.LoginCertification.Length > 0)
+                //{
+                //    CurrentIO.Write(String.Format(LANG_CertLength, Configuration.LoginCertification.Length));
+                //    CurrentIO.WriteColor(LANG_CertExist, ConsoleColor.Red);
+                //}
             }
 
         }

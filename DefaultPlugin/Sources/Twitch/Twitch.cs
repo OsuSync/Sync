@@ -192,7 +192,7 @@ namespace DefaultPlugin.Sources.Twitch
                         return int.Parse(viewers);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return prev_ViewersCount;//就当做啥事都没发生(
                 }
