@@ -176,8 +176,8 @@ namespace OsuStatusOutputSever
 
             try
             {
-                currentClient.GetStream().Write(message, 0, message.Length);
-                currentClient.GetStream().Flush();
+                currentClient?.GetStream().Write(message, 0, message.Length);
+                currentClient?.GetStream().Flush();
             }
             catch { return; }//skip
         }

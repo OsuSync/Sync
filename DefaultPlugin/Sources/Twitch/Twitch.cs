@@ -40,17 +40,17 @@ namespace DefaultPlugin.Sources.Twitch
         public bool IsUsingDefaultChannelID { get { return isUsingDefaultChannelID; } set { isUsingDefaultChannelID = value; } }
 
         public ConfigurationElement HostChannelName { get; set; } = "";
-        public ConfigurationElement DefaultClientID { get; set; } = "esmhw2lcvrgtqw545ourqjwlg7twee";
+        public ConfigurationElement DefaultClientID { get; set; } = "";
         public ConfigurationElement CurrentClientID { get; set; } = "";
         public ConfigurationElement IsUsingCurrentClientID { get; set; } = "1";
         public ConfigurationElement SOAuth { get; set; } = "";
-
+        //public ConfigurationElement CCCC { get; set; } = "";
         #region 接口实现
 
         public void LoadConfig()
         {
-
             ClientID = IsUsingCurrentClientID == "1" ? CurrentClientID : DefaultClientID;
+            IsUsingDefaultChannelID = !(IsUsingCurrentClientID=="1");
             OAuth = SOAuth;
             ChannelName = HostChannelName;
         }
@@ -61,13 +61,12 @@ namespace DefaultPlugin.Sources.Twitch
             HostChannelName = ChannelName;
             SOAuth = OAuth;
             IsUsingCurrentClientID = IsUsingDefaultChannelID ? "1" : "0";
+            DefaultClientID = "esmhw2lcvrgtqw545ourqjwlg7twee";
         }
 
         public bool Connect(string roomName)
         {
             channelName = roomName;
-
-            SaveConfig();
 
             if (channelName.Length == 0)
             {
@@ -79,6 +78,8 @@ namespace DefaultPlugin.Sources.Twitch
                 TwitchAuthenticationDialog AuthDialog = new TwitchAuthenticationDialog(this);
                 AuthDialog.ShowDialog();
             }
+
+            SaveConfig();
 
             if (currentIRCIO != null)
             {
