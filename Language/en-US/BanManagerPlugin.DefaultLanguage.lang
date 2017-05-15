@@ -1,0 +1,8 @@
+[en-US]
+LANG_HELP_BAN=Prevent one(User/Id/RegexRule) sending message to Osu!IRC
+LANG_HELP_UNBAN=Lift one(User/Id/RegexRule) ban
+LANG_HELP_WHITELIST=Add one(User/Id/RegexRule) to the whitelist and he able to send message to Osu!IRC
+LANG_HELP_REMOVE_WHITELIST=Remove one(User/Id/RegexRule) from the whitelist
+LANG_HELP_ACCESS=Set access permission
+LANG_HELP_LIST=Print all users and rules from the whitelist and blacklist
+LANG_ERR_COMMAND=Error command

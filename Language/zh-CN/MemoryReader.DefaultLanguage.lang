@@ -1,0 +1,5 @@
+[zh-CN]
+LANG_OSU_NOT_FOUND=没有发现 OSU! 进程
+LANG_ADDRESS_NOT_FOUND=没有找到ThreadStack0 Base Address
+LANG_NOT_FOUND=未找到
+LANG_BEATMAP_NOT_FOUND=memoryReader无法获取beatmap地址

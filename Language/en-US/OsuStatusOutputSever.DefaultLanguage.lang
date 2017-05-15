@@ -1,0 +1,11 @@
+[en-US]
+LANG_COMMAND_DP=Send some data for other using through localhost TCP socket.
+LANG_REGISTER_SUCCESS=osuStatus is registered successfully
+LANG_HELP=syncserver <param>\n-start Start send data to client\n-stop Stop sending.
+LANG_MSG_START=syncserver start to run
+LANG_MSG_STOP=syncserver transport is stopped.
+LANG_MSG_STATUS=s{0} b{1} h{2} a{3} c{4} m{5}
+LANG_MSG_UNKNOWN_COMMAND=syncserver unknown param
+LANG_MSG_LOST_CONNECTION=can not connect client.
+LANG_MSG_START_LISTENNING=wait for client connection....
+LANG_MSG_GET_CONNECTION=connected successfully!
