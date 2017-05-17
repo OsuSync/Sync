@@ -33,6 +33,8 @@ namespace Sync
                 CurrentIO.WriteConfig();
                 CurrentIO.WriteWelcome();
 
+                ProgramUpdater.CheckUpdate();
+
                 string cmd = CurrentIO.ReadCommand();
                 while (true)
                 {

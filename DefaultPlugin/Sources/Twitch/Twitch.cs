@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Net;
 using System.IO;
 using Sync.Tools;
+using System.Timers;
 
 namespace DefaultPlugin.Sources.Twitch
 {
@@ -20,15 +21,19 @@ namespace DefaultPlugin.Sources.Twitch
 
         TwitchIRCIO currentIRCIO;
 
-        int prev_ViewersCount = 0;
+        int prev_ViewersCount = int.MinValue;
 
         int onlineViewersCountInv = 6;
+
+        int viewersUpdateInterval = 3000;
 
         public event ConnectedEvt onConnected;
         public event DisconnectedEvt onDisconnected;
         public event DanmukuEvt onDanmuku;
         public event GiftEvt onGift;
         public event CurrentOnlineEvt onOnlineChange;
+
+        public Timer viewerUpdateTimer;
 
         string oauth="", clientId="", channelName="";
 
@@ -44,7 +49,6 @@ namespace DefaultPlugin.Sources.Twitch
         public ConfigurationElement CurrentClientID { get; set; } = "";
         public ConfigurationElement IsUsingCurrentClientID { get; set; } = "1";
         public ConfigurationElement SOAuth { get; set; } = "";
-        //public ConfigurationElement CCCC { get; set; } = "";
         #region 接口实现
 
         public void LoadConfig()
@@ -101,6 +105,11 @@ namespace DefaultPlugin.Sources.Twitch
 
                 onConnected?.Invoke();
                 UpdateChannelViewersCount();
+
+                viewerUpdateTimer = new Timer(viewersUpdateInterval);
+                viewerUpdateTimer.Elapsed += (z,zz) => UpdateChannelViewersCount();
+                viewerUpdateTimer.Start();
+                
             }
             catch (Exception e)
             {
@@ -116,6 +125,9 @@ namespace DefaultPlugin.Sources.Twitch
             currentIRCIO?.DisConnect();
             currentIRCIO = null;
             onDisconnected?.Invoke();
+
+            viewerUpdateTimer.Stop();
+            viewerUpdateTimer.Dispose();
             return true;
         }
 

@@ -82,7 +82,7 @@ namespace Sync
             {
                 CBaseDanmuku d = new CBaseDanmuku()
                 {
-                    danmuku = string.Format(LANG_UserCount_Change, (usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
+                    danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
                 };
                 Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
