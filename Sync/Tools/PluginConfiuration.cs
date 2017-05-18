@@ -68,6 +68,7 @@ namespace Sync.Tools
                     item.SetValue(config, (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name));
                 }
             }
+            config.onConfigurationLoad();
         }
 
         public void ForceSave()
@@ -79,6 +80,7 @@ namespace Sync.Tools
                     ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
                 }
             }
+            config.onConfigurationSave();
         }
     }
 

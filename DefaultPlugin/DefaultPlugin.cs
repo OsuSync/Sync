@@ -62,8 +62,6 @@ namespace DefaultPlugin
             Config = new PluginConfigurationManager(this);
             Config.AddItem(srcBili);
             Config.AddItem(srcTwitch);
-
-            srcTwitch.LoadConfig();
         }
     }
 }

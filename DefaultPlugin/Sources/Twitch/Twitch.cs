@@ -241,12 +241,12 @@ namespace DefaultPlugin.Sources.Twitch
 
         public void onConfigurationLoad()
         {
-            //throw new NotImplementedException();
+            LoadConfig();
         }
 
         public void onConfigurationSave()
         {
-            //throw new NotImplementedException();
+            SaveConfig();
         }
     }
 }
