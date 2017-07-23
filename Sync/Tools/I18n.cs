@@ -109,9 +109,9 @@ namespace Sync.Tools
     /// <summary>
     /// 特定语言的I18n实现
     /// </summary>
-    class I18n
+    public class I18n
     {
-        public static string CurrentLang { get => System.Globalization.CultureInfo.CurrentCulture.Name; }
+        public static string CurrentSystemLang { get => System.Globalization.CultureInfo.CurrentCulture.Name; }
         string Base { get => AppDomain.CurrentDomain.BaseDirectory; }
         public string LangFolder { get => Path.Combine(Base, "Language"); }
         public string SelectLangFolder {  get => Path.Combine(LangFolder, CurrentLanguage); }
@@ -159,7 +159,7 @@ namespace Sync.Tools
         ///  实例化一个特定区域语言的I18n实例
         /// </summary>
         /// <param name="CultureName">指定区域</param>
-        public I18n(string CultureName)
+        private I18n(string CultureName)
         {
             CurrentLanguage = CultureName;
             if (!Directory.Exists(LangFolder)) Directory.CreateDirectory(LangFolder);

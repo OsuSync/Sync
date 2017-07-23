@@ -35,8 +35,8 @@ namespace Sync.Tools
                 XmlDocument xml = new XmlDocument();
                 IO.CurrentIO.Write("Update: Searching files...");
                 xml.Load(data);
-
             }
+            catch { }
         }
 
         private class UpdateXML

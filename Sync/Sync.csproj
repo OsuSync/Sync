@@ -110,7 +110,6 @@
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
-    <Compile Include="Tools\FtpClient.cs" />
     <Compile Include="Tools\I18n.cs" />
     <Compile Include="Tools\IConfigurable.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
