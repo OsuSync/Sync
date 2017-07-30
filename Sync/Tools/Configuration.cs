@@ -37,27 +37,27 @@ namespace Sync.Tools
             }
         }
 
-        public static string BotIRC
+        public static string CoocAccount
         {
             get
             {
-                return ReadConfig(DefaultConfig.BotIRC);
+                return ReadConfig(DefaultConfig.CooCID);
             }
             set
             {
-                WriteConfig(DefaultConfig.BotIRC, value);
+                WriteConfig(DefaultConfig.CooCID, value);
             }
         }
 
-        public static string BotIRCPassword
+        public static string CoocPassword
         {
             get
             {
-                return ReadConfig(DefaultConfig.BotIRCPassword);
+                return ReadConfig(DefaultConfig.CooCPassword);
             }
             set
             {
-                WriteConfig(DefaultConfig.BotIRCPassword, value);
+                WriteConfig(DefaultConfig.CooCPassword, value);
             }
         }
 
@@ -72,7 +72,7 @@ namespace Sync.Tools
                 WriteConfig(DefaultConfig.Provider, value);
             }
         }
-
+        
         public static string Language
         {
 

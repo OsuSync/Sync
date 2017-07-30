@@ -16,11 +16,9 @@ namespace Sync.Tools
         {
             LiveRoomID,
             TargetIRC,
-            BotIRC,
-            BotIRCPassword,
-            Provider,
-            Certification,
-            Language
+            CooCID,
+            CooCPassword,
+            Provider
         }
 
         [DllImport("kernel32")]
