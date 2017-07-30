@@ -188,7 +188,6 @@ namespace Sync.Source
         public T EventObject { get => (T)eventObj; }
         public SourceEventArgs(T EventObject)
         {
-            Name = EventName;
             eventObj = EventObject;
         }
 
