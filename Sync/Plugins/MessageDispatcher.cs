@@ -24,7 +24,7 @@ namespace Sync.Plugins
             MessageManager.Option = MessageManager.PeekOption.Auto;
             MessageManager.Init(filters);
             MessageManager.SetSendMessageAction(new MessageManager.SendMessageAction((target,message) =>{
-                parent.GetIRC().sendRawMessage(Configuration.TargetIRC, message);
+                parent.Client.sendRawMessage(Configuration.TargetIRC, message);
             }));
 
         }
@@ -32,9 +32,9 @@ namespace Sync.Plugins
         /// 简易实现直接传递弹幕消息
         /// </summary>
         /// <param name="danmaku">弹幕</param>
-        public void onDanmaku(CBaseDanmuku danmaku)
+        public void onDanmaku(BaseDanmakuEvent danmaku)
         {
-            MessageBase msg = new DanmakuMessage(danmaku);
+            IMessageBase msg = new DanmakuMessage(danmaku);
             RaiseMessage<ISourceDanmaku>(msg);
         }
 
@@ -45,13 +45,13 @@ namespace Sync.Plugins
         /// <param name="message">信息</param>
         public void onIRC(StringElement user, StringElement message)
         {
-            MessageBase msg = new IRCMessage(user, message);
+            IMessageBase msg = new IRCMessage(user, message);
             RaiseMessage<ISourceOsu>(msg);
         }
 
 
 
-        public void RaiseMessage<Source>(MessageBase msg)
+        public void RaiseMessage<Source>(IMessageBase msg)
         {
             RaiseMessage(typeof(Source), msg);
         }
@@ -62,16 +62,16 @@ namespace Sync.Plugins
         /// </summary>
         /// <param name="msgType">消息类型，此处传IOsu(来自IRC)和IDanmaku(来自弹幕)</param>
         /// <param name="msg">具体消息实例</param>
-        private void RaiseMessage(Type msgType, MessageBase msg)
+        private void RaiseMessage(Type msgType, IMessageBase msg)
         {
-            MessageBase newMsg = msg;
+            IMessageBase newMsg = msg;
 
             //消息来自弹幕
             if (msgType == typeof(ISourceDanmaku))
             {
                 filters.PassFilterDanmaku(ref newMsg);
                 //将消息过滤一遍插件之后，判断是否取消消息（消息是否由插件自行处理拦截）
-                if (newMsg.cancel) return;
+                if (newMsg.Cancel) return;
                 else
                 {
                     //parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
@@ -85,25 +85,20 @@ namespace Sync.Plugins
             {
                 filters.PassFilterOSU(ref newMsg);
                 //同上
-                if (newMsg.cancel) return;
+                if (newMsg.Cancel) return;
                 else
                 {
                     //发信用户为设置的目标IRC
-                    if (newMsg.user.RawText == Configuration.TargetIRC)
+                    if (newMsg.User.RawText == Configuration.TargetIRC)
                     {
-                        if (parent.GetSource() is ISendable)
+                        if (parent.Source.SupportSend)
                         {
-                            ISendable sender = parent.GetSource() as ISendable;
-                            if (sender.LoginStauts())
-                            {
-                                sender.Send(newMsg.message);
-                            }
+                            parent.Source.Send(newMsg.Message);
                         }
                     }
                     //其他用户则转发到目标IRC
                     else
                     {
-                        //parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
                         MessageManager.PostIRCMessage(Configuration.TargetIRC, newMsg);
                     }
 
@@ -115,10 +110,10 @@ namespace Sync.Plugins
             else if (msgType == typeof(ISourceGift))
             {
                 filters.PassFilterGift(ref newMsg);
-                if (newMsg.cancel) return;
+                if (newMsg.Cancel) return;
                 else
                 {
-                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, IRC.IRCClient.CONST_ACTION_FLAG + newMsg.message);
+                    parent.Client.sendRawMessage(Configuration.TargetIRC, Client.CooCClient.CONST_ACTION_FLAG + newMsg.Message);
                 }
             }
 
@@ -126,10 +121,10 @@ namespace Sync.Plugins
             else if (msgType == typeof(ISourceOnlineChange))
             {
                 filters.PassFilterOnlineChange(ref newMsg);
-                if (newMsg.cancel) return;
+                if (newMsg.Cancel) return;
                 else
                 {
-                    parent.GetIRC().sendRawMessage(Configuration.TargetIRC, IRC.IRCClient.CONST_ACTION_FLAG + newMsg.message);
+                    parent.Client.sendRawMessage(Configuration.TargetIRC, Client.CooCClient.CONST_ACTION_FLAG + newMsg.Message);
                 }
             }
 
@@ -144,10 +139,10 @@ namespace Sync.Plugins
     {
         class SendFilter : IFilter, ISourceDanmaku
         {
-            public void onMsg(ref MessageBase msg)
+            public void onMsg(ref IMessageBase msg)
             {
-                if (!msg.message.RawText.StartsWith("?send"))
-                    msg.cancel = true;
+                if (!msg.Message.RawText.StartsWith("?send"))
+                    msg.Cancel = true;
             }
         }
 
@@ -239,9 +234,9 @@ namespace Sync.Plugins
             }
         }
 
-        static List<MessageBase> MessageQueue = new List<MessageBase>();
+        static List<IMessageBase> MessageQueue = new List<IMessageBase>();
 
-        public static void PostIRCMessage(string target, MessageBase message)
+        public static void PostIRCMessage(string target, IMessageBase message)
         {
             lock (lockObj)
             {
@@ -251,7 +246,7 @@ namespace Sync.Plugins
                 if (isLimit)
                     return;
 
-                SendMessage(target, message.user + message.message.RawText);
+                SendMessage(target, message.User + message.Message.RawText);
                 MessageQueue.Remove(message);
             }
         }
@@ -300,7 +295,7 @@ namespace Sync.Plugins
             if (isLimit)
             {
                 sb = new StringBuilder();
-                MessageBase message = null;
+                IMessageBase message = null;
                 lock (lockObj)
                 {
                     while (MessageQueue.Count != 0)
@@ -309,7 +304,7 @@ namespace Sync.Plugins
                         MessageQueue.RemoveAt(0);
                         if (message == null)
                             break;
-                        sb.AppendFormat("{0}:{1} || ", message.user.Result, message.message.RawText);
+                        sb.AppendFormat("{0}:{1} || ", message.User, message.Message.RawText);
                     }
                 }
                 if (sb.Length != 0)

@@ -91,19 +91,19 @@ namespace Sync.Tools
         public void WriteStatus(SyncConnector instance)
         {
             WriteColor(LANG_Config, ConsoleColor.Blue, false);
-            if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.BotIRC.Length > 0 && Configuration.BotIRCPassword.Length > 0)
+            if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.CoocAccount.Length > 0 && Configuration.CoocPassword.Length > 0)
                 WriteColor(string.Format(LANG_Config_Status_OK, Configuration.LiveRoomID), ConsoleColor.Green, true, false);
             else
                 WriteColor(LANG_Config_Status_Fail, ConsoleColor.Red, true, false);
 
             WriteColor(string.Format(LANG_Source, Configuration.Provider), ConsoleColor.Blue, false);
-            if (instance.SourceStatus)
+            if (instance.Source.Status == Source.SourceStatus.CONNECTED_WORKING)
                 WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
             else
                 WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
 
             WriteColor(LANG_IRC, ConsoleColor.Blue, false);
-            if (instance.IRCStatus)
+            if (instance.Client.isConnected)
                 WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
             else
                 WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
@@ -111,7 +111,7 @@ namespace Sync.Tools
             if (SyncManager.loginable)
             {
                 WriteColor(LANG_Danmaku, ConsoleColor.Blue, false);
-                if (((Source.ISendable)instance.GetSource()).LoginStauts())
+                if (instance.Source.SupportSend)
                     WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
                 else
                     WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
@@ -125,8 +125,8 @@ namespace Sync.Tools
             Write(LANG_Loading_Config);
             Write(LANG_Config_RoomID + Configuration.LiveRoomID);
             Write(LANG_Config_osuID + Configuration.TargetIRC);
-            Write(LANG_Config_BotID + Configuration.BotIRC);
-            Write(LANG_Config_BotPassLen + Configuration.BotIRCPassword.Length);
+            Write(LANG_Config_BotID + Configuration.CoocAccount);
+            Write(LANG_Config_BotPassLen + Configuration.CoocPassword.Length);
         }
         /// <summary>
         /// 向屏幕输出欢迎信息

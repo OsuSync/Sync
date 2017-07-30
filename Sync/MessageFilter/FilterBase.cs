@@ -5,80 +5,79 @@ using static Sync.Tools.DefaultI18n;
 
 namespace Sync.MessageFilter
 {
-    public interface MessageBase
+    public interface IMessageBase
     {
-        StringElement user { get; set; }
-        StringElement message { get; set; }
-        bool cancel { get; set; }
+        StringElement User { get; set; }
+        StringElement Message { get; set; }
+        bool Cancel { get; set; }
     }
 
-    public class OnlineChangeMessage : MessageBase
+    public class OnlineChangeMessage : IMessageBase
     {
-        public StringElement user { get; set; }
-        public StringElement message { get; set; }
-        public StringElement name { get; set; }
-        public uint count { get; set; }
-        public bool cancel { get; set; }
+        public StringElement User { get; set; }
+        public StringElement Message { get; set; }
+        public StringElement Name { get; set; }
+        public uint Count { get; set; }
+        public bool Cancel { get; set; }
 
         OnlineChangeMessage(uint count)
         {
-            user = "";
-            message = string.Format(LANG_Current_Online, count);
-            this.count = count;
+            User = "";
+            Message = string.Format(LANG_Current_Online, Count);
+            this.Count = count;
         }
     }
 
-    public class GiftMessage : MessageBase
+    public class GiftMessage : IMessageBase
     {
-        public StringElement user { get; set; }
-        public StringElement message { get; set; }
-        public StringElement name { get; set; }
-        public CBaseGift source { get; }
-        public uint count { get; set; }
+        public StringElement User { get; set; }        public StringElement Message { get; set; }
+        public StringElement Name { get; set; }
+        public BaseGiftEvent Source { get; }
+        public int Count { get; set; }
         /// <summary>
         /// cancel标志指示了这条来自弹幕的消息将不会同步到IRC。
         /// </summary>
-        public bool cancel { get; set; }
+        public bool Cancel { get; set; }
 
-        public GiftMessage(CBaseGift src)
+        public GiftMessage(BaseGiftEvent src)
         {
-            this.user = src.senderName;
-            this.name = src.giftName;
-            this.count = src.giftCount;
-            this.source = src;
-            this.message = string.Format(LANG_Gift_Sent, count, name);
+            this.User = src.SenderName;
+            this.Name = src.GiftName;
+            this.Count = src.GiftCount;
+            this.Source = src;
+            this.Message = string.Format(LANG_Gift_Sent, Count, Name);
         }
     }
 
-    public class DanmakuMessage : MessageBase
+    public class DanmakuMessage : IMessageBase
     {
-        public StringElement user { get; set; }
-        public StringElement message { get; set; }
+        public StringElement User { get; set; }
+        public StringElement Message { get; set; }
         /// <summary>
         /// cancel标志指示了这条来自弹幕的消息将不会同步到IRC。
         /// </summary>
-        public bool cancel { get; set; }
+        public bool Cancel { get; set; }
 
-        public DanmakuMessage(CBaseDanmuku src)
+        public DanmakuMessage(BaseDanmakuEvent src)
         {
-            this.user = src.senderName;
-            this.message = src.danmuku;
+            this.User = src.SenderName;
+            this.Message = src.Danmuku;
         }
     }
 
-    public class IRCMessage : MessageBase
+    public class IRCMessage : IMessageBase
     {
-        public StringElement user { get; set; }
-        public StringElement message { get; set; }
+        public StringElement User { get; set; }
+        public StringElement Message { get; set; }
         /// <summary>
         /// cancel标志指示了这条来自IRC的消息，不会同步到弹幕
         /// </summary>
-        public bool cancel { get; set; }
+        public bool Cancel { get; set; }
 
         public IRCMessage(StringElement user, StringElement rawMessage)
         {
-            this.user = user;
-            this.message = rawMessage;
+            this.User = user;
+            this.Message = rawMessage;
         }
     }
 
@@ -104,7 +103,7 @@ namespace Sync.MessageFilter
 
     public interface IFilter
     {
-        void onMsg(ref MessageBase msg);
+        void onMsg(ref IMessageBase msg);
 
     }
 }

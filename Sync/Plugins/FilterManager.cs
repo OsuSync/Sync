@@ -43,32 +43,32 @@ namespace Sync.Plugins
 
         public int Count { get { return filters.Sum(p => p.Value.Count); } }
 
-        internal void PassFilterDanmaku(ref MessageBase msg)
+        internal void PassFilterDanmaku(ref IMessageBase msg)
         {
             PassFilter<ISourceDanmaku>(ref msg);
         }
 
-        internal void PassFilterOSU(ref MessageBase msg)
+        internal void PassFilterOSU(ref IMessageBase msg)
         {
             PassFilter<ISourceOsu>(ref msg);
         }
 
-        internal void PassFilterGift(ref MessageBase msg)
+        internal void PassFilterGift(ref IMessageBase msg)
         {
             PassFilter<ISourceGift>(ref msg);
         }
 
-        internal void PassFilterOnlineChange(ref MessageBase msg)
+        internal void PassFilterOnlineChange(ref IMessageBase msg)
         {
             PassFilter<ISourceGift>(ref msg);
         }
 
-        private void PassFilter<T>(ref MessageBase msg)
+        private void PassFilter<T>(ref IMessageBase msg)
         {
             PassFilter(typeof(T), ref msg);
         }
 
-        private void PassFilter(Type identify, ref MessageBase msg)
+        private void PassFilter(Type identify, ref IMessageBase msg)
         {
             foreach (var filter in filters[identify])
             {

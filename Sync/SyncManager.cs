@@ -34,9 +34,9 @@ namespace Sync
                 return;
             }
 
-            foreach (ISourceBase item in sources.SourceList)
+            foreach (SourceBase item in sources.SourceList)
             {
-                if (item.getSourceName() == Configuration.Provider)
+                if (item.Name == Configuration.Provider)
                 {
                     connector = new SyncConnector(item);
                 }
@@ -48,17 +48,12 @@ namespace Sync
                 connector = new SyncConnector(sources.SourceList.First());
             }
 
-            CurrentIO.WriteColor(String.Format(LANG_SetSource, connector.GetSource().getSourceName()), ConsoleColor.Yellow);
+            CurrentIO.WriteColor(String.Format(LANG_SetSource, connector.Source.Name), ConsoleColor.Yellow);
 
-            if (connector.GetSource() is ISendable)
+            if (connector.Source.SupportSend)
             {
                 loginable = true;
                 CurrentIO.WriteColor(LANG_SupportSend, ConsoleColor.Yellow);
-                //if (Configuration.LoginCertification.Length > 0)
-                //{
-                //    CurrentIO.Write(String.Format(LANG_CertLength, Configuration.LoginCertification.Length));
-                //    CurrentIO.WriteColor(LANG_CertExist, ConsoleColor.Red);
-                //}
             }
 
         }

@@ -1,4 +1,4 @@
-﻿using Sync.IRC;
+﻿using Sync.Client;
 using Sync.MessageFilter;
 using Sync.Plugins;
 using Sync.Source;
@@ -14,21 +14,17 @@ namespace Sync
     /// </summary>
     public class SyncConnector
     {
-        private IRCClient IRC = null;
-        private ISourceBase Src = null;
-        private Thread IRCThread = null;
-        private Thread SrcThread = null;
+        private CooCClient client = null;
+        private SourceBase source = null;
+        private Thread ClientThread = null;
+        private Thread SourceThread = null;
 
-        public bool IRCStatus = false;
-        public bool SourceStatus = false;
+        private int usercount;
 
-        public bool IsConnect = false;
-        private uint usercount;
-
-        public Thread GetThreadIRC() { return IRCThread; }
-        public Thread GetThreadSource() { return SrcThread; }
-        public IRCClient GetIRC() { return IRC; }
-        public ISourceBase GetSource() { return Src; }
+        public Thread ThreadClient { get => ClientThread; }
+        public Thread ThreadSource { get => SourceThread; }
+        public CooCClient Client { get => client; }
+        public SourceBase Source { get => source; }
 
         /// <summary>
         /// 使用Message Filter替代直接发送消息（改用IRC类内部方法）
@@ -56,66 +52,91 @@ namespace Sync
         /// 用连接源实例化一个Sync类
         /// </summary>
         /// <param name="Source">连接源</param>
-        public SyncConnector(ISourceBase Source)
+        public SyncConnector(SourceBase Source)
         {
 
-            IRC = new IRCClient(this);
-            Src = Source;
+            client = new Client.CooCClient(this);
+            this.source = Source;
 
-            Src.onConnected += Src_onConnected;
-            Src.onDisconnected += Src_onDisconnected;
-            Src.onDanmuku += Src_onDanmuku;
-            Src.onOnlineChange += Src_onOnlineChange;
-            Src.onGift += Src_onGift;
+            SourceEventDispatcher.Instance.RegisterEventHandler<BaseStatusEvent>(OnStatusChange);
+            SourceEventDispatcher.Instance.RegisterEventHandler<BaseGiftEvent>(OnGift);
+            SourceEventDispatcher.Instance.RegisterEventHandler<BaseDanmakuEvent>(OnDanmuku);
+            SourceEventDispatcher.Instance.RegisterEventHandler<BaseOnlineCountEvent>(OnOnlineChange);
         }
 
         #region 连接源的事件
-        private void Src_onGift(CBaseGift gift)
-        {
-            Program.host.Messages.RaiseMessage<ISourceGift>(new GiftMessage(gift));
-        }
 
-        private void Src_onOnlineChange(uint lCount)
+        private async Task OnStatusChange(SourceEvent evt)
         {
-            IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
-            if (Math.Abs(usercount - lCount) > 4) 
+            await Task.Run(() =>
             {
-                CBaseDanmuku d = new CBaseDanmuku()
+                BaseStatusEvent status = evt.CastTo<BaseStatusEvent>();
+                switch (status.Status)
                 {
-                    danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
-                };
-                Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
-
-                usercount = lCount;
-            }
+                    case SourceStatus.REMOTE_DISCONNECTED:
+                        OnDisconnected();
+                        break;
+                    case SourceStatus.CONNECTED_WORKING:
+                        OnConnected();
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
 
-        private void Src_onDisconnected()
+        private async Task OnGift(BaseGiftEvent gift)
         {
-            if (IsConnect)
+            await Task.Run(() =>
             {
-                IsConnect = false;
+                Program.host.Messages.RaiseMessage<ISourceGift>(new GiftMessage(gift));
+            });
+        }
+
+        private async Task OnDanmuku(BaseDanmakuEvent danmuku)
+        {
+            await Task.Run(() =>
+            {
+                Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
+            });
+        }
+
+        private async Task OnOnlineChange(BaseOnlineCountEvent count)
+        {
+            await Task.Run(() =>
+            {
+                int lCount = count.Count;
+                IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
+                if (Math.Abs(usercount - lCount) > 4) 
+                {
+                    CBaseDanmuku d = new CBaseDanmuku()
+                    {
+                        danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
+                    };
+                    Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
+
+                    usercount = lCount;
+                }
+            });
+        }
+
+        private void OnDisconnected()
+        {
+            if (source.Status == SourceStatus.REMOTE_DISCONNECTED)
+            {
                 IO.CurrentIO.Write(LANG_Source_Disconnected);
-                System.Threading.Tasks.Task.Delay(3000);
+                Task.Delay(3000);
                 Connect();
             }
             else
             {
-                IsConnect = false;
                 IO.CurrentIO.Write(LANG_Source_Disconnected_Succ);
             }
-            
-            
+
         }
 
-        private void Src_onDanmuku(CBaseDanmuku danmuku)
+        private void OnConnected()
         {
-            Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
-        }
-
-        private void Src_onConnected()
-        {
-            SourceStatus = true;
             IO.CurrentIO.Write(LANG_Source_Connected_Succ);
         }
         #endregion
@@ -124,57 +145,48 @@ namespace Sync
         private void StartSourceT()
         {
             IO.CurrentIO.Write(LANG_Source_Connect);
-            SourceStatus = true;
-            SrcThread = new Thread(StartSource);
-            SrcThread.IsBackground = true;
-            SrcThread.Start();
+            SourceThread = new Thread(StartSource)
+            {
+                IsBackground = true
+            };
+            SourceThread.Start();
         }
 
         private void StopSourceT()
         {
             IO.CurrentIO.Write(LANG_Source_Disconnecting);
-            SourceStatus = false;
-            Src.Disconnect();
-            while (Src.Stauts()) { Thread.Sleep(1); }
+            source.disconnect();
         }
 
-        private void StartIRCT()
+        private void StartClientT()
         {
             IO.CurrentIO.Write(LANG_IRC_Connecting);
-            IRCStatus = true;
-            IRCThread = new Thread(StartIRC);
-            IRCThread.IsBackground = true;
-            IRCThread.Start();
+            ClientThread = new Thread(StartClient)
+            {
+                IsBackground = true
+            };
+            ClientThread.Start();
         }
 
-        private void StopIRCT()
+        private void StopClientT()
         {
             IO.CurrentIO.Write(LANG_IRC_Disconnect);
-            IRCStatus = false;
-            IRC.disconnect();
-            while (IRC.isConnected) { Thread.Sleep(1); }
+            client.disconnect();
+            while (client.isConnected) { Thread.Sleep(1); }
         }
 
         private void StartSource()
         {
-            bool result = Src.Connect(/*int.Parse*/(Configuration.LiveRoomID));
-            while (SourceStatus && IsConnect && Src.Stauts())
-            {
-                Thread.Sleep(1);
-            }
-            Src.Disconnect();
-            while (Src.Stauts())
-            {
-                Thread.Sleep(1);
-            }
+            source.connect();
+            while (source.Status == SourceStatus.CONNECTED_WORKING) { Thread.Sleep(1); }
+            source.disconnect();
         }
 
-        private void StartIRC()
+        private void StartClient()
         {
-            IRC.connect();
-            while (IRCStatus && IsConnect && IRC.isConnected) { Thread.Sleep(1); }
-            IRC.disconnect();
-            IRCStatus = false;
+            client.connect();
+            while (client.isConnected) { Thread.Sleep(1); }
+            client.disconnect();
         }
 
         #endregion
@@ -185,8 +197,7 @@ namespace Sync
         public void Connect()
         {
             IO.CurrentIO.Write(LANG_Start);
-            IsConnect = true;
-            StartIRCT();
+            StartClientT();
             StartSourceT();
             Program.host.Plugins.StartSync();
         }
@@ -197,9 +208,8 @@ namespace Sync
         public void Disconnect()
         {
             IO.CurrentIO.Write(LANG_Stopping);
-            IsConnect = false;
-            if (IRCThread != null && IRCThread.IsAlive) StopIRCT();
-            if (SrcThread != null && SrcThread.IsAlive) StopSourceT();
+            if (ClientThread != null && ClientThread.IsAlive) StopClientT();
+            if (SourceThread != null && SourceThread.IsAlive) StopSourceT();
         }
 
         /// <summary>
