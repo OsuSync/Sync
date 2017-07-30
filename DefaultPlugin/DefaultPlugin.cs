@@ -17,7 +17,7 @@ namespace DefaultPlugin
         public static FilterManager MainFilters = null;
         public static SourceManager MainSources = null;
         private BiliBili srcBili;
-        //private Twitch srcTwitch;
+        private Twitch srcTwitch;
         private DefaultFormat fltFormat;
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
@@ -30,12 +30,12 @@ namespace DefaultPlugin
             base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
 
             srcBili = new BiliBili();
-            //srcTwitch = new Twitch();
+            srcTwitch = new Twitch();
 
             base.onInitCommand += manager => new BaseCommand(manager);
             base.onInitSource += manager => {
                 manager.AddSource(srcBili);
-                //manager.AddSource(srcTwitch);
+                manager.AddSource(srcTwitch);
             };
 
             fltFormat = new DefaultFormat();
@@ -61,7 +61,7 @@ namespace DefaultPlugin
             //config load
             Config = new PluginConfigurationManager(this);
             Config.AddItem(srcBili);
-            //Config.AddItem(srcTwitch);
+            Config.AddItem(srcTwitch);
         }
     }
 }
