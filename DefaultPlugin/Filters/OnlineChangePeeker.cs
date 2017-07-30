@@ -21,7 +21,7 @@ namespace DefaultPlugin.Filters
             if (Math.Abs(usercount - castMsg.count) > 4)
             {
                 CBaseDanmuku d = new CBaseDanmuku();
-                d.danmuku = "直播间围观人数" + (usercount > castMsg.count ? "减少" : "增加") + "到" + castMsg.count + "人";
+                d.Danmuku = "直播间围观人数" + (usercount > castMsg.count ? "减少" : "增加") + "到" + castMsg.count + "人";
                 DefaultPlugin.MainMessager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
                 usercount = castMsg.count;
             }

@@ -65,18 +65,18 @@ namespace DefaultPlugin.Filters
                         CBaseGift mostUser;
                         curList.ForEach(p =>
                         {
-                            long giftCount = p.giftCount;
-                            var g = curList.Where(cp => cp.senderName == p.senderName);
-                            giftCount += g.Sum(cp => cp.giftCount);
-                            p.giftCount = (uint)giftCount;
+                            long giftCount = p.GiftCount;
+                            var g = curList.Where(cp => cp.SenderName == p.SenderName);
+                            giftCount += g.Sum(cp => cp.GiftCount);
+                            p.GiftCount = (uint)giftCount;
 
                         });
                         curList.Distinct(new GiftSenderEqv());
-                        curList.Select(p => p.senderName).ToList().ForEach(p => strUsers += p + ",");
-                        curList.OrderBy(p => p.giftCount);
+                        curList.Select(p => p.SenderName).ToList().ForEach(p => strUsers += p + ",");
+                        curList.OrderBy(p => p.GiftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
                         DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.senderName + "，共计" + mostUser.giftCount + "个"));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.SenderName + "，共计" + mostUser.GiftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }
@@ -94,7 +94,7 @@ namespace DefaultPlugin.Filters
     {
         public bool Equals(CBaseGift x, CBaseGift y)
         {
-            return x.senderName.Equals(y.senderName);
+            return x.SenderName.Equals(y.SenderName);
         }
 
         public int GetHashCode(CBaseGift obj)

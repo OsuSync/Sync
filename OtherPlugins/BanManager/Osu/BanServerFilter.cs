@@ -56,7 +56,7 @@ namespace BanManagerPlugin.Ban
                 if (args.Length == 0) // like ?ban ,?whitelist for help
                 {
                     CBaseDanmuku danmaku = new CBaseDanmuku();
-                    danmaku.danmuku = basecommandHelpArray[i];
+                    danmaku.Danmuku = basecommandHelpArray[i];
                     bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                 }
                 else {
@@ -67,7 +67,7 @@ namespace BanManagerPlugin.Ban
                     catch (Exception e)
                     {
                         CBaseDanmuku danmaku = new CBaseDanmuku();
-                        danmaku.danmuku = e.Message;
+                        danmaku.Danmuku = e.Message;
                         bindManager.GetMessageDispatcher().RaiseMessage < ISourceDanmaku >( new DanmakuMessage(danmaku));
                     }
                 }
@@ -234,7 +234,7 @@ namespace BanManagerPlugin.Ban
                     foreach (var rule in bindManager.GetFliterInfo().GetBanRuleRegexList())
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id,rule.expression);
                     
-                    danmaku.danmuku = sb.ToString();
+                    danmaku.Danmuku = sb.ToString();
                     bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
 
@@ -244,7 +244,7 @@ namespace BanManagerPlugin.Ban
                     foreach (var rule in bindManager.GetFliterInfo().GetWhiteListRuleRegexList())
                         sb.AppendFormat("{0}:\"{1}\" || ", rule.id, rule.expression);
                     
-                    danmaku.danmuku = sb.ToString();
+                    danmaku.Danmuku = sb.ToString();
                     bindManager.GetMessageDispatcher().RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
                     break;
             }

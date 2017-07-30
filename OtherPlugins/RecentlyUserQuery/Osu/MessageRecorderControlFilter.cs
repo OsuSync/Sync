@@ -59,7 +59,7 @@ namespace RecentlyUserQuery.Osu
         private void SendResponseMessage(string message)
         {
             CBaseDanmuku danmaku = new CBaseDanmuku();
-            danmaku.danmuku = message;
+            danmaku.Danmuku = message;
             manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
 

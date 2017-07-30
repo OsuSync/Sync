@@ -9,10 +9,10 @@ namespace DefaultPlugin.Source
 
         public BiliBiliDanmuku(DanmakuModel instance)
         {
-            this.danmuku = instance.CommentText;
-            this.senderName = instance.CommentUser;
-            this.sendTime = DateTime.Now.ToShortTimeString();
-            this.source = instance;
+            this.Danmuku = instance.CommentText;
+            this.SenderName = instance.CommentUser;
+            this.SendTime = DateTime.Now.ToShortTimeString();
+            this.Source = instance;
         }
 
     }
@@ -21,11 +21,11 @@ namespace DefaultPlugin.Source
     {
         public BiliBiliGift(DanmakuModel instance)
         {
-            this.giftCount = uint.Parse(instance.GiftNum);
-            this.giftName = instance.GiftName;
-            this.senderName = instance.GiftUser;
-            this.sendTime = DateTime.Now.ToShortTimeString();
-            this.source = instance;
+            this.GiftCount = uint.Parse(instance.GiftNum);
+            this.GiftName = instance.GiftName;
+            this.SenderName = instance.GiftUser;
+            this.SendTime = DateTime.Now.ToShortTimeString();
+            this.Source = instance;
 
         }
     }

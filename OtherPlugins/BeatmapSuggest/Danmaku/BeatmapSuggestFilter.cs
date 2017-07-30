@@ -79,7 +79,6 @@ namespace BeatmapSuggest.Danmaku
                 return;
             }
             CBaseDanmuku danmaku = new CBaseDanmuku();
-
             string message = string.Format(LANG_SUGGEST_MEG,userName,GetLink(id,isSetId),$"{beatmapInfo[3]} - {beatmapInfo[2]}[{beatmapInfo[4]}]",GetDownloadLink(int.Parse(beatmapInfo[1])),GetMirrorDownloadLink(int.Parse(beatmapInfo[0])));
             danmaku.danmuku = message;
             msgManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));

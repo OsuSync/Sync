@@ -11,10 +11,10 @@ namespace DefaultPlugin.Sources.Douyutv
     {
         public DouyuDanmaku(string sender, string text)
         {
-            this.danmuku = text;
-            this.senderName = sender;
-            this.source = this;
-            this.sendTime = DateTime.Now.ToShortTimeString();
+            this.Danmuku = text;
+            this.SenderName = sender;
+            this.Source = this;
+            this.SendTime = DateTime.Now.ToShortTimeString();
         }
     }
 
@@ -22,9 +22,9 @@ namespace DefaultPlugin.Sources.Douyutv
     {
         public DouyuGift(string sender, string giftName, string giftNum)
         {
-            this.senderName = sender;
-            this.giftName = giftName;
-            this.giftCount = uint.Parse(giftNum);
+            this.SenderName = sender;
+            this.GiftName = giftName;
+            this.GiftCount = uint.Parse(giftNum);
         }
     }
 }

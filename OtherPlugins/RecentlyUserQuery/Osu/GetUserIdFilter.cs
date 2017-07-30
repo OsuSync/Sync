@@ -30,7 +30,7 @@ namespace RecentlyUserQuery.Osu
                 param = message.Substring(queryUserIdCommand.Length).Trim();
 
                 danmaku = new CBaseDanmuku();
-                danmaku.danmuku = String.Format("userid \"{0}\" is {1} ", param, (UserIdGenerator.GetId(param)));
+                danmaku.Danmuku = String.Format("userid \"{0}\" is {1} ", param, (UserIdGenerator.GetId(param)));
 
                 messageSender.RaiseMessage<ISourceDanmaku>( new DanmakuMessage(danmaku));
                 msg.cancel = true;
@@ -47,7 +47,7 @@ namespace RecentlyUserQuery.Osu
                     return;
 
                 danmaku = new CBaseDanmuku();
-                danmaku.danmuku = String.Format("userName \"{0}\" is {1} ", UserIdGenerator.GetUserName(id), param);
+                danmaku.Danmuku = String.Format("userName \"{0}\" is {1} ", UserIdGenerator.GetUserName(id), param);
                 messageSender.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
             }
         }
