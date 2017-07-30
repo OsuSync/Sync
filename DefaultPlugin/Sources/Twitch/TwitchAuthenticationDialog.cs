@@ -79,7 +79,7 @@ namespace DefaultPlugin.Sources.Twitch
             Close();
         }
 
-        private async void Connect() => bindTwitchSource.Connect();
+        private async void Connect() => await Task.Run(()=> bindTwitchSource.Connect());
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {

@@ -9,10 +9,10 @@ namespace DefaultPlugin.Filters
 {
     class DefaultFormat : IFilter, ISourceDanmaku, ISourceOsu
     {
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            msg.user.setPerfix("<");
-            msg.user.setSuffix(">: ");
+            msg.User.setPerfix("<");
+            msg.User.setSuffix(">: ");
         }
     }
 }

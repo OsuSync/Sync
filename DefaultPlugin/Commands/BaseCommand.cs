@@ -19,7 +19,6 @@ namespace DefaultPlugin.Commands
     {
         public BaseCommand(CommandManager manager)
         {
-            manager.Dispatch.bind("login", login, LANG_COMMANDS_LOGIN);
             manager.Dispatch.bind("exit", exit, LANG_COMMANDS_EXIT);
             manager.Dispatch.bind("clear", clear, LANG_COMMANDS_CLEAR);
             manager.Dispatch.bind("status", status, LANG_COMMANDS_STATUS);
@@ -64,13 +63,13 @@ namespace DefaultPlugin.Commands
         {
             if (arg.Count == 0)
             {
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_CURRENT, Configuration.BotIRC), ConsoleColor.Green);
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_CURRENT, Configuration.CoocAccount), ConsoleColor.Green);
             }
             else
             {
-                Configuration.BotIRC = arg[0];
-                Configuration.BotIRCPassword = arg[1];
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_SET, Configuration.BotIRC), ConsoleColor.Green);
+                Configuration.CoocAccount = arg[0];
+                Configuration.CoocPassword = arg[1];
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_SET, Configuration.CoocAccount), ConsoleColor.Green);
             }
             return true;
         }
@@ -107,29 +106,13 @@ namespace DefaultPlugin.Commands
 
         public bool listsource(Arguments arg)
         {
-            foreach(ISourceBase src in MainSources.SourceList)
+            foreach(SourceBase src in MainSources.SourceList)
             {
                 CurrentIO.WriteColor("", ConsoleColor.Gray, false);
                 CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_NAME, ConsoleColor.Cyan, false, false);
-                CurrentIO.WriteColor(src.getSourceName().PadRight(18), ConsoleColor.White, false, false);
+                CurrentIO.WriteColor(src.Name.PadRight(18), ConsoleColor.White, false, false);
                 CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_AUTHOR, ConsoleColor.DarkCyan, false, false);
-                CurrentIO.WriteColor(src.getSourceAuthor(), ConsoleColor.White, true, false);
-            }
-            return true;
-        }
-
-        public bool login(Arguments arg)
-        {
-            if (loginable)
-            {
-                ISendable s = MainInstance.Connector.GetSource() as ISendable;
-                if (arg.Count == 0) s.Login(null, null);
-                if (arg.Count == 1) s.Login(arg[0], null);
-                if (arg.Count == 2) s.Login(arg[0], arg[1]);
-            }
-            else
-            {
-                CurrentIO.WriteColor(LANG_COMMANDS_DANMAKU_NOT_SUPPORT, ConsoleColor.DarkYellow);
+                CurrentIO.WriteColor(src.Author, ConsoleColor.White, true, false);
             }
             return true;
         }
@@ -144,7 +127,7 @@ namespace DefaultPlugin.Commands
 
         public bool chat(Arguments arg)
         {
-            if (arg.Count == 0 || !MainInstance.Connector.IRCStatus)
+            if (arg.Count == 0 || !MainInstance.Connector.Client.isConnected)
             {
                 CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
             }
@@ -155,7 +138,7 @@ namespace DefaultPlugin.Commands
 
         public bool chatuser(Arguments arg)
         {
-            if (arg.Count <1 || !MainInstance.Connector.IRCStatus)
+            if (arg.Count <1 || !MainInstance.Connector.Client.isConnected)
             {
                 CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
             }
@@ -171,10 +154,9 @@ namespace DefaultPlugin.Commands
         {
             if (loginable)
             {
-                ISendable sender = MainInstance.Connector.GetSource() as ISendable;
-                if (sender.LoginStauts())
+                if (MainInstance.Connector.Source.SupportSend)
                 {
-                    sender.Send(string.Join("", arg));
+                    MainInstance.Connector.Source.Send(string.Join("", arg));
                     return true;
                 }
                 else
@@ -197,7 +179,7 @@ namespace DefaultPlugin.Commands
 
         public bool start(Arguments arg)
         {
-            if(MainInstance.Connector.IsConnect)
+            if (MainInstance.Connector.Source.Status == SourceStatus.CONNECTED_WORKING)
             {
                 CurrentIO.Write(LANG_COMMANDS_START_ALREADY_RUN);
                 return true;

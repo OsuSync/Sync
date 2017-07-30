@@ -9,7 +9,7 @@ namespace DefaultPlugin.Source.BiliBili
     /// <summary>
     /// BiliBili Live的同步源类
     /// </summary>
-    class BiliBili : ISourceBase, ISendable , IConfigurable
+    class BiliBili : SourceBase , IConfigurable
     {
         public const string SOURCE_NAME = "Bilibili";
         public const string SOURCE_AUTHOR = "Sender: Deliay, Receive: copyliu";
@@ -17,50 +17,50 @@ namespace DefaultPlugin.Source.BiliBili
         BiliBiliSender sender;
         private bool isConnected = false;
 
-        public event Sync.Source.ConnectedEvt onConnected;
-        public event DisconnectedEvt onDisconnected;
-        public event DanmukuEvt onDanmuku;
-        public event GiftEvt onGift;
-        public event CurrentOnlineEvt onOnlineChange;
-
         public static ConfigurationElement Cookies { get; set; } = "";
+        public static ConfigurationElement RoomID { get; set; } = "";
 
-        public BiliBili()
+        public BiliBili() : base(SOURCE_NAME, SOURCE_AUTHOR, true)
         {
             sender = new BiliBiliSender(null, null);
         }
 
-        public bool Connect(string roomName)
+        public override void Send(string Message)
+        {
+
+        }
+
+        public override void Connect()
         {
             client.ReceivedDanmaku += Dl_ReceivedDanmaku;
             client.ReceivedRoomCount += Dl_ReceivedRoomCount;
             client.Disconnected += Dl_Disconnected;
-            Task<bool> task = client.ConnectAsync(int.Parse(roomName));
+            Task<bool> task = client.ConnectAsync(int.Parse(RoomID));
             if(task.Status == TaskStatus.Running)
             {
                 isConnected = true;
             }
             isConnected = true;
-            onConnected();
-            return true;
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
         }
 
-        public bool Disconnect()
+        public override void Disconnect()
         {
-            client.Disconnect();
-            return true;
+            client.Disconnect(); 
         }
         private void Dl_Disconnected(object sender, DisconnectEvtArgs args)
         {
             isConnected = false;
-            onDisconnected();
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.REMOTE_DISCONNECTED)));
         }
 
         private void Dl_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
         {
-
-            onOnlineChange(e.UserCount);
-
+            base.RaiseEvent<BaseOnlineCountEvent>(
+                new SourceEventArgs<BaseOnlineCountEvent>(
+                    new BaseOnlineCountEvent() {
+                        Count = (int)e.UserCount
+                    }));
         }
 
         private void Dl_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
@@ -68,25 +68,17 @@ namespace DefaultPlugin.Source.BiliBili
 
             if (e.Danmaku.MsgType == MsgTypeEnum.Comment)
             {
-                onDanmuku(new BiliBiliDanmuku(e.Danmaku));
+                base.RaiseEvent<BaseDanmakuEvent>(new SourceEventArgs<BaseDanmakuEvent>(new BiliBiliDanmuku(e.Danmaku)));
             }
             else if (e.Danmaku.MsgType == MsgTypeEnum.GiftSend)
             {
-                onGift(new BiliBiliGift(e.Danmaku));
+                base.RaiseEvent<BaseGiftEvent>(new SourceEventArgs<BaseGiftEvent>(new BiliBiliGift(e.Danmaku)));
             }
         }
 
         public bool Stauts()
         {
             return isConnected;
-        }
-
-        public void Send(string str)
-        {
-            if(sender.loginStauts)
-            {
-                sender.send(str);
-            }
         }
 
         public void Login(string user, string password)
@@ -129,5 +121,6 @@ namespace DefaultPlugin.Source.BiliBili
         {
 
         }
+
     }
 }

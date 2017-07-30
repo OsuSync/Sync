@@ -45,11 +45,11 @@ namespace NowPlaying
             return true;
         }
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            if (msg.message.RawText.Equals("?np"))
+            if (msg.Message.RawText.Equals("?np"))
             {
-                msg.cancel = true;
+                msg.Cancel = true;
                 string strMsg = string.Empty;
                 if (osuStat.status == "Playing")
                 {

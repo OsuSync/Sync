@@ -12,15 +12,10 @@ using static DefaultPlugin.Language;
 namespace DefaultPlugin.Sources.Douyutv
 {
 
-    class Douyutv : ISourceBase
+    class Douyutv : SourceBase, IConfigurable
     {
         public const string SOURCE_NAME = "Douyutv";
         public const string SOURCE_AUTHOR = "Deliay";
-        public event ConnectedEvt onConnected;
-        public event DanmukuEvt onDanmuku;
-        public event DisconnectedEvt onDisconnected;
-        public event GiftEvt onGift;
-        public event CurrentOnlineEvt onOnlineChange;
 
         private const string server = "openbarrage.douyutv.com";
         private const short port = 8601;
@@ -28,10 +23,14 @@ namespace DefaultPlugin.Sources.Douyutv
         private NetworkStream stream;
         private int roomId = 0;
         private long unix;
+        
+        public Douyutv() : base(SOURCE_NAME, SOURCE_AUTHOR, false)
+        {
+        }
 
-        private bool isConencted = false;
+        public static ConfigurationElement RoomID { get; set; } = "";
 
-        public async Task<bool> ConnectAsync(int roomId)
+        public async void ConnectAsync(int roomId)
         {
             this.roomId = roomId;
             if (socket == null)
@@ -42,30 +41,34 @@ namespace DefaultPlugin.Sources.Douyutv
                 socket = new TcpClient();
             }
 
-            
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WAITING)));
+
             await socket.ConnectAsync(server, port);
 
             if (socket.Connected) stream = socket.GetStream();
-            else return false;
+            else return;
 
             //Login first
             LoginRequest();
             //Proceed to join group
             JoinGroup();
+            Status = SourceStatus.CONNECTED_WORKING;
             //And first heartbeat loop
             HeartLoop();
             //Final, start new receive thread
             //Thread receive = new Thread(DataReceive);
             //receive.Start();
-            isConencted = true;
+
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
             DataReceive();
-            return true;
+            return;
 
         }
 
         private void DataReceive()
         {
-            while (isConencted)
+
+            while (Status == SourceStatus.CONNECTED_WORKING)
             {
                 ServerPacket packet;
                 packet = new ServerPacket(stream.ReadPacket());
@@ -76,7 +79,7 @@ namespace DefaultPlugin.Sources.Douyutv
 
                         if (!packet.get("tick").Equals(unix.ToString()))
                         {
-                            onOnlineChange(0);
+                            RaiseEvent(new SourceEventArgs<BaseOnlineCountEvent>(new BaseOnlineCountEvent() { Count = 0 }));
                             IO.CurrentIO.WriteColor(string.Format(LANG_DOUYU_FAIL, unix.ToString() ,packet.get("tick")), ConsoleColor.Red);
                         }
                     
@@ -85,24 +88,22 @@ namespace DefaultPlugin.Sources.Douyutv
                     case ServerPacket.ServerMsg.loginres:             // login response
 
                         IO.CurrentIO.WriteColor(LANG_DOUYU_AUTH_SUCC, ConsoleColor.Green);
-                        onConnected?.Invoke();
+                        RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
 
                     break;
                     case ServerPacket.ServerMsg.chatmsg:              // danmaku
 #if DEBUG
                         IO.CurrentIO.Write(string.Format(LANG_DOUYU_DANMAKU, packet.get("nn") ,packet.get("txt")));
 #endif
-                        this.onDanmuku?.Invoke(new DouyuDanmaku(packet.get("nn"), packet.get("txt")));
+                        RaiseEvent(new SourceEventArgs<BaseDanmakuEvent>(new DouyuDanmaku(packet.get("nn"), packet.get("txt"))));
 
                     break;
                     case ServerPacket.ServerMsg.dgb:                  // gift
-
-                        this.onGift?.Invoke(new DouyuGift(packet.get("nn"), packet.get("gs"), packet.get("gfcnt")));
+                        RaiseEvent(new SourceEventArgs<BaseGiftEvent>(new DouyuGift(packet.get("nn"), packet.get("gs"), packet.get("gfcnt"))));
 
                     break;
                     case ServerPacket.ServerMsg.dc_buy_deserve:       // gift
-
-                        this.onGift?.Invoke(new DouyuGift((new STT(packet.get("sui"))).get("nick"), LANG_DOUYU_GIFT,  packet.get("cnt")));
+                        RaiseEvent(new SourceEventArgs<BaseGiftEvent>(new DouyuGift((new STT(packet.get("sui"))).get("nick"), LANG_DOUYU_GIFT, packet.get("cnt"))));
 
                     break;
                     case ServerPacket.ServerMsg.spbc:                 // gift
@@ -116,7 +117,7 @@ namespace DefaultPlugin.Sources.Douyutv
 
         private async void HeartLoop()
         {
-            while (this.isConencted)
+            while (this.Status == SourceStatus.CONNECTED_WORKING)
             {
                 unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
                 Heratbeat heartbeat = new Heratbeat(unix);
@@ -153,26 +154,25 @@ namespace DefaultPlugin.Sources.Douyutv
 
         }
 
-        public bool Connect(string roomName)
+        public override void Connect()
         {
             try
             {
-                return ConnectAsync(int.Parse(roomName)).Result;
+                ConnectAsync(int.Parse(RoomID));
+                RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTING)));
             }
             catch
             {
-                return Disconnect();
+                Disconnect();
             }
         }
 
-        public bool Disconnect()
+        public override void Disconnect()
         {
             LogoutReq logout = new LogoutReq();
             stream.SendPack(logout);
             socket.Close();
-            isConencted = false;
-            this.onDisconnected?.Invoke();
-            return true;
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED)));
         }
 
         public string getSourceAuthor()
@@ -190,9 +190,17 @@ namespace DefaultPlugin.Sources.Douyutv
             return typeof(Douyutv);
         }
 
-        public bool Stauts()
+        public void onConfigurationLoad()
         {
-            return isConencted;
+        }
+
+        public void onConfigurationSave()
+        {
+        }
+
+        public override void Send(string Message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

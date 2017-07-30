@@ -13,19 +13,19 @@ namespace DefaultPlugin.Filters
     class GiftReceivePeeker : IFilter, ISourceGift
     {
         private Thread giftRecyler;
-        private List<CBaseGift> historyGift;
+        private List<BaseGiftEvent> historyGift;
         private bool isRunning = false;
 
         internal GiftReceivePeeker()
         {
-            historyGift = new List<CBaseGift>();        }
+            historyGift = new List<BaseGiftEvent>();        }
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
             if(msg is GiftMessage)
             {
-                msg.cancel = true;
-                AddGift((msg as GiftMessage).source);
+                msg.Cancel = true;
+                AddGift((msg as GiftMessage).Source);
             }
         }
 
@@ -38,7 +38,7 @@ namespace DefaultPlugin.Filters
             isRunning = true;
         }
 
-        public void AddGift(CBaseGift gift)
+        public void AddGift(BaseGiftEvent gift)
         {
             historyGift.Add(gift);
         }
@@ -48,11 +48,11 @@ namespace DefaultPlugin.Filters
             System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
             time.Start();
 
-            while (DefaultPlugin.MainInstance.Connector.IsConnect && isRunning)
+            while (DefaultPlugin.MainInstance.Connector.Source.Status == SourceStatus.CONNECTED_WORKING && isRunning)
             {
                 if (time.ElapsedMilliseconds / 1000 > 180)
                 {
-                    List<CBaseGift> curList;
+                    List<BaseGiftEvent> curList;
                     lock (historyGift)
                     {
                         curList = historyGift.ToList();
@@ -62,21 +62,21 @@ namespace DefaultPlugin.Filters
                     if (curList.Count > 0)
                     {
                         string strUsers = string.Empty;
-                        CBaseGift mostUser;
+                        BaseGiftEvent mostUser;
                         curList.ForEach(p =>
                         {
                             long giftCount = p.GiftCount;
                             var g = curList.Where(cp => cp.SenderName == p.SenderName);
                             giftCount += g.Sum(cp => cp.GiftCount);
-                            p.GiftCount = (uint)giftCount;
+                            p.GiftCount = (int)giftCount;
 
                         });
                         curList.Distinct(new GiftSenderEqv());
                         curList.Select(p => p.SenderName).ToList().ForEach(p => strUsers += p + ",");
                         curList.OrderBy(p => p.GiftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
-                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.IRC.IRCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.SenderName + "，共计" + mostUser.GiftCount + "个"));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.Client.CooCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.Client.CooCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.SenderName + "，共计" + mostUser.GiftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }
@@ -90,14 +90,14 @@ namespace DefaultPlugin.Filters
     }
 
 
-    internal class GiftSenderEqv : IEqualityComparer<CBaseGift>
+    internal class GiftSenderEqv : IEqualityComparer<BaseGiftEvent>
     {
-        public bool Equals(CBaseGift x, CBaseGift y)
+        public bool Equals(BaseGiftEvent x, BaseGiftEvent y)
         {
             return x.SenderName.Equals(y.SenderName);
         }
 
-        public int GetHashCode(CBaseGift obj)
+        public int GetHashCode(BaseGiftEvent obj)
         {
             return obj.GetHashCode();
         }

@@ -12,7 +12,7 @@ using System.Timers;
 
 namespace DefaultPlugin.Sources.Twitch
 {
-    public class Twitch : ISourceBase,ISendable, IConfigurable
+    public class Twitch : SourceBase, IConfigurable
     {
         public const string SOURCE_NAME = "Twitch";
         public const string SOURCE_AUTHOR = "DarkProjector";
@@ -27,17 +27,15 @@ namespace DefaultPlugin.Sources.Twitch
 
         int viewersUpdateInterval = 3000;
 
-        public event ConnectedEvt onConnected;
-        public event DisconnectedEvt onDisconnected;
-        public event DanmukuEvt onDanmuku;
-        public event GiftEvt onGift;
-        public event CurrentOnlineEvt onOnlineChange;
-
         public Timer viewerUpdateTimer;
 
         string oauth="", clientId="", channelName="";
 
         bool isUsingDefaultChannelID = true;
+
+        public Twitch() : base(SOURCE_NAME, SOURCE_AUTHOR, true)
+        {
+        }
 
         public string OAuth { get { return oauth; } set { oauth = value; } }
         public string ClientID { get { return clientId; } set { clientId = value; } }
@@ -68,14 +66,14 @@ namespace DefaultPlugin.Sources.Twitch
             DefaultClientID = "esmhw2lcvrgtqw545ourqjwlg7twee";
         }
 
-        public bool Connect(string roomName)
+        public void Connect(string roomName)
         {
             channelName = roomName;
 
             if (channelName.Length == 0)
             {
-                Sync.Tools.IO.CurrentIO.WriteColor("频道名不能为空!",ConsoleColor.Red);
-                return false;
+                IO.CurrentIO.WriteColor("频道名不能为空!",ConsoleColor.Red);
+                return;
             }
 
             while (oauth.Length==0) {
@@ -95,15 +93,17 @@ namespace DefaultPlugin.Sources.Twitch
             }
             try
             {
-                currentIRCIO = new TwitchIRCIO(roomName);
-                currentIRCIO.OAuth = oauth;
-                currentIRCIO.ChannelName = channelName;
-                currentIRCIO.ClientID = clientId;
+                currentIRCIO = new TwitchIRCIO(roomName)
+                {
+                    OAuth = oauth,
+                    ChannelName = channelName,
+                    ClientID = clientId
+                };
                 currentIRCIO.Connect();
 
                 currentIRCIO.OnRecieveRawMessage += onRecieveRawMessage;
 
-                onConnected?.Invoke();
+                RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
                 UpdateChannelViewersCount();
 
                 viewerUpdateTimer = new Timer(viewersUpdateInterval);
@@ -113,37 +113,18 @@ namespace DefaultPlugin.Sources.Twitch
             }
             catch (Exception e)
             {
-                Sync.Tools.IO.CurrentIO.WriteColor("twitch connect error!" + e.Message, ConsoleColor.Red);
-                return false;
+                IO.CurrentIO.WriteColor("twitch connect error!" + e.Message, ConsoleColor.Red);
             }
-
-            return true;
         }
 
-        public bool Disconnect()
+        public override void Disconnect()
         {
             currentIRCIO?.DisConnect();
             currentIRCIO = null;
-            onDisconnected?.Invoke();
+            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED)));
 
             viewerUpdateTimer.Stop();
             viewerUpdateTimer.Dispose();
-            return true;
-        }
-
-        public string getSourceAuthor()
-        {
-            return SOURCE_AUTHOR;
-        }
-
-        public string getSourceName()
-        {
-            return SOURCE_NAME;
-        }
-
-        public Type getSourceType()
-        {
-            return typeof(Twitch);
         }
 
         public bool Stauts()
@@ -151,19 +132,9 @@ namespace DefaultPlugin.Sources.Twitch
             return currentIRCIO != null && currentIRCIO.IsConnected;
         }
 
-        public void Send(string str)
+        public override void Send(string str)
         {
             currentIRCIO?.SendMessage(str);
-        }
-
-        public void Login(string user, string password)
-        {
-            //只需要oauth
-        }
-
-        public bool LoginStauts()
-        {
-            return true;//只需要oauth
         }
 
         #endregion  
@@ -178,11 +149,7 @@ namespace DefaultPlugin.Sources.Twitch
             string userName = result.Groups["UserName"].Value;
             string message = result.Groups["Message"].Value;
 
-            CBaseDanmuku danmuku = new CBaseDanmuku();
-            danmuku.senderName = userName;
-            danmuku.danmuku = message;
-
-            onDanmuku?.Invoke(danmuku);
+            RaiseEvent(new SourceEventArgs<BaseDanmakuEvent>(new BaseDanmakuEvent() { Danmuku = message, SenderName = userName }));
         }
 
         /// <summary>
@@ -217,7 +184,7 @@ namespace DefaultPlugin.Sources.Twitch
 
             if (Math.Abs(nowViewersCount - prev_ViewersCount) > onlineViewersCountInv)
             {
-                onOnlineChange?.Invoke(Convert.ToUInt32(nowViewersCount));
+                RaiseEvent(new SourceEventArgs<BaseOnlineCountEvent>(new BaseOnlineCountEvent() { Count = nowViewersCount }));
                 prev_ViewersCount = nowViewersCount;
             }
         }
@@ -232,7 +199,7 @@ namespace DefaultPlugin.Sources.Twitch
             return result.Groups[1].Value;
         }
 
-        public bool Connect() => Connect(channelName);
+        public override void Connect() => Connect(channelName);
 
         public override string ToString()
         {

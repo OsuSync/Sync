@@ -4,28 +4,25 @@ using System;
 
 namespace DefaultPlugin.Source
 {
-    class BiliBiliDanmuku : CBaseDanmuku
+    class BiliBiliDanmuku : BaseDanmakuEvent
     {
-
         public BiliBiliDanmuku(DanmakuModel instance)
         {
             this.Danmuku = instance.CommentText;
             this.SenderName = instance.CommentUser;
             this.SendTime = DateTime.Now.ToShortTimeString();
-            this.Source = instance;
         }
 
     }
 
-    class BiliBiliGift : CBaseGift
+    class BiliBiliGift : BaseGiftEvent
     {
         public BiliBiliGift(DanmakuModel instance)
         {
-            this.GiftCount = uint.Parse(instance.GiftNum);
+            this.GiftCount = int.Parse(instance.GiftNum);
             this.GiftName = instance.GiftName;
             this.SenderName = instance.GiftUser;
             this.SendTime = DateTime.Now.ToShortTimeString();
-            this.Source = instance;
 
         }
     }

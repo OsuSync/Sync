@@ -13,20 +13,20 @@ namespace DefaultPlugin.Filters
     {
         private uint usercount = 0;
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
             OnlineChangeMessage castMsg = msg as OnlineChangeMessage;
 
-            IO.CurrentIO.Write("用户变更:" + castMsg.count);
-            if (Math.Abs(usercount - castMsg.count) > 4)
+            IO.CurrentIO.Write("用户变更:" + castMsg.Count);
+            if (Math.Abs(usercount - castMsg.Count) > 4)
             {
-                CBaseDanmuku d = new CBaseDanmuku();
-                d.Danmuku = "直播间围观人数" + (usercount > castMsg.count ? "减少" : "增加") + "到" + castMsg.count + "人";
+                BaseDanmakuEvent d = new BaseDanmakuEvent();
+                d.Danmuku = "直播间围观人数" + (usercount > castMsg.Count ? "减少" : "增加") + "到" + castMsg.Count + "人";
                 DefaultPlugin.MainMessager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
-                usercount = castMsg.count;
+                usercount = castMsg.Count;
             }
 
-            msg.cancel = true;
+            msg.Cancel = true;
         }
     }
 }

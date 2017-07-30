@@ -19,21 +19,21 @@ namespace PPQuery
 
         }
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            if (msg.user.RawText == Configuration.TargetIRC)
+            if (msg.User.RawText == Configuration.TargetIRC)
             {
-                if (msg.message.RawText.StartsWith(Sync.IRC.IRCClient.CONST_ACTION_FLAG) && msg.message.RawText.Contains("osu.ppy.sh/b/"))
+                if (msg.Message.RawText.StartsWith(Sync.Client.CooCClient.CONST_ACTION_FLAG) && msg.Message.RawText.Contains("osu.ppy.sh/b/"))
                 {
-                    msg.cancel = true;
-                    getHoster().SyncInstance.Connector.GetIRC().sendRawMessage("tillerino", msg.message.RawText);
+                    msg.Cancel = true;
+                    getHoster().SyncInstance.Connector.Client.sendRawMessage("tillerino", msg.Message.RawText);
                 }
             }
 
-            if (msg.user.Result.ToLower().Equals("tillerino"))
+            if (msg.User.Result.ToLower().Equals("tillerino"))
             {
-                msg.cancel = true;
-                getHoster().SyncInstance.Connector.GetIRC().sendRawMessage(Configuration.TargetIRC, msg.message.RawText);
+                msg.Cancel = true;
+                getHoster().SyncInstance.Connector.Client.sendRawMessage(Configuration.TargetIRC, msg.Message.RawText);
             }
         }
     }
