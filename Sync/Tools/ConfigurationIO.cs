@@ -18,7 +18,8 @@ namespace Sync.Tools
             TargetIRC,
             CooCID,
             CooCPassword,
-            Provider
+            Provider,
+            Language,
         }
 
         [DllImport("kernel32")]

@@ -109,9 +109,9 @@ namespace Sync
                 IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
                 if (Math.Abs(usercount - lCount) > 4) 
                 {
-                    CBaseDanmuku d = new CBaseDanmuku()
+                    BaseDanmakuEvent d = new BaseDanmakuEvent()
                     {
-                        danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
+                        Danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
                     };
                     Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
