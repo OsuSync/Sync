@@ -156,7 +156,7 @@ namespace Sync.Source
         internal void disconnect()
         {
             this.Status = SourceStatus.USER_REQUEST_DISCONNECT;
-            Disconenct();
+            Disconnect();
         }
 
         internal void send(string msg)
@@ -166,7 +166,7 @@ namespace Sync.Source
         }
 
         public abstract void Connect();
-        public abstract void Disconenct();
+        public abstract void Disconnect();
         public abstract void Send(string Message);
 
     }

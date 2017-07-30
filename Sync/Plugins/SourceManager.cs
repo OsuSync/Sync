@@ -20,12 +20,12 @@ namespace Sync.Plugins
     /// </summary>
     public sealed class SourceEventDispatcher
     {
-        private LinkedList<SourceBase> allHandlers;
+        private LinkedList<object> allHandlers;
         private Dictionary<Type, LinkedList<object>> typedHandlers;
 
         private SourceEventDispatcher()
         {
-            allHandlers = new LinkedList<SourceBase>();
+            allHandlers = new LinkedList<object>();
             typedHandlers = new Dictionary<Type, LinkedList<object>>();
         }
         /// <summary>
@@ -35,12 +35,13 @@ namespace Sync.Plugins
 
         private bool RegisterEventHandler(Type handleType, object handler)
         {
+            if (!typedHandlers.ContainsKey(handleType)) typedHandlers.Add(handleType, new LinkedList<object>());
             var handlers = typedHandlers[handleType];
             if (allHandlers.Contains(handler)) return false;
             else
             {
                 handlers.AddLast(handler);
-                allHandlers.AddLast((SourceBase)handler);
+                allHandlers.AddLast(handler);
             }
             return true;
         }
