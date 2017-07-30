@@ -186,7 +186,7 @@ namespace Sync.Source
         private SourceEvent eventObj;
         public string Name { get; private set; }
         public T EventObject { get => (T)eventObj; }
-        public SourceEventArgs(string EventName, T EventObject)
+        public SourceEventArgs(T EventObject)
         {
             Name = EventName;
             eventObj = EventObject;
