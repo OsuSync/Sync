@@ -137,13 +137,13 @@ namespace OsuStatusOutputSever
 
         const string commandSyncServer = "?syncserver";
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            if (!msg.message.RawText.Trim().StartsWith(commandSyncServer))
+            if (!msg.Message.RawText.Trim().StartsWith(commandSyncServer))
                 return;
-            msg.cancel = true;
+            msg.Cancel = true;
             char[] splitChars = { ' ' };
-            string message = msg.message.RawText.Substring(commandSyncServer.Length).Trim();
+            string message = msg.Message.RawText.Substring(commandSyncServer.Length).Trim();
             string[] args = message.Split(splitChars);
             commandProcess(new Arguments(args));
         }

@@ -26,11 +26,11 @@ namespace BanManagerPlugin.Ban
             return bindManager.GetFliterInfo();
         }
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
 
-            if (GetInfo().IsBanned(msg.user.RawText))
-                msg.cancel = true;
+            if (GetInfo().IsBanned(msg.User.RawText))
+                msg.Cancel = true;
         }
 
         public void Dispose()

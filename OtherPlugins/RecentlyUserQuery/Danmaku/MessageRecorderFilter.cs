@@ -23,11 +23,11 @@ namespace RecentlyUserQuery.Danmaku
         }
 
         //listening messages from Danmaku
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            if (msg.cancel||recorder==null||msg.user.RawText.Length==0)
+            if (msg.Cancel||recorder==null||msg.User.RawText.Length==0)
                 return;
-            recorder.Update(msg.user.RawText, msg.message.RawText);
+            recorder.Update(msg.User.RawText, msg.Message.RawText);
         }
     }
 }

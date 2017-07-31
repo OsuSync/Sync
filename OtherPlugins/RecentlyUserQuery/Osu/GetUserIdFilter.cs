@@ -20,33 +20,33 @@ namespace RecentlyUserQuery.Osu
 
         const string queryUserIdCommand= "?userid",queryUserNameCommand="?username";
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            string message = msg.message.RawText, param = string.Empty;
-            CBaseDanmuku danmaku;
+            string message = msg.Message.RawText, param = string.Empty;
+            BaseDanmakuEvent danmaku;
 
             if (message.StartsWith(queryUserIdCommand))
             {
                 param = message.Substring(queryUserIdCommand.Length).Trim();
 
-                danmaku = new CBaseDanmuku();
+                danmaku = new BaseDanmakuEvent();
                 danmaku.Danmuku = String.Format("userid \"{0}\" is {1} ", param, (UserIdGenerator.GetId(param)));
 
                 messageSender.RaiseMessage<ISourceDanmaku>( new DanmakuMessage(danmaku));
-                msg.cancel = true;
+                msg.Cancel = true;
                 return;
             }
 
             if (message.StartsWith(queryUserNameCommand))
             {
-                msg.cancel = true;
+                msg.Cancel = true;
                 param = message.Substring(queryUserNameCommand.Length).Trim();
                 int id = 0;
 
                 if (Int32.TryParse(param, out id))
                     return;
 
-                danmaku = new CBaseDanmuku();
+                danmaku = new BaseDanmakuEvent();
                 danmaku.Danmuku = String.Format("userName \"{0}\" is {1} ", UserIdGenerator.GetUserName(id), param);
                 messageSender.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
             }

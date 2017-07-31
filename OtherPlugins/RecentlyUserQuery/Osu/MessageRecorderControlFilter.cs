@@ -24,15 +24,15 @@ namespace RecentlyUserQuery.Osu
 
         const string recentlyCommand = "?recently";
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            string message = msg.message.RawText;
+            string message = msg.Message.RawText;
 
-            if (msg.message.RawText[0] != '?'|| recorder.IsRecording == false|| !message.StartsWith(recentlyCommand))
+            if (msg.Message.RawText[0] != '?'|| recorder.IsRecording == false|| !message.StartsWith(recentlyCommand))
                 return;
 
             string[] args = message.Split(' ');
-            msg.cancel = true;
+            msg.Cancel = true;
             if (args.Length > 1)
                 SendResponseMessage(recorder.ProcessCommonCommand(args));
             else
@@ -58,7 +58,7 @@ namespace RecentlyUserQuery.Osu
 
         private void SendResponseMessage(string message)
         {
-            CBaseDanmuku danmaku = new CBaseDanmuku();
+            BaseDanmakuEvent danmaku = new BaseDanmakuEvent();
             danmaku.Danmuku = message;
             manager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }

@@ -24,13 +24,13 @@ namespace BeatmapSuggest.Danmaku
 
         const int timeout = 6000;//ms
 
-        public void onMsg(ref MessageBase msg)
+        public void onMsg(ref IMessageBase msg)
         {
-            string message = msg.message.RawText;
+            string message = msg.Message.RawText;
             int id = 0;
             if (message.StartsWith(suggestCommand))
             {
-                msg.cancel = true;
+                msg.Cancel = true;
                 if (msgManager == null)
                     return; //没完全初始化，发送不了信息
 
@@ -46,10 +46,10 @@ namespace BeatmapSuggest.Danmaku
                     switch (param[1])
                     {
                         case "-b":
-                            SendSuggestMessage(id, msg.user.RawText,false);
+                            SendSuggestMessage(id, msg.User.RawText,false);
                             break;
                         case "-s":
-                            SendSuggestMessage(id, msg.user.RawText);
+                            SendSuggestMessage(id, msg.User.RawText);
                             break;
                         default:
                             IO.CurrentIO.WriteColor(string.Format(LANG_UNKOWN_PARAM, param[1]), ConsoleColor.Red);
@@ -58,7 +58,7 @@ namespace BeatmapSuggest.Danmaku
                 }
                 else if (Int32.TryParse(message.Substring(suggestCommand.Length).Trim(), out id))
                 {
-                    SendSuggestMessage(id, msg.user.RawText);
+                    SendSuggestMessage(id, msg.User.RawText);
                 }
             }
         }
@@ -78,9 +78,9 @@ namespace BeatmapSuggest.Danmaku
                 IO.CurrentIO.WriteColor(string.Format(LANG_GET_BEATMAP_FAILED, id, e.Message),ConsoleColor.Red);
                 return;
             }
-            CBaseDanmuku danmaku = new CBaseDanmuku();
+            BaseDanmakuEvent danmaku = new BaseDanmakuEvent();
             string message = string.Format(LANG_SUGGEST_MEG,userName,GetLink(id,isSetId),$"{beatmapInfo[3]} - {beatmapInfo[2]}[{beatmapInfo[4]}]",GetDownloadLink(int.Parse(beatmapInfo[1])),GetMirrorDownloadLink(int.Parse(beatmapInfo[0])));
-            danmaku.danmuku = message;
+            danmaku.Danmuku = message;
             msgManager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmaku));
         }
 
