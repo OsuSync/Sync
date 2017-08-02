@@ -213,7 +213,7 @@ namespace DefaultPlugin.Commands
             int value = 0;
 
             if (arg.Count == 0)
-                CurrentIO.WriteColor(LANG_COMMANDS_ARGUMENT_WRONG, ConsoleColor.Red);
+                CurrentIO.WriteColor(LANG_COMMANDS_MSGMGR_HELP, ConsoleColor.Yellow);
             else
             {
                 switch (arg[0].Trim())
@@ -222,7 +222,7 @@ namespace DefaultPlugin.Commands
                         CurrentIO.WriteColor(LANG_COMMANDS_MSGMGR_HELP, ConsoleColor.Yellow);
                         break;
                     case "--status":
-                        CurrentIO.WriteColor(String.Format(LANG_COMMANDS_MSGMGR_STATUS, MessageManager.IsLimit ? LANG_COMMANDS_MSGMGR_LIMIT : LANG_COMMANDS_MSGMGR_FREE, MessageManager.CurrentQueueCount, MessageManager.LimitLevel, MessageManager.RecoverTime, MessageManager.Option.ToString()), ConsoleColor.Yellow);
+                        CurrentIO.WriteColor(String.Format(LANG_COMMANDS_MSGMGR_STATUS, (string)(MessageManager.IsLimit ? LANG_COMMANDS_MSGMGR_LIMIT : LANG_COMMANDS_MSGMGR_FREE), MessageManager.CurrentQueueCount, MessageManager.LimitLevel, MessageManager.RecoverTime, MessageManager.Option.ToString()), ConsoleColor.Yellow);
                         break;
                     case "--limit":
                         if (arg.Count == 2 && Int32.TryParse(arg[1].Trim(), out value))

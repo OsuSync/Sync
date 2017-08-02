@@ -143,6 +143,7 @@ namespace Sync.Plugins
             {
                 if (!msg.Message.RawText.StartsWith("?send"))
                     msg.Cancel = true;
+                msg.Message = new StringElement(msg.Message.RawText.TrimStart("?send".ToArray()));
             }
         }
 
@@ -160,15 +161,21 @@ namespace Sync.Plugins
         {
             set
             {
-                option = value;
                 if (option != value)
                 {
                     if (option == PeekOption.Only_Send_Command)
+                    {
                         filterManager.deleteFilter(sendFilter);
+                        IO.CurrentIO.WriteColor("当前消息管理器 解除 管制,内容可以直接发送到irc频道", ConsoleColor.Green);
+                    }
                     else if (value == PeekOption.Only_Send_Command)
+                    {
                         filterManager.AddFilter(sendFilter);
+                        IO.CurrentIO.WriteColor("当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道", ConsoleColor.Green);
+                    }
+
                 }
-                isLimit = false;
+                option = value;
             }
             get
             {
