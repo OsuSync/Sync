@@ -7,6 +7,11 @@ using Sync;
 using Sync.Command;
 using Sync.MessageFilter;
 using System.Threading.Tasks;
+using osu_database_reader;
+using Sync.Tools;
+using System.Diagnostics;
+using System.IO;
+using Sync.Source;
 
 namespace NowPlaying
 {
@@ -15,6 +20,13 @@ namespace NowPlaying
         private MessageDispatcher MainMessager = null;
         private MSNHandler handler = null;
         private OSUStatus osuStat = new OSUStatus();
+        private BeatmapEntry currentPlayingBeatmap=null;
+
+        private OsuDb currentDatabase;
+        private ConfigurationElement OsuFolderPath = @"H:\osu!\";
+        private bool supportAdvanceInfo { get => currentDatabase != null; }
+        private Stopwatch sw = new Stopwatch();
+        private static PluginConfiuration plugin_config;
 
         public NowPlaying() : base("Now Playing", "Deliay")
         {
@@ -28,23 +40,77 @@ namespace NowPlaying
         {
             Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
             handler.Load();
+
             handler.registerCallback(p =>
             {
                 return new Task<bool>(OnOSUStatusChange, p);
             });
+
+            #region InitAdvanceQuery
+
+            InitAdvanceQuery();
+
+            #endregion
+            
             handler.StartHandler();
+        }
+
+        private void InitAdvanceQuery()
+        {
+            if (!Directory.Exists(OsuFolderPath))
+                return;
+
+            try
+            {
+                currentDatabase = OsuDb.Read(OsuFolderPath + "osu!.db");
+            }
+            catch { currentDatabase = null; }
         }
 
 
         private bool OnOSUStatusChange(object stat)
         {
             osuStat = (OSUStatus)stat;
-#if (DEBUG)
-            Sync.Tools.IO.CurrentIO.WriteColor(osuStat.status + " " + osuStat.artist + " - " + osuStat.title, ConsoleColor.DarkCyan);
-#endif
+
+            if (!supportAdvanceInfo)
+                return true;
+
+            #region TryGetPlayingBeatmap
+            
+            #if DEBUG
+            sw.Reset();
+            sw.Start();
+            #endif
+
+            var query_result = currentDatabase.Beatmaps.AsParallel().Where((beatmap) => {
+                if (((osuStat.title == beatmap.TitleUnicode) || (osuStat.title == beatmap.Title)) && osuStat.diff == beatmap.Difficulty)
+                    return true;
+                return false;
+            });
+
+            #if DEBUG
+            IO.CurrentIO.WriteColor($"query_result count:{query_result.Count()}\ttime={sw.ElapsedMilliseconds}ms\t", ConsoleColor.Cyan);
+            sw.Stop();
+            #endif
+
+            if (query_result.Count() != 0)
+            {
+                BeatmapEntry beatmap = query_result.First();
+                IO.CurrentIO.WriteColor($"[{beatmap.SongSource}]({beatmap.ArtistUnicode}) - {beatmap.TitleUnicode}[{beatmap.Difficulty}](AR/HP/OD/CS:{beatmap.DiffAR}/{beatmap.DiffHP}/{beatmap.DiffOD}/{beatmap.DiffCS})", ConsoleColor.Cyan);
+
+                currentPlayingBeatmap = beatmap;
+                //todo : send message
+            }
+            else
+            {
+                currentPlayingBeatmap = null;
+            }
+
+            #endregion
+
             return true;
         }
-
+        
         public void onMsg(ref IMessageBase msg)
         {
             if (msg.Message.RawText.Equals("?np"))

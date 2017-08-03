@@ -80,6 +80,8 @@ namespace Sync.Tools
         public static LanguageElement LANG_Command = "命令";
         public static LanguageElement LANG_Command_Description = "描述";
 
+        public static LanguageElement LANG_MsgMgr_Limit = "当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道";
+        public static LanguageElement LANG_MsgMgr_Free = "当前消息管理器 解除 管制,内容可以直接发送到irc频道";
     }
 
 

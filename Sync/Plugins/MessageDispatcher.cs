@@ -166,12 +166,12 @@ namespace Sync.Plugins
                     if (option == PeekOption.Only_Send_Command)
                     {
                         filterManager.deleteFilter(sendFilter);
-                        IO.CurrentIO.WriteColor("当前消息管理器 解除 管制,内容可以直接发送到irc频道", ConsoleColor.Green);
+                        IO.CurrentIO.WriteColor(DefaultI18n.LANG_MsgMgr_Free, ConsoleColor.Green);
                     }
                     else if (value == PeekOption.Only_Send_Command)
                     {
                         filterManager.AddFilter(sendFilter);
-                        IO.CurrentIO.WriteColor("当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道", ConsoleColor.Green);
+                        IO.CurrentIO.WriteColor(DefaultI18n.LANG_MsgMgr_Limit, ConsoleColor.Green);
                     }
 
                 }
