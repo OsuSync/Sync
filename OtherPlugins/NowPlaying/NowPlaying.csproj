@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="MSNHandler.cs" />
     <Compile Include="NowPlaying.cs" />
+    <Compile Include="OsuFileParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
