@@ -10,11 +10,13 @@ namespace Sync.Plugins
     /// <summary>
     /// 提供对消息的发送、管理、过滤功能
     /// </summary>
-    public class FilterManager
+    public class FilterManager : BaseEventDispatcher
     {
+
+
         Dictionary<Type, List<IFilter>> filters;
 
-        public FilterManager()
+        internal FilterManager()
         {
             filters = new Dictionary<Type, List<IFilter>>();
 
@@ -22,6 +24,8 @@ namespace Sync.Plugins
             AddSource<ISourceDanmaku>();
             AddSource<ISourceOnlineChange>();
             AddSource<ISourceGift>();
+
+            EventDispatcher.Instance.RegistNewDispatcher(GetType());
         }
 
         private void AddSource<T>()
@@ -74,6 +78,8 @@ namespace Sync.Plugins
             {
                 filter.onMsg(ref msg);
             }
+
+            RaiseEventAsync(msg);
         }
 
         public void AddFilter(IFilter filter)
@@ -106,4 +112,5 @@ namespace Sync.Plugins
             }
         }
     }
+
 }

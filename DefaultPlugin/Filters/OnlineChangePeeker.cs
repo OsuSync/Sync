@@ -11,16 +11,16 @@ namespace DefaultPlugin.Filters
 {
     class OnlineChangePeeker : IFilter, ISourceOnlineChange
     {
-        private uint usercount = 0;
+        private int usercount = 0;
 
         public void onMsg(ref IMessageBase msg)
         {
-            OnlineChangeMessage castMsg = msg as OnlineChangeMessage;
+            OnlineChangeMessage castMsg = (OnlineChangeMessage)msg;
 
             IO.CurrentIO.Write("用户变更:" + castMsg.Count);
             if (Math.Abs(usercount - castMsg.Count) > 4)
             {
-                BaseDanmakuEvent d = new BaseDanmakuEvent();
+                IBaseDanmakuEvent d = new BaseDanmakuEvent();
                 d.Danmuku = "直播间围观人数" + (usercount > castMsg.Count ? "减少" : "增加") + "到" + castMsg.Count + "人";
                 DefaultPlugin.MainMessager.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
                 usercount = castMsg.Count;

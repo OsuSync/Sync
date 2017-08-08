@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sync.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,6 +10,25 @@ using System.Windows.Forms;
 
 namespace NowPlaying
 {
+    public struct StatusChangeEvent : IBaseEvent
+    {
+        public OSUStatus CurrentStatus { get; private set; }
+        public StatusChangeEvent(OSUStatus status)
+        {
+            CurrentStatus = status;
+        }
+    }
+
+    public class NowPlayingEvents : BaseEventDispatcher
+    {
+        public static readonly NowPlayingEvents Instance = new NowPlayingEvents();
+        private NowPlayingEvents()
+        {
+            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+        }
+    }
+
+    [Obsolete("Instead with standrad event dispatcher", true)]
     public interface IOSUStatus
     {
         string artist { get; set; }
@@ -20,7 +40,7 @@ namespace NowPlaying
 
     }
 
-    public class OSUStatus : IOSUStatus
+    public struct OSUStatus
     {
         public string artist { get; set; }
         public string title { get; set; }
@@ -69,12 +89,13 @@ namespace NowPlaying
         }
     }
 
+    [Obsolete("Instead with standrad event dispatcher", true)]
     public interface IMSNHandler
     {
         void registerCallback(Func<IOSUStatus, Task<bool>> callback);
     }
 
-    public class MSNHandler : IMSNHandler
+    public class MSNHandler
     {
         #region WIN32API Import
         private const string CONST_CLASS_NAME = "MsnMsgrUIManager";
@@ -129,9 +150,10 @@ namespace NowPlaying
             t.Name = "ActiveXThread";
         }
 
+        [Obsolete("Instead with standrad event dispatcher", true)]
         public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
         {
-            callbacks.Add(callback);
+            //callbacks.Add(callback);
         }
 
         public void StartHandler()
@@ -182,7 +204,8 @@ namespace NowPlaying
                 COPYDATASTRUCT cb = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
                 string[] info = Marshal.PtrToStringUni(cb.lpData, cb.cbData / 2).Split("\0".ToCharArray(), StringSplitOptions.None);
                 OSUStatus stats = info;
-                callbacks.ForEach(p => p(stats).Start());
+                NowPlayingEvents.Instance.RaiseEventAsync(new StatusChangeEvent(stats));
+                //callbacks.ForEach(p => p(stats).Start());
             }
 
             return DefWindowProcW(hWnd, msg, wParam, lParam);

@@ -127,6 +127,7 @@ namespace Sync.Source
         public string Name { get; private set; }
         public string Author { get; private set; }
         public bool SupportSend { get; private set; }
+        public BaseEventDispatcher EventBus { get => SourceEvents.Instance; }
         public SourceStatus Status { get; protected set; }
 
         public SourceBase(string Name, string Author, bool SupportSend = false)
@@ -142,9 +143,9 @@ namespace Sync.Source
         /// </summary>
         /// <typeparam name="T">Target Event Type</typeparam>
         /// <param name="args">Type args</param>
-        protected void RaiseEvent<T>(SourceEventArgs<T> args) where T : SourceEvent
+        protected void RaiseEvent<T>(T args) where T : SourceEvent
         {
-            SourceEventDispatcher.Instance.SourceEventEvt<T>(args);
+            EventBus.RaiseEvent(args);
         }
 
         internal void connect()
@@ -171,31 +172,31 @@ namespace Sync.Source
 
     }
 
-    /// <summary>
-    /// fire when Source event raised.
-    /// </summary>
-    /// <param name="args"></param>
-    public delegate void SourceEventEvt<T>(SourceEventArgs<T> args) where T : SourceEvent;
+    ///// <summary>
+    ///// fire when Source event raised.
+    ///// </summary>
+    ///// <param name="args"></param>
+    ////public delegate void SourceEventEvt<T>(T args) where T : SourceEvent;
 
-    /// <summary>
-    /// Source event base arg class
-    /// Including event name and eventobject
-    /// </summary>
-    public class SourceEventArgs<T> where T : SourceEvent
-    {
-        private SourceEvent eventObj;
-        public string Name { get; private set; }
-        public T EventObject { get => (T)eventObj; }
-        public SourceEventArgs(T EventObject)
-        {
-            eventObj = EventObject;
-        }
+    ///// <summary>
+    ///// Source event base arg class
+    ///// Including event name and eventobject
+    ///// </summary>
+    //public class SourceEventArgs<T> where T : SourceEvent
+    //{
+    //    private SourceEvent eventObj;
+    //    public string Name { get; private set; }
+    //    public T EventObject { get => (T)eventObj; }
+    //    public SourceEventArgs(T EventObject)
+    //    {
+    //        eventObj = EventObject;
+    //    }
 
-        public T CastTo()
-        {
-            return (T)EventObject;
-        }
-    }
+    //    public T CastTo()
+    //    {
+    //        return (T)EventObject;
+    //    }
+    //}
 
     /// <summary>
     /// Source network impossible status

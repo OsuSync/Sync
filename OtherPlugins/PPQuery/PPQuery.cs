@@ -7,6 +7,8 @@ using Sync;
 using Sync.Command;
 using Sync.MessageFilter;
 using Sync.Tools;
+using static Sync.Plugins.PluginEvents;
+using System.Threading.Tasks;
 
 namespace PPQuery
 {
@@ -14,8 +16,8 @@ namespace PPQuery
     {
         public PPQuery() : base("PP Query", "Deliay")
         {
-            base.onInitPlugin += () => IO.CurrentIO.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
-            base.onInitFilter += filters => filters.AddFilter(this);
+            Instance.BindEvent<InitPluginEvent>((evt) => IO.CurrentIO.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan));
+            Instance.BindEvent<InitFilterEvent>((evt) => evt.Filters.AddFilter(this));
 
         }
 

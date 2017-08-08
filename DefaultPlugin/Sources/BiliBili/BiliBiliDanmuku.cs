@@ -4,7 +4,7 @@ using System;
 
 namespace DefaultPlugin.Source
 {
-    class BiliBiliDanmuku : BaseDanmakuEvent
+    class BiliBiliDanmuku : IBaseDanmakuEvent
     {
         public BiliBiliDanmuku(DanmakuModel instance)
         {
@@ -13,9 +13,12 @@ namespace DefaultPlugin.Source
             this.SendTime = DateTime.Now.ToShortTimeString();
         }
 
+        public string Danmuku { get; set; }
+        public string SenderName { get; set; }
+        public string SendTime { get; set; }
     }
 
-    class BiliBiliGift : BaseGiftEvent
+    class BiliBiliGift : IBaseGiftEvent
     {
         public BiliBiliGift(DanmakuModel instance)
         {
@@ -25,5 +28,10 @@ namespace DefaultPlugin.Source
             this.SendTime = DateTime.Now.ToShortTimeString();
 
         }
+
+        public int GiftCount { get; set; }
+        public string GiftName { get; set; }
+        public string SenderName { get; set; }
+        public string SendTime { get; set; }
     }
 }

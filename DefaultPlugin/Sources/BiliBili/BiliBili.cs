@@ -41,7 +41,7 @@ namespace DefaultPlugin.Source.BiliBili
                 isConnected = true;
             }
             isConnected = true;
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING));
         }
 
         public override void Disconnect()
@@ -51,16 +51,15 @@ namespace DefaultPlugin.Source.BiliBili
         private void Dl_Disconnected(object sender, DisconnectEvtArgs args)
         {
             isConnected = false;
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.REMOTE_DISCONNECTED)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.REMOTE_DISCONNECTED));
         }
 
         private void Dl_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
         {
             base.RaiseEvent<BaseOnlineCountEvent>(
-                new SourceEventArgs<BaseOnlineCountEvent>(
-                    new BaseOnlineCountEvent() {
+                new BaseOnlineCountEvent() {
                         Count = (int)e.UserCount
-                    }));
+                });
         }
 
         private void Dl_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
@@ -68,11 +67,11 @@ namespace DefaultPlugin.Source.BiliBili
 
             if (e.Danmaku.MsgType == MsgTypeEnum.Comment)
             {
-                base.RaiseEvent<BaseDanmakuEvent>(new SourceEventArgs<BaseDanmakuEvent>(new BiliBiliDanmuku(e.Danmaku)));
+                base.RaiseEvent<IBaseDanmakuEvent>(new BiliBiliDanmuku(e.Danmaku));
             }
             else if (e.Danmaku.MsgType == MsgTypeEnum.GiftSend)
             {
-                base.RaiseEvent<BaseGiftEvent>(new SourceEventArgs<BaseGiftEvent>(new BiliBiliGift(e.Danmaku)));
+                base.RaiseEvent<IBaseGiftEvent>(new BiliBiliGift(e.Danmaku));
             }
         }
 

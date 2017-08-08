@@ -4,13 +4,21 @@ using System.Reflection;
 
 namespace Sync.Plugins
 {
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void SyncManagerCompleteEvt(SyncManager sync);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void InitPluginEvt();
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void InitSourceEvt(SourceManager sources);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void InitFilterEvt(FilterManager filters);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void InitCommandEvt(CommandManager commands);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void LoadCompleteEvt(SyncHost host);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void StartSyncEvt(SyncConnector connector);
+    [Obsolete("Instead with EventBus(PluginEvents class)", true)]
     public delegate void StopSyncEvt();
 
     public interface IPlugin
@@ -23,20 +31,28 @@ namespace Sync.Plugins
     {
         public readonly string Name;
         public readonly string Author;
+        public BaseEventDispatcher EventBus { get => PluginEvents.Instance; }
 
         public Plugin(string Name, string Author)
         {
             this.Name = Name;
             this.Author = Author;
         }
-
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event InitPluginEvt onInitPlugin;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event SyncManagerCompleteEvt onSyncMangerComplete;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event InitSourceEvt onInitSource;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event InitFilterEvt onInitFilter;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event InitCommandEvt onInitCommand;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event LoadCompleteEvt onLoadComplete;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event StartSyncEvt onStartSync;
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         protected event StopSyncEvt onStopSync;
         private bool isComplete = false;
 
@@ -45,6 +61,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="T">类别</typeparam>
         /// <param name="handler">产生器</param>
+        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
         internal void onEvent<T>(Func<T> handler)
         {
             Type eventType = typeof(T);

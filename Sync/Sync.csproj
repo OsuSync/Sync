@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Plugins\CommandManager.cs" />
     <Compile Include="MessageFilter\FilterBase.cs" />
+    <Compile Include="Plugins\EventDispatcher.cs" />
     <Compile Include="Plugins\FilterManager.cs" />
     <Compile Include="Plugins\MessageDispatcher.cs" />
     <Compile Include="Plugins\Plugin.cs" />

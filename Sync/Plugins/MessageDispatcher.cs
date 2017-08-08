@@ -14,7 +14,7 @@ namespace Sync.Plugins
 
         SyncConnector parent;
         FilterManager filters;
-        public MessageDispatcher(SyncConnector p, FilterManager f)
+        internal MessageDispatcher(SyncConnector p, FilterManager f)
         {
             parent = p;
 
@@ -32,7 +32,7 @@ namespace Sync.Plugins
         /// 简易实现直接传递弹幕消息
         /// </summary>
         /// <param name="danmaku">弹幕</param>
-        public void onDanmaku(BaseDanmakuEvent danmaku)
+        public void onDanmaku(IBaseDanmakuEvent danmaku)
         {
             IMessageBase msg = new DanmakuMessage(danmaku);
             RaiseMessage<ISourceDanmaku>(msg);
