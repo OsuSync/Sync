@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sync.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,67 +7,72 @@ using System.Threading.Tasks;
 
 namespace Sync.Source
 {
-    public class BaseDanmakuEvent : SourceEvent
+
+    public sealed class SourceEvents : BaseEventDispatcher
     {
-        public static string EVENT_NAME = "DANMAKU";
-
-        public BaseDanmakuEvent() : base(EVENT_NAME)
+        public readonly static SourceEvents Instance = new SourceEvents();
+        private SourceEvents()
         {
+            EventDispatcher.Instance.RegistNewDispatcher(GetType());
         }
+    }
 
+    public struct StartSyncEvent : SourceEvent
+    {
+        public SyncConnector Connector { get => Program.host.SyncInstance.Connector; }
+    }
+
+    public struct StopSyncEvent : SourceEvent
+    {
+
+    }
+
+    public struct BaseDanmakuEvent : IBaseDanmakuEvent
+    {
         public string Danmuku { get; set; }
         public string SenderName { get; set; }
         public string SendTime { get; set; }
 
-    }
-
-    public class BaseGiftEvent : SourceEvent
-    {
-        public static string EVENT_NAME = "GIFT";
-        public string GiftName { get; set; }
-        public int GiftCount { get; set; }
-        public string SenderName { get; set; }
-        public string SendTime { get; set; }
-
-        public BaseGiftEvent() : base(EVENT_NAME)
+        public BaseDanmakuEvent(string danmaku, string sender, string time)
         {
+            Danmuku = danmaku;
+            SenderName = sender;
+            SendTime = time;
         }
     }
 
-    public class BaseStatusEvent : SourceEvent
+    public interface IBaseDanmakuEvent : SourceEvent
     {
-        public static string EVENT_NAME = "STATUS";
+        string Danmuku { get; set; }
+        string SenderName { get; set; }
+        string SendTime { get; set; }
+    }
+
+    public interface IBaseGiftEvent : SourceEvent
+    {
+        string GiftName { get; set; }
+        int GiftCount { get; set; }
+        string SenderName { get; set; }
+        string SendTime { get; set; }
+
+    }
+
+    public struct BaseStatusEvent : SourceEvent
+    {
         public SourceStatus Status { get; private set; }
 
-        public BaseStatusEvent(SourceStatus status) : base(EVENT_NAME)
+        public BaseStatusEvent(SourceStatus status)
         {
             Status = status;
         }
     }
 
-    public class BaseOnlineCountEvent : SourceEvent
+    public struct BaseOnlineCountEvent : SourceEvent
     {
-        public static string EVENT_NAME = "ONLINE";
         public int Count { get; set; }
-        public BaseOnlineCountEvent() : base(EVENT_NAME)
-        {
-        }
     }
 
-    public abstract class SourceEvent
+    public interface SourceEvent : IBaseEvent
     {
-        public string EventName { get; private set; }
-        public SourceEvent(string EventName)
-        {
-            this.EventName = EventName;
-        }
-
-        public T CastTo<T>() where T : SourceEvent
-        {
-            if (this is T)
-                return (T)this;
-            else
-                return null;
-        }
     }
 }

@@ -13,19 +13,19 @@ namespace DefaultPlugin.Filters
     class GiftReceivePeeker : IFilter, ISourceGift
     {
         private Thread giftRecyler;
-        private List<BaseGiftEvent> historyGift;
+        private List<IBaseGiftEvent> historyGift;
         private bool isRunning = false;
 
         internal GiftReceivePeeker()
         {
-            historyGift = new List<BaseGiftEvent>();        }
+            historyGift = new List<IBaseGiftEvent>();        }
 
         public void onMsg(ref IMessageBase msg)
         {
             if(msg is GiftMessage)
             {
                 msg.Cancel = true;
-                AddGift((msg as GiftMessage).Source);
+                AddGift(((GiftMessage)msg).Source);
             }
         }
 
@@ -38,7 +38,7 @@ namespace DefaultPlugin.Filters
             isRunning = true;
         }
 
-        public void AddGift(BaseGiftEvent gift)
+        public void AddGift(IBaseGiftEvent gift)
         {
             historyGift.Add(gift);
         }
@@ -52,7 +52,7 @@ namespace DefaultPlugin.Filters
             {
                 if (time.ElapsedMilliseconds / 1000 > 180)
                 {
-                    List<BaseGiftEvent> curList;
+                    List<IBaseGiftEvent> curList;
                     lock (historyGift)
                     {
                         curList = historyGift.ToList();
@@ -62,7 +62,7 @@ namespace DefaultPlugin.Filters
                     if (curList.Count > 0)
                     {
                         string strUsers = string.Empty;
-                        BaseGiftEvent mostUser;
+                        IBaseGiftEvent mostUser;
                         curList.ForEach(p =>
                         {
                             long giftCount = p.GiftCount;
@@ -90,14 +90,14 @@ namespace DefaultPlugin.Filters
     }
 
 
-    internal class GiftSenderEqv : IEqualityComparer<BaseGiftEvent>
+    internal class GiftSenderEqv : IEqualityComparer<IBaseGiftEvent>
     {
-        public bool Equals(BaseGiftEvent x, BaseGiftEvent y)
+        public bool Equals(IBaseGiftEvent x, IBaseGiftEvent y)
         {
             return x.SenderName.Equals(y.SenderName);
         }
 
-        public int GetHashCode(BaseGiftEvent obj)
+        public int GetHashCode(IBaseGiftEvent obj)
         {
             return obj.GetHashCode();
         }

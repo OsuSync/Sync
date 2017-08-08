@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NowPlaying
 {
-    public class NowPlaying : Plugin, IFilter, ISourceDanmaku, IMSNHandler
+    public class NowPlaying : Plugin, IFilter, ISourceDanmaku
     {
         private MessageDispatcher MainMessager = null;
         private MSNHandler handler = null;
@@ -18,31 +18,27 @@ namespace NowPlaying
 
         public NowPlaying() : base("Now Playing", "Deliay")
         {
-            base.onInitFilter += filter => filter.AddFilter(this);
-            base.onInitPlugin += NowPlaying_onInitPlugin;
-            base.onLoadComplete += host => MainMessager = host.Messages;
+            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>((filter) => filter.Filters.AddFilter(this));
+            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>(NowPlaying_onInitPlugin);
+            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => MainMessager = evt.Host.Messages);
             handler = new MSNHandler();
+
+            
         }
 
-        private void NowPlaying_onInitPlugin()
+        private void NowPlaying_onInitPlugin(PluginEvents.InitPluginEvent @event)
         {
             Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
-            handler.Load();
-            handler.registerCallback(p =>
-            {
-                return new Task<bool>(OnOSUStatusChange, p);
-            });
-            handler.StartHandler();
+            NowPlayingEvents.Instance.BindEvent<StatusChangeEvent>(OnOSUStatusChange);
         }
 
 
-        private bool OnOSUStatusChange(object stat)
+        private void OnOSUStatusChange(StatusChangeEvent @event)
         {
-            osuStat = (OSUStatus)stat;
+            osuStat = @event.CurrentStatus;
 #if (DEBUG)
             Sync.Tools.IO.CurrentIO.WriteColor(osuStat.status + " " + osuStat.artist + " - " + osuStat.title, ConsoleColor.DarkCyan);
 #endif
-            return true;
         }
 
         public void onMsg(ref IMessageBase msg)
@@ -75,6 +71,7 @@ namespace NowPlaying
 
         }
 
+        [Obsolete("Replace with EventBus", true)]
         public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
         {
             ((IMSNHandler)handler).registerCallback(callback);

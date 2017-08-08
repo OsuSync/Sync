@@ -6,9 +6,20 @@ using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
 using System;
 using Sync.Tools;
+using System.Threading.Tasks;
 
 namespace DefaultPlugin
 {
+    public class MyMessageEvent : IBaseEvent
+    {
+
+    }
+
+    public class MyEvent : BaseEventDispatcher
+    {
+        public readonly static MyEvent Instance = new MyEvent();
+    }
+
     public class DefaultPlugin : Plugin
     {
 
@@ -26,33 +37,39 @@ namespace DefaultPlugin
 
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
-            Sync.Tools.I18n.Instance.ApplyLanguage(new Language());
-            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan);
+            I18n.Instance.ApplyLanguage(new Language());
+            EventBus.BindEvent<PluginEvents.InitPluginEvent>( (evt) => Task.Run(() => IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan)));
 
             srcBili = new BiliBili();
             srcTwitch = new Twitch();
 
-            base.onInitCommand += manager => new BaseCommand(manager);
-            base.onInitSource += manager => {
-                manager.AddSource(srcBili);
-                manager.AddSource(srcTwitch);
-            };
+            base.EventBus.BindEvent<PluginEvents.InitCommandEvent>(evt => new BaseCommand(evt.Commands));
+            base.EventBus.BindEvent<PluginEvents.InitSourceEvent>(evt =>{
+                evt.Sources.AddSource(srcBili);
+                evt.Sources.AddSource(srcTwitch);
+            });
 
             fltFormat = new DefaultFormat();
             fltGift = new GiftReceivePeeker();
             fltOnline = new OnlineChangePeeker();
 
-            base.onInitFilter += manager => manager.AddFilters(fltFormat, fltGift, fltOnline);
-            base.onStartSync += connector => fltGift.StartRecycler();
+            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>(evt => evt.Filters.AddFilters(fltFormat, fltGift, fltOnline));
 
-            base.onLoadComplete += DefaultPlugin_onLoadComplete;
+            //TODO : 
+            //base.onStartSync += connector => fltGift.StartRecycler();
 
-            base.onStopSync += () => { Config.SaveAll(); };
+            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(DefaultPlugin_onLoadComplete);
+
+            //TODO:
+            //{ Config.SaveAll(); };
+
+            EventDispatcher.Instance.RegistNewDispatcher<MyEvent>();
 
         }
 
-        private void DefaultPlugin_onLoadComplete(SyncHost host)
+        private void DefaultPlugin_onLoadComplete(PluginEvents.LoadCompleteEvent @event)
         {
+            SyncHost host = @event.Host;
             MainFilters = host.Filters;
             MainSources = host.Sources;
             MainInstance = host.SyncInstance;
@@ -62,6 +79,8 @@ namespace DefaultPlugin
             Config = new PluginConfigurationManager(this);
             Config.AddItem(srcBili);
             Config.AddItem(srcTwitch);
+
+            MyEvent.Instance.RaiseEvent(new MyMessageEvent());
         }
     }
 }

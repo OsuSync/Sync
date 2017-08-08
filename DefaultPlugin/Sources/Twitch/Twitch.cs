@@ -103,7 +103,7 @@ namespace DefaultPlugin.Sources.Twitch
 
                 currentIRCIO.OnRecieveRawMessage += onRecieveRawMessage;
 
-                RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
+                RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING));
                 UpdateChannelViewersCount();
 
                 viewerUpdateTimer = new Timer(viewersUpdateInterval);
@@ -121,7 +121,7 @@ namespace DefaultPlugin.Sources.Twitch
         {
             currentIRCIO?.DisConnect();
             currentIRCIO = null;
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED));
 
             viewerUpdateTimer.Stop();
             viewerUpdateTimer.Dispose();
@@ -149,7 +149,7 @@ namespace DefaultPlugin.Sources.Twitch
             string userName = result.Groups["UserName"].Value;
             string message = result.Groups["Message"].Value;
 
-            RaiseEvent(new SourceEventArgs<BaseDanmakuEvent>(new BaseDanmakuEvent() { Danmuku = message, SenderName = userName }));
+            RaiseEvent(new BaseDanmakuEvent() { Danmuku = message, SenderName = userName });
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace DefaultPlugin.Sources.Twitch
 
             if (Math.Abs(nowViewersCount - prev_ViewersCount) > onlineViewersCountInv)
             {
-                RaiseEvent(new SourceEventArgs<BaseOnlineCountEvent>(new BaseOnlineCountEvent() { Count = nowViewersCount }));
+                RaiseEvent(new BaseOnlineCountEvent() { Count = nowViewersCount });
                 prev_ViewersCount = nowViewersCount;
             }
         }

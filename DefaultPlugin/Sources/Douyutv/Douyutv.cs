@@ -41,7 +41,7 @@ namespace DefaultPlugin.Sources.Douyutv
                 socket = new TcpClient();
             }
 
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WAITING)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WAITING));
 
             await socket.ConnectAsync(server, port);
 
@@ -59,7 +59,7 @@ namespace DefaultPlugin.Sources.Douyutv
             //Thread receive = new Thread(DataReceive);
             //receive.Start();
 
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING));
             DataReceive();
             return;
 
@@ -79,7 +79,7 @@ namespace DefaultPlugin.Sources.Douyutv
 
                         if (!packet.get("tick").Equals(unix.ToString()))
                         {
-                            RaiseEvent(new SourceEventArgs<BaseOnlineCountEvent>(new BaseOnlineCountEvent() { Count = 0 }));
+                            RaiseEvent(new BaseOnlineCountEvent() { Count = 0 });
                             IO.CurrentIO.WriteColor(string.Format(LANG_DOUYU_FAIL, unix.ToString() ,packet.get("tick")), ConsoleColor.Red);
                         }
                     
@@ -88,22 +88,22 @@ namespace DefaultPlugin.Sources.Douyutv
                     case ServerPacket.ServerMsg.loginres:             // login response
 
                         IO.CurrentIO.WriteColor(LANG_DOUYU_AUTH_SUCC, ConsoleColor.Green);
-                        RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING)));
+                        RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING));
 
                     break;
                     case ServerPacket.ServerMsg.chatmsg:              // danmaku
 #if DEBUG
                         IO.CurrentIO.Write(string.Format(LANG_DOUYU_DANMAKU, packet.get("nn") ,packet.get("txt")));
 #endif
-                        RaiseEvent(new SourceEventArgs<BaseDanmakuEvent>(new DouyuDanmaku(packet.get("nn"), packet.get("txt"))));
+                        RaiseEvent(new DouyuDanmaku(packet.get("nn"), packet.get("txt")));
 
                     break;
                     case ServerPacket.ServerMsg.dgb:                  // gift
-                        RaiseEvent(new SourceEventArgs<BaseGiftEvent>(new DouyuGift(packet.get("nn"), packet.get("gs"), packet.get("gfcnt"))));
+                        RaiseEvent(new DouyuGift(packet.get("nn"), packet.get("gs"), packet.get("gfcnt")));
 
                     break;
                     case ServerPacket.ServerMsg.dc_buy_deserve:       // gift
-                        RaiseEvent(new SourceEventArgs<BaseGiftEvent>(new DouyuGift((new STT(packet.get("sui"))).get("nick"), LANG_DOUYU_GIFT, packet.get("cnt"))));
+                        RaiseEvent(new DouyuGift((new STT(packet.get("sui"))).get("nick"), LANG_DOUYU_GIFT, packet.get("cnt")));
 
                     break;
                     case ServerPacket.ServerMsg.spbc:                 // gift
@@ -159,7 +159,7 @@ namespace DefaultPlugin.Sources.Douyutv
             try
             {
                 ConnectAsync(int.Parse(RoomID));
-                RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.CONNECTING)));
+                RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTING));
             }
             catch
             {
@@ -172,7 +172,7 @@ namespace DefaultPlugin.Sources.Douyutv
             LogoutReq logout = new LogoutReq();
             stream.SendPack(logout);
             socket.Close();
-            RaiseEvent(new SourceEventArgs<BaseStatusEvent>(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED)));
+            RaiseEvent(new BaseStatusEvent(SourceStatus.USER_DISCONNECTED));
         }
 
         public string getSourceAuthor()
@@ -200,7 +200,6 @@ namespace DefaultPlugin.Sources.Douyutv
 
         public override void Send(string Message)
         {
-            throw new NotImplementedException();
         }
     }
 }

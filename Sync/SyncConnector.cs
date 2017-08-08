@@ -55,69 +55,57 @@ namespace Sync
         public SyncConnector(SourceBase Source)
         {
 
-            client = new Client.CooCClient(this);
+            client = new CooCClient(this);
             this.source = Source;
 
-            SourceEventDispatcher.Instance.RegisterEventHandler<BaseStatusEvent>(OnStatusChange);
-            SourceEventDispatcher.Instance.RegisterEventHandler<BaseGiftEvent>(OnGift);
-            SourceEventDispatcher.Instance.RegisterEventHandler<BaseDanmakuEvent>(OnDanmuku);
-            SourceEventDispatcher.Instance.RegisterEventHandler<BaseOnlineCountEvent>(OnOnlineChange);
+            Source.EventBus.BindEvent<BaseStatusEvent>(OnStatusChange);
+            Source.EventBus.BindEvent<IBaseGiftEvent>(OnGift);
+            Source.EventBus.BindEvent<IBaseDanmakuEvent>(OnDanmuku);
+            Source.EventBus.BindEvent<BaseOnlineCountEvent>(OnOnlineChange);
         }
 
         #region 连接源的事件
 
-        private async Task OnStatusChange(SourceEvent evt)
+        private void OnStatusChange(BaseStatusEvent evt)
         {
-            await Task.Run(() =>
+            BaseStatusEvent status = evt;
+            switch (status.Status)
             {
-                BaseStatusEvent status = evt.CastTo<BaseStatusEvent>();
-                switch (status.Status)
+                case SourceStatus.REMOTE_DISCONNECTED:
+                    OnDisconnected();
+                    break;
+                case SourceStatus.CONNECTED_WORKING:
+                    OnConnected();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void OnGift(IBaseGiftEvent gift)
+        {
+            Program.host.Messages.RaiseMessage<ISourceGift>(new GiftMessage(gift));
+        }
+
+        private void OnDanmuku(IBaseDanmakuEvent danmuku)
+        {
+            Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
+        }
+
+        private void OnOnlineChange(BaseOnlineCountEvent count)
+        {
+            int lCount = count.Count;
+            IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
+            if (Math.Abs(usercount - lCount) > 4) 
+            {
+                IBaseDanmakuEvent d = new BaseDanmakuEvent()
                 {
-                    case SourceStatus.REMOTE_DISCONNECTED:
-                        OnDisconnected();
-                        break;
-                    case SourceStatus.CONNECTED_WORKING:
-                        OnConnected();
-                        break;
-                    default:
-                        break;
-                }
-            });
-        }
+                    Danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
+                };
+                Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
 
-        private async Task OnGift(BaseGiftEvent gift)
-        {
-            await Task.Run(() =>
-            {
-                Program.host.Messages.RaiseMessage<ISourceGift>(new GiftMessage(gift));
-            });
-        }
-
-        private async Task OnDanmuku(BaseDanmakuEvent danmuku)
-        {
-            await Task.Run(() =>
-            {
-                Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(danmuku));
-            });
-        }
-
-        private async Task OnOnlineChange(BaseOnlineCountEvent count)
-        {
-            await Task.Run(() =>
-            {
-                int lCount = count.Count;
-                IO.CurrentIO.Write(string.Format(LANG_UserCount, lCount));
-                if (Math.Abs(usercount - lCount) > 4) 
-                {
-                    BaseDanmakuEvent d = new BaseDanmakuEvent()
-                    {
-                        Danmuku = string.Format(LANG_UserCount_Change,(string)(usercount > lCount ? LANG_UserCount_Change_Decrease : LANG_UserCount_Change_Increase), lCount)
-                    };
-                    Program.host.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage(d));
-
-                    usercount = lCount;
-                }
-            });
+                usercount = lCount;
+            }
         }
 
         private void OnDisconnected()
@@ -199,7 +187,7 @@ namespace Sync
             IO.CurrentIO.Write(LANG_Start);
             StartClientT();
             StartSourceT();
-            Program.host.Plugins.StartSync();
+            Source.EventBus.RaiseEventAsync(new StartSyncEvent());
         }
 
         /// <summary>

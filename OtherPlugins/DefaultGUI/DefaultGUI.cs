@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Sync.Command;
 using static DefaultGUI.Language;
+using Sync.Source;
 
 namespace DefaultGUI
 {
@@ -32,20 +33,19 @@ namespace DefaultGUI
             frmThread = new Thread(ShowForm);
             frmThread.SetApartmentState(ApartmentState.STA);
             frmThread.Name = "STAThreadForm";
-            
-            onLoadComplete += (t) => {
-                hoster = t; frmUI.ready();
-            };
 
-            onInitCommand += cmd => cmd.Dispatch.bind("gui", (t) => {
-                frmUI.ShowMe(); return true;
-            }, UI_DISPLAY);
+            EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => Task.Run(() => { hoster = evt.Host; frmUI.ready(); }));
 
-            onStartSync += t => 
-                frmUI.UpdateStautsAuto();
+            EventBus.BindEvent<PluginEvents.InitCommandEvent>(evt => Task.Run(() => {
+                evt.Commands.Dispatch.bind("gui", (t) =>
+                {
+                    frmUI.ShowMe(); return true;
+                }, UI_DISPLAY);
+            }));
 
-            onStopSync += () => 
-                frmUI.UpdateStautsAuto();
+            SourceEvents.Instance.BindEvent<StartSyncEvent>(evt => Task.Run(() => frmUI.UpdateStautsAuto()));
+
+            SourceEvents.Instance.BindEvent<StopSyncEvent>(evt => Task.Run(() => frmUI.UpdateStautsAuto()));
 
             frmThread.Start();
         }
