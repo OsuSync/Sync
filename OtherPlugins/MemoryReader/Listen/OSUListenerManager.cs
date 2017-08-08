@@ -38,7 +38,8 @@ namespace MemoryReader.Listen
         private IntPtr m_beatmap_id_address;
 
         private OsuStatus m_last_osu_status = OsuStatus.Unkonw;
-        private IOSUStatus m_now_player_status = new OSUStatus();
+        //private IOSUStatus m_now_player_status = new OSUStatus();
+        OSUStatus m_now_player_status = new OSUStatus();
         private bool m_stop = false;
         private Thread m_listen_thread;
         private List<IOSUListener> m_listeners = new List<IOSUListener>();
@@ -59,14 +60,7 @@ namespace MemoryReader.Listen
             {
                 if (t.getName() == "Now Playing")
                 {
-                    ((NowPlaying.NowPlaying)t).registerCallback(p =>
-                    {
-                        return new System.Threading.Tasks.Task<bool>(status =>
-                        {
-                            m_now_player_status = (NowPlaying.IOSUStatus)status;
-                            return true;
-                        }, p);
-                    });
+                    ((NowPlaying.NowPlaying)t).EventBus.BindEvent<NowPlaying.StatusChangeEvent>((event_arg)=> { m_now_player_status = event_arg.CurrentStatus; });
                     break;
                 }
             }

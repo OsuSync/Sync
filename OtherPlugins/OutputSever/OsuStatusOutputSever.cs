@@ -81,15 +81,15 @@ namespace OsuStatusOutputSever
         {
             I18n.Instance.ApplyLanguage(new DefaultLanguage());
 
-            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>((e) => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan));
 
-            base.onInitCommand += commandManager =>
+            base.EventBus.BindEvent<PluginEvents.InitCommandEvent>(commandManager =>
             {
-                commandManager.Dispatch.bind("syncserver", commandProcess,LANG_COMMAND_DP);
-            };
+                commandManager.Commands.Dispatch.bind("syncserver", commandProcess,LANG_COMMAND_DP);
+            });
 
-            base.onLoadComplete += host => {
-                foreach(var itor in host.EnumPluings())
+            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(host => {
+                foreach(var itor in host.Host.EnumPluings())
                 {
                     if (itor is MemoryReader.MemoryReader)
                     {
@@ -98,7 +98,7 @@ namespace OsuStatusOutputSever
                         break;
                     }
                 }
-            };
+            });
 
             listenerServer = new TcpListener(IPAddress.Parse("127.0.0.1"),PORT);
             socketThread = new Thread(socketThreadRun);

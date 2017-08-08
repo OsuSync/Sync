@@ -17,14 +17,14 @@ namespace BanManagerPlugin
         {
             Sync.Tools.I18n.Instance.ApplyLanguage(new DefaultLanguage());
 
-            base.onInitFilter += manager => {
-                banManager = new BanManager(manager,null);
-                manager.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
-            };
+            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>(manager => {
+                banManager = new BanManager(manager.Filters,null);
+                manager.Filters.AddFilters(banManager.GetClientFliter(), banManager.GetServerFliter());
+            });
 
-            base.onLoadComplete += host=>banManager.SetMessageDispatcher(host.Messages);
+            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(host=>banManager.SetMessageDispatcher(host.Host.Messages));
 
-            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>((e) => Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan));
         }
 
     }

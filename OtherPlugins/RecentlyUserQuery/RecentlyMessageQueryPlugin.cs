@@ -23,10 +23,10 @@ namespace RecentlyUserQuery
             ///todo
             I18n.Instance.ApplyLanguage(new DefaultLanguage());
 
-            base.onInitCommand += manager => manager.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令");
-            base.onInitFilter += manager => manager.AddFilters(new Danmaku.MessageRecorderFilter(recorder));
-            base.onLoadComplete += host => host.Filters.AddFilters(new Osu.MessageRecorderControlFilter(host.Messages, recorder),new Osu.GetUserIdFilter(host.Messages));
-            base.onInitPlugin += () => Sync.Tools.IO.CurrentIO.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan);
+            base.EventBus.BindEvent<PluginEvents.InitCommandEvent>(manager => manager.Commands.Dispatch.bind("recently", onProcessCommand, "recently --<command> [arg...] 操作消息记录器相关功能,--help获取相关指令"));
+            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>( manager => manager.Filters.AddFilters(new Danmaku.MessageRecorderFilter(recorder)));
+            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>( host => host.Host.Filters.AddFilters(new Osu.MessageRecorderControlFilter(host.Host.Messages, recorder),new Osu.GetUserIdFilter(host.Host.Messages)));
+            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>((e) => Sync.Tools.IO.CurrentIO.WriteColor(PLUGIN_NAME + " By " + PLUGIN_AUTHOR, ConsoleColor.DarkCyan));
         }
 
         private bool onProcessCommand(Arguments args)
