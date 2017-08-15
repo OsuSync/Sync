@@ -91,7 +91,7 @@ namespace BeatmapSuggest.Danmaku
             var task = new Task<string[]>(() =>
             {
                 string uri = @"https://osu.ppy.sh/api/get_beatmaps?" +
-                $@"k=f188c4793a2a435983a9bdc49fc85c287af66a2b&{(isSetId ? "s" : "b")}={id}&limit=1";
+                $@"k=b9f8ca3fc035078a5b111380bc21cd0b8e79d7b5&{(isSetId ? "s" : "b")}={id}&limit=1";
 
                 HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
                 request.Method = "GET";
