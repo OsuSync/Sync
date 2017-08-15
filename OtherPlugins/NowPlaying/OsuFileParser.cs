@@ -12,24 +12,33 @@ namespace NowPlaying
     {
         public static BeatmapEntry ParseText(string content)
         {
-            BeatmapEntry entry = new BeatmapEntry();
+            BeatmapEntry entry = null;
 
             var parser_data = PickValues(ref content);
 
-            entry.Artist = parser_data["Artist"];
-            entry.ArtistUnicode = parser_data["ArtistUnicode"];
-            entry.Title = parser_data["Title"];
-            entry.TitleUnicode = parser_data["TitleUnicode"];
-            entry.Creator = parser_data["Creator"];
-            entry.SongSource = parser_data["Source"];
-            entry.SongTags = parser_data["Tags"];
-            entry.BeatmapId = int.Parse(parser_data["BeatmapID"]);
-            entry.BeatmapSetId = int.Parse(parser_data["BeatmapSetID"]);
-            entry.Difficulty = parser_data["Version"];
-            entry.DiffAR = float.Parse(parser_data["ApproachRate"]);
-            entry.DiffOD = float.Parse(parser_data["OverallDifficulty"]);
-            entry.DiffCS = float.Parse(parser_data["CircleSize"]);
-            entry.DiffHP = float.Parse(parser_data["HPDrainRate"]);
+            try
+            {
+                entry = new BeatmapEntry();
+
+                entry.Artist = parser_data["Artist"];
+                entry.ArtistUnicode = parser_data["ArtistUnicode"];
+                entry.Title = parser_data["Title"];
+                entry.TitleUnicode = parser_data["TitleUnicode"];
+                entry.Creator = parser_data["Creator"];
+                entry.SongSource = parser_data["Source"];
+                entry.SongTags = parser_data["Tags"];
+                entry.BeatmapId = int.Parse(parser_data["BeatmapID"]);
+                entry.BeatmapSetId = int.Parse(parser_data["BeatmapSetID"]);
+                entry.Difficulty = parser_data["Version"];
+                entry.DiffAR = float.Parse(parser_data["ApproachRate"]);
+                entry.DiffOD = float.Parse(parser_data["OverallDifficulty"]);
+                entry.DiffCS = float.Parse(parser_data["CircleSize"]);
+                entry.DiffHP = float.Parse(parser_data["HPDrainRate"]);
+            }
+            catch
+            {
+                return null;
+            }
 
             return entry;
         }
