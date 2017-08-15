@@ -122,7 +122,11 @@ namespace DefaultGUI
 
         public void SetColor(Color c)
         {
-            Invoke(new SetColorDelegate((t) => txtLog.SelectionColor = t), new object[] { c });
+            try
+            {
+                Invoke(new SetColorDelegate((t) => txtLog.SelectionColor = t), new object[] { c });
+            }
+            catch { }
         }
 
         public string ReadCommand()
