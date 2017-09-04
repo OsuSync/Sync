@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 
-namespace Sync.Source.BiliBili.BiliBili_dm
+namespace DefaultPlugin.Sources.BiliBili.BiliBili_dm
 {
     class DanmakuLoader
     {
@@ -158,12 +158,9 @@ namespace Sync.Source.BiliBili.BiliBili_dm
 
 
                             var viewer = BitConverter.ToUInt32(buffer.Take(4).Reverse().ToArray(), 0); //观众人数
-                            //Console.WriteLine(viewer);
-                            if (ReceivedRoomCount != null)
-                            {
-                                ReceivedRoomCount(this, new ReceivedRoomCountArgs() { UserCount = viewer });
-                            }
-                            break;
+                                                                                                       //Console.WriteLine(viewer);
+                                ReceivedRoomCount?.Invoke(this, new ReceivedRoomCountArgs() { UserCount = viewer });
+                                break;
                         }
                         case 3:
                         case 4://playerCommand
@@ -173,12 +170,9 @@ namespace Sync.Source.BiliBili.BiliBili_dm
                             try
                             {
                                 DanmakuModel dama = new DanmakuModel(json, 2);
-                                if (ReceivedDanmaku != null)
-                                {
-                                    ReceivedDanmaku(this, new ReceivedDanmakuArgs() { Danmaku = dama });
-                                }
+                                    ReceivedDanmaku?.Invoke(this, new ReceivedDanmakuArgs() { Danmaku = dama });
 
-                            }
+                                }
                             catch (Exception)
                             {
                                 // ignored

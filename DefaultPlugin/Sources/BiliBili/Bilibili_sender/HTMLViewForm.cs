@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DefaultPlugin.Source
+namespace DefaultPlugin.Sources
 {
     /// <summary>
     /// 用于模仿bilibili登录实现，抓取cookies的窗体
@@ -37,7 +37,7 @@ namespace DefaultPlugin.Source
                 viewer.Navigate("https://account.bilibili.com/ajax/miniLogin/minilogin");
 
             //如果在指定房间号，说明登录成功，抓取cookies并关闭窗体
-            if (viewer.Document.Url.AbsolutePath.EndsWith(Configuration.LiveRoomID.ToString()))
+            if (viewer.Document.Url.AbsolutePath.EndsWith(BiliBili.BiliBili.RoomID.ToString()))
             {
                 parent.setCookies(GetCookies("http://live.bilibili.com/"));
                 this.Close();
@@ -45,7 +45,7 @@ namespace DefaultPlugin.Source
 
             //如果URI结尾是redirect，说明登录成功，接下来跳转到指定房间
             if (e.Url.AbsolutePath.EndsWith("redirect"))
-                viewer.Navigate("http://live.bilibili.com/" + Configuration.LiveRoomID);
+                viewer.Navigate("http://live.bilibili.com/" + BiliBili.BiliBili.RoomID);
             
             //实现简易自动完成
             if (e.Url.AbsolutePath.EndsWith("minilogin") && parent.user != null)
