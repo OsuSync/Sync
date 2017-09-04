@@ -1,4 +1,5 @@
-﻿using Sync.Source;
+﻿using Sync.MessageFilter;
+using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using static DefaultPlugin.Language;
 namespace DefaultPlugin.Sources.Douyutv
 {
 
-    class Douyutv : SourceBase, IConfigurable
+    class Douyutv : SendableSource, IConfigurable
     {
         public const string SOURCE_NAME = "Douyutv";
         public const string SOURCE_AUTHOR = "Deliay";
@@ -24,7 +25,7 @@ namespace DefaultPlugin.Sources.Douyutv
         private int roomId = 0;
         private long unix;
         
-        public Douyutv() : base(SOURCE_NAME, SOURCE_AUTHOR, false)
+        public Douyutv() : base(SOURCE_NAME, SOURCE_AUTHOR)
         {
         }
 
@@ -198,8 +199,14 @@ namespace DefaultPlugin.Sources.Douyutv
         {
         }
 
-        public override void Send(string Message)
+        public override void Send(IMessageBase Message)
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Login(string user, string password)
+        {
+            throw new NotImplementedException();
         }
     }
 }

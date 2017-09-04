@@ -8,82 +8,24 @@ namespace Sync.Tools
     public static class Configuration
     {
 
-        /// <summary>
-        /// BiliBili Live 同步源的标识常数
-        /// </summary>
-        public const string PROVIDER_BILIBILI = "BiliBili";
         public const string DEFAULT_LANGUAGE = "LocalSettings";
-        public static string LiveRoomID
-        {
-            get
-            {
-                return ReadConfig(DefaultConfig.LiveRoomID);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.LiveRoomID, value);
-            }
-        }
 
-        public static string TargetIRC
+        public static string Client
         {
-            get
-            {
-                return ReadConfig(DefaultConfig.TargetIRC);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.TargetIRC, value);
-            }
+            get => ReadConfig(DefaultConfig.Client);
+            set => WriteConfig(DefaultConfig.Client, value);
         }
-
-        public static string CoocAccount
+        
+        public static string Source
         {
-            get
-            {
-                return ReadConfig(DefaultConfig.CooCID);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.CooCID, value);
-            }
-        }
-
-        public static string CoocPassword
-        {
-            get
-            {
-                return ReadConfig(DefaultConfig.CooCPassword);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.CooCPassword, value);
-            }
-        }
-
-        public static string Provider
-        {
-            get
-            {
-                return ReadConfig(DefaultConfig.Provider);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.Provider, value);
-            }
+            get => ReadConfig(DefaultConfig.Source);
+            set => WriteConfig(DefaultConfig.Source, value);
         }
         
         public static string Language
         {
-
-            get
-            {
-                return ReadConfig(DefaultConfig.Language);
-            }
-            set
-            {
-                WriteConfig(DefaultConfig.Language, value);
-            }
+            get => ReadConfig(DefaultConfig.Language);
+            set => WriteConfig(DefaultConfig.Language, value);
         }
     }
 }

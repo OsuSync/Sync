@@ -1,4 +1,6 @@
-﻿using Sync.Plugins;
+﻿using Sync.MessageFilter;
+using Sync.Plugins;
+using Sync.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,116 +9,31 @@ using System.Threading.Tasks;
 namespace Sync.Source
 {
 
-
-    #region Old Source impl
-    /// <summary>
-    /// 礼物基类
-    /// </summary>
-    [Obsolete("Instead with SourceEvent classes", true)]
-    public class CBaseGift
+    public abstract class SendableSource : SourceBase
     {
-        public string GiftName { get; set; }
-        public uint GiftCount { get; set; }
-        public string SenderName { get; set; }
-        public string SendTime { get; set; }
-        public object Source { get; set; }
+        public bool SendStatus { get; private set; } = false;
+        public SendableSource(string Name, string Author) : base(Name, Author)
+        {
+        }
+
+        internal void send(IMessageBase message)
+        {
+            if (!SendStatus)
+            {
+                IO.CurrentIO.WriteColor(DefaultI18n.LANG_SendNotReady, ConsoleColor.Red);
+                return;
+            }
+            Send(message);
+        }
+
+        internal void login(string user, string password)
+        {
+            Login(user, password);
+        }
+
+        public abstract void Login(string user, string password);
+        public abstract void Send(IMessageBase message);
     }
-
-    /// <summary>
-    /// 弹幕基类
-    /// </summary>
-    [Obsolete("Instead with SourceEvent classes", true)]
-    public class CBaseDanmuku
-    {
-        public string Danmuku { get; set; }
-        public string SenderName { get; set; }
-        public string SendTime { get; set; }
-        public object Source { get; set; }
-    }
-    /// <summary>
-    /// 在源服务器连接成功时的委托
-    /// </summary>
-    [Obsolete("Program will not support this event, instead with StatusChangeEvt", true)]
-    public delegate void ConnectedEvt();
-    /// <summary>
-    /// 在源服务器断开连接时的委托
-    /// </summary>
-    [Obsolete("Program will not support this event, instead with StatusChangeEvt", true)]
-    public delegate void DisconnectedEvt();
-    /// <summary>
-    /// 接收到礼物信息的委托
-    /// </summary>
-    /// <param name="gift">礼物</param>
-    [Obsolete("Program will not support this event, instead with SourceEventEvt", true)]
-    public delegate void GiftEvt(CBaseGift gift);
-    /// <summary>
-    /// 收到弹幕信息时的委托
-    /// </summary>
-    /// <param name="danmuku">弹幕</param>
-    [Obsolete("Program will not support this event, instead with SourceEventEvt", true)]
-    public delegate void DanmukuEvt(CBaseDanmuku danmuku);
-    /// <summary>
-    /// 在源房间观看人数发生变化时的委托
-    /// </summary>
-    /// <param name="lCount">房间人数</param>
-    [Obsolete("Program will not support this event, instead with SourceEventEvt", true)]
-    public delegate void CurrentOnlineEvt(uint lCount);
-
-    [Obsolete("Program will not support this interface, instead with SourceBase", true)]
-    /// <summary>
-    /// 弹幕源接口
-    /// 实现接口即可用于连接。
-    /// </summary>
-    public interface ISourceBase
-    {
-        event ConnectedEvt onConnected;
-        event DisconnectedEvt onDisconnected;
-        event DanmukuEvt onDanmuku;
-        event GiftEvt onGift;
-        event CurrentOnlineEvt onOnlineChange;
-
-        string getSourceName();
-        string getSourceAuthor();
-
-        /// <summary>
-        /// 获得原始类型
-        /// </summary>
-        /// <returns>原始类型</returns>
-        Type getSourceType();
-        /// <summary>
-        /// 开始源服务器连接
-        /// </summary>
-        /// <param name="room">指定的房间名字，既可以是twitch的channelName也可以是bilibili的id</param>
-        /// <returns>true为连接成功, false为连接失败</returns>
-        bool Connect(string roomName);
-
-        /// <summary>
-        /// 断开连接
-        /// </summary>
-        /// <returns>true为确认断开, false为断开失败</returns>
-        bool Disconnect();
-
-        /// <summary>
-        /// 连接状态
-        /// </summary>
-        /// <returns>true为已经连接, false为尚未连接</returns>
-        bool Stauts();
-
-    }
-
-
-    /// <summary>
-    /// 标识当前弹幕源是支持发送弹幕的
-    /// </summary>
-    [Obsolete]
-    public interface ISendable
-    {
-        void Send(string str);
-        void Login(string user, string password);
-        bool LoginStauts();
-    }
-
-    #endregion
 
     /// <summary>
     /// base class help program manager the source impl in program dispatch
@@ -126,15 +43,13 @@ namespace Sync.Source
 
         public string Name { get; private set; }
         public string Author { get; private set; }
-        public bool SupportSend { get; private set; }
         public BaseEventDispatcher EventBus { get => SourceEvents.Instance; }
         public SourceStatus Status { get; protected set; }
 
-        public SourceBase(string Name, string Author, bool SupportSend = false)
+        public SourceBase(string Name, string Author)
         {
             this.Name = Name;
             this.Author = Author;
-            this.SupportSend = SupportSend;
             this.Status = SourceStatus.IDLE;
         }
 
@@ -160,15 +75,8 @@ namespace Sync.Source
             Disconnect();
         }
 
-        internal void send(string msg)
-        {
-            if (SupportSend) return;
-            Send(msg);
-        }
-
         public abstract void Connect();
         public abstract void Disconnect();
-        public abstract void Send(string Message);
 
     }
 

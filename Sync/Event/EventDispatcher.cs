@@ -24,10 +24,7 @@ namespace Sync.Plugins
 
         protected override void QueueTask(Task task)
         {
-            var thread = new Thread(() =>
-                                    {
-                                        TryExecuteTask(task);
-                                    });
+            var thread = new Thread(() => { TryExecuteTask(task); });
             thread.Start();
         }
 
@@ -195,9 +192,9 @@ namespace Sync.Plugins
 
         internal void RaiseEvent<Event>(Type eventType, Event @event) where Event : IBaseEvent
         {
-
-            if (!GetDispatcher(eventType).ContainsKey(typeof(Event))) return;
-            foreach (var item in GetDispatcher(eventType)[typeof(Event)])
+            Type typo = typeof(Event);
+            if (!GetDispatcher(eventType).ContainsKey(typo)) return;
+            foreach (var item in GetDispatcher(eventType)[typo])
             {
                 ((EventHandlerFunc<Event>)(item))(@event);
             }

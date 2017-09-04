@@ -16,18 +16,16 @@ namespace DefaultPlugin
         public static LanguageElement LANG_COMMANDS_STOP = "停止当前连接";
         public static LanguageElement LANG_COMMANDS_START = "开始同步";
         public static LanguageElement LANG_COMMANDS_HELP = "打印帮助信息";
-        public static LanguageElement LANG_COMMANDS_DANMAKU = "danmaku <message> 发送弹幕测试";
-        public static LanguageElement LANG_COMMANDS_CHAT = "chat <message> 发送IRC信息测试";
-        public static LanguageElement LANG_COMMANDS_CHATUSER = "chat <userName> <message> 以某个用户名字发送IRC信息测试";
+        public static LanguageElement LANG_COMMANDS_SOURCEMSG = "danmaku <message> 发送弹幕测试";
+        public static LanguageElement LANG_COMMANDS_CLIENTMSG = "chat <message> 发送IRC信息测试";
         public static LanguageElement LANG_COMMANDS_SOURCES = "获得当前所有弹幕源列表";
-        public static LanguageElement LANG_COMMANDS_TARGET = "target <roomID> 设置目标直播地址";
-        public static LanguageElement LANG_COMMANDS_IRC = "irc <ircID> 设置目标IRC(空格请替换为下划线)";
-        public static LanguageElement LANG_COMMANDS_BOTIRC = "botirc <ircID> <irc_password> 设置BotIRC(空格请替换为下划线)";
         public static LanguageElement LANG_COMMANDS_MSGMGR = "查看或者设置消息控制器相关内容,添加--help参数获取帮助";
         public static LanguageElement LANG_COMMANDS_FILTERS = "列表所有当前可用消息过滤器";
+        public static LanguageElement LANG_COMMANDS_SOURCELOGIN = "登录到弹幕源 sourcelogin [用户名] [密码]";
         public static LanguageElement LANG_COMMANDS_RESTART = "重新启动应用程序";
         public static LanguageElement LANG_COMMANDS_LANG = "lang [cultureName] Get/Set language";
         public static LanguageElement LANG_COMMANDS_LISTLANG = "listlang [--all] List (supported/all) languages";
+        public static LanguageElement LANG_COMMANDS_BILIBILI = "setbili roomID 设置Bilibili直播源的房间号";
         public static LanguageElement LANG_COMMANDS_FILTERS_ITEM = "过滤项";
         public static LanguageElement LANG_COMMANDS_FILTERS_OBJ = "过滤器";
         public static LanguageElement LANG_COMMANDS_BOTIRC_CURRENT = "当前BotIRC: {0:S}";
@@ -56,5 +54,6 @@ namespace DefaultPlugin
         public static LanguageElement LANG_DOUYU_AUTH_SUCC = "斗鱼服务器连接认证成功！";
         public static LanguageElement LANG_DOUYU_DANMAKU = "收到弹幕: {0}:{1}";
         public static LanguageElement LANG_DOUYU_GIFT = "酬勤";
+        public static LanguageElement LANG_BILIBILI_ONLINECHANGE = "直播间人数变化 {0}";
     }
 }

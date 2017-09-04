@@ -2,11 +2,11 @@
 
 namespace Sync.Tools
 {
-    public class StringElement
+    public struct StringElement
     {
-        private string perfix { get; set; }
-        private string str { get; set; }
-        private string suffix { get; set; }
+        public string perfix;
+        public string str;
+        public string suffix;
 
         public StringElement(string perfix, string text, string suffix)
         {
@@ -21,32 +21,15 @@ namespace Sync.Tools
             this.perfix = perfix;
             str = text;
             if (str == null) str = string.Empty;
+            suffix = string.Empty;
         }
 
         public StringElement(string source)
         {
             str = source;
             if (str == null) str = string.Empty;
-        }
-
-        public StringElement()
-        {
-            str = String.Empty;
-        }
-
-        public void setText(string source)
-        {
-            str = source;
-        }
-
-        public void setPerfix(string perfix)
-        {
-            this.perfix = perfix;
-        }
-
-        public void setSuffix(string suffix)
-        {
-            this.suffix = suffix;
+            perfix = string.Empty;
+            suffix = string.Empty;
         }
 
         public string Result
@@ -93,6 +76,11 @@ namespace Sync.Tools
         public static implicit operator string(StringElement e)
         {
             return e.Result;
+        }
+
+        public override string ToString()
+        {
+            return Result;
         }
     }
 }

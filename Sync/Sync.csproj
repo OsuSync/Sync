@@ -83,21 +83,23 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Plugins\CommandManager.cs" />
+    <Compile Include="Client\ClientEvent.cs" />
+    <Compile Include="Client\ClientManager.cs" />
+    <Compile Include="Client\ClientWorkWrapper.cs" />
+    <Compile Include="Client\DefaultReciveClient.cs" />
+    <Compile Include="Command\CommandManager.cs" />
     <Compile Include="MessageFilter\FilterBase.cs" />
-    <Compile Include="Plugins\EventDispatcher.cs" />
-    <Compile Include="Plugins\FilterManager.cs" />
-    <Compile Include="Plugins\MessageDispatcher.cs" />
+    <Compile Include="Event\EventDispatcher.cs" />
+    <Compile Include="MessageFilter\FilterManager.cs" />
+    <Compile Include="MessageFilter\MessageDispatcher.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Plugins\SourceManager.cs" />
+    <Compile Include="Source\SourceManager.cs" />
     <Compile Include="Source\SourceEvent.cs" />
+    <Compile Include="Source\SourceWorkWrapper.cs" />
     <Compile Include="SyncHost.cs" />
     <Compile Include="Source\SourceBase.cs" />
-    <Compile Include="SyncManager.cs" />
-    <Compile Include="SyncConnector.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Client\Client.cs" />
     <Compile Include="Command\CommandDispatch.cs" />
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
@@ -154,6 +156,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(SolutionDir)\Language $(ProjectDir)\$(OutDir)\Language\ /s/e/y</PostBuildEvent>

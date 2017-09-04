@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Linq;
 using static Sync.Tools.DefaultI18n;
 using Sync.Command;
+using Sync.Client;
+using Sync.Source;
 
 namespace Sync.Plugins
 { 
@@ -38,6 +40,34 @@ namespace Sync.Plugins
                 Commands = commands;
             }
         }
+
+        public class InitClientEvent : PluginEvent
+        {
+            public ClientManager Clients { get; private set; }
+            public InitClientEvent(ClientManager clients)
+            {
+                Clients = clients;
+            }
+        }
+
+        public class InitSourceWarpperEvent : PluginEvent
+        {
+            public SourceWorkWrapper SourceWrapper { get; private set; }
+            public InitSourceWarpperEvent(SourceWorkWrapper wrapper)
+            {
+                SourceWrapper = wrapper;
+            }
+        }
+
+        public class InitClientWarpperEvent : PluginEvent
+        {
+            public ClientWorkWrapper ClientWrapper { get; private set; }
+            public InitClientWarpperEvent(ClientWorkWrapper wrapper)
+            {
+                ClientWrapper = wrapper;
+            }
+        }
+
         public class LoadCompleteEvent : PluginEvent
         {
             public SyncHost Host { get; private set; }
@@ -46,13 +76,15 @@ namespace Sync.Plugins
                 Host = host;
             }
         }
+
+
         public class SyncManagerCompleteEvent : PluginEvent
         {
-            public SyncManager Manager { get; private set; }
-            public SyncManagerCompleteEvent()
-            {
-                Manager = Program.host.SyncInstance;
-            }
+            //public SyncManager Manager { get; private set; }
+            //public SyncManagerCompleteEvent()
+            //{
+            //    Manager = Program.host.SyncInstance;
+            //}
         }
 
         public static readonly PluginEvents Instance = new PluginEvents();
@@ -72,31 +104,28 @@ namespace Sync.Plugins
 
         }
 
-        [Obsolete("Instead with EventBus(PluginEvents class)", true)]
-        internal void Loader<T>(T instance)
-        {
-            foreach (Plugin item in pluginList)
-            {
-                item.onEvent(() => instance);
-            }
-        }
-
         internal int LoadCommnads()
         {
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitCommandEvent(Program.host.Commands));
-            return Program.host.Commands.Dispatch.count;
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitCommandEvent(SyncHost.Instance.Commands));
+            return SyncHost.Instance.Commands.Dispatch.count;
         }
 
         internal int LoadSources()
         {
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceEvent(Program.host.Sources));
-            return Program.host.Sources.SourceList.Count();
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceEvent(SyncHost.Instance.Sources));
+            return SyncHost.Instance.Sources.SourceList.Count();
         }
 
         internal int LoadFilters()
         {
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitFilterEvent(Program.host.Filters));
-            return Program.host.Filters.Count;
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitFilterEvent(SyncHost.Instance.Filters));
+            return SyncHost.Instance.Filters.Count;
+        }
+
+        internal int LoadClients()
+        {
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitClientEvent(SyncHost.Instance.Clients));
+            return SyncHost.Instance.Clients.Count;
         }
 
         internal void ReadySync()
@@ -104,17 +133,6 @@ namespace Sync.Plugins
             PluginEvents.Instance.RaiseEvent(new PluginEvents.SyncManagerCompleteEvent());
         }
 
-        [Obsolete("Event tigger move to SourceBase", true)]
-        internal void StartSync()
-        {
-            Loader(Program.host.SyncInstance.Connector);
-        }
-
-        [Obsolete("Event tigger move to SourceBase", true)]
-        internal void StopSync()
-        {
-            Loader<SyncConnector>(null);
-        }
 
         public IEnumerable<Plugin> GetPlugins()
         {
@@ -123,7 +141,7 @@ namespace Sync.Plugins
 
         internal void ReadyProgram()
         {
-            PluginEvents.Instance.RaiseEventAsync<PluginEvents.LoadCompleteEvent>(new PluginEvents.LoadCompleteEvent(Program.host));
+            PluginEvents.Instance.RaiseEventAsync(new PluginEvents.LoadCompleteEvent(SyncHost.Instance));
         }
 
         internal int LoadPlugins()
@@ -170,7 +188,7 @@ namespace Sync.Plugins
                         if (pluginTest == null || !(pluginTest is Plugin)) continue;
                         Plugin plugin = pluginTest as Plugin;
                         IO.CurrentIO.WriteColor(String.Format(LANG_LoadingPlugin, plugin.Name), ConsoleColor.White);
-                        PluginEvents.Instance.RaiseEventAsync<PluginEvents.InitPluginEvent>(new PluginEvents.InitPluginEvent());
+                        PluginEvents.Instance.RaiseEventAsync(new PluginEvents.InitPluginEvent());
                         pluginList.Add(plugin);
                     }
                 }
