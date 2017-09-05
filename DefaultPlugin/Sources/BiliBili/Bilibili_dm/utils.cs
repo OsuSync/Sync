@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Net.Sockets;
 
-namespace Sync.Source.BiliBili.BiliBili_dm
+namespace DefaultPlugin.Sources.BiliBili.BiliBili_dm
 {
     static class utils
     {

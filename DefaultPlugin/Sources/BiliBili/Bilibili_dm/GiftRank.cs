@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Sync.Source.BiliBili.BiliBili_dm
+namespace DefaultPlugin.Sources.BiliBili.BiliBili_dm
 {
     class GiftRank : INotifyPropertyChanged
     {

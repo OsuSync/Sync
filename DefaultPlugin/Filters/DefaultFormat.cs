@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace DefaultPlugin.Filters
 {
-    class DefaultFormat : IFilter, ISourceDanmaku, ISourceOsu
+    class DefaultFormat : IFilter, ISourceDanmaku, ISourceClient
     {
         public void onMsg(ref IMessageBase msg)
         {
-            msg.User.setPerfix("<");
-            msg.User.setSuffix(">: ");
+            msg.User = new Sync.Tools.StringElement("<", msg.User.RawText, ">: ");
         }
     }
 }

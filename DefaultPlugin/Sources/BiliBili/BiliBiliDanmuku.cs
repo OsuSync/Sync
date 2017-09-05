@@ -1,13 +1,18 @@
-﻿using Sync.Source;
-using Sync.Source.BiliBili.BiliBili_dm;
+﻿using DefaultPlugin.Sources.BiliBili.BiliBili_dm;
+using Sync.Source;
 using System;
 
-namespace DefaultPlugin.Source
+namespace DefaultPlugin.Sources.BiliBili
 {
     class BiliBiliDanmuku : IBaseDanmakuEvent
     {
         public BiliBiliDanmuku(DanmakuModel instance)
         {
+            if (instance == null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
             this.Danmuku = instance.CommentText;
             this.SenderName = instance.CommentUser;
             this.SendTime = DateTime.Now.ToShortTimeString();

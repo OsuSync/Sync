@@ -2,7 +2,6 @@
 using System;
 using System.Reflection;
 using System.Linq;
-using static Sync.SyncManager;
 using static DefaultPlugin.DefaultPlugin;
 using static Sync.Tools.IO;
 using static DefaultPlugin.Language;
@@ -12,6 +11,7 @@ using Sync.Tools;
 using Sync.Plugins;
 using System.Diagnostics;
 using System.Globalization;
+using DefaultPlugin.Sources.BiliBili;
 
 namespace DefaultPlugin.Commands
 {
@@ -20,23 +20,46 @@ namespace DefaultPlugin.Commands
         public BaseCommand(CommandManager manager)
         {
             manager.Dispatch.bind("exit", exit, LANG_COMMANDS_EXIT);
-            manager.Dispatch.bind("clear", clear, LANG_COMMANDS_CLEAR);
-            manager.Dispatch.bind("status", status, LANG_COMMANDS_STATUS);
             manager.Dispatch.bind("stop", stop, LANG_COMMANDS_STOP);
             manager.Dispatch.bind("start", start, LANG_COMMANDS_START);
-            manager.Dispatch.bind("help", help, LANG_COMMANDS_HELP);
-            manager.Dispatch.bind("danmaku", danmaku, LANG_COMMANDS_DANMAKU);
-            manager.Dispatch.bind("chat", chat, LANG_COMMANDS_CHAT);
-            manager.Dispatch.bind("chatuser", chatuser, LANG_COMMANDS_CHATUSER);
-            manager.Dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
-            manager.Dispatch.bind("target", target, LANG_COMMANDS_TARGET);
-            manager.Dispatch.bind("irc", setirc, LANG_COMMANDS_IRC);
-            manager.Dispatch.bind("botirc", setbotirc, LANG_COMMANDS_BOTIRC);
-            manager.Dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
-            manager.Dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
             manager.Dispatch.bind("restart", restart, LANG_COMMANDS_RESTART);
-            manager.Dispatch.bind("lang", language, LANG_COMMANDS_LANG);
+
+            manager.Dispatch.bind("clear", clear, LANG_COMMANDS_CLEAR);
+
+            manager.Dispatch.bind("status", status, LANG_COMMANDS_STATUS);
+            manager.Dispatch.bind("help", help, LANG_COMMANDS_HELP);
             manager.Dispatch.bind("listlang", languages, LANG_COMMANDS_LISTLANG);
+
+            manager.Dispatch.bind("lang", language, LANG_COMMANDS_LANG);
+            manager.Dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
+            manager.Dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
+            manager.Dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
+
+            manager.Dispatch.bind("sourcemsg", sourcemsg, LANG_COMMANDS_SOURCEMSG);
+            manager.Dispatch.bind("clientmsg", clientmsg, LANG_COMMANDS_CLIENTMSG);
+
+            manager.Dispatch.bind("setbili", setBilibili, LANG_COMMANDS_BILIBILI);
+            manager.Dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_FILTERS);
+
+        }
+
+        private bool sourcelogin(Arguments arg)
+        {
+            if(MainSource.Sendable)
+            {
+                if (arg.Count == 0) MainSource.SendableSource.Login("", "");
+                else if (arg.Count == 1) MainSource.SendableSource.Login(arg[0], "");
+                else if (arg.Count == 2) MainSource.SendableSource.Login(arg[0], arg[1]);
+            }
+
+            return true;
+        }
+
+        private bool setBilibili(Arguments arg)
+        {
+            if (arg.Count == 0) return false;
+            BiliBili.RoomID = arg[0];
+            return true;
         }
 
         private bool restart(Arguments arg)
@@ -59,48 +82,18 @@ namespace DefaultPlugin.Commands
             return true;
         }
 
-        private bool setbotirc(Arguments arg)
+        private bool target(Arguments arg)
         {
             if (arg.Count == 0)
             {
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_CURRENT, Configuration.CoocAccount), ConsoleColor.Green);
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_TARGET_CURRENT, BiliBili.RoomID), ConsoleColor.Green);
             }
             else
             {
-                Configuration.CoocAccount = arg[0];
-                Configuration.CoocPassword = arg[1];
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_SET, Configuration.CoocAccount), ConsoleColor.Green);
-            }
-            return true;
-        }
-
-        private bool setirc(Arguments arg)
-        {
-            if(arg.Count == 0)
-            {
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_IRC_CURRENT, Configuration.TargetIRC), ConsoleColor.Green);
-            }
-            else
-            {
-                Configuration.TargetIRC = arg[0];
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_IRC_SET, Configuration.TargetIRC), ConsoleColor.Green);
+                BiliBili.RoomID = arg[0];
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_TARGET_SET, BiliBili.RoomID), ConsoleColor.Green);
             }
 
-            return true;
-        }
-
-        private bool target(Arguments arg)
-        {
-            if(arg.Count == 0)
-            {
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_TARGET_CURRENT, Configuration.LiveRoomID), ConsoleColor.Green);
-            }
-            else
-            {
-                Configuration.LiveRoomID = arg[0];
-                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_TARGET_SET, Configuration.LiveRoomID), ConsoleColor.Green);
-            }
-  
             return true;
         }
 
@@ -119,44 +112,47 @@ namespace DefaultPlugin.Commands
 
         public bool exit(Arguments arg)
         {
-            MainInstance.Connector.Disconnect();
+            MainClient?.Client?.StopWork();
+            MainSource?.Source?.Disconnect();
             CurrentIO.Write(LANG_COMMANDS_EXIT_DONE);
             Environment.Exit(0);
             return true;
         }
 
-        public bool chat(Arguments arg)
+        public bool clientmsg(Arguments arg)
         {
-            if (arg.Count == 0 || !MainInstance.Connector.Client.isConnected)
+            if (arg.Count == 0 || (MainSendable != null && MainSendable.SendStatus == false))
             {
                 CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
+                return true;
             }
-            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage("Console", string.Join(" ", arg)));
+            
+            MainMessager.RaiseMessage<ISourceClient>(new IRCMessage("Console", string.Join(" ", arg)));
             return true;
             
         }
 
         public bool chatuser(Arguments arg)
         {
-            if (arg.Count <1 || !MainInstance.Connector.Client.isConnected)
+            if (arg.Count < 1 || (MainSendable != null && MainSendable.SendStatus == false))
             {
                 CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
             }
             string message = "";
             for (int i = 1; i < arg.Count; i++)
                 message += arg[i] + " ";
-            MainMessager.RaiseMessage<ISourceOsu>(new IRCMessage(arg[0].Trim(), message));
+            MainMessager.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
             return true;
 
         }
 
-        public bool danmaku(Arguments arg)
+        public bool sourcemsg(Arguments arg)
         {
-            if (loginable)
+            if (MainSource.Sendable)
             {
-                if (MainInstance.Connector.Source.SupportSend)
+                if (MainSource.Sendable)
                 {
-                    MainInstance.Connector.Source.Send(string.Join("", arg));
+                    MainSource.SendableSource.Send(new IRCMessage(string.Empty, string.Join("", arg)));
                     return true;
                 }
                 else
@@ -179,25 +175,27 @@ namespace DefaultPlugin.Commands
 
         public bool start(Arguments arg)
         {
-            if (MainInstance.Connector.Source.Status == SourceStatus.CONNECTED_WORKING)
+            if (MainSource.Source.Status == SourceStatus.CONNECTED_WORKING)
             {
                 CurrentIO.Write(LANG_COMMANDS_START_ALREADY_RUN);
                 return true;
             }
-            MainInstance.Connector.Connect();
+            MainClient?.Client?.StartWork();
+            MainSource?.Source?.Connect();
             return true;
         }
 
         public bool stop(Arguments arg)
         {
-            MainInstance.Connector.Disconnect();
+            MainClient?.Client?.StopWork();
+            MainSource?.Source?.Disconnect();
             Environment.Exit(0);
             return true;
         }
 
         public bool status(Arguments arg)
         {
-            CurrentIO.WriteStatus(MainInstance.Connector);
+            CurrentIO.WriteStatus();
             return true;
         }
 

@@ -20,7 +20,7 @@ namespace Sync.Plugins
         {
             filters = new Dictionary<Type, List<IFilter>>();
 
-            AddSource<ISourceOsu>();
+            AddSource<ISourceClient>();
             AddSource<ISourceDanmaku>();
             AddSource<ISourceOnlineChange>();
             AddSource<ISourceGift>();
@@ -54,7 +54,7 @@ namespace Sync.Plugins
 
         internal void PassFilterOSU(ref IMessageBase msg)
         {
-            PassFilter<ISourceOsu>(ref msg);
+            PassFilter<ISourceClient>(ref msg);
         }
 
         internal void PassFilterGift(ref IMessageBase msg)

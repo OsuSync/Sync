@@ -13,10 +13,16 @@ namespace Sync.Tools
         public static LanguageElement LANG_Loading = "读取中....";
         public static LanguageElement LANG_Plugins = "已载入 {0:D} 个 插件";
         public static LanguageElement LANG_Sources = "已载入 {0:D} 个 直播源";
+        public static LanguageElement LANG_Client = "已载入 {0:D} 个 Client";
         public static LanguageElement LANG_Error = "不能初始化连接器，请确认是否已经安装直播源.";
         public static LanguageElement LANG_Commands = "已载入 {0:D} 个 命令";
         public static LanguageElement LANG_Filters = "已载入 {0:D} 个 过滤器";
         public static LanguageElement LANG_Ready = "准备就绪。";
+
+        public static LanguageElement LANG_RqueireLogin = "请登录到RnW账号";
+        public static LanguageElement LANG_AccountName = "用户名:";
+        public static LanguageElement LANG_AccountPw = "密码:";
+        public static LanguageElement LANG_AccountSave = "账户保存成功! 将开始连接到服务器";
 
         public static LanguageElement LANG_Start = "开始工作....";
         public static LanguageElement LANG_Stopping = "停止工作...";
@@ -33,6 +39,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_SupportSend = "提示:当前弹幕源支持游戏内发送到弹幕源的功能，请输入login [用户名] [密码] 来登录!(用户名、密码二者可选输入)";
         public static LanguageElement LANG_CertLength = "Certification长度: {0:D}";
         public static LanguageElement LANG_CertExist = "提示：当前已有登录Certification记录，如需覆盖，请输入login [用户名] [密码]进行覆盖！（用户名密码可选输入）";
+        public static LanguageElement LANG_SendNotReady = "当前Client未标志弹幕发送可用，请尝试使用Login登录";
 
         public static LanguageElement LANG_UnknowCommand = "未知命令！ 请输入help查看命令列表。";
         public static LanguageElement LANG_CommandFail = "命令执行失败！ 请输入help查看命令列表。";
@@ -50,11 +57,11 @@ namespace Sync.Tools
         public static LanguageElement LANG_Source_Connect = "正在连接弹幕源服务器....";
         public static LanguageElement LANG_Source_Connected_Succ = "源服务器连接成功！";
 
-        public static LanguageElement LANG_IRC_Connecting = "[IRC] osu! IRC正在连接中...";
+        public static LanguageElement LANG_IRC_Connecting = "[Client] 正在连接中...";
         public static LanguageElement LANG_IRC_Disconnect = "正在断开IRC服务器的连接....";
 
-        public static LanguageElement LANG_IRC_Connect_Timeout = @"osu! IRC连接错误，无法连接到老板小霸王服务器 !!\n请稍后重试或者开一个VPN。";
-        public static LanguageElement LANG_IRC_Ready = "[IRC] osu! IRC 已经准备就绪!";
+        public static LanguageElement LANG_IRC_Connect_Timeout = @"Client 连接错误，请检查网络或联系Client作者.";
+        public static LanguageElement LANG_IRC_Ready = "[Client] 已经准备就绪!";
 
         public static LanguageElement LANG_Current_Online = "当前在线人数: {0:D}";
         public static LanguageElement LANG_Gift_Sent = "我送给你{O:D}份{1:S}!";
@@ -64,16 +71,12 @@ namespace Sync.Tools
         public static LanguageElement LANG_Config_Status_Fail = "尚未配置成功";
 
         public static LanguageElement LANG_Source = "源{0:S}: ";
-        public static LanguageElement LANG_IRC = "osu! IRC(聊天):";
+        public static LanguageElement LANG_IRC = "Client:";
         public static LanguageElement LANG_Danmaku = "弹幕发送:";
         public static LanguageElement LANG_Status_Connected = "已连接";
         public static LanguageElement LANG_Status_NotConenct = "未连接";
 
         public static LanguageElement LANG_Loading_Config = @"正在读取配置文件....\n";
-        public static LanguageElement LANG_Config_RoomID = @"房间ID: \t\t";
-        public static LanguageElement LANG_Config_osuID = @"主号IRC: \t\t";
-        public static LanguageElement LANG_Config_BotID = @"BotIRC: \t\t";
-        public static LanguageElement LANG_Config_BotPassLen = @"BotIRC密码长度: \t";
 
         public static LanguageElement LANG_Welcome = "欢迎使用 osu直播弹幕同步工具 ver {0:S} ";
         public static LanguageElement LANG_Help = @"输入 'help' 获得帮助列表\n\n";
@@ -89,7 +92,7 @@ namespace Sync.Tools
     {
     }
 
-    public class LanguageElement
+    public struct LanguageElement
     {
         private string value;
 
@@ -179,7 +182,7 @@ namespace Sync.Tools
                     string value = ConfigurationIO.IniReadValue(LangFile, item.Name, CurrentLanguage);
                     if (value == "")
                     {
-                        value = item.GetValue(instance) as LanguageElement;
+                        value = (LanguageElement)item.GetValue(instance);
                         ConfigurationIO.IniWriteValue(LangFile, item.Name, value, CurrentLanguage);
                     }
                     item.SetValue(instance, new LanguageElement(value));

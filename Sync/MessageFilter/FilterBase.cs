@@ -103,7 +103,7 @@ namespace Sync.MessageFilter
         //just flag
     }
 
-    public interface ISourceOsu 
+    public interface ISourceClient 
     {
         //just flag
     }

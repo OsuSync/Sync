@@ -14,16 +14,14 @@ namespace Sync.Tools
         /// </summary>
         public enum DefaultConfig
         {
-            LiveRoomID,
-            TargetIRC,
-            CooCID,
-            CooCPassword,
-            Provider,
+            Client,
+            Source,
             Language,
         }
 
         [DllImport("kernel32")]
         private static extern int GetPrivateProfileString(string section, string key, string defVal, StringBuilder retVal, int size, string filePath);
+
         [DllImport("kernel32")]
         private static extern bool WritePrivateProfileString(string section, string key, string val, string filePath);
         /// <summary>
@@ -38,8 +36,8 @@ namespace Sync.Tools
         /// <returns>配置信息</returns>
         internal static string IniReadValue(string FilePath, string key, string column = "config")
         {
-            StringBuilder temp = new StringBuilder(1536);
-            GetPrivateProfileString(column, key, "", temp, 1536, FilePath);
+            StringBuilder temp = new StringBuilder(2048);
+            GetPrivateProfileString(column, key, "", temp, 2048, FilePath);
             return temp.ToString();
         }
 

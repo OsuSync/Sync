@@ -11,8 +11,6 @@ namespace Sync
 {
     public static class Program
     {
-
-        internal static SyncHost host;
         //public static I18n i18n;
 
         static void Main(string[] args)
@@ -27,16 +25,15 @@ namespace Sync
             
             while(true)
             {
-                host = new SyncHost();
-                host.Load();
-
-                CurrentIO.WriteConfig();
-                CurrentIO.WriteWelcome();
+                SyncHost.Instance = new SyncHost();
+                SyncHost.Instance.Load();
                 
+                CurrentIO.WriteWelcome();
+
                 string cmd = CurrentIO.ReadCommand();
                 while (true)
                 {
-                    host.Commands.invokeCmdString(cmd);
+                    SyncHost.Instance.Commands.invokeCmdString(cmd);
                     cmd = CurrentIO.ReadCommand();
                 }
             }

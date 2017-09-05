@@ -1,4 +1,5 @@
-﻿using Sync.MessageFilter;
+﻿using Sync.Client;
+using Sync.MessageFilter;
 using Sync.Source;
 using Sync.Tools;
 using System;
@@ -11,20 +12,16 @@ namespace Sync.Plugins
 {
     public class MessageDispatcher
     {
-
-        SyncConnector parent;
         FilterManager filters;
-        internal MessageDispatcher(SyncConnector p, FilterManager f)
+
+        internal MessageDispatcher(FilterManager f)
         {
-            parent = p;
-
             filters = f;
-
             MessageManager.LimitLevel = 3;
             MessageManager.Option = MessageManager.PeekOption.Auto;
             MessageManager.Init(filters);
             MessageManager.SetSendMessageAction(new MessageManager.SendMessageAction((target,message) =>{
-                parent.Client.sendRawMessage(Configuration.TargetIRC, message);
+                    SyncHost.Instance.ClientWrapper.Client.SendMessage(new IRCMessage(target, message));
             }));
 
         }
@@ -46,7 +43,7 @@ namespace Sync.Plugins
         public void onIRC(StringElement user, StringElement message)
         {
             IMessageBase msg = new IRCMessage(user, message);
-            RaiseMessage<ISourceOsu>(msg);
+            RaiseMessage<ISourceClient>(msg);
         }
 
 
@@ -75,13 +72,13 @@ namespace Sync.Plugins
                 else
                 {
                     //parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
-                    MessageManager.PostIRCMessage(Configuration.TargetIRC, newMsg);
+                    MessageManager.PostIRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg);
                 }
                 return;
             }
 
             //消息来自osu!IRC
-            else if (msgType == typeof(ISourceOsu))
+            else if (msgType == typeof(ISourceClient))
             {
                 filters.PassFilterOSU(ref newMsg);
                 //同上
@@ -89,17 +86,14 @@ namespace Sync.Plugins
                 else
                 {
                     //发信用户为设置的目标IRC
-                    if (newMsg.User.RawText == Configuration.TargetIRC)
+                    if (newMsg.User.RawText == SyncHost.Instance.ClientWrapper.Client.NickName)
                     {
-                        if (parent.Source.SupportSend)
-                        {
-                            parent.Source.Send(newMsg.Message);
-                        }
+                        SyncHost.Instance.ClientWrapper.Client.SendMessage(newMsg);
                     }
                     //其他用户则转发到目标IRC
                     else
                     {
-                        MessageManager.PostIRCMessage(Configuration.TargetIRC, newMsg);
+                        MessageManager.PostIRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg);
                     }
 
                 }
@@ -113,7 +107,7 @@ namespace Sync.Plugins
                 if (newMsg.Cancel) return;
                 else
                 {
-                    parent.Client.sendRawMessage(Configuration.TargetIRC, Client.CooCClient.CONST_ACTION_FLAG + newMsg.Message);
+                    SyncHost.Instance.ClientWrapper.Client?.SendMessage(new IRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg.Message));
                 }
             }
 
@@ -124,7 +118,7 @@ namespace Sync.Plugins
                 if (newMsg.Cancel) return;
                 else
                 {
-                    parent.Client.sendRawMessage(Configuration.TargetIRC, Client.CooCClient.CONST_ACTION_FLAG + newMsg.Message);
+                    SyncHost.Instance.ClientWrapper.Client?.SendMessage(new IRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg.Message));
                 }
             }
 
@@ -253,7 +247,7 @@ namespace Sync.Plugins
                 if (isLimit)
                     return;
 
-                SendMessage(target, message.User + message.Message.RawText);
+                SendMessage(target, message.User + message.Message.ToString());
                 MessageQueue.Remove(message);
             }
         }

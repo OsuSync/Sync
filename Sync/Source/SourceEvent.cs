@@ -1,4 +1,5 @@
-﻿using Sync.Plugins;
+﻿using Sync.Client;
+using Sync.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,10 @@ namespace Sync.Source
         }
     }
 
-    public struct StartSyncEvent : SourceEvent
+    
+    public struct StartSourceEvent : SourceEvent
     {
-        public SyncConnector Connector { get => Program.host.SyncInstance.Connector; }
+        public SourceWorkWrapper Source { get => SyncHost.Instance.SourceWrapper; }
     }
 
     public struct StopSyncEvent : SourceEvent
@@ -70,6 +72,11 @@ namespace Sync.Source
     public struct BaseOnlineCountEvent : SourceEvent
     {
         public int Count { get; set; }
+
+        public BaseOnlineCountEvent(int Count)
+        {
+            this.Count = Count;
+        }
     }
 
     public interface SourceEvent : IBaseEvent

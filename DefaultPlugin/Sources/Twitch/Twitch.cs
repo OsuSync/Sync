@@ -9,10 +9,11 @@ using System.Net;
 using System.IO;
 using Sync.Tools;
 using System.Timers;
+using Sync.MessageFilter;
 
 namespace DefaultPlugin.Sources.Twitch
 {
-    public class Twitch : SourceBase, IConfigurable
+    public class Twitch : SendableSource, IConfigurable
     {
         public const string SOURCE_NAME = "Twitch";
         public const string SOURCE_AUTHOR = "DarkProjector";
@@ -33,7 +34,7 @@ namespace DefaultPlugin.Sources.Twitch
 
         bool isUsingDefaultChannelID = true;
 
-        public Twitch() : base(SOURCE_NAME, SOURCE_AUTHOR, true)
+        public Twitch() : base(SOURCE_NAME, SOURCE_AUTHOR)
         {
         }
 
@@ -130,11 +131,11 @@ namespace DefaultPlugin.Sources.Twitch
         public bool Stauts()
         {
             return currentIRCIO != null && currentIRCIO.IsConnected;
-        }
+        } 
 
-        public override void Send(string str)
+        public override void Send(IMessageBase message)
         {
-            currentIRCIO?.SendMessage(str);
+            currentIRCIO?.SendMessage(message.Message);
         }
 
         #endregion  
@@ -214,6 +215,10 @@ namespace DefaultPlugin.Sources.Twitch
         public void onConfigurationSave()
         {
             SaveConfig();
+        }
+
+        public override void Login(string user, string password)
+        {
         }
     }
 }

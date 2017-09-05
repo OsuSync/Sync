@@ -1,4 +1,4 @@
-﻿namespace DefaultPlugin.Source
+﻿namespace DefaultPlugin.Sources
 {
     partial class HTMLViewForm
     {

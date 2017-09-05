@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
-namespace Sync.Source.BiliBili.BiliBili_dm
+namespace DefaultPlugin.Sources.BiliBili.BiliBili_dm
 {
     enum MsgTypeEnum
     {

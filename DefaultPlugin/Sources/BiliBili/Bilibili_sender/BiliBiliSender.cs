@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static DefaultPlugin.Language;
 
-namespace DefaultPlugin.Source
+namespace DefaultPlugin.Sources
 {
     /// <summary>
     /// 实现发送弹幕功能
@@ -88,7 +88,7 @@ namespace DefaultPlugin.Source
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(new Uri("http://live.bilibili.com/msg/send"));
             long unix = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-            byte[] byteArray = Encoding.UTF8.GetBytes("color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + Configuration.LiveRoomID + "");
+            byte[] byteArray = Encoding.UTF8.GetBytes("color=16777215&fontsize=25&mode=1&msg=" + msg + "&rnd=" + unix + "&roomid=" + BiliBili.BiliBili.RoomID + "");
             string[] cookies = BiliBili.BiliBili.Cookies.ToString().Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             Uri live = new Uri("http://live.bilibili.com/");
 

@@ -1,15 +1,16 @@
 ﻿using System;
-using Sync.Source.BiliBili.BiliBili_dm;
 using Sync.Source;
 using System.Threading.Tasks;
 using Sync.Tools;
+using Sync.MessageFilter;
+using DefaultPlugin.Sources.BiliBili.BiliBili_dm;
 
-namespace DefaultPlugin.Source.BiliBili
+namespace DefaultPlugin.Sources.BiliBili
 {
     /// <summary>
     /// BiliBili Live的同步源类
     /// </summary>
-    class BiliBili : SourceBase , IConfigurable
+    class BiliBili : SendableSource , IConfigurable
     {
         public const string SOURCE_NAME = "Bilibili";
         public const string SOURCE_AUTHOR = "Sender: Deliay, Receive: copyliu";
@@ -20,14 +21,17 @@ namespace DefaultPlugin.Source.BiliBili
         public static ConfigurationElement Cookies { get; set; } = "";
         public static ConfigurationElement RoomID { get; set; } = "";
 
-        public BiliBili() : base(SOURCE_NAME, SOURCE_AUTHOR, true)
+        public BiliBili() : base(SOURCE_NAME, SOURCE_AUTHOR)
         {
-            sender = new BiliBiliSender(null, null);
+            sender = new BiliBiliSender("", "");
         }
 
-        public override void Send(string Message)
+        public override void Send(IMessageBase Message)
         {
-
+            if(sender.loginStauts)
+            {
+                sender.send(Message.Message);
+            }
         }
 
         public override void Connect()
@@ -40,7 +44,7 @@ namespace DefaultPlugin.Source.BiliBili
             {
                 isConnected = true;
             }
-            isConnected = true;
+            Status = SourceStatus.CONNECTED_WORKING;
             RaiseEvent(new BaseStatusEvent(SourceStatus.CONNECTED_WORKING));
         }
 
@@ -80,7 +84,7 @@ namespace DefaultPlugin.Source.BiliBili
             return isConnected;
         }
 
-        public void Login(string user, string password)
+        public override void Login(string user, string password)
         {
             sender = new BiliBiliSender(user, password);
             sender.login();

@@ -1,34 +1,30 @@
 ﻿using Sync.Plugins;
 using Sync;
-using DefaultPlugin.Source.BiliBili;
+using DefaultPlugin.Sources.BiliBili;
 using DefaultPlugin.Sources.Twitch;
 using DefaultPlugin.Filters;
 using DefaultPlugin.Commands;
 using System;
 using Sync.Tools;
 using System.Threading.Tasks;
-
+using Sync.Source;
+using Sync.Client;
+using DefaultPlugin.Clients;
+using static Sync.Plugins.PluginEvents;
 namespace DefaultPlugin
 {
-    public class MyMessageEvent : IBaseEvent
-    {
-
-    }
-
-    public class MyEvent : BaseEventDispatcher
-    {
-        public readonly static MyEvent Instance = new MyEvent();
-    }
 
     public class DefaultPlugin : Plugin
     {
-
-        public static SyncManager MainInstance = null;
         public static MessageDispatcher MainMessager = null;
         public static FilterManager MainFilters = null;
         public static SourceManager MainSources = null;
+        public static SourceWorkWrapper MainSource = null;
+        public static ClientWorkWrapper MainClient = null;
+        public static SendableSource MainSendable = null;
         private BiliBili srcBili;
         private Twitch srcTwitch;
+        private ConsoleReciveSendOnlyClient clientConsole;
         private DefaultFormat fltFormat;
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
@@ -38,13 +34,13 @@ namespace DefaultPlugin
         public DefaultPlugin() : base("Default Plug-ins", "Deliay")
         {
             I18n.Instance.ApplyLanguage(new Language());
-            EventBus.BindEvent<PluginEvents.InitPluginEvent>( (evt) => Task.Run(() => IO.CurrentIO.WriteColor("Default Plugin by Deliay", System.ConsoleColor.DarkCyan)));
+            EventBus.BindEvent<InitPluginEvent>( (evt) => Task.Run(() => IO.CurrentIO.WriteColor("Default Plugin by Deliay", ConsoleColor.DarkCyan)));
 
             srcBili = new BiliBili();
             srcTwitch = new Twitch();
 
-            base.EventBus.BindEvent<PluginEvents.InitCommandEvent>(evt => new BaseCommand(evt.Commands));
-            base.EventBus.BindEvent<PluginEvents.InitSourceEvent>(evt =>{
+            base.EventBus.BindEvent<InitCommandEvent>(evt => new BaseCommand(evt.Commands));
+            base.EventBus.BindEvent<InitSourceEvent>(evt =>{
                 evt.Sources.AddSource(srcBili);
                 evt.Sources.AddSource(srcTwitch);
             });
@@ -53,34 +49,29 @@ namespace DefaultPlugin
             fltGift = new GiftReceivePeeker();
             fltOnline = new OnlineChangePeeker();
 
-            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>(evt => evt.Filters.AddFilters(fltFormat, fltGift, fltOnline));
+            base.EventBus.BindEvent<InitFilterEvent>(evt => evt.Filters.AddFilters(fltFormat, fltGift, fltOnline));
 
-            //TODO : 
-            //base.onStartSync += connector => fltGift.StartRecycler();
+            base.EventBus.BindEvent<LoadCompleteEvent>(DefaultPlugin_onLoadComplete);
 
-            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(DefaultPlugin_onLoadComplete);
+            clientConsole = new ConsoleReciveSendOnlyClient();
 
-            //TODO:
-            //{ Config.SaveAll(); };
-
-            EventDispatcher.Instance.RegistNewDispatcher<MyEvent>();
+            base.EventBus.BindEvent<InitClientEvent>(evt => evt.Clients.AddClient(clientConsole));
 
         }
 
-        private void DefaultPlugin_onLoadComplete(PluginEvents.LoadCompleteEvent @event)
+        private void DefaultPlugin_onLoadComplete(LoadCompleteEvent @event)
         {
             SyncHost host = @event.Host;
             MainFilters = host.Filters;
             MainSources = host.Sources;
-            MainInstance = host.SyncInstance;
+            MainSource = host.SourceWrapper;
+            MainClient = host.ClientWrapper;
             MainMessager = host.Messages;
 
             //config load
             Config = new PluginConfigurationManager(this);
             Config.AddItem(srcBili);
             Config.AddItem(srcTwitch);
-
-            MyEvent.Instance.RaiseEvent(new MyMessageEvent());
         }
     }
 }

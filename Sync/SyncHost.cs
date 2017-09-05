@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using static Sync.Tools.IO;
 using static Sync.Tools.DefaultI18n;
+using Sync.Client;
+using Sync.Source;
+
 namespace Sync
 {
     /// <summary>
@@ -12,12 +15,16 @@ namespace Sync
     /// </summary>
     public class SyncHost
     {
-        private SyncManager sync;
+        public static SyncHost Instance { get; internal set; }
+
+        private SourceWorkWrapper sourceWrapper;
+        private ClientWorkWrapper clientWrapper;
         private CommandManager commands;
         private PluginManager plugins;
         private SourceManager sources;
         private FilterManager filters;
         private MessageDispatcher messages;
+        private ClientManager clients;
         /// <summary>
         /// 对程序集外不可见，不允许主程序外的程序初始化Host的实例
         /// 
@@ -36,22 +43,42 @@ namespace Sync
         {
             CurrentIO.Write(LANG_Loading);
 
+            //初始化插件管理器，并初始化插件，让插件做准备工作
             plugins = new PluginManager();
             CurrentIO.WriteColor(String.Format(LANG_Plugins, plugins.LoadPlugins()), ConsoleColor.Green);
 
+            //初始化弹幕源
             sources = new SourceManager();
             CurrentIO.WriteColor(String.Format(LANG_Sources, plugins.LoadSources()), ConsoleColor.Green);
 
-            sync = new SyncManager(sources);
+            //挑选需要作为工作弹幕源的弹幕源
+            sourceWrapper = new SourceWorkWrapper(sources);
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceWarpperEvent(sourceWrapper));
 
-            if (sync.Connector == null)
+            if (sourceWrapper.Source == null)
             {
                 CurrentIO.Write("");
                 CurrentIO.WriteColor(LANG_Error, ConsoleColor.Red);
                 CurrentIO.ReadCommand();
                 throw new NullReferenceException(LANG_Error);
-                
             }
+
+            //获得单例
+            clients = ClientManager.Instance;
+            CurrentIO.WriteColor(String.Format(LANG_Client, plugins.LoadClients()), ConsoleColor.Green);
+
+            clientWrapper = new ClientWorkWrapper(clients);
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitClientWarpperEvent(clientWrapper));
+
+            //if (Configuration.CoocAccount.Length == 0)
+            //{
+            //    CurrentIO.WriteColor(LANG_RqueireLogin, ConsoleColor.Red);
+            //    CurrentIO.WriteColor(LANG_AccountName, ConsoleColor.Green);
+            //    Configuration.CoocAccount = CurrentIO.ReadCommand();
+            //    CurrentIO.WriteColor(LANG_AccountPw, ConsoleColor.Green);
+            //    Configuration.CoocPassword = CurrentIO.ReadCommand();
+
+            //}
 
             plugins.ReadySync();
 
@@ -61,7 +88,7 @@ namespace Sync
             filters = new FilterManager();
             CurrentIO.WriteColor(String.Format(LANG_Filters, plugins.LoadFilters()), ConsoleColor.Green);
 
-            messages = new MessageDispatcher(sync.Connector, filters);
+            messages = new MessageDispatcher(filters);
 
             plugins.ReadyProgram();
 
@@ -106,17 +133,15 @@ namespace Sync
             }
         }
 
-        public SyncManager SyncInstance
-        {
-            get
-            {
-                return sync;
-            }
-        }
-
         public MessageDispatcher Messages
         {
             get { return messages; }
         }
+
+        public ClientManager Clients { get => clients; }
+
+        public SourceWorkWrapper SourceWrapper { get => sourceWrapper; }
+
+        public ClientWorkWrapper ClientWrapper { get => clientWrapper; }
     }
 }

@@ -18,7 +18,8 @@ namespace DefaultPlugin.Filters
 
         internal GiftReceivePeeker()
         {
-            historyGift = new List<IBaseGiftEvent>();        }
+            historyGift = new List<IBaseGiftEvent>();
+        }
 
         public void onMsg(ref IMessageBase msg)
         {
@@ -48,7 +49,7 @@ namespace DefaultPlugin.Filters
             System.Diagnostics.Stopwatch time = new System.Diagnostics.Stopwatch();
             time.Start();
 
-            while (DefaultPlugin.MainInstance.Connector.Source.Status == SourceStatus.CONNECTED_WORKING && isRunning)
+            while (DefaultPlugin.MainSource.Source.Status == SourceStatus.CONNECTED_WORKING && isRunning)
             {
                 if (time.ElapsedMilliseconds / 1000 > 180)
                 {
@@ -75,8 +76,8 @@ namespace DefaultPlugin.Filters
                         curList.Select(p => p.SenderName).ToList().ForEach(p => strUsers += p + ",");
                         curList.OrderBy(p => p.GiftCount);
                         mostUser = curList.Count == 0 ? null : curList.First();
-                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.Client.CooCClient.CONST_ACTION_FLAG, "3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
-                        DefaultPlugin.MainMessager.onIRC("", new StringElement(Sync.Client.CooCClient.CONST_ACTION_FLAG, "送礼物最多的是" + mostUser.SenderName + "，共计" + mostUser.GiftCount + "个"));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement("3分钟内共" + curList.Count() + "个玩家发来礼物, 他们是" + strUsers));
+                        DefaultPlugin.MainMessager.onIRC("", new StringElement("送礼物最多的是" + mostUser.SenderName + "，共计" + mostUser.GiftCount + "个"));
                         time.Restart();
                         mostUser = null;
                     }

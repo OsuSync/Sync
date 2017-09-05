@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sync.Source.BiliBili.BiliBili_dm
+namespace DefaultPlugin.Sources.BiliBili.BiliBili_dm
 {
     delegate void DisconnectEvt(object sender, DisconnectEvtArgs e);
 
