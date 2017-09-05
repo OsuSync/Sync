@@ -21,7 +21,9 @@ namespace NowPlaying
         private MSNHandler handler = null;
         private OSUStatus osuStat = new OSUStatus();
 
-        public ConfigurationElement OsuFolderPath = "H:\\osu!\\";
+        PluginConfigurationManager config;
+
+        public static ConfigurationElement OsuFolderPath { get; set; } = "";
         private bool supportAdvanceInfo { get => CurrentBeatmapList != null; }
         Stopwatch sw = new Stopwatch();
 
@@ -49,15 +51,38 @@ namespace NowPlaying
 
             try
             {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
+                if (string.IsNullOrWhiteSpace(OsuFolderPath))
+                {
+                    IO.CurrentIO.WriteColor($"[NowPlaying]未设置osu文件夹路径，将自行搜寻当前运行中的osu程序来自动设置", ConsoleColor.Yellow);
+
+                    var processes = Process.GetProcessesByName(@"osu!");
+                    if (processes.Length != 0)
+                    {
+                        OsuFolderPath = processes[0].MainModule.FileName.Replace(@"osu!.exe", string.Empty);
+                        IO.CurrentIO.WriteColor($"[NowPlaying]Found osu!.exe ,Get osu folder:{OsuFolderPath}", ConsoleColor.Green);
+                    }
+                    else
+                    {
+                        IO.CurrentIO.WriteColor($"[NowPlaying]未设置osu文件夹路径，也没运行中的osu程序，无法使用此插件其他高级功能，请设置好路径并重新启动osuSync才能继续使用", ConsoleColor.Red);
+                    }
+                }
+
                 var currentDatabase = OsuDb.Read(OsuFolderPath + "osu!.db");
+                Console.WriteLine($"========={sw.ElapsedMilliseconds}=============");
+                sw.Stop();
                 CurrentBeatmapList = currentDatabase.Beatmaps;
                 CurrentOsuFilesWatcher = new FileSystemWatcher(OsuFolderPath + @"Songs", "*.osu");
                 CurrentOsuFilesWatcher.EnableRaisingEvents = true;
                 CurrentOsuFilesWatcher.IncludeSubdirectories = true;
                 CurrentOsuFilesWatcher.Changed += CurrentOsuFilesWatcher_Changed;
+
             }
-            catch
+            catch (Exception e)
             {
+                IO.CurrentIO.WriteColor($"[NowPlaying]trying support advance features failed!,{e.Message}", ConsoleColor.Yellow);
                 CurrentBeatmapList = null;
             }
         }
@@ -199,7 +224,7 @@ namespace NowPlaying
                     break;
 
                 default:
-                    MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, $"无效的命令\"{param}\"");
+                    MainMessager.onIRC(Sync.Tools.Configuration.Client, $"无效的命令\"{param}\"");
                     break;
             }
         }
@@ -221,25 +246,25 @@ namespace NowPlaying
             }
             if (osuStat.title.Length > 17)
             {
-                MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
+                MainMessager.onIRC(string.Empty, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
             }
             else
             {
-                MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title);
+                MainMessager.onIRC(string.Empty, "我在" + strMsg + osuStat.title);
             }
         }
 
-        public void SendCurrentBeatmapSetID() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面SetID:{CurrentPlayingBeatmap.BeatmapSetId}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapSetID() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面SetID:{CurrentPlayingBeatmap.BeatmapSetId}" : $"咕咕咕,当前并没打任何图");
 
-        public void SendCurrentBeatmapID() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面ID:{CurrentPlayingBeatmap.BeatmapId}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapID() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面ID:{CurrentPlayingBeatmap.BeatmapId}" : $"咕咕咕,当前并没打任何图");
 
-        public void SendCurrentBeatmapAR() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面AR:{CurrentPlayingBeatmap.DiffAR}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapAR() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面AR:{CurrentPlayingBeatmap.DiffAR}" : $"咕咕咕,当前并没打任何图");
 
-        public void SendCurrentBeatmapHP() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面HP:{CurrentPlayingBeatmap.DiffHP}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapHP() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面HP:{CurrentPlayingBeatmap.DiffHP}" : $"咕咕咕,当前并没打任何图");
 
-        public void SendCurrentBeatmapCS() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面CS:{CurrentPlayingBeatmap.DiffCS}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapCS() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面CS:{CurrentPlayingBeatmap.DiffCS}" : $"咕咕咕,当前并没打任何图");
 
-        public void SendCurrentBeatmapOD() => MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, CurrentPlayingBeatmap != null ? $"当前铺面OD:{CurrentPlayingBeatmap.DiffOD}" : $"咕咕咕,当前并没打任何图");
+        public void SendCurrentBeatmapOD() => MainMessager.onIRC(string.Empty, CurrentPlayingBeatmap != null ? $"当前铺面OD:{CurrentPlayingBeatmap.DiffOD}" : $"咕咕咕,当前并没打任何图");
 
         [Obsolete("Replace with EventBus", true)]
         public void registerCallback(Func<IOSUStatus, Task<bool>> callback)
