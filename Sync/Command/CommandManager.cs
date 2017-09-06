@@ -20,6 +20,7 @@ namespace Sync.Command
 
         public void invokeCmdString(string cmd)
         {
+            if (cmd.Length == 0) return;
             string[] args = cmd.Split(" ".ToCharArray(), 2);
 
             if(args.Length < 1 )
