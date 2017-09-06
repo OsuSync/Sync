@@ -30,7 +30,7 @@ namespace Sync
                 
                 CurrentIO.WriteWelcome();
 
-                string cmd = CurrentIO.ReadCommand();
+                string cmd = "";
                 while (true)
                 {
                     SyncHost.Instance.Commands.invokeCmdString(cmd);
