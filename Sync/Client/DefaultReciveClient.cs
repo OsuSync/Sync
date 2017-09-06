@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
-    public abstract class DefaultReciveClient
+    public abstract class DefaultClient
     {
 
         public string Author { get; }
@@ -30,7 +30,7 @@ namespace Sync.Client
         /// </summary>
         public abstract void SwitchThisClient();
 
-        public DefaultReciveClient(string Author, string Name)
+        public DefaultClient(string Author, string Name)
         {
             pending_messages = new Queue<IRCMessage>();
             this.Author = Author;

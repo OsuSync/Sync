@@ -9,7 +9,7 @@ namespace Sync.Client
 {
     public class ClientWorkWrapper
     {
-        public DefaultReciveClient Client { get; internal set; }
+        public DefaultClient Client { get; internal set; }
         
         private ClientManager clients;
 

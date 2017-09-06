@@ -15,7 +15,7 @@ namespace DefaultPlugin.Clients
     /// <summary>
     /// Debug only
     /// </summary>
-    class ConsoleReciveSendOnlyClient : DefaultReciveClient
+    class ConsoleReciveSendOnlyClient : DefaultClient
     {
         public ConsoleReciveSendOnlyClient() : base("Deliay", "ConsoleReciveSendOnlyClient")
         {
