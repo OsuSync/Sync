@@ -41,6 +41,20 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("setbili", setBilibili, LANG_COMMANDS_BILIBILI);
             manager.Dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_FILTERS);
 
+            manager.Dispatch.bind("disable", disable, LANG_COMMANDS_DISABLE);
+
+        }
+
+        private bool disable(Arguments arg)
+        {
+            foreach (var item in Sync.SyncHost.Instance.EnumPluings())
+            {
+                if (item.Name == arg[0])
+                {
+                    item.OnDisable();
+                }
+            }
+            return true;
         }
 
         private bool sourcelogin(Arguments arg)

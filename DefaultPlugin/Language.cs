@@ -21,6 +21,7 @@ namespace DefaultPlugin
         public static LanguageElement LANG_COMMANDS_SOURCES = "获得当前所有弹幕源列表";
         public static LanguageElement LANG_COMMANDS_MSGMGR = "查看或者设置消息控制器相关内容,添加--help参数获取帮助";
         public static LanguageElement LANG_COMMANDS_FILTERS = "列表所有当前可用消息过滤器";
+        public static LanguageElement LANG_COMMANDS_DISABLE = "向插件发送禁用消息 disable (插件名称)";
         public static LanguageElement LANG_COMMANDS_SOURCELOGIN = "登录到弹幕源 sourcelogin [用户名] [密码]";
         public static LanguageElement LANG_COMMANDS_RESTART = "重新启动应用程序";
         public static LanguageElement LANG_COMMANDS_LANG = "lang [cultureName] Get/Set language";

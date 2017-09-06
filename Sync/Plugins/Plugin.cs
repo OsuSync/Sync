@@ -47,5 +47,10 @@ namespace Sync.Plugins
         {
             return Name;
         }
+
+        public virtual void OnDisable()
+        {
+
+        }
     }
 }
