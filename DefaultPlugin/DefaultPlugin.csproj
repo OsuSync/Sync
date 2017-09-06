@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\ConsoleReciveSendOnlyClient.cs" />
+    <Compile Include="Clients\DirectOSUIRCBot.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="DefaultPlugin.cs" />
     <Compile Include="Filters\DefaultFormat.cs" />
