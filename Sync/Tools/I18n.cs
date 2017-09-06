@@ -83,6 +83,8 @@ namespace Sync.Tools
         public static LanguageElement LANG_Command = "命令";
         public static LanguageElement LANG_Command_Description = "描述";
 
+        public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
+
     }
 
 
