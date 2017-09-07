@@ -6,6 +6,9 @@ using Sync.Plugins;
 
 namespace Sync.MessageFilter
 {
+    /// <summary>
+    /// Base filter message
+    /// </summary>
     public interface IMessageBase : IBaseEvent
     {
         StringElement User { get; set; }
@@ -13,6 +16,9 @@ namespace Sync.MessageFilter
         bool Cancel { get; set; }
     }
 
+    /// <summary>
+    /// Online change event will raise this message
+    /// </summary>
     public struct OnlineChangeMessage : IMessageBase
     {
         public StringElement User { get; set; }
@@ -31,6 +37,9 @@ namespace Sync.MessageFilter
         }
     }
 
+    /// <summary>
+    /// GiftMessage event will raise this message
+    /// </summary>
     public struct GiftMessage : IMessageBase
     {
         public StringElement User { get; set; }
@@ -54,6 +63,9 @@ namespace Sync.MessageFilter
         }
     }
 
+    /// <summary>
+    /// Normal danmaku event will raise this message
+    /// </summary>
     public struct DanmakuMessage : IMessageBase
     {
         public StringElement User { get; set; }
@@ -71,6 +83,9 @@ namespace Sync.MessageFilter
         }
     }
 
+    /// <summary>
+    /// Client Reccive event will raise this message
+    /// </summary>
     public struct IRCMessage : IMessageBase
     {
         public StringElement User { get; set; }

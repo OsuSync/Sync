@@ -8,12 +8,10 @@ using System.Linq;
 namespace Sync.Plugins
 {
     /// <summary>
-    /// 提供对消息的发送、管理、过滤功能
+    /// Manager and filter message
     /// </summary>
     public class FilterManager : BaseEventDispatcher
     {
-
-
         Dictionary<Type, List<IFilter>> filters;
 
         internal FilterManager()
@@ -25,7 +23,13 @@ namespace Sync.Plugins
             AddSource<ISourceOnlineChange>();
             AddSource<ISourceGift>();
 
-            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+            EventDispatcher.Instance.RegisterNewDispatcher(GetType());
+
+
+            //Bind source event for Message Dispathcer
+            SourceEvents.Instance.BindEvent<BaseDanmakuEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(evt.SenderName, evt.Danmuku)));
+            SourceEvents.Instance.BindEvent<BaseOnlineCountEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceOnlineChange>(new OnlineChangeMessage(evt.Count)));
+            SourceEvents.Instance.BindEvent<IBaseGiftEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new GiftMessage(evt)));
         }
 
         private void AddSource<T>()
@@ -64,7 +68,7 @@ namespace Sync.Plugins
 
         internal void PassFilterOnlineChange(ref IMessageBase msg)
         {
-            PassFilter<ISourceGift>(ref msg);
+            PassFilter<ISourceOnlineChange>(ref msg);
         }
 
         private void PassFilter<T>(ref IMessageBase msg)

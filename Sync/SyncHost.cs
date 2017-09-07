@@ -80,8 +80,6 @@ namespace Sync
 
             //}
 
-            plugins.ReadySync();
-
             commands = new CommandManager();
             CurrentIO.WriteColor(String.Format(LANG_Commands, plugins.LoadCommnads()), ConsoleColor.Green);
 

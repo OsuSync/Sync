@@ -8,6 +8,9 @@ using Sync.Tools;
 
 namespace Sync.Source
 {
+    /// <summary>
+    /// Select source and check source is or not a senable source
+    /// </summary>
     public class SourceWorkWrapper
     {
         private SourceManager sources;

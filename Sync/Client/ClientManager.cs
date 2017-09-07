@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
+    /// <summary>
+    /// The manager for Clients
+    /// </summary>
     public class ClientManager
     {
         private LinkedList<DefaultClient> clients;
@@ -17,6 +20,17 @@ namespace Sync.Client
         private ClientManager()
         {
             clients = new LinkedList<DefaultClient>();
+        }
+
+        public void AddAllClient(params DefaultClient[] clients)
+        {
+            foreach (var client in clients)
+            {
+                if (!this.clients.Contains(client))
+                {
+                    this.clients.AddLast(client);
+                }
+            }
         }
 
         public bool AddClient(DefaultClient client)

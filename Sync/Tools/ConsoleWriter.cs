@@ -8,7 +8,7 @@ using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Tools
 {
-    public interface SyncIO
+    public interface ISyncIO
     {
         string ReadCommand();
         void Write(string msg, bool newline = true, bool time = true);
@@ -23,15 +23,15 @@ namespace Sync.Tools
     public class IO
     {
         public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
-        public static SyncIO CurrentIO { get { return currIO; } private set { currIO = value; } }
-        private static SyncIO currIO = DefaultIO;
-        public static void SetIO(SyncIO specIO)
+        public static ISyncIO CurrentIO { get { return currIO; } private set { currIO = value; } }
+        private static ISyncIO currIO = DefaultIO;
+        public static void SetIO(ISyncIO specIO)
         {
             CurrentIO = specIO;
         }
     }
 
-    public class NConsoleWriter : SyncIO
+    public class NConsoleWriter : ISyncIO
     {
         private bool wait = false;
 
@@ -57,8 +57,20 @@ namespace Sync.Tools
                 wait = false;
                 Console.SetCursorPosition(0, Console.CursorTop);
             }
+
+            string ms = System.Text.RegularExpressions.Regex.Replace(msg, @"\\t|\\r|\\n", m =>
+            {
+                switch (m.ToString())
+                {
+                    case @"\t": return "\t";
+                    case @"\r": return "\r";
+                    case @"\n": return "\n";
+                }
+                return m.ToString();
+            });
+
             Console.Write((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "")
-               + msg
+               + ms
                + (newline ? "\n" : ""));
         }
         /// <summary>
