@@ -15,13 +15,11 @@ namespace DefaultPlugin.Clients
     /// <summary>
     /// Debug only
     /// </summary>
-    class ConsoleReciveSendOnlyClient : DefaultClient
+    public class ConsoleReciveSendOnlyClient : DefaultClient
     {
         public ConsoleReciveSendOnlyClient() : base("Deliay", "ConsoleReciveSendOnlyClient")
         {
-            //此Client需要监听Source的事件
-            SourceEvents.Instance.BindEvent<IBaseDanmakuEvent>(evt => Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(evt.SenderName, evt.Danmuku)));
-            SourceEvents.Instance.BindEvent<BaseOnlineCountEvent>(evt => Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage("Online", evt.Count.ToString())));
+            this.CurrentStatus = SourceStatus.IDLE;
         }
 
         public override void Restart()
@@ -32,6 +30,7 @@ namespace DefaultPlugin.Clients
         public override void SendMessage(IMessageBase message)
         {
             IO.CurrentIO.WriteColor($"[Damaku Message] {message.User} : {message.Message}", ConsoleColor.Gray);
+
         }
 
         public override void StartWork()

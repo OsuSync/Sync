@@ -7,7 +7,7 @@ using Sync;
 using Sync.Command;
 using Sync.MessageFilter;
 using System.Threading.Tasks;
-
+using static Sync.Plugins.PluginEvents;
 namespace NowPlaying
 {
     public class NowPlaying : Plugin, IFilter, ISourceDanmaku
@@ -18,20 +18,18 @@ namespace NowPlaying
 
         public NowPlaying() : base("Now Playing", "Deliay")
         {
-            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>((filter) => filter.Filters.AddFilter(this));
-            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>(NowPlaying_onInitPlugin);
-            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => MainMessager = evt.Host.Messages);
+        }
+
+        public override void OnEnable()
+        {
+            base.EventBus.BindEvent<InitFilterEvent>((filter) => filter.Filters.AddFilter(this));
+            base.EventBus.BindEvent<LoadCompleteEvent>(evt => MainMessager = evt.Host.Messages);
             handler = new MSNHandler();
 
-            
-        }
-
-        private void NowPlaying_onInitPlugin(PluginEvents.InitPluginEvent @event)
-        {
             Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
+            //绑定NowPlayingEvents这个Dispatcher的StatusChangeEvent事件
             NowPlayingEvents.Instance.BindEvent<StatusChangeEvent>(OnOSUStatusChange);
         }
-
 
         private void OnOSUStatusChange(StatusChangeEvent @event)
         {
@@ -61,11 +59,11 @@ namespace NowPlaying
                 }
                 if (osuStat.title.Length > 17)
                 {
-                    MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
+                    MainMessager.onIRC(SyncHost.Instance.ClientWrapper.Client.NickName, "我在" + strMsg + osuStat.title.Substring(0, 14) + "...");
                 }
                 else
                 {
-                    MainMessager.onIRC(Sync.Tools.Configuration.TargetIRC, "我在" + strMsg + osuStat.title);
+                    MainMessager.onIRC(SyncHost.Instance.ClientWrapper.Client.NickName, "我在" + strMsg + osuStat.title);
                 }
             }
 

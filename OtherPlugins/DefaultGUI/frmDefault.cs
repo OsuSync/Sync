@@ -14,10 +14,12 @@ using System.Runtime.InteropServices;
 using Sync.Source;
 using System.Drawing.Drawing2D;
 using static Sync.Tools.DefaultI18n;
+using DefaultPlugin.Clients;
+using Sync.Command;
 
 namespace DefaultGUI
 {
-    public partial class frmDefault : Form, SyncIO, IDisposable
+    public partial class frmDefault : Form, ISyncIO, IDisposable
     {
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -51,22 +53,25 @@ namespace DefaultGUI
                 int h = FindWindow("ConsoleWindowClass", formName);
                 Task.Delay(400);
                 ShowWindow(h, 0);
-                txtBotIRC.Text = Configuration.CoocAccount;
-                txtBotIRCPassword.Text = Configuration.CoocPassword;
-                txtTargetIRC.Text = Configuration.TargetIRC;
-                txtLiveID.Text = Configuration.LiveRoomID;
+                txtBotIRC.Text = DirectOSUIRCBot.IRCBotName;
+                txtBotIRCPassword.Text = DirectOSUIRCBot.IRCBotPasswd;
+                txtTargetIRC.Text = DirectOSUIRCBot.IRCNick;
+                txtLiveID.Text = SyncHost.Instance.SourceWrapper.Source.LiveID;
                 cbSources.Items.Clear();
                 if(DefaultGUI.hoster?.Sources != null)
                 foreach (var item in DefaultGUI.hoster?.Sources?.SourceList)
                 {
                     cbSources.Items.Add(item);
                 }
-                cbSources.SelectedItem = DefaultGUI.hoster?.SyncInstance?.Connector?.Source;
-                IO.SetIO(this);
+                cbSources.SelectedItem = DefaultGUI.hoster?.SourceWrapper?.Source;
 
                 var c = new AutoCompleteStringCollection();
                 if(DefaultGUI.hoster != null) c.AddRange(DefaultGUI.hoster?.Commands?.Dispatch?.getCommandsHelp().Keys.ToArray());
                 txtCmd.AutoCompleteCustomSource = c;
+                IO.SetIO(this);
+
+                this.WriteWelcome();
+
             }));
         }
 
@@ -86,7 +91,7 @@ namespace DefaultGUI
         public void UpdateStautsAuto()
         {
             if(DefaultGUI.hoster != null)
-            UpdateStatus(DefaultGUI.hoster.SyncInstance.Connector.Source.Status == SourceStatus.CONNECTED_WORKING, DefaultGUI.hoster.SyncInstance.Connector.Client.isConnected);
+            UpdateStatus(DefaultGUI.hoster.SourceWrapper.Source.Status == SourceStatus.CONNECTED_WORKING, DefaultGUI.hoster.ClientWrapper.Client.CurrentStatus == SourceStatus.CONNECTED_WORKING);
         }
 
         public void ShowMe()
@@ -161,15 +166,6 @@ namespace DefaultGUI
             SetColor(Color.White);
         }
 
-        public void WriteConfig()
-        {
-            Write(LANG_Loading_Config);
-            Write(LANG_Config_RoomID + Configuration.LiveRoomID);
-            Write(LANG_Config_osuID + Configuration.TargetIRC);
-            Write(LANG_Config_BotID + Configuration.CoocAccount);
-            Write(LANG_Config_BotPassLen + Configuration.CoocPassword.Length);
-        }
-
         public void WriteHelp()
         {
             WriteHelp(LANG_Command, LANG_Command_Description);
@@ -188,34 +184,9 @@ namespace DefaultGUI
             WriteColor(desc, ConsoleColor.White, true, false);
         }
 
-        public void WriteStatus(SyncConnector instance)
+        public void WriteStatus()
         {
-            WriteColor(LANG_Config, ConsoleColor.Blue, false);
-            if (Configuration.LiveRoomID.Length > 0 && Configuration.TargetIRC.Length > 0 && Configuration.CoocAccount.Length > 0 && Configuration.CoocPassword.Length > 0)
-                WriteColor(string.Format(LANG_Config_Status_OK, Configuration.LiveRoomID), ConsoleColor.Green, true, false);
-            else
-                WriteColor(LANG_Config_Status_Fail, ConsoleColor.Red, true, false);
 
-            WriteColor(string.Format(LANG_Source, Configuration.Provider), ConsoleColor.Blue, false);
-            if (instance.Source.Status == SourceStatus.CONNECTED_WORKING)
-                WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
-            else
-                WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
-
-            WriteColor(LANG_IRC, ConsoleColor.Blue, false);
-            if (instance.Client.isConnected)
-                WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
-            else
-                WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
-
-            if (SyncManager.loginable)
-            {
-                WriteColor(LANG_Danmaku, ConsoleColor.Blue, false);
-                if (instance.Source.SupportSend)
-                    WriteColor(LANG_Status_Connected, ConsoleColor.Green, true, false);
-                else
-                    WriteColor(LANG_Status_NotConenct, ConsoleColor.Red, true, false);
-            }
         }
 
         public void WriteWelcome()
@@ -283,27 +254,27 @@ namespace DefaultGUI
 
         private void txtBotIRC_TextChanged(object sender, EventArgs e)
         {
-            Configuration.CoocAccount = txtBotIRC.Text;
+            DirectOSUIRCBot.IRCBotName = txtBotIRC.Text;
         }
 
         private void txtBotIRCPassword_TextChanged(object sender, EventArgs e)
         {
-            Configuration.CoocPassword = txtBotIRCPassword.Text;
+            DirectOSUIRCBot.IRCBotPasswd = txtBotIRCPassword.Text;
         }
 
         private void txtTargetIRC_TextChanged(object sender, EventArgs e)
         {
-            Configuration.TargetIRC = txtTargetIRC.Text;
+            DirectOSUIRCBot.IRCNick = txtTargetIRC.Text;
         }
 
         private void txtLiveID_TextChanged(object sender, EventArgs e)
         {
-            Configuration.LiveRoomID = txtLiveID.Text;
+            DefaultGUI.hoster.SourceWrapper.Source.LiveID = txtLiveID.Text;
         }
 
         private void cbSources_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Configuration.Provider = (cbSources.SelectedItem as SourceBase).Name;
+            Configuration.Source = (cbSources.SelectedItem as SourceBase).Name;
         }
 
         private void lblTitle_MouseDown(object sender, MouseEventArgs e)
@@ -323,23 +294,23 @@ namespace DefaultGUI
 
         private void cmdStart_Click(object sender, EventArgs e)
         {
-            DefaultGUI.hoster.SyncInstance.Connector.Connect();
+            DefaultGUI.hoster.Commands.invokeCmdString("start");
             cmdStart.Enabled = false;
             cmdStop.Enabled = true;
         }
 
         private void cmdStop_Click(object sender, EventArgs e)
         {
-            DefaultGUI.hoster.SyncInstance.Connector.Disconnect();
+            DefaultGUI.hoster.Commands.invokeCmdString("stop");
             cmdStart.Enabled = true;
             cmdStop.Enabled = false;
         }
 
         private void cmdLogin_Click(object sender, EventArgs e)
         {
-            if(SyncManager.loginable)
+            if(DefaultGUI.hoster.SourceWrapper.Sendable)
             {
-                
+                DefaultGUI.hoster.SourceWrapper.SendableSource.Login("", "");
             }
         }
 

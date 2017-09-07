@@ -24,7 +24,7 @@ namespace NowPlaying
         public static readonly NowPlayingEvents Instance = new NowPlayingEvents();
         private NowPlayingEvents()
         {
-            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+            EventDispatcher.Instance.RegisterNewDispatcher(GetType());
         }
     }
 

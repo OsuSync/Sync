@@ -11,6 +11,8 @@ using Sync.Source;
 using Sync.Client;
 using DefaultPlugin.Clients;
 using static Sync.Plugins.PluginEvents;
+using Sync.MessageFilter;
+
 namespace DefaultPlugin
 {
 
@@ -22,25 +24,27 @@ namespace DefaultPlugin
         public static SourceWorkWrapper MainSource = null;
         public static ClientWorkWrapper MainClient = null;
         public static SendableSource MainSendable = null;
+        public static ClientManager MainClients = null;
         private BiliBili srcBili;
         private Twitch srcTwitch;
-        private ConsoleReciveSendOnlyClient clientConsole;
+        private DirectOSUIRCBot clientOSU;
         private DefaultFormat fltFormat;
         private GiftReceivePeeker fltGift;
         private OnlineChangePeeker fltOnline;
-
+        
         public static PluginConfigurationManager Config { get; set; }
 
-        public DefaultPlugin() : base("Default Plug-ins", "Deliay")
+        public DefaultPlugin() : base("Default Plug-ins", "Deliay") { }
+
+        public override void OnEnable()
         {
             I18n.Instance.ApplyLanguage(new Language());
-            EventBus.BindEvent<InitPluginEvent>( (evt) => Task.Run(() => IO.CurrentIO.WriteColor("Default Plugin by Deliay", ConsoleColor.DarkCyan)));
 
             srcBili = new BiliBili();
             srcTwitch = new Twitch();
 
             base.EventBus.BindEvent<InitCommandEvent>(evt => new BaseCommand(evt.Commands));
-            base.EventBus.BindEvent<InitSourceEvent>(evt =>{
+            base.EventBus.BindEvent<InitSourceEvent>(evt => {
                 evt.Sources.AddSource(srcBili);
                 evt.Sources.AddSource(srcTwitch);
             });
@@ -53,10 +57,16 @@ namespace DefaultPlugin
 
             base.EventBus.BindEvent<LoadCompleteEvent>(DefaultPlugin_onLoadComplete);
 
-            clientConsole = new ConsoleReciveSendOnlyClient();
+            clientOSU = new DirectOSUIRCBot();
 
-            base.EventBus.BindEvent<InitClientEvent>(evt => evt.Clients.AddClient(clientConsole));
+            base.EventBus.BindEvent<InitClientEvent>(evt => {
+                evt.Clients.AddAllClient(clientOSU);
+#if (DEBUG)
+                evt.Clients.AddClient(new ConsoleReciveSendOnlyClient());
+#endif
+            });
 
+            IO.CurrentIO.WriteColor("Default Plugin by Deliay", ConsoleColor.DarkCyan);
         }
 
         private void DefaultPlugin_onLoadComplete(LoadCompleteEvent @event)
@@ -67,11 +77,13 @@ namespace DefaultPlugin
             MainSource = host.SourceWrapper;
             MainClient = host.ClientWrapper;
             MainMessager = host.Messages;
+            MainClients = host.Clients;
 
             //config load
             Config = new PluginConfigurationManager(this);
             Config.AddItem(srcBili);
             Config.AddItem(srcTwitch);
+            Config.AddItem(clientOSU);
         }
     }
 }

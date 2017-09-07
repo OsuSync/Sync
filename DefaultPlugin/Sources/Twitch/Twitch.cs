@@ -210,11 +210,13 @@ namespace DefaultPlugin.Sources.Twitch
         public void onConfigurationLoad()
         {
             LoadConfig();
+            LiveID = HostChannelName;
         }
 
         public void onConfigurationSave()
         {
             SaveConfig();
+            HostChannelName = LiveID;
         }
 
         public override void Login(string user, string password)

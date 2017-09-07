@@ -117,12 +117,17 @@ namespace DefaultPlugin.Sources.BiliBili
 
         public void onConfigurationLoad()
         {
+            if (Cookies.ToString().Length > 0)
+            {
+                sender.loginStauts = true;
+            }
 
+            LiveID = RoomID;
         }
 
         public void onConfigurationSave()
         {
-
+            RoomID = LiveID;
         }
 
     }

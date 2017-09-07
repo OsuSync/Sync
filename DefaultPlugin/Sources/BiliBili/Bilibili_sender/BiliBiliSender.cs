@@ -40,10 +40,6 @@ namespace DefaultPlugin.Sources
             formThread.Name = "ActiveXThread";
             this.user = user;
             this.password = password;
-            if (BiliBili.BiliBili.Cookies.ToString().Length > 0)
-            {
-                loginStauts = true;
-            }
         }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace DefaultPlugin.Sources
             foreach (var i in cookies)
             {
                 string[] cookie = i.Split("=".ToCharArray(), 2);
-                req.CookieContainer.Add(live, new Cookie(cookie[0], cookie[1]));
+                req.CookieContainer.Add(live, new Cookie(cookie[0], cookie[1].Replace(',', '_')));
             }
 
 

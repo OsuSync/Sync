@@ -12,30 +12,35 @@ using System.Threading.Tasks;
 
 namespace PPQuery
 {
-    public class PPQuery : Plugin, IFilter, ISourceOsu
+    [SyncRequirePlugin(typeof(DefaultPlugin.DefaultPlugin))]
+    public class PPQuery : Plugin, IFilter, ISourceClient
     {
         public PPQuery() : base("PP Query", "Deliay")
         {
-            Instance.BindEvent<InitPluginEvent>((evt) => IO.CurrentIO.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan));
-            Instance.BindEvent<InitFilterEvent>((evt) => evt.Filters.AddFilter(this));
 
+        }
+
+        public override void OnEnable()
+        {
+            Instance.BindEvent<InitFilterEvent>((evt) => evt.Filters.AddFilter(this));
+            IO.CurrentIO.WriteColor("PP Query Plugin By Deliay >w<", ConsoleColor.DarkCyan);
         }
 
         public void onMsg(ref IMessageBase msg)
         {
-            if (msg.User.RawText == Configuration.TargetIRC)
+            if (msg.User.RawText == SyncHost.Instance.ClientWrapper.Client.NickName)
             {
-                if (msg.Message.RawText.StartsWith(Sync.Client.CooCClient.CONST_ACTION_FLAG) && msg.Message.RawText.Contains("osu.ppy.sh/b/"))
+                if (msg.Message.RawText.StartsWith(DefaultPlugin.Clients.DirectOSUIRCBot.CONST_ACTION_FLAG) && msg.Message.RawText.Contains("osu.ppy.sh/b/"))
                 {
                     msg.Cancel = true;
-                    getHoster().SyncInstance.Connector.Client.sendRawMessage("tillerino", msg.Message.RawText);
+                    SyncHost.Instance.ClientWrapper.Client.SendMessage(new IRCMessage("tillerino", msg.Message.RawText));
                 }
             }
 
             if (msg.User.Result.ToLower().Equals("tillerino"))
             {
                 msg.Cancel = true;
-                getHoster().SyncInstance.Connector.Client.sendRawMessage(Configuration.TargetIRC, msg.Message.RawText);
+                SyncHost.Instance.ClientWrapper.Client.SendMessage(new IRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, msg.Message.RawText));
             }
         }
     }
