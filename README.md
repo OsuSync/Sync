@@ -1,10 +1,11 @@
 # Sync
 
-![osuSyncIcon](Sync/Resources/SyncIcon.ico)
+![SyncIcon](Sync/Resources/SyncIcon.ico)
 
-## [Releases下载](/releases) [CN git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档(过期)](ReadMe/UserGudie/README.md) 
-
-以同步弹幕到你的游戏中。
+## [Releases下载](/releases) [使用帮助文档](ReadMe/UserGudie/README.md) 
+## [交流QQ群](https://jq.qq.com/?_wv=1027&k=5y2CVZ6) [Discord](https://discord.gg/KG86sWS)
+## [插件仓库](https://github.com/Deliay/SyncPlugin)
+Sync是一款同步弹幕到你的游戏中的工具~
 
 本软件使用[MIT协议](LICENSE)授权
 
@@ -13,7 +14,7 @@
 - Client是具有发送/接收功能的目标源：  
 > 1. 找到属于你的游戏的Client
 > 2. 设置Client所需的账号密码，开始接入程序 
-> 3. 接收来自游戏对弹幕的回复，并通过接口转发到直播源  
+> 3. 在游戏中对弹幕回复，并通过接口转发到直播源  
 
 ## 2.直播源
 
@@ -24,8 +25,6 @@
 
 ## 3.Frameworks
 
-- 本软件实现了一套同步框架，开发者只需要将Sync.exe或者Sync工程引入您的插件中（插件必须编译为DLL，并放入Plugins才会被程序识别。）
+- 本软件实现了一套同步框架，开发者只需要将Sync.exe或者Sync工程引入您的插件工程中（插件必须编译为DLL，并放入Plugins才会被程序识别。）即可进行开发！
 
-> 详见[开发指南](ReadMe/DevelopGuide/README.md)
-> 官方[插件仓库](https://github.com/Deliay/SyncPlugin)
-
+> - 详见[开发指南](ReadMe/DevelopGuide/README.md)
