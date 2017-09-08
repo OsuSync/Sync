@@ -122,9 +122,9 @@
 >   <br>如果不放心程序的登陆程序，您可以自己在网页上登录
 >   <br>
 > 从IRC发送弹幕到直播间需要账号登录，并提取cookie.那么就拿BILIBILI来举例，你可以在你的浏览器(chrome内核)打开B站直播首页。按F12打开控制台(Console).输入`doucument.cookie`并回车，将出现的红色内容复制，打开config.ini，在Provider变量下面起一行写`Cookies=红色内容`
-> ![cookies](images/e.png)
-
-Certification : B站网页的cookie，如果你想在IRC发送消息到直播间就需要它,在osuSync里面用login命令即可快速获取cookie
+>   <br>
+>   ![cookies](images/e.png)
+>   <br>
 
 ## 启用Sync
 如果已经配置好了，那么请在程序输入`start`指令.
