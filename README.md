@@ -2,12 +2,14 @@
 
 ![SyncIcon](Sync/Resources/SyncIcon.ico)
 
-## [Releases下载](/releases) [使用帮助文档](ReadMe/UserGudie/README.md) 
-## [交流QQ群](https://jq.qq.com/?_wv=1027&k=5y2CVZ6) [Discord](https://discord.gg/KG86sWS)
-## [插件仓库](https://github.com/Deliay/SyncPlugin)
+## [Releases下载](/releases) [使用帮助文档](ReadMe/UserGudie/README.md)  [插件仓库](https://github.com/Deliay/SyncPlugin)
+[交流QQ群](https://jq.qq.com/?_wv=1027&k=5y2CVZ6) [Discord](https://discord.gg/KG86sWS)
+----------------------------------
 Sync是一款同步弹幕到你的游戏中的工具~
 
 本软件使用[MIT协议](LICENSE)授权
+
+本软件的同步功能由Client和Source组成，Client负责收发游戏内的消息，Source负责收发来自弹幕网站的消息。
 
 ## 1.Client
 
