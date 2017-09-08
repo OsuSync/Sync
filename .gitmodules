@@ -1,0 +1,3 @@
+[submodule "OfficalPlugins"]
+	path = OfficalPlugins
+	url = https://github.com/Deliay/SyncPlugin.git
