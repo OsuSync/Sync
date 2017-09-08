@@ -1,8 +1,8 @@
-# osuSync
+# Sync
 
-![osuSyncIcon](Sync/Resources/osu!%20001.ico)
+![osuSyncIcon](Sync/Resources/SyncIcon.ico)
 
-## [Releases下载](/releases) [CN git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档(过期)](help_readme/README.md) 
+## [Releases下载](/releases) [CN git地址](http://git.oschina.net/remilia/osuSync) [使用帮助文档(过期)](ReadMe/UserGudie/README.md) 
 
 以同步弹幕到你的游戏中。
 
@@ -24,6 +24,8 @@
 
 ## 3.Frameworks
 
-- 本软件实现了一套同步框架，开发者只需要将Sync.exe或者Sync工程引入您的插件中（插件必须编译为DLL，并放入Plugins才会被程序识别，）
+- 本软件实现了一套同步框架，开发者只需要将Sync.exe或者Sync工程引入您的插件中（插件必须编译为DLL，并放入Plugins才会被程序识别。）
 
+> 详见[开发指南](ReadMe/DevelopGuide/README.md)
+> 官方[插件仓库](https://github.com/Deliay/SyncPlugin)
 

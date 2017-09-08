@@ -58,7 +58,7 @@
     <StartupObject>Sync.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\osu! 001.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\SyncIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
