@@ -113,18 +113,17 @@
 >
 > 4. 上述两项可以自己手动设置，也可以在程序中使用指令完成
 > 5. 使用指令即为
->   <br> **setbili** (RoomID) 
->   <br>指令可以直接设置Bilibili直播间的ID
->   <br>
->   <br> **sourcelogin** [用户名] [密码]
->   <br>指令可以直接打开B站登录页面，用户名和密码是选填项。执行指令后会自动弹出一个登录页面，在页面上登录即可自动保存你的登录Cookie。
->   <br>
->   <br>如果不放心程序的登陆程序，您可以自己在网页上登录
->   <br>
-> 从IRC发送弹幕到直播间需要账号登录，并提取cookie.那么就拿BILIBILI来举例，你可以在你的浏览器(chrome内核)打开B站直播首页。按F12打开控制台(Console).输入`doucument.cookie`并回车，将出现的红色内容复制，打开config.ini，在Provider变量下面起一行写`Cookies=红色内容`
->   <br>
->   ![cookies](images/e.png)
->   <br>
+>   
+>    **setbili** (RoomID) 指令可以直接设置Bilibili直播间的ID
+>
+>    **sourcelogin** [用户名] [密码] 指令可以直接打开B站登录页面，用户名和密码是选填项。执行指令后会自动弹出一个登录页面，在页面上登录即可自动保存你的登录Cookie。
+>    
+>    如果不放心程序的登陆程序，您可以自己在网页上登录
+> 
+> 提取cookie.拿BILIBILI来举例，你可以在你的浏览器(chrome内核)打开B站直播首页(在你登录的前提下)。按F12打开控制台(Console).输入`doucument.cookie`并回车，将出现的红色内容复制，打开config.ini，在Default Plug-ins.BiliBili找到并填写为`Cookies=红色内容`
+>
+> ![Cookies](images/e.png)
+>
 
 ## 启用Sync
 如果已经配置好了，那么请在程序输入`start`指令.
