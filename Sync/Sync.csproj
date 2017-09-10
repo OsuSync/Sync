@@ -58,7 +58,7 @@
     <StartupObject>Sync.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\osu! 001.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\SyncIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -142,7 +142,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\osu! 001.ico" />
+    <Resource Include="Resources\SyncIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -156,7 +156,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(SolutionDir)\Language $(ProjectDir)\$(OutDir)\Language\ /s/e/y</PostBuildEvent>
