@@ -12,6 +12,7 @@ using Sync.Plugins;
 using System.Diagnostics;
 using System.Globalization;
 using DefaultPlugin.Sources.BiliBili;
+using DefaultPlugin.Clients;
 
 namespace DefaultPlugin.Commands
 {
@@ -39,8 +40,65 @@ namespace DefaultPlugin.Commands
             manager.Dispatch.bind("clientmsg", clientmsg, LANG_COMMANDS_CLIENTMSG);
 
             manager.Dispatch.bind("setbili", setBilibili, LANG_COMMANDS_BILIBILI);
-            manager.Dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_FILTERS);
+            manager.Dispatch.bind("setosubot", setosubot, LANG_COMMANDS_SET_OSU_BOT);
+            manager.Dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_SOURCELOGIN);
 
+            manager.Dispatch.bind("disable", disable, LANG_COMMANDS_DISABLE);
+            manager.Dispatch.bind("client", switchclient, LANG_COMMANDS_SWITCH_CLIENT);
+        }
+
+        private bool switchclient(Arguments arg)
+        {
+            if(arg.Count == 0)
+            {
+                foreach (var item in MainClients.Clients)
+                {
+                    CurrentIO.WriteColor("", ConsoleColor.Gray, false);
+                    CurrentIO.WriteColor(LANG_COMMANDS_CLIENT_NAME, ConsoleColor.Cyan, false, false);
+                    CurrentIO.WriteColor(item.ClientName.PadRight(18), ConsoleColor.White, false, false);
+                    CurrentIO.WriteColor(LANG_COMMANDS_CLIENT_AUTHOR, ConsoleColor.DarkCyan, false, false);
+                    CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
+                }
+
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, MainClient.Client.ClientName), ConsoleColor.Green);
+            }
+            else
+            {
+                if (MainClients.Clients.FirstOrDefault(p => p.ClientName == arg[0]) == null) return false;
+                Configuration.Client = arg[0];
+                MainClient.ResetClient();
+            }
+            return true;
+        }
+
+        private bool setosubot(Arguments arg)
+        {
+
+            if(arg.Count == 0)
+            {
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_BOTIRC_CURRENT, DirectOSUIRCBot.IRCBotName), ConsoleColor.Cyan);
+                CurrentIO.WriteColor(string.Format(LANG_COMMANDS_IRC_CURRENT, DirectOSUIRCBot.IRCNick), ConsoleColor.Cyan);
+                return true;
+            }
+            if (arg.Count < 3) return false;
+
+            DirectOSUIRCBot.IRCBotName = arg[0];
+            DirectOSUIRCBot.IRCBotPasswd = arg[1];
+            DirectOSUIRCBot.IRCNick = arg[2];
+
+            return true;
+        }
+
+        private bool disable(Arguments arg)
+        {
+            foreach (var item in Sync.SyncHost.Instance.EnumPluings())
+            {
+                if (item.Name == arg[0])
+                {
+                    item.OnDisable();
+                }
+            }
+            return true;
         }
 
         private bool sourcelogin(Arguments arg)
@@ -189,7 +247,6 @@ namespace DefaultPlugin.Commands
         {
             MainClient?.Client?.StopWork();
             MainSource?.Source?.Disconnect();
-            Environment.Exit(0);
             return true;
         }
 

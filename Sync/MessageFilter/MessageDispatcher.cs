@@ -88,7 +88,15 @@ namespace Sync.Plugins
                     //发信用户为设置的目标IRC
                     if (newMsg.User.RawText == SyncHost.Instance.ClientWrapper.Client.NickName)
                     {
-                        SyncHost.Instance.ClientWrapper.Client.SendMessage(newMsg);
+                        //则将消息发往Source源
+                        if(!SyncHost.Instance.SourceWrapper.Sendable)
+                        {
+                            IO.CurrentIO.WriteColor(DefaultI18n.LANG_SendNotReady, ConsoleColor.Red);
+                        }
+                        else
+                        {
+                            SyncHost.Instance.SourceWrapper.SendableSource.Send(newMsg);
+                        }
                     }
                     //其他用户则转发到目标IRC
                     else

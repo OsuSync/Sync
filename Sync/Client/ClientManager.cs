@@ -7,19 +7,33 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
+    /// <summary>
+    /// The manager for Clients
+    /// </summary>
     public class ClientManager
     {
-        private LinkedList<DefaultReciveClient> clients;
-        public IReadOnlyList<DefaultReciveClient> Clients { get => clients.ToList(); }
+        private LinkedList<DefaultClient> clients;
+        public IReadOnlyList<DefaultClient> Clients { get => clients.ToList(); }
         public int Count { get => clients.Count; }
 
         public static readonly ClientManager Instance = new ClientManager();
         private ClientManager()
         {
-            clients = new LinkedList<DefaultReciveClient>();
+            clients = new LinkedList<DefaultClient>();
         }
 
-        public bool AddClient(DefaultReciveClient client)
+        public void AddAllClient(params DefaultClient[] clients)
+        {
+            foreach (var client in clients)
+            {
+                if (!this.clients.Contains(client))
+                {
+                    this.clients.AddLast(client);
+                }
+            }
+        }
+
+        public bool AddClient(DefaultClient client)
         {
             if(clients.Contains(client))
             {

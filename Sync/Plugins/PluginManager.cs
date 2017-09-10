@@ -11,12 +11,31 @@ using Sync.Source;
 
 namespace Sync.Plugins
 { 
+    /// <summary>
+    /// Base plugin events
+    /// </summary>
     public class PluginEvents : BaseEventDispatcher
     {
-        public abstract class PluginEvent : IBaseEvent { }
+        /// <summary>
+        /// flag
+        /// </summary>
+        public interface IPluginEvent : IBaseEvent { }
 
-        public class InitPluginEvent : PluginEvent { }
-        public class InitSourceEvent : PluginEvent
+        /// <summary>
+        /// Fire when init plugin
+        /// </summary>
+        public struct InitPluginEvent : IPluginEvent
+        {
+            public Plugin Plugin { get; private set; }
+            public InitPluginEvent(Plugin plugin)
+            {
+                this.Plugin = plugin;
+            }
+        }
+        /// <summary>
+        /// Fire when init source
+        /// </summary>
+        public struct InitSourceEvent : IPluginEvent
         {
             public SourceManager Sources { get; private set; }
             public InitSourceEvent(SourceManager source)
@@ -24,7 +43,10 @@ namespace Sync.Plugins
                 Sources = source;
             }
         }
-        public class InitFilterEvent : PluginEvent
+        /// <summary>
+        /// Fire when init filter
+        /// </summary>
+        public struct InitFilterEvent : IPluginEvent
         {
             public FilterManager Filters { get; private set; }
             public InitFilterEvent(FilterManager filters)
@@ -32,7 +54,10 @@ namespace Sync.Plugins
                 Filters = filters;
             }
         }
-        public class InitCommandEvent : PluginEvent
+        /// <summary>
+        /// Fire when init command
+        /// </summary>
+        public struct InitCommandEvent : IPluginEvent
         {
             public CommandManager Commands { get; private set; }
             public InitCommandEvent(CommandManager commands)
@@ -40,8 +65,10 @@ namespace Sync.Plugins
                 Commands = commands;
             }
         }
-
-        public class InitClientEvent : PluginEvent
+        /// <summary>
+        /// Fire when init clients
+        /// </summary>
+        public struct InitClientEvent : IPluginEvent
         {
             public ClientManager Clients { get; private set; }
             public InitClientEvent(ClientManager clients)
@@ -49,8 +76,10 @@ namespace Sync.Plugins
                 Clients = clients;
             }
         }
-
-        public class InitSourceWarpperEvent : PluginEvent
+        /// <summary>
+        /// Fire when init source warpper
+        /// </summary>
+        public struct InitSourceWarpperEvent : IPluginEvent
         {
             public SourceWorkWrapper SourceWrapper { get; private set; }
             public InitSourceWarpperEvent(SourceWorkWrapper wrapper)
@@ -58,8 +87,10 @@ namespace Sync.Plugins
                 SourceWrapper = wrapper;
             }
         }
-
-        public class InitClientWarpperEvent : PluginEvent
+        /// <summary>
+        /// Fire when init client warpper
+        /// </summary>
+        public struct InitClientWarpperEvent : IPluginEvent
         {
             public ClientWorkWrapper ClientWrapper { get; private set; }
             public InitClientWarpperEvent(ClientWorkWrapper wrapper)
@@ -67,8 +98,10 @@ namespace Sync.Plugins
                 ClientWrapper = wrapper;
             }
         }
-
-        public class LoadCompleteEvent : PluginEvent
+        /// <summary>
+        /// Fire when load complete
+        /// </summary>
+        public struct LoadCompleteEvent : IPluginEvent
         {
             public SyncHost Host { get; private set; }
             public LoadCompleteEvent(SyncHost host)
@@ -77,8 +110,10 @@ namespace Sync.Plugins
             }
         }
 
-
-        public class SyncManagerCompleteEvent : PluginEvent
+        /// <summary>
+        /// Fire when ready
+        /// </summary>
+        public struct ProgramReadyEvent : IPluginEvent
         {
             //public SyncManager Manager { get; private set; }
             //public SyncManagerCompleteEvent()
@@ -90,7 +125,7 @@ namespace Sync.Plugins
         public static readonly PluginEvents Instance = new PluginEvents();
         private PluginEvents()
         {
-            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+            EventDispatcher.Instance.RegisterNewDispatcher(GetType());
         }
     }
 
@@ -99,6 +134,7 @@ namespace Sync.Plugins
 
         List<Plugin> pluginList;
         private List<Assembly> asmList;
+        private LinkedList<Type> loadedList;
         internal PluginManager()
         {
 
@@ -130,7 +166,7 @@ namespace Sync.Plugins
 
         internal void ReadySync()
         {
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.SyncManagerCompleteEvent());
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.ProgramReadyEvent());
         }
 
 
@@ -141,7 +177,7 @@ namespace Sync.Plugins
 
         internal void ReadyProgram()
         {
-            PluginEvents.Instance.RaiseEventAsync(new PluginEvents.LoadCompleteEvent(SyncHost.Instance));
+            PluginEvents.Instance.RaiseEvent(new PluginEvents.LoadCompleteEvent(SyncHost.Instance));
         }
 
         internal int LoadPlugins()
@@ -171,34 +207,133 @@ namespace Sync.Plugins
                 }
             }
 
+            loadedList = new LinkedList<Type>();
+            List<Type> lazylist = new List<Type>();
+            //Load all plugins first
             foreach (Assembly asm in asmList)
+            {
+                foreach (Type item in asm.GetExportedTypes())
+                {
+                    Type it = asm.GetType(item.FullName);
+                    if (it == null ||
+                        !it.IsClass || !it.IsPublic ||
+                        !typeof(Plugin).IsAssignableFrom(it) ||
+                        typeof(Plugin) == it)
+                        continue;
+                    lazylist.Add(it);
+                }
+            }
+
+            //looping add for resolve dependency
+            do
+            {
+
+                lazylist = layerLoader(lazylist);
+
+            } while (lazylist.Count != 0);
+
+            return pluginList.Count;
+        }
+
+        private List<Type> layerLoader(IList<Type> asmList)
+        {
+            List<Type> nextLoad = new List<Type>();
+            foreach (Type it in asmList)
             {
                 try
                 {
-                    foreach (Type t in asm.GetExportedTypes())
-                    {
-                        Type it = asm.GetType(t.FullName);
-                        if (it == null ||
-                            !it.IsClass || !it.IsPublic ||
-                            !typeof(Plugin).IsAssignableFrom(it) ||
-                            typeof(Plugin) == it)
-                            continue;
 
-                        object pluginTest = asm.CreateInstance(it.FullName);
-                        if (pluginTest == null || !(pluginTest is Plugin)) continue;
-                        Plugin plugin = pluginTest as Plugin;
-                        IO.CurrentIO.WriteColor(String.Format(LANG_LoadingPlugin, plugin.Name), ConsoleColor.White);
-                        PluginEvents.Instance.RaiseEventAsync(new PluginEvents.InitPluginEvent());
-                        pluginList.Add(plugin);
+                    if (Check_Should_Late_Load(it))
+                    {
+#if (DEBUG)
+                        IO.CurrentIO.WriteColor($"Lazy load [{it.Name}]", ConsoleColor.Green);
+#endif
+                        nextLoad.Add(it);
+                        //Dependency load at this time
+                        //Lazy load this plugin at next time
+                        continue;
                     }
+
+
+                    //no dependencies or dependencies all was loaded
+                    if (!it.IsSubclassOf(typeof(Plugin))) continue;
+                    else
+                    {
+                        LoadPluginFormType(it);
+                        loadedList.AddLast(it);
+                    }
+
                 }
                 catch (Exception e)
                 {
-                    IO.CurrentIO.WriteColor(String.Format(LANG_NotPluginErr, asm.FullName ,e.Message), ConsoleColor.Red);
+                    IO.CurrentIO.WriteColor(String.Format(LANG_NotPluginErr, it.Name, e.Message), ConsoleColor.Red);
                     continue;
                 }
             }
-            return pluginList.Count;
+
+            return nextLoad;
+        }
+
+        private bool Check_Should_Late_Load(Type a)
+        {
+
+            SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
+            if (requireAttr == null)
+            {
+                return false;
+            }
+
+            foreach (var item in requireAttr.RequirePluguins)
+            {
+                //Dependency was been loaded
+                if (loadedList.Contains(item)) continue;
+                else
+                {
+
+                    //Check cycle reference
+                    if (Check_A_IS_Reference_TO_B(item, a)) return false;
+                    else return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool Check_A_IS_Reference_TO_B(Type a, Type b)
+        {
+            SyncRequirePlugin refRequireCheck = a.GetCustomAttribute<SyncRequirePlugin>();
+            if (refRequireCheck == null) return false;
+            return refRequireCheck.RequirePluguins.Contains(b);
+        }
+
+        private Plugin LoadPluginFormType(Type it)
+        {
+            object pluginTest = it.Assembly.CreateInstance(it.FullName);
+            if (pluginTest == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            Plugin plugin = (Plugin)pluginTest;
+            IO.CurrentIO.WriteColor(String.Format(LANG_LoadingPlugin, plugin.Name), ConsoleColor.White);
+
+            pluginList.Add(plugin);
+            plugin.OnEnable();
+            PluginEvents.Instance.RaiseEventAsync(new PluginEvents.InitPluginEvent(plugin));
+            return plugin;
+        }
+    }
+
+    /// <summary>
+    /// Using this attribute when you want load some plugin before your plugin
+    /// </summary>
+    public class SyncRequirePlugin : Attribute
+    {
+        public IReadOnlyList<Type> RequirePluguins;
+
+        public SyncRequirePlugin(params Type[] types)
+        {
+            RequirePluguins = new List<Type>(types);
         }
     }
 }

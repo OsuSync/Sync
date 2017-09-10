@@ -10,10 +10,12 @@ using System.Windows.Forms;
 using Sync.Command;
 using static DefaultGUI.Language;
 using Sync.Source;
+using Sync.Tools;
 
 namespace DefaultGUI
 {
     [Serializable]
+    [SyncRequirePlugin(typeof(DefaultPlugin.DefaultPlugin))]
     public class DefaultGUI : Plugin
     {
         public const string PLUGIN_NAME = "Default GUI";
@@ -28,26 +30,42 @@ namespace DefaultGUI
 
         public DefaultGUI() : base(PLUGIN_NAME, PLUGIN_AUTHOR)
         {
-            Sync.Tools.I18n.Instance.ApplyLanguage(new Language());
+
+        }
+
+        public override void OnEnable()
+        {
+            I18n.Instance.ApplyLanguage(new Language());
             frmUI = new frmDefault();
             frmThread = new Thread(ShowForm);
             frmThread.SetApartmentState(ApartmentState.STA);
             frmThread.Name = "STAThreadForm";
 
-            EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => Task.Run(() => { hoster = evt.Host; frmUI.ready(); }));
-
-            EventBus.BindEvent<PluginEvents.InitCommandEvent>(evt => Task.Run(() => {
+            EventBus.BindEvent<PluginEvents.InitCommandEvent>(evt => {
                 evt.Commands.Dispatch.bind("gui", (t) =>
                 {
-                    frmUI.ShowMe(); return true;
+                    frmUI.ShowMe();
+                    return true;
                 }, UI_DISPLAY);
-            }));
+            });
 
-            SourceEvents.Instance.BindEvent<StartSyncEvent>(evt => Task.Run(() => frmUI.UpdateStautsAuto()));
+            EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => 
+            {
+                hoster = evt.Host;
 
-            SourceEvents.Instance.BindEvent<StopSyncEvent>(evt => Task.Run(() => frmUI.UpdateStautsAuto()));
+                SourceEvents.Instance.BindEvent<StartSourceEvent>(e => frmUI.UpdateStautsAuto());
+                SourceEvents.Instance.BindEvent<StopSyncEvent>(e => frmUI.UpdateStautsAuto());
 
-            frmThread.Start();
+            });
+
+            EventBus.BindEvent<PluginEvents.ProgramReadyEvent>(evt => 
+            {
+                frmThread.Start();
+                IO.SetIO(frmUI);
+            });
+
+            IO.CurrentIO.Write("Default GUI by Deliay : )");
+
         }
 
         [STAThread]
@@ -55,8 +73,9 @@ namespace DefaultGUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
             Application.Run(frmUI);
+            frmUI.ready();
+            
         }
     }
 }

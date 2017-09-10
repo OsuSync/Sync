@@ -21,6 +21,8 @@ namespace DefaultPlugin
         public static LanguageElement LANG_COMMANDS_SOURCES = "获得当前所有弹幕源列表";
         public static LanguageElement LANG_COMMANDS_MSGMGR = "查看或者设置消息控制器相关内容,添加--help参数获取帮助";
         public static LanguageElement LANG_COMMANDS_FILTERS = "列表所有当前可用消息过滤器";
+        public static LanguageElement LANG_COMMANDS_DISABLE = "向插件发送禁用消息 disable (插件名称)";
+        public static LanguageElement LANG_COMMANDS_SWITCH_CLIENT = "切换到指定Client实例，不带名称则为获取Client列表";
         public static LanguageElement LANG_COMMANDS_SOURCELOGIN = "登录到弹幕源 sourcelogin [用户名] [密码]";
         public static LanguageElement LANG_COMMANDS_RESTART = "重新启动应用程序";
         public static LanguageElement LANG_COMMANDS_LANG = "lang [cultureName] Get/Set language";
@@ -28,14 +30,18 @@ namespace DefaultPlugin
         public static LanguageElement LANG_COMMANDS_BILIBILI = "setbili roomID 设置Bilibili直播源的房间号";
         public static LanguageElement LANG_COMMANDS_FILTERS_ITEM = "过滤项";
         public static LanguageElement LANG_COMMANDS_FILTERS_OBJ = "过滤器";
+        public static LanguageElement LANG_COMMANDS_SET_OSU_BOT = "设置osu的机器人账号 setosubot (账号) (IRC密码) (目标IRC)";
         public static LanguageElement LANG_COMMANDS_BOTIRC_CURRENT = "当前BotIRC: {0:S}";
         public static LanguageElement LANG_COMMANDS_BOTIRC_SET = "当前BotIRC设置为 {0:S}";
         public static LanguageElement LANG_COMMANDS_IRC_CURRENT = "当前目标IRC: {0:S}";
         public static LanguageElement LANG_COMMANDS_IRC_SET = "当前目标IRC设置为 ";
         public static LanguageElement LANG_COMMANDS_TARGET_CURRENT = "当前直播ID: {0:S}";
         public static LanguageElement LANG_COMMANDS_TARGET_SET = "当前直播ID设置为 ";
+        public static LanguageElement LANG_COMMANDS_CLIENT_NAME = "Client";
+        public static LanguageElement LANG_COMMANDS_CLIENT_AUTHOR = "作者";
         public static LanguageElement LANG_COMMANDS_SOURCES_NAME = "弹幕源";
         public static LanguageElement LANG_COMMANDS_SOURCES_AUTHOR = "作者";
+        public static LanguageElement LANG_COMMANDS_CURRENT = "当前设置为 {0:S}";
         public static LanguageElement LANG_COMMANDS_DANMAKU_NOT_SUPPORT = @"提示：当前弹幕源不支持发送弹幕，请更换弹幕源！\n";
         public static LanguageElement LANG_COMMANDS_EXIT_DONE = "退出操作已完成，如果窗口还未关闭，您可以强制关闭。";
         public static LanguageElement LANG_COMMANDS_CHAT_IRC_NOTCONNECT = "osu! irc 尚未连接，您还不能发送消息。";

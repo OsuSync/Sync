@@ -7,21 +7,43 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
+    /// <summary>
+    /// Client instance switch and dispatch
+    /// </summary>
     public class ClientWorkWrapper
     {
-        public DefaultReciveClient Client { get; internal set; }
+        public DefaultClient Client { get; internal set; }
         
         private ClientManager clients;
 
         public ClientWorkWrapper(ClientManager manager)
         {
             clients = manager;
-            Client = clients.Clients.FirstOrDefault(p => p.ClientName == Configuration.Client);
-            if(Client == null)
+            ResetClient();
+        }
+
+        /// <summary>
+        /// Call when reload client form confiuration file
+        /// </summary>
+        public void ResetClient()
+        {
+            DefaultClient client = clients.Clients.FirstOrDefault(p => p.ClientName == Configuration.Client);
+
+            if (Client != null && Client != client)
+            {
+                Client.SwitchOtherClient();
+            }
+            
+            if (client == null)
             {
                 if (clients.Count == 0) return;
-                Client = clients.Clients.First();
+                client = clients.Clients.First();
             }
+
+
+            Client = client;
+
+            Client.SwitchThisClient();
         }
     }
 }

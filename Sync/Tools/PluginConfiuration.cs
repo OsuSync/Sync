@@ -73,6 +73,7 @@ namespace Sync.Tools
 
         public void ForceSave()
         {
+            config.onConfigurationSave();
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
@@ -80,7 +81,6 @@ namespace Sync.Tools
                     ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
                 }
             }
-            config.onConfigurationSave();
         }
     }
 

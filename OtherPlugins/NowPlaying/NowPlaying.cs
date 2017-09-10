@@ -36,12 +36,6 @@ namespace NowPlaying
 
         public NowPlaying() : base("Now Playing", "Deliay")
         {
-            base.EventBus.BindEvent<PluginEvents.InitFilterEvent>((filter) => filter.Filters.AddFilter(this));
-            base.EventBus.BindEvent<PluginEvents.InitPluginEvent>(NowPlaying_onInitPlugin);
-            base.EventBus.BindEvent<PluginEvents.LoadCompleteEvent>(evt => MainMessager = evt.Host.Messages);
-            handler = new MSNHandler();
-
-            
         }
 
         private void InitAdvance()
@@ -128,6 +122,10 @@ namespace NowPlaying
 
         private void NowPlaying_onInitPlugin(PluginEvents.InitPluginEvent e)
         {
+            base.EventBus.BindEvent<InitFilterEvent>((filter) => filter.Filters.AddFilter(this));
+            base.EventBus.BindEvent<LoadCompleteEvent>(evt => MainMessager = evt.Host.Messages);
+            handler = new MSNHandler();
+
             Sync.Tools.IO.CurrentIO.WriteColor(Name + " By " + Author, ConsoleColor.DarkCyan);
             handler.Load();
             base.EventBus.BindEvent<StatusChangeEvent>(OnOSUStatusChange);

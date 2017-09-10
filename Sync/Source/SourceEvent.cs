@@ -1,4 +1,5 @@
 ﻿using Sync.Client;
+using Sync.MessageFilter;
 using Sync.Plugins;
 using System;
 using System.Collections.Generic;
@@ -9,26 +10,38 @@ using System.Threading.Tasks;
 namespace Sync.Source
 {
 
+    /// <summary>
+    /// Singleton for source events
+    /// </summary>
     public sealed class SourceEvents : BaseEventDispatcher
     {
         public readonly static SourceEvents Instance = new SourceEvents();
+
         private SourceEvents()
         {
-            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+            EventDispatcher.Instance.RegisterNewDispatcher(GetType());
         }
     }
 
-    
-    public struct StartSourceEvent : SourceEvent
+    /// <summary>
+    /// This message will fire when source start work
+    /// </summary>
+    public struct StartSourceEvent : ISourceEvent
     {
         public SourceWorkWrapper Source { get => SyncHost.Instance.SourceWrapper; }
     }
 
-    public struct StopSyncEvent : SourceEvent
+    /// <summary>
+    /// This message will fire when source stop work
+    /// </summary>
+    public struct StopSyncEvent : ISourceEvent
     {
 
     }
 
+    /// <summary>
+    /// The message will fire when source recive a danmaku
+    /// </summary>
     public struct BaseDanmakuEvent : IBaseDanmakuEvent
     {
         public string Danmuku { get; set; }
@@ -43,14 +56,20 @@ namespace Sync.Source
         }
     }
 
-    public interface IBaseDanmakuEvent : SourceEvent
+    /// <summary>
+    /// Base danmaku interface
+    /// </summary>
+    public interface IBaseDanmakuEvent : ISourceEvent
     {
         string Danmuku { get; set; }
         string SenderName { get; set; }
         string SendTime { get; set; }
     }
 
-    public interface IBaseGiftEvent : SourceEvent
+    /// <summary>
+    /// Base gift interface
+    /// </summary>
+    public interface IBaseGiftEvent : ISourceEvent
     {
         string GiftName { get; set; }
         int GiftCount { get; set; }
@@ -59,7 +78,10 @@ namespace Sync.Source
 
     }
 
-    public struct BaseStatusEvent : SourceEvent
+    /// <summary>
+    /// This event will fire when source status change
+    /// </summary>
+    public struct BaseStatusEvent : ISourceEvent
     {
         public SourceStatus Status { get; private set; }
 
@@ -69,7 +91,10 @@ namespace Sync.Source
         }
     }
 
-    public struct BaseOnlineCountEvent : SourceEvent
+    /// <summary>
+    /// This event will fire when source check online change
+    /// </summary>
+    public struct BaseOnlineCountEvent : ISourceEvent
     {
         public int Count { get; set; }
 
@@ -79,7 +104,10 @@ namespace Sync.Source
         }
     }
 
-    public interface SourceEvent : IBaseEvent
+    /// <summary>
+    /// Source event flag
+    /// </summary>
+    public interface ISourceEvent : IBaseEvent
     {
     }
 }

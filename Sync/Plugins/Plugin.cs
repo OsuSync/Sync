@@ -23,14 +23,9 @@ namespace Sync.Plugins
             this.Author = Author;
         }
 
-        private bool isComplete = false;
-
         protected SyncHost getHoster()
         {
-            if (isComplete)
-                return SyncHost.Instance;
-            else
-                throw new NullReferenceException("Can't get Instance of the Hoster.");
+            return SyncHost.Instance;
         }
 
         public string getName()
@@ -46,6 +41,16 @@ namespace Sync.Plugins
         public override string ToString()
         {
             return Name;
+        }
+
+        public virtual void OnDisable()
+        {
+
+        }
+
+        public virtual void OnEnable()
+        {
+
         }
     }
 }

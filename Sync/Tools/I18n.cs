@@ -57,15 +57,6 @@ namespace Sync.Tools
         public static LanguageElement LANG_Source_Connect = "正在连接弹幕源服务器....";
         public static LanguageElement LANG_Source_Connected_Succ = "源服务器连接成功！";
 
-        public static LanguageElement LANG_IRC_Connecting = "[Client] 正在连接中...";
-        public static LanguageElement LANG_IRC_Disconnect = "正在断开IRC服务器的连接....";
-
-        public static LanguageElement LANG_IRC_Connect_Timeout = @"Client 连接错误，请检查网络或联系Client作者.";
-        public static LanguageElement LANG_IRC_Ready = "[Client] 已经准备就绪!";
-
-        public static LanguageElement LANG_Current_Online = "当前在线人数: {0:D}";
-        public static LanguageElement LANG_Gift_Sent = "我送给你{O:D}份{1:S}!";
-
         public static LanguageElement LANG_Config = "配置文件: ";
         public static LanguageElement LANG_Config_Status_OK = "OK, 房间ID:{0}";
         public static LanguageElement LANG_Config_Status_Fail = "尚未配置成功";
@@ -85,6 +76,8 @@ namespace Sync.Tools
 
         public static LanguageElement LANG_MsgMgr_Limit = "当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道";
         public static LanguageElement LANG_MsgMgr_Free = "当前消息管理器 解除 管制,内容可以直接发送到irc频道";
+        public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
+
     }
 
 

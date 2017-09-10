@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 namespace Sync.Source
 {
 
+    /// <summary>
+    /// Flag this source is support send
+    /// </summary>
     public abstract class SendableSource : SourceBase
     {
         public bool SendStatus { get; private set; } = false;
@@ -43,6 +46,7 @@ namespace Sync.Source
 
         public string Name { get; private set; }
         public string Author { get; private set; }
+        public string LiveID { get; set; } = "";
         public BaseEventDispatcher EventBus { get => SourceEvents.Instance; }
         public SourceStatus Status { get; protected set; }
 
@@ -58,7 +62,7 @@ namespace Sync.Source
         /// </summary>
         /// <typeparam name="T">Target Event Type</typeparam>
         /// <param name="args">Type args</param>
-        protected void RaiseEvent<T>(T args) where T : SourceEvent
+        protected void RaiseEvent<T>(T args) where T : ISourceEvent
         {
             EventBus.RaiseEvent(args);
         }

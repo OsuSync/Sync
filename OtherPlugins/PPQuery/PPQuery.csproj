@@ -52,6 +52,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DefaultPlugin\DefaultPlugin.csproj">
+      <Project>{d5d6e048-2de2-4388-a0b0-4ac3875cbf81}</Project>
+      <Name>DefaultPlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Sync\Sync.csproj">
       <Project>{fbd514c2-2830-479e-b050-d1c383028456}</Project>
       <Name>Sync</Name>

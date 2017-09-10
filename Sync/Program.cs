@@ -22,13 +22,15 @@ namespace Sync
              *    4.程序IO Manager开始工作，等待用户输入
              */
             I18n.Instance.ApplyLanguage(new DefaultI18n());
-            
-            while(true)
+
+            while (true)
             {
                 SyncHost.Instance = new SyncHost();
                 SyncHost.Instance.Load();
-                
+
                 CurrentIO.WriteWelcome();
+
+                SyncHost.Instance.Plugins.ReadySync();
 
                 string cmd = CurrentIO.ReadCommand();
                 while (true)

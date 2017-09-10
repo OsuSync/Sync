@@ -8,28 +8,43 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
+    /// <summary>
+    /// Singleton Client event dispathcher
+    /// </summary>
     public class ClientEvents : BaseEventDispatcher
     {
         public readonly static ClientEvents Instance = new ClientEvents();
         private ClientEvents()
         {
-            EventDispatcher.Instance.RegistNewDispatcher(GetType());
+            EventDispatcher.Instance.RegisterNewDispatcher(GetType());
         }
     }
 
-    public interface ClientEvent : IBaseEvent { }
+    /// <summary>
+    /// Base client event interface flag
+    /// </summary>
+    public interface IClientEvent : IBaseEvent { }
 
-    public struct ClientStartWorkEvent : ClientEvent
+    /// <summary>
+    /// Fire when client start work (fire time decide by client)
+    /// </summary>
+    public struct ClientStartWorkEvent : IClientEvent
     {
         public ClientWorkWrapper Client { get => SyncHost.Instance.ClientWrapper; }
     }
 
-    public struct ClientStopWorkEvent : ClientEvent
+    /// <summary>
+    /// Fire when client stop work
+    /// </summary>
+    public struct ClientStopWorkEvent : IClientEvent
     {
 
     }
 
-    public struct ClientOnMessageEvent : ClientEvent
+    /// <summary>
+    /// Fire when Client recive a IRCMessage
+    /// </summary>
+    public struct ClientOnMessageEvent : IClientEvent
     {
         public IRCMessage Message { get; }
 

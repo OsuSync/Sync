@@ -9,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace Sync.Client
 {
-    public abstract class DefaultReciveClient
+    public abstract class DefaultClient
     {
 
+        //Author and Client Name
         public string Author { get; }
         public string ClientName { get; }
 
         public BaseEventDispatcher EventBus { get => ClientEvents.Instance; }
 
-        public string NickName { get; }
-
-        private Queue<IRCMessage> pending_messages;
+        public string NickName { get; protected set; }
 
         /// <summary>
         /// Invoke while user switch to other client instance
@@ -30,39 +29,19 @@ namespace Sync.Client
         /// </summary>
         public abstract void SwitchThisClient();
 
-        public DefaultReciveClient(string Author, string Name)
+        public DefaultClient(string Author, string Name)
         {
-            pending_messages = new Queue<IRCMessage>();
             this.Author = Author;
             this.ClientName = Name;
         }
 
-        /// <summary>
-        /// Check for next new message
-        /// </summary>
-        /// <returns></returns>
-        public bool HaveNextMessage()
-        {
-            return pending_messages.Count > 0;
-        }
 
         /// <summary>
-        /// Dequeue next message
+        /// Raise event and pass messages
         /// </summary>
-        /// <returns></returns>
-        public IRCMessage NextMessage()
-        {
-            return pending_messages.Dequeue();
-        }
-
-        /// <summary>
-        /// Enqueue next message
-        /// </summary>
-        /// <param name="nick"></param>
-        /// <param name="message"></param>
+        /// <param name="msg">Bypass message</param>
         protected void EnqueueMessage(IRCMessage msg)
         {
-            pending_messages.Enqueue(msg);
             EventBus.RaiseEvent(new ClientOnMessageEvent(msg));
         }
 
@@ -73,7 +52,8 @@ namespace Sync.Client
         public SourceStatus CurrentStatus { get; protected set; }
 
         /// <summary>
-        /// 警告，此方法不应随意调用，请用MessageDispather里的RaiseMessage来发送消息
+        /// SendMessage to Client
+        /// WARNING: SEND MESSAGE DIRECTLY WHIT THIS WILL NOT PASS BY FILTERS!
         /// </summary>
         /// <param name="message"></param>
         public abstract void SendMessage(IMessageBase message);
