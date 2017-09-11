@@ -27,7 +27,9 @@ namespace Sync.Plugins
 
 
             //Bind source event for Message Dispathcer
-            SourceEvents.Instance.BindEvent<BaseDanmakuEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(evt.SenderName, evt.Danmuku)));
+            SourceEvents.Instance.BindEvent<BaseDanmakuEvent>(
+                evt => 
+                SyncHost.Instance.Messages.RaiseMessage<ISourceDanmaku>(new IRCMessage(evt.SenderName, evt.Danmuku)));
             SourceEvents.Instance.BindEvent<BaseOnlineCountEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceOnlineChange>(new OnlineChangeMessage(evt.Count)));
             SourceEvents.Instance.BindEvent<IBaseGiftEvent>(evt => SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new GiftMessage(evt)));
         }
