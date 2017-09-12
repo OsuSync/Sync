@@ -15,7 +15,7 @@ namespace Sync.Plugins
     {
         public readonly string Name;
         public readonly string Author;
-        public BaseEventDispatcher EventBus { get => PluginEvents.Instance; }
+        public BaseEventDispatcher<PluginEvents.IPluginEvent> EventBus { get => PluginEvents.Instance; }
 
         public Plugin(string Name, string Author)
         {

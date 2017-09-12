@@ -11,7 +11,7 @@ namespace Sync.Client
     /// <summary>
     /// Singleton Client event dispathcher
     /// </summary>
-    public class ClientEvents : BaseEventDispatcher
+    public class ClientEvents : BaseEventDispatcher<IClientEvent>
     {
         public readonly static ClientEvents Instance = new ClientEvents();
         private ClientEvents()

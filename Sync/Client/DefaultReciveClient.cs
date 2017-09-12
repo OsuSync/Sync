@@ -16,7 +16,7 @@ namespace Sync.Client
         public string Author { get; }
         public string ClientName { get; }
 
-        public BaseEventDispatcher EventBus { get => ClientEvents.Instance; }
+        public BaseEventDispatcher<IClientEvent> EventBus { get => ClientEvents.Instance; }
 
         public string NickName { get; protected set; }
 

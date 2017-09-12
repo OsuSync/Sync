@@ -29,6 +29,8 @@ namespace Sync.Source
             Send(message);
         }
 
+
+
         internal void login(string user, string password)
         {
             Login(user, password);
@@ -47,8 +49,9 @@ namespace Sync.Source
         public string Name { get; private set; }
         public string Author { get; private set; }
         public string LiveID { get; set; } = "";
-        public BaseEventDispatcher EventBus { get => SourceEvents.Instance; }
+        public BaseEventDispatcher<ISourceEvent> EventBus { get => SourceEvents.Instance; }
         public SourceStatus Status { get; protected set; }
+        
 
         public SourceBase(string Name, string Author)
         {
