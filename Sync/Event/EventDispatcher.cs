@@ -34,19 +34,19 @@ namespace Sync.Plugins
         }
     }
 
-    public abstract class BaseEventDispatcher
+    public abstract class BaseEventDispatcher<T> where T : IBaseEvent
     {
         /// <summary>
         /// private event for call
         /// </summary>
         /// <param name="eventType"></param>
         /// <param name="insance"></param>
-        private void raiseEventAsync<Event>(Event insance) where Event : IBaseEvent
+        private void raiseEventAsync<Event>(Event insance) where Event : T
         {
             EventDispatcher.Instance.RaiseEventAsync(this.GetType(), insance);
         }
 
-        private void raiseEvent<Event>(Event insance) where Event : IBaseEvent
+        private void raiseEvent<Event>(Event insance) where Event : T
         {
             EventDispatcher.Instance.RaiseEvent(this.GetType(), insance);
         }
@@ -56,7 +56,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="Event"></typeparam>
         /// <param name="event"></param>
-        public virtual void RaiseEventAsync<Event>(Event @event) where Event : IBaseEvent
+        public virtual void RaiseEventAsync<Event>(Event @event) where Event : T
         {
             raiseEventAsync(@event);        
         }
@@ -66,7 +66,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="Event"></typeparam>
         /// <param name="event"></param>
-        public virtual void RaiseEvent<Event>(Event @event) where Event : IBaseEvent
+        public virtual void RaiseEvent<Event>(Event @event) where Event : T
         {
             raiseEvent(@event);
         }
@@ -76,7 +76,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="Event"></typeparam>
         /// <param name="handler"></param>
-        public void BindEvent<Event>(EventHandlerFunc<Event> handler) where Event : IBaseEvent
+        public void BindEvent<Event>(EventHandlerFunc<Event> handler) where Event : T
         {
             EventDispatcher.Instance.RegisterEventHandler(GetType(), handler);
         }
@@ -123,7 +123,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="EventDispatcher">New dispatcher classes</typeparam>
         /// <returns></returns>
-        public void RegisterNewDispatcher<EventDispatcher>() where EventDispatcher : BaseEventDispatcher
+        public void RegisterNewDispatcher<EventDispatcher, TEvent>() where EventDispatcher : BaseEventDispatcher<TEvent> where TEvent : IBaseEvent
         {
             RegisterNewDispatcher(typeof(EventDispatcher));
         }
@@ -176,7 +176,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="EventType">Type</typeparam>
         /// <returns></returns>
-        public Dispatcher GetDispatcher<EventType>() where EventType : BaseEventDispatcher
+        public Dispatcher GetDispatcher<EventType>()
         {
             return (dispatchers[typeof(EventType)]);
         }
@@ -186,7 +186,7 @@ namespace Sync.Plugins
         /// </summary>
         /// <typeparam name="EventType"></typeparam>
         /// <returns></returns>
-        public bool ExistDispatcher<EventType>() where EventType : BaseEventDispatcher
+        public bool ExistDispatcher<EventType>()
         {
             return dispatchers.ContainsKey(typeof(EventType));
         }
@@ -207,7 +207,7 @@ namespace Sync.Plugins
         /// <typeparam name="EventType">Dispathcer</typeparam>
         /// <typeparam name="Event">Event</typeparam>
         /// <param name="event">Event instance</param>
-        internal void RaiseEventAsync<EventType, Event>(Event @event) where EventType : BaseEventDispatcher where Event : IBaseEvent
+        internal void RaiseEventAsync<EventType, Event>(Event @event)  where Event : IBaseEvent
         {
             RaiseEventAsync(typeof(EventType), @event);
         }
@@ -235,7 +235,7 @@ namespace Sync.Plugins
         /// <typeparam name="EventType">Event dispathcer</typeparam>
         /// <typeparam name="Event">Event</typeparam>
         /// <param name="event">Event instance</param>
-        internal void RaiseEvent<EventType, Event>(Event @event) where EventType : BaseEventDispatcher where Event : IBaseEvent
+        internal void RaiseEvent<EventType, Event>(Event @event) where Event : IBaseEvent
         {
             RaiseEvent(typeof(EventType), @event);
         }
@@ -292,7 +292,7 @@ namespace Sync.Plugins
         /// <typeparam name="Event">Target Event</typeparam>
         /// <param name="handler">Handler</param>
         /// <returns></returns>
-        public bool RegisterEventHandler<EventType, Event>(EventHandlerFunc<Event> handler) where EventType : BaseEventDispatcher where Event : IBaseEvent
+        public bool RegisterEventHandler<EventType, Event>(EventHandlerFunc<Event> handler) where Event : IBaseEvent
         {
             return RegisterEventHandler(typeof(EventType), handler);
         }

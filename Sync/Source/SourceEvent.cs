@@ -13,7 +13,7 @@ namespace Sync.Source
     /// <summary>
     /// Singleton for source events
     /// </summary>
-    public sealed class SourceEvents : BaseEventDispatcher
+    public sealed class SourceEvents : BaseEventDispatcher<ISourceEvent>
     {
         public readonly static SourceEvents Instance = new SourceEvents();
 

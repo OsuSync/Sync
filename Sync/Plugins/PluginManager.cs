@@ -14,7 +14,7 @@ namespace Sync.Plugins
     /// <summary>
     /// Base plugin events
     /// </summary>
-    public class PluginEvents : BaseEventDispatcher
+    public class PluginEvents : BaseEventDispatcher<PluginEvents.IPluginEvent>
     {
         /// <summary>
         /// flag
