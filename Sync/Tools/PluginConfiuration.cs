@@ -65,7 +65,12 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    item.SetValue(config, (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name));
+                    ConfigurationElement element = (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+
+                    if (!string.IsNullOrWhiteSpace(element))
+                    {
+                        item.SetValue(config, element);
+                    }
                 }
             }
             config.onConfigurationLoad();
