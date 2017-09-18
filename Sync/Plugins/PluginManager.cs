@@ -10,17 +10,18 @@ using Sync.Client;
 using Sync.Source;
 
 namespace Sync.Plugins
-{ 
+{
+
+    /// <summary>
+    /// flag
+    /// </summary>
+    public interface IPluginEvent : IBaseEvent { }
+
     /// <summary>
     /// Base plugin events
     /// </summary>
-    public class PluginEvents : BaseEventDispatcher<PluginEvents.IPluginEvent>
+    public class PluginEvents : BaseEventDispatcher<IPluginEvent>
     {
-        /// <summary>
-        /// flag
-        /// </summary>
-        public interface IPluginEvent : IBaseEvent { }
-
         /// <summary>
         /// Fire when init plugin
         /// </summary>
