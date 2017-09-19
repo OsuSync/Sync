@@ -1,0 +1,8 @@
+[en-US]
+LANG_HELP_BAN=stop user/id/regex send message to irc
+LANG_HELP_UNBAN=nonstop user/id/regex
+LANG_HELP_WHITELIST=add user/id/regex to whitelist which can send message to irc
+LANG_HELP_REMOVE_WHITELIST=remove user/id/regex form whitelist
+LANG_HELP_ACCESS=set message to irc protecet level
+LANG_HELP_LIST=list whiltelist or banlist
+LANG_ERR_COMMAND=error command

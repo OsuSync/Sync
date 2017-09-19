@@ -21,7 +21,7 @@ namespace Sync.Tools
             get => ReadConfig(DefaultConfig.Source);
             set => WriteConfig(DefaultConfig.Source, value);
         }
-        
+
         public static string Language
         {
             get => ReadConfig(DefaultConfig.Language);

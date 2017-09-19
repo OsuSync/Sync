@@ -13,3 +13,4 @@ UI_BOTTON_SWITCH_CON=Switch Console
 UI_BOTTON_EXIT=Exit
 UI_TIPS_LIVE_ID=LiveID
 UI_TIPS_LIVE_SOURCE=LiveSource
+UI_INFO_RESTART_REQ=Change live source will apply effect after restart software. Restart now? 
