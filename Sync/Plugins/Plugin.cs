@@ -4,13 +4,6 @@ using System.Reflection;
 
 namespace Sync.Plugins
 {
-
-    public interface IPlugin
-    {
-        string getName();
-        string getAuthor();
-    }
-
     public abstract class Plugin
     {
         public readonly string Name;

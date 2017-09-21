@@ -136,6 +136,7 @@ namespace Sync.Plugins
         List<Plugin> pluginList;
         private List<Assembly> asmList;
         private LinkedList<Type> loadedList;
+        private List<Type> allList;
         internal PluginManager()
         {
 
@@ -210,6 +211,7 @@ namespace Sync.Plugins
 
             loadedList = new LinkedList<Type>();
             List<Type> lazylist = new List<Type>();
+            allList = new List<Type>();
             //Load all plugins first
             foreach (Assembly asm in asmList)
             {
@@ -221,10 +223,11 @@ namespace Sync.Plugins
                         !typeof(Plugin).IsAssignableFrom(it) ||
                         typeof(Plugin) == it)
                         continue;
-                    lazylist.Add(it);
+                    allList.Add(it);
                 }
             }
 
+            lazylist = allList.ToList();
             //looping add for resolve dependency
             do
             {
@@ -279,21 +282,38 @@ namespace Sync.Plugins
         {
 
             SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
-            if (requireAttr == null)
-            {
-                return false;
-            }
+            SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
 
-            foreach (var item in requireAttr.RequirePluguins)
+            if (requireAttr != null)
             {
-                //Dependency was been loaded
-                if (loadedList.Contains(item)) continue;
-                else
+                foreach (var item in requireAttr.RequirePluguins)
                 {
+                    //Dependency was been loaded
+                    if (loadedList.Contains(item)) continue;
+                    else
+                    {
 
-                    //Check cycle reference
-                    if (Check_A_IS_Reference_TO_B(item, a)) return false;
-                    else return true;
+                        //Check cycle reference
+                        if (Check_A_IS_Reference_TO_B(item, a)) return false;
+                        else return true;
+                    }
+                }
+            }
+            
+            if(softRequirePlugin != null)
+            {
+                foreach (var item in softRequirePlugin.RequirePluguins)
+                {
+                    Type s = allList.FirstOrDefault(p => p.Name == item);
+                    if (s == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (Check_A_IS_Reference_TO_B(s, a)) return false;
+                        if (!loadedList.Contains(s)) return true;
+                    }
                 }
             }
 
@@ -302,7 +322,19 @@ namespace Sync.Plugins
 
         private bool Check_A_IS_Reference_TO_B(Type a, Type b)
         {
+            return Check_A_IS_HardReference_TO_B(a, b) || Check_A_IS_SoftReference_TO_B(a, b.Name);
+        }
+
+        private bool Check_A_IS_HardReference_TO_B(Type a, Type b)
+        {
             SyncRequirePlugin refRequireCheck = a.GetCustomAttribute<SyncRequirePlugin>();
+            if (refRequireCheck == null) return false;
+            return refRequireCheck.RequirePluguins.Contains(b);
+        }
+
+        private bool Check_A_IS_SoftReference_TO_B(Type a, string b)
+        {
+            SyncSoftRequirePlugin refRequireCheck = a.GetCustomAttribute<SyncSoftRequirePlugin>();
             if (refRequireCheck == null) return false;
             return refRequireCheck.RequirePluguins.Contains(b);
         }
@@ -326,7 +358,7 @@ namespace Sync.Plugins
     }
 
     /// <summary>
-    /// Using this attribute when you want load some plugin before your plugin
+    /// Using this attribute when you want load some plugin before your plugin.
     /// </summary>
     public class SyncRequirePlugin : Attribute
     {
@@ -335,6 +367,18 @@ namespace Sync.Plugins
         public SyncRequirePlugin(params Type[] types)
         {
             RequirePluguins = new List<Type>(types);
+        }
+    }
+
+    /// <summary>
+    /// Using this attribute when you dependence some plugin without hard link.
+    /// </summary>
+    public class SyncSoftRequirePlugin : Attribute
+    {
+        public IReadOnlyList<string> RequirePluguins;
+        public SyncSoftRequirePlugin(params string[] types)
+        {
+            RequirePluguins = new List<string>(types);
         }
     }
 }
