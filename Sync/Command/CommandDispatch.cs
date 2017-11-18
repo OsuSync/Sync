@@ -3,8 +3,16 @@ using System.Collections.Generic;
 
 namespace Sync.Command
 {
+    /// <summary>
+    /// Delegate for one Command
+    /// </summary>
+    /// <param name="arg">Command args</param>
+    /// <returns></returns>
     public delegate bool CommandDelegate(Arguments arg);
 
+    /// <summary>
+    /// A typedef for arguments list
+    /// </summary>
     public class Arguments : List<string>
     {
         public Arguments()
@@ -23,6 +31,9 @@ namespace Sync.Command
         }
     }
 
+    /// <summary>
+    /// A Hashmap command dispatcher
+    /// </summary>
     public class CommandDispatch
     {
         private Dictionary<string, CommandDelegate> cmdList = new Dictionary<string, CommandDelegate>();
@@ -32,6 +43,13 @@ namespace Sync.Command
             get { return cmdList.Count; }
         }
 
+        /// <summary>
+        /// Bind command to string
+        /// </summary>
+        /// <param name="name">Invoke name</param>
+        /// <param name="func">Functor</param>
+        /// <param name="desc">Description</param>
+        /// <returns><see cref="true"/> success, <see cref="false"/> fail</returns>
         public bool bind(string name, CommandDelegate func, string desc)
         {
             if (cmdList.ContainsKey(name)) return false;

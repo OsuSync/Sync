@@ -4,6 +4,9 @@ using System;
 
 namespace Sync.Command
 {
+    /// <summary>
+    /// Command manager for plugins commands
+    /// </summary>
     public class CommandManager
     {
         CommandDispatch dispatch;
@@ -13,11 +16,18 @@ namespace Sync.Command
             dispatch = new CommandDispatch();
         }
 
+        /// <summary>
+        /// Register command via this dispatch
+        /// </summary>
         public CommandDispatch Dispatch
         {
             get { return dispatch; }
         }
 
+        /// <summary>
+        /// Invoke command in string
+        /// </summary>
+        /// <param name="cmd">Command</param>
         public void invokeCmdString(string cmd)
         {
             if (cmd.Length == 0) return;
