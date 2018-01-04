@@ -107,7 +107,6 @@
     <Compile Include="Tools\I18n.cs" />
     <Compile Include="Tools\IConfigurable.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
-    <Compile Include="Tools\ProgramUpdater.cs" />
     <Compile Include="Tools\StringElement.cs" />
   </ItemGroup>
   <ItemGroup>
