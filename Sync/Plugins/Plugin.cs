@@ -45,5 +45,10 @@ namespace Sync.Plugins
         {
 
         }
+
+        public virtual void OnExit()
+        {
+
+        }
     }
 }

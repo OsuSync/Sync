@@ -203,6 +203,16 @@ namespace Sync.Plugins
             return pluginList;
         }
 
+
+        /// <summary>
+        /// Internal get plugin list
+        /// </summary>
+        /// <returns></returns>
+        internal List<Plugin> GetPluginList()
+        {
+            return pluginList;
+        }
+
         /// <summary>
         /// Raise a <see cref="PluginEvents.LoadCompleteEvent"/> to all plugin
         /// </summary>

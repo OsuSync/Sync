@@ -39,10 +39,8 @@ namespace Sync.Tools
     }
 
     /// <summary>
-    /// 配置文件类，实例化时传入插件类实例和继承配置文件的实例的类即可享受配置文件服务。
+    /// Plugins configuration service, create instance to get configuration service
     /// </summary>
-    /// <typeparam name="T">插件类</typeparam>
-    /// <typeparam name="U">配置文件类</typeparam>
     public sealed class PluginConfiuration
     {
         private Plugin instance;
@@ -65,7 +63,7 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationElement element = (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
@@ -89,14 +87,19 @@ namespace Sync.Tools
         }
     }
 
+    /// <summary>
+    /// Configuration Manager
+    /// </summary>
     public sealed class PluginConfigurationManager
     {
+        internal static LinkedList<PluginConfigurationManager> ConfigurationSet = new LinkedList<PluginConfigurationManager>();
         private List<PluginConfiuration> items;
         private Plugin instance;
         public PluginConfigurationManager(Plugin instance)
         {
             items = new List<PluginConfiuration>();
             this.instance = instance;
+            ConfigurationSet.AddLast(this);
         }
 
         public void AddItem(IConfigurable Config)
