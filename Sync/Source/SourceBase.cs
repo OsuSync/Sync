@@ -149,7 +149,7 @@ namespace Sync.Source
         /// <summary>
         /// user request disconnect, and waiting for Source class response.
         /// </summary>
-        USER_REQUEST_DISCONNECT,///用户请求断开连接
+        USER_REQUEST_DISCONNECT,
     }
 
 }

@@ -9,11 +9,11 @@ namespace Sync.Tools
     public interface IConfigurable
     {
         /// <summary>
-        /// 在系统读取配置文件时调用
+        /// Invoke when load configuration
         /// </summary>
         void onConfigurationLoad();
         /// <summary>
-        /// 在系统保存配置文件时调用
+        /// Invoke when save configuration
         /// </summary>
         void onConfigurationSave();
     }

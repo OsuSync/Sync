@@ -2,6 +2,9 @@
 
 namespace Sync.Tools
 {
+    /// <summary>
+    /// A helper for a string with a perfix and a suffix
+    /// </summary>
     public struct StringElement
     {
         public string perfix;

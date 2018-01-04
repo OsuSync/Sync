@@ -36,9 +36,9 @@ namespace Sync.Tools
         private bool wait = false;
 
         /// <summary>
-        /// 等待用户输入一个命令
+        /// Read Line
         /// </summary>
-        /// <returns>输入的字符串</returns>
+        /// <returns>Input chars</returns>
         public string ReadCommand()
         {
             WriteColor("", ConsoleColor.Green, false, false);
@@ -46,10 +46,10 @@ namespace Sync.Tools
             return Console.ReadLine();
         }
         /// <summary>
-        /// 向控制台输出信息
+        /// Write a message to console
         /// </summary>
-        /// <param name="msg">信息</param>
-        /// <param name="newline">是否换行</param>
+        /// <param name="msg">Message</param>
+        /// <param name="newline">Display in new line</param>
         public void Write(string msg, bool newline = true, bool time = true)
         {
             if (wait)
@@ -74,11 +74,11 @@ namespace Sync.Tools
                + (newline ? "\n" : ""));
         }
         /// <summary>
-        /// 向控制台输出带颜色的信息
+        /// Write a message with color
         /// </summary>
-        /// <param name="text">信息文本</param>
-        /// <param name="color">颜色</param>
-        /// <param name="newline">是否换行</param>
+        /// <param name="text">Message</param>
+        /// <param name="color">Color</param>
+        /// <param name="newline">Display in new line</param>
         public void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true)
         {
             Console.ForegroundColor = color;
@@ -86,7 +86,7 @@ namespace Sync.Tools
             Console.ResetColor();
         }
         /// <summary>
-        /// 格式化帮助信息
+        /// Write a formated help message
         /// </summary>
         /// <param name="cmd">命令</param>
         /// <param name="desc">命令描述</param>
@@ -96,9 +96,8 @@ namespace Sync.Tools
             WriteColor(desc, ConsoleColor.White, true, false);
         }
         /// <summary>
-        /// 向屏幕输出某个Sync实例的状态
+        /// Write current work status
         /// </summary>
-        /// <param name="instance">指定Sync实例</param>
         public void WriteStatus()
         {
             WriteColor(SyncHost.Instance.SourceWrapper.Source?.Status.ToString(), ConsoleColor.Magenta);
@@ -106,7 +105,7 @@ namespace Sync.Tools
         }
 
         /// <summary>
-        /// 向屏幕输出欢迎信息
+        /// Write welcolme message
         /// </summary>
         public void WriteWelcome()
         {
@@ -116,7 +115,7 @@ namespace Sync.Tools
             Write(LANG_Help);
         }
         /// <summary>
-        /// 输出帮助信息
+        /// Write all commands
         /// </summary>
         public void WriteHelp()
         {
@@ -131,7 +130,7 @@ namespace Sync.Tools
 
         }
         /// <summary>
-        /// 清空屏幕
+        /// Clear screen
         /// </summary>
         public void Clear()
         {

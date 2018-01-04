@@ -108,7 +108,7 @@ namespace Sync.Tools
         }
     }
     /// <summary>
-    /// 特定语言的I18n实现
+    /// I18n Manager
     /// </summary>
     public class I18n
     {
@@ -157,9 +157,9 @@ namespace Sync.Tools
         private I18n() { }
 
         /// <summary>
-        ///  实例化一个特定区域语言的I18n实例
+        ///  Constructor for initial one language
         /// </summary>
-        /// <param name="CultureName">指定区域</param>
+        /// <param name="CultureName">Cultura name</param>
         private I18n(string CultureName)
         {
             CurrentLanguage = CultureName;

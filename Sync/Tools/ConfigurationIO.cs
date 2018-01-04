@@ -5,12 +5,12 @@ using System.Text;
 namespace Sync.Tools
 {
     /// <summary>
-    /// 该类提供直接读取配置文件的方法
+    /// INI File reader
     /// </summary>
     static class ConfigurationIO
     {
         /// <summary>
-        /// 配置文件枚举项
+        /// InI key
         /// </summary>
         public enum DefaultConfig
         {
@@ -25,15 +25,15 @@ namespace Sync.Tools
         [DllImport("kernel32")]
         private static extern bool WritePrivateProfileString(string section, string key, string val, string filePath);
         /// <summary>
-        /// 配置文件路径
+        /// Config path
         /// </summary>
         public readonly static string ConfigFile = AppDomain.CurrentDomain.BaseDirectory + "config.ini";
         /// <summary>
-        /// 实现读取配置文件
+        /// Read value
         /// </summary>
-        /// <param name="key">键</param>
-        /// <param name="column">索引</param>
-        /// <returns>配置信息</returns>
+        /// <param name="key">Key</param>
+        /// <param name="column">Section</param>
+        /// <returns>Value</returns>
         internal static string IniReadValue(string FilePath, string key, string column = "config")
         {
             StringBuilder temp = new StringBuilder(2048);
@@ -46,40 +46,40 @@ namespace Sync.Tools
             return WritePrivateProfileString(column, key, value, FilePath);
         }
         /// <summary>
-        /// 按需读取配置文件
+        /// Read value
         /// </summary>
-        /// <param name="key">键</param>
-        /// <param name="column">索引</param>
-        /// <returns>配置信息</returns>
+        /// <param name="key">Key</param>
+        /// <param name="column">Section</param>
+        /// <returns>Value</returns>
         public static string Read(string key, string column = "config")
         {
             return IniReadValue(ConfigFile, key, column);
         }
         /// <summary>
-        /// 按枚举读取配置文件
+        /// Read via enum
         /// </summary>
-        /// <param name="key">指定配置节</param>
-        /// <returns>配置信息</returns>
+        /// <param name="key">Key</param>
+        /// <returns>Value</returns>
         public static string ReadConfig(DefaultConfig key)
         {
             return IniReadValue(ConfigFile, Enum.GetName(typeof(DefaultConfig), key));
         }
         /// <summary>
-        /// 写入配置文件
+        /// Write <see cref="value"/> to <see cref="key"/>
         /// </summary>
-        /// <param name="key">键</param>
-        /// <param name="value">值</param>
-        /// <param name="column">索引</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="column">Section</param>
         /// <returns></returns>
         public static bool Write(string key, string value, string column = "config")
         {
             return IniWriteValue(ConfigFile, key, value, column);
         }
         /// <summary>
-        /// 按枚举写入配置文件
+        /// Write value via enum
         /// </summary>
-        /// <param name="key">枚举</param>
-        /// <param name="value">值</param>
+        /// <param name="key">Key</param>
+        /// <param name="value">value</param>
         /// <returns></returns>
         public static bool WriteConfig(DefaultConfig key, string value)
         {
