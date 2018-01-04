@@ -57,5 +57,5 @@ LANG_IRC_Connecting=[Client] 正在连接中...
 LANG_IRC_Disconnect=正在断开IRC服务器的连接....
 LANG_IRC_Connect_Timeout=Client 连接错误，请检查网络或联系Client作者.
 LANG_IRC_Ready=[Client] 已经准备就绪!
-LANG_MsgMgr_Limit=当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道
-LANG_MsgMgr_Free=当前消息管理器 解除 管制,内容可以直接发送到irc频道
+LANG_MsgMgr_Limit=Message limiter was toggle ON, the danmaku only perfix with ?send will send to irc
+LANG_MsgMgr_Free=Message limiter was toggle OFF.

@@ -51,3 +51,4 @@ LANG_DOUYU_AUTH_SUCC=Auth to Douyutv success
 LANG_DOUYU_DANMAKU=Recive danmaku: {0}:{1}
 LANG_DOUYU_GIFT=Gift
 LANG_BILIBILI_ONLINECHANGE=Online change: {0}
+LANG_COMMANDS_CLIENTUSERMSG=chatuser <username> <message> Send irc message to live with specify username
