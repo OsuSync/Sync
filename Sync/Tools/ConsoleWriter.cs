@@ -8,9 +8,18 @@ using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Tools
 {
-    public interface ISyncIO
+    [Obsolete]
+    public interface ISyncIO : ISyncOutput, ISyncInput
     {
-        string ReadCommand();
+    }
+
+    public interface ISyncConsoleWriter : ISyncOutput, ISyncInput
+    {
+
+    }
+
+    public interface ISyncOutput 
+    {
         void Write(string msg, bool newline = true, bool time = true);
         void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true);
         void WriteHelp(string cmd, string desc);
@@ -20,18 +29,68 @@ namespace Sync.Tools
         void Clear();
     }
 
-    public class IO
+    public interface ISyncInput
     {
-        public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
-        public static ISyncIO CurrentIO { get { return currIO; } private set { currIO = value; } }
-        private static ISyncIO currIO = DefaultIO;
-        public static void SetIO(ISyncIO specIO)
+        string ReadCommand();
+    }
+
+    public sealed class IOWrapper : ISyncConsoleWriter
+    {
+        private ISyncInput currI = IO.DefaultIO;
+        private List<ISyncOutput> currOs = new List<ISyncOutput>() { IO.DefaultIO };
+
+        public void Clear() => currOs.ForEach(p => p.Clear());
+
+        public string ReadCommand() => currI.ReadCommand();
+
+        public void Write(string msg, bool newline = true, bool time = true) => currOs.ForEach(p => p.Write(msg, newline, time));
+
+        public void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true) => currOs.ForEach(p => p.WriteColor(text, color, newline, time));
+
+        public void WriteHelp(string cmd, string desc) => currOs.ForEach(p => p.WriteHelp(cmd, desc));
+
+        public void WriteHelp() => currOs.ForEach(p => p.WriteHelp());
+
+        public void WriteStatus() => currOs.ForEach(p => p.WriteStatus());
+
+        public void WriteWelcome() => currOs.ForEach(p => p.WriteWelcome());
+
+        internal void SetInput(ISyncInput input)
         {
-            CurrentIO = specIO;
+            this.currI = input;
+        }
+
+        internal void AddOutput(ISyncOutput output)
+        {
+            if (currOs.Contains(output)) return;
+            currOs.Add(output);
         }
     }
 
-    public class NConsoleWriter : ISyncIO
+    public static class IO
+    {
+        public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
+        public static readonly IOWrapper CurrentIO = new IOWrapper();
+
+        [Obsolete("Obsoleted, instead with AddOutput and SetInput", true)]
+        public static void SetIO(ISyncIO specIO)
+        {
+            CurrentIO.SetInput(specIO);
+            CurrentIO.AddOutput(specIO);
+        }
+        
+        public static void SetIO(ISyncConsoleWriter specIO)
+        {
+            CurrentIO.SetInput(specIO);
+            CurrentIO.AddOutput(specIO);
+        }
+
+        public static void AddOutput(ISyncOutput output) => CurrentIO.AddOutput(output);
+
+        public static void SetInput(ISyncInput input) => CurrentIO.SetInput(input);
+    }
+
+    public class NConsoleWriter : ISyncConsoleWriter, ISyncOutput, ISyncInput
     {
         private bool wait = false;
 
@@ -58,12 +117,11 @@ namespace Sync.Tools
                 Console.SetCursorPosition(0, Console.CursorTop);
             }
 
-            string ms = System.Text.RegularExpressions.Regex.Replace(msg, @"\\t|\\r|\\n", m =>
+            string ms = System.Text.RegularExpressions.Regex.Replace(msg, @"\\t|\\n", m =>
             {
                 switch (m.ToString())
                 {
                     case @"\t": return "\t";
-                    case @"\r": return "\r";
                     case @"\n": return "\n";
                 }
                 return m.ToString();
