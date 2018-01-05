@@ -27,5 +27,11 @@ namespace Sync.Tools
             get => ReadConfig(DefaultConfig.Language);
             set => WriteConfig(DefaultConfig.Language, value);
         }
+
+        public static string LoggerFile
+        {
+            get => ReadConfig(DefaultConfig.LoggerFile);
+            set => WriteConfig(DefaultConfig.LoggerFile, value);
+        }
     }
 }

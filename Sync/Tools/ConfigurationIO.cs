@@ -17,6 +17,7 @@ namespace Sync.Tools
             Client,
             Source,
             Language,
+            LoggerFile,
         }
 
         [DllImport("kernel32")]

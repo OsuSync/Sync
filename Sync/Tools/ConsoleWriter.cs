@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,8 +37,8 @@ namespace Sync.Tools
 
     public sealed class IOWrapper : ISyncConsoleWriter
     {
-        private ISyncInput currI = IO.DefaultIO;
-        private List<ISyncOutput> currOs = new List<ISyncOutput>() { IO.DefaultIO };
+        private ISyncInput currI;
+        private List<ISyncOutput> currOs = new List<ISyncOutput>();
 
         public void Clear() => currOs.ForEach(p => p.Clear());
 
@@ -70,6 +71,7 @@ namespace Sync.Tools
     public static class IO
     {
         public static readonly NConsoleWriter DefaultIO = new NConsoleWriter();
+        public static readonly FileLoggerWriter FileLogger;
         public static readonly IOWrapper CurrentIO = new IOWrapper();
 
         [Obsolete("Obsoleted, instead with AddOutput and SetInput", true)]
@@ -83,6 +85,20 @@ namespace Sync.Tools
         {
             CurrentIO.SetInput(specIO);
             CurrentIO.AddOutput(specIO);
+        }
+
+        static IO()
+        {
+            SetIO(DefaultIO);
+            try
+            {
+                FileLogger = new FileLoggerWriter();
+                AddOutput(FileLogger);
+            }
+            catch
+            {
+                DefaultIO.Write("Initial File Logger failed!!");
+            }
         }
 
         public static void AddOutput(ISyncOutput output) => CurrentIO.AddOutput(output);
@@ -193,6 +209,67 @@ namespace Sync.Tools
         public void Clear()
         {
             Console.Clear();
+        }
+    }
+
+    public class FileLoggerWriter : ISyncOutput
+    {
+        StreamWriter logger;
+        internal FileLoggerWriter()
+        {
+            if(Configuration.LoggerFile == "")
+            {
+                Configuration.LoggerFile = "Log.txt";
+            }
+            logger = new StreamWriter(File.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Configuration.LoggerFile), FileMode.OpenOrCreate, FileAccess.Write))
+            { AutoFlush = true };
+
+
+        }
+
+        public void Clear()
+        {
+        }
+
+        public void Write(string msg, bool newline = true, bool time = true)
+        {
+            string ms = System.Text.RegularExpressions.Regex.Replace(msg, @"\\t|\\n", m =>
+            {
+                switch (m.ToString())
+                {
+                    case @"\t": return "\t";
+                    case @"\n": return "\n";
+                }
+                return m.ToString();
+            });
+            logger.Write((time ? "[" + DateTime.Now.ToLongTimeString() + "] " : "")
+               + ms
+               + (newline ? "\n" : ""));
+        }
+
+        public void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true)
+        {
+            Write(text, newline, time);
+        }
+
+        public void WriteHelp(string cmd, string desc)
+        {
+        }
+
+        public void WriteHelp()
+        {
+        }
+
+        public void WriteStatus()
+        {
+        }
+
+        public void WriteWelcome()
+        {
+            Write(string.Format(LANG_Welcome,
+                   System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+
+            Write(LANG_Help);
         }
     }
 }
