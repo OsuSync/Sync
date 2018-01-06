@@ -243,15 +243,28 @@ namespace Sync.Plugins
             //Change directiory to Plugins
             Directory.SetCurrentDirectory(path);
 
+            string cache = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            if(Directory.Exists(cache))
+            {
+                Directory.Delete(cache, true);
+            }
+            Directory.CreateDirectory(cache);
+
             //Search all .dll files in directory(include sub directory)
             foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
             {
                 try
                 {
-                    if (asmList.Where(a => a.Location == file).Count() != 0)
+                    if (asmList.Any(a => a.Location == file))
                         continue;
                     //Load assembly directly
+#if RELEASE || TEST_UPDATE
+                    string temp = Path.Combine(cache, Path.GetFileName(file));
+                    File.Copy(file, temp);
+                    Assembly asm = Assembly.LoadFrom(temp);
+#else
                     Assembly asm = Assembly.LoadFrom(file);
+#endif
                     asmList.Add(asm);
                 }
                 catch(Exception e)
