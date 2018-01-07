@@ -243,12 +243,24 @@ namespace Sync.Plugins
             //Change directiory to Plugins
             Directory.SetCurrentDirectory(path);
 
-            string cache = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            var rootCache = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            try
+            {
+                Directory.Delete(rootCache, true);
+            }
+            catch { }
+
+            string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
             if(Directory.Exists(cache))
             {
                 Directory.Delete(cache, true);
             }
             Directory.CreateDirectory(cache);
+
+            new DirectoryInfo(rootCache)
+            {
+                Attributes = FileAttributes.Hidden
+            };
 
             //Search all .dll files in directory(include sub directory)
             foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
@@ -357,6 +369,20 @@ namespace Sync.Plugins
 
             SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
             SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
+            SyncPluginDependency deps = a.GetCustomAttribute<SyncPluginDependency>();
+            SyncPluginID pid = a.GetCustomAttribute<SyncPluginID>();
+            if(deps != null)
+            {
+                foreach (var item in deps.Dependencies)
+                {
+                    if (loadedList.Any(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item)) continue;
+                    else
+                    {
+                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item), pid.GUID)) return false;
+                        else return true;
+                    }
+                }
+            }
 
             if (requireAttr != null)
             {
@@ -392,6 +418,13 @@ namespace Sync.Plugins
             }
 
             return false;
+        }
+
+        private bool CheckIsReferenceTo(Type a, string b)
+        {
+            var result = a.GetCustomAttribute<SyncPluginDependency>()?.Dependencies.Any(p => p == b);
+            if (result.HasValue) return result.Value;
+            else return false;
         }
 
         private bool CheckIsReferenceTo(Type a, Type b)
@@ -454,5 +487,17 @@ namespace Sync.Plugins
         {
             RequirePluguins = new List<string>(types);
         }
+    }
+
+    public class SyncPluginID : Attribute
+    {
+        public string GUID;
+        public SyncPluginID(string GUID) => this.GUID = GUID;
+    }
+
+    public class SyncPluginDependency : Attribute
+    {
+        public string[] Dependencies;
+        public SyncPluginDependency(params string[] deps) => Dependencies = deps;
     }
 }
