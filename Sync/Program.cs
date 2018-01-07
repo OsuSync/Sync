@@ -1,18 +1,16 @@
-﻿using Sync.Command;
-using Sync.MessageFilter;
-using Sync.Plugins;
-using Sync.Source;
-using Sync.Tools;
-using System;
-using System.Diagnostics;
+﻿using Sync.Tools;
 using static Sync.Tools.IO;
 
 namespace Sync
 {
     public static class Program
     {
+
         static void Main(string[] args)
         {
+
+            if(Updater.ApplyUpdate(args)) return;
+ 
             I18n.Instance.ApplyLanguage(new DefaultI18n());
 
             while (true)
