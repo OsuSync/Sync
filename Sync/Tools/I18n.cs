@@ -106,6 +106,11 @@ namespace Sync.Tools
         {
             return element.value;
         }
+
+        public override string ToString()
+        {
+            return value;
+        }
     }
     /// <summary>
     /// I18n Manager
