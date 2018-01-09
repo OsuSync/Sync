@@ -31,6 +31,11 @@ namespace Sync.Plugins
             return Author;
         }
 
+        public string getGuid()
+        {
+            return this.GetType().GetCustomAttribute<SyncPluginID>()?.GUID;
+        }
+
         public override string ToString()
         {
             return Name;

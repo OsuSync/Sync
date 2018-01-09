@@ -369,16 +369,16 @@ namespace Sync.Plugins
 
             SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
             SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
-            SyncPluginDependency deps = a.GetCustomAttribute<SyncPluginDependency>();
+            IEnumerable<SyncPluginDependency> deps = a.GetCustomAttributes<SyncPluginDependency>();
             SyncPluginID pid = a.GetCustomAttribute<SyncPluginID>();
             if(deps != null)
             {
-                foreach (var item in deps.Dependencies)
+                foreach (var item in deps)
                 {
-                    if (loadedList.Any(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item)) continue;
+                    if (loadedList.Any(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID)) continue;
                     else
                     {
-                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item), pid.GUID)) return false;
+                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID), pid.GUID)) return false;
                         else return true;
                     }
                 }
@@ -422,7 +422,7 @@ namespace Sync.Plugins
 
         private bool CheckIsReferenceTo(Type a, string b)
         {
-            var result = a.GetCustomAttribute<SyncPluginDependency>()?.Dependencies.Any(p => p == b);
+            var result = a.GetCustomAttributes<SyncPluginDependency>()?.Any(p => p.GUID == b);
             if (result.HasValue) return result.Value;
             else return false;
         }
@@ -446,12 +446,65 @@ namespace Sync.Plugins
             return refRequireCheck.RequirePluguins.Contains(b);
         }
 
+        /// <summary>
+        /// True if <paramref name="b"/> is satisfy for the require of <paramref name="a"/> 
+        /// </summary>
+        /// <param name="a">A version require</param>
+        /// <param name="b">Target version</param>
+        /// <returns></returns>
+        public static bool CompareVersion(string a, string b)
+        {
+            // v : less or equal
+            // x : must
+            // ^ : large or equal
+            char start = a[0];
+
+            Func<bool?, bool> converter;
+            if (start == 'v') converter = p => p == null || !p.Value;
+            else if (start == '^') converter = p => p == null || p.Value;
+            else converter = p => p == null;
+
+            var va = a.Split('.').Select(k => int.Parse(k)).ToArray();
+            var vb = b.Split('.').Select(k => int.Parse(k)).ToArray();
+
+            for (int i = 0; i < va.Length; i++)
+            {
+                bool val = va[i] > vb[i];
+                if (va[i] == vb[i]) continue;
+                else return converter(val);
+            }
+            return converter(null);
+        }
+
+        private void CheckGUIDUpdate(SyncPluginDependency item)
+        {
+            if (Updater.update.CheckUpdate(item.GUID))
+            {
+                IO.CurrentIO.Write("Restart to apply plugins update");
+                throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");
+            }
+            else
+            {
+                throw new SyncMissingPluginException($"Can't install dependency plugin: {item.GUID}, version {item.Version}");
+            }
+        }
+
         private Plugin LoadPluginFormType(Type it)
         {
+            var deps = it.GetCustomAttributes<SyncPluginDependency>();
+
+            foreach (var item in deps)
+            {
+                var target = loadedList.Select(p=>p.GetCustomAttribute<SyncPluginID>()).FirstOrDefault(p =>p.GUID == item.GUID);
+                if (item.Require && target == null) CheckGUIDUpdate(item);
+                if (item.Version == null) continue;
+                if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
+            }
+
             object pluginTest = it.Assembly.CreateInstance(it.FullName);
             if (pluginTest == null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("Create instance fail!");
             }
 
             Plugin plugin = (Plugin)pluginTest;
@@ -462,6 +515,16 @@ namespace Sync.Plugins
             PluginEvents.Instance.RaiseEventAsync(new PluginEvents.InitPluginEvent(plugin));
             return plugin;
         }
+    }
+
+    public class SyncMissingPluginException : Exception
+    {
+        public SyncMissingPluginException(string msg) : base(msg) { }
+    }
+
+    public class SyncPluginOutdateException : Exception
+    {
+        public SyncPluginOutdateException(string msg) : base(msg) { }
     }
 
     /// <summary>
@@ -491,13 +554,24 @@ namespace Sync.Plugins
 
     public class SyncPluginID : Attribute
     {
-        public string GUID;
-        public SyncPluginID(string GUID) => this.GUID = GUID;
+        public string GUID { get; }
+        /// <summary>
+        /// Major.Minjor.Reversion
+        /// <para>e.g: 1.4.5</para>
+        /// </summary>
+        public string Version { get; }
+        public SyncPluginID(string GUID, string Version)
+        {
+            this.Version = Version;
+            this.GUID = GUID;
+        }
     }
 
     public class SyncPluginDependency : Attribute
     {
-        public string[] Dependencies;
-        public SyncPluginDependency(params string[] deps) => Dependencies = deps;
+        public string GUID { get; }
+        public string Version { get; set; }
+        public bool Require { get; set; }
+        public SyncPluginDependency(string guid) => GUID = guid;
     }
 }

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
-    public class InternalUpdate : Plugin
+    internal class InternalUpdate : Plugin
     {
         [DataContract]
         public class UpdateData
@@ -46,6 +46,7 @@ namespace Sync.Tools
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
                 addCmd("plugins", Plugins, "Install & Update Plugins online, to get help type 'plugins help'");
             });
+            Updater.update = this;
         }
 
         private bool Plugins(Arguments arg)
@@ -76,8 +77,8 @@ namespace Sync.Tools
             {
                 try
                 {
-                    IO.CurrentIO.Write($"Fetch update: {item.Name} by {item.Author} ");
-                    var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{item.Author}/{item.Name}");
+                    IO.CurrentIO.Write($"Fetch update: {item.Name} by {item.Author} [{item.getGuid()}]");
+                    var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{item.getGuid()}");
                     var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
                     if(MD5HashFile(target) != result.latestHash)
                     {
@@ -97,6 +98,32 @@ namespace Sync.Tools
 
             }
             return true;
+        }
+
+        internal bool CheckUpdate(string guid)
+        {
+            try
+            {
+                IO.CurrentIO.Write($"Fetch update: {guid}");
+                var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{guid}");
+                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
+                if (File.Exists(target) && MD5HashFile(target) != result.latestHash)
+                {
+                    IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
+                    DownloadSingleFile(result.downloadUrl, target, result.name);
+                    return true;
+                }
+                else
+                {
+                    IO.CurrentIO.Write($"{result.name} Up-to-date");
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                IO.CurrentIO.Write($"Can't find plugin [{guid}] update :  {e.TargetSite.Name} : {e.Message}");
+                return false;
+            }
         }
 
         private T Serializer<T>(string url)
@@ -227,6 +254,7 @@ namespace Sync.Tools
         private const string UpdateArg = "--update";
         private static readonly string CurrentEXEName = Path.GetFileName(Process.GetCurrentProcess().Modules[0].FileName);
         private static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+        internal static InternalUpdate update;
 
         public static bool ApplyUpdate(string[] args)
         {
