@@ -306,7 +306,7 @@ namespace Sync.Tools
                     totalDownloadedByte += osize;      //更新当前下载进度
                     osize = st.Read(buffer, 0, buffer.Length);              //获得下一个缓冲区
 
-                    if (time.ElapsedMilliseconds > 2000)                     //数据统计大于1000ms，则更新下载速度
+                    if (time.ElapsedMilliseconds > 1000)                     //数据统计大于1000ms，则更新下载速度
                     {
                         downloadspeed = totalDownloadedByte - updateDownloadByte;                   //这段时间已经下载的数据量
                         time.Restart();                                     //计时器重新开始计时
@@ -340,7 +340,10 @@ namespace Sync.Tools
                         {
                             if (entry.Length == 0) continue;
                             IO.CurrentIO.WriteHelp(entry.FullName, entry.Length.ToString());
-                            entry.ExtractToFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entry.FullName), true);
+                            try
+                            {
+                                entry.ExtractToFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entry.FullName), true);
+                            } catch { }
                         }
                     }
                      
