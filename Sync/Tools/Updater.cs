@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.IO.Packaging;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -34,6 +36,8 @@ namespace Sync.Tools
             public string description { get; set; }
             [DataMember(Order = 6)]
             public string guid { get; set; }
+            [DataMember(Order = 7)]
+            public string fileName { get; set; }
         }
 
         public InternalUpdate() : base("Internal Updater", "Deliay")
@@ -117,7 +121,7 @@ namespace Sync.Tools
             else
             {
                 var result = Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{name}")?[0];
-                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
+                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.fileName));
                 if (File.Exists(target)) File.Delete(target);
 
                 RequireRestart("Remove done. Restart to apply effect");
@@ -143,7 +147,12 @@ namespace Sync.Tools
             {
                 if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
                 {
-                    return CheckUpdate(datas[0].guid);
+                    if (CheckUpdate(datas[0].guid))
+                    {
+                        RequireRestart("Install done. Restart to load plugin");
+                        return true;
+                    }
+                    else return false;
                 }
                 return false;
             }
@@ -158,11 +167,14 @@ namespace Sync.Tools
                 {
                     IO.CurrentIO.Write($"Fetch update: {item.Name} by {item.Author} [{item.getGuid()}]");
                     var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{item.getGuid()}");
-                    var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
+                    var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", result.fileName);
                     if(MD5HashFile(target).ToLower() != result.latestHash)
                     {
                         IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
-                        DownloadSingleFile(result.downloadUrl, target, item.Name);
+                        if(!DownloadSingleFile(result.downloadUrl, target, result.fileName))
+                        {
+                            IO.CurrentIO.WriteColor("Download Failed!", ConsoleColor.Red);
+                        }
                     }
                     else
                     {
@@ -187,12 +199,11 @@ namespace Sync.Tools
             {
                 IO.CurrentIO.Write($"Fetch update: {guid}");
                 var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{guid}");
-                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
+                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", result.fileName);
                 if (!File.Exists(target) || MD5HashFile(target) != result.latestHash)
                 {
                     IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
-                    DownloadSingleFile(result.downloadUrl, target, result.name);
-                    return true;
+                    return DownloadSingleFile(result.downloadUrl, target, result.fileName); ;
                 }
                 else
                 {
@@ -266,6 +277,7 @@ namespace Sync.Tools
             try
             {
                 //打开HTTP连接，获得文件长度
+                IO.CurrentIO.WriteColor($"Download {name} from {dlUrl}", ConsoleColor.Magenta);
                 HttpWebRequest Myrq = (HttpWebRequest)WebRequest.Create(dlUrl);
                 HttpWebResponse myrp = (HttpWebResponse)Myrq.GetResponse();
                 long totalBytes = myrp.ContentLength;
@@ -316,6 +328,24 @@ namespace Sync.Tools
 
                 File.Copy(path + "_", path);
                 File.Delete(path + "_");
+
+                if(dlUrl.EndsWith("zip"))
+                {
+                    var zip = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".zip");
+                    if (File.Exists(zip)) File.Delete(zip);
+                    File.Move(path, zip);
+                    using (var archive = ZipFile.Open(zip, ZipArchiveMode.Update))
+                    {
+                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        {
+                            if (entry.Length == 0) continue;
+                            IO.CurrentIO.WriteHelp(entry.FullName, entry.Length.ToString());
+                            entry.ExtractToFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entry.FullName), true);
+                        }
+                    }
+                     
+                    File.Delete(zip);
+                }
 
                 IO.CurrentIO.Write($"[{name}] Done.");
                 return true;
