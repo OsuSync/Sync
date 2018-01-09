@@ -7,6 +7,8 @@ using static Sync.Tools.IO;
 using static Sync.Tools.DefaultI18n;
 using Sync.Client;
 using Sync.Source;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace Sync
 {
@@ -49,15 +51,17 @@ namespace Sync
             CurrentIO.WriteColor(String.Format(LANG_Sources, plugins.LoadSources()), ConsoleColor.Green);
 
             //select a danmaku source by config
-            sourceWrapper = new SourceWorkWrapper(sources);
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceWarpperEvent(sourceWrapper));
-
-            if (sourceWrapper.Source == null)
+            try
+            {
+                sourceWrapper = new SourceWorkWrapper(sources);
+                PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceWarpperEvent(sourceWrapper));
+            }
+            catch
             {
                 CurrentIO.Write("");
                 CurrentIO.WriteColor(LANG_Error, ConsoleColor.Red);
+                CurrentIO.WriteColor("Press enter to continue", ConsoleColor.Red);
                 CurrentIO.ReadCommand();
-                throw new NullReferenceException(LANG_Error);
             }
 
             //Get clients singleton
@@ -141,6 +145,12 @@ namespace Sync
 
             plugins.GetPluginList().ForEach(p => p.OnExit());
 
+            Environment.Exit(0);
+        }
+
+        public void RestartSync()
+        {
+            Process.Start(Assembly.GetEntryAssembly().Location);
             Environment.Exit(0);
         }
     }

@@ -333,6 +333,17 @@ namespace Sync.Plugins
                 try
                 {
 
+                    var deps = it.GetCustomAttributes<SyncPluginDependency>();
+
+                    foreach (var item in deps)
+                    {
+                        var target = allList.Select(p => p.GetCustomAttribute<SyncPluginID>())?.FirstOrDefault(p => p?.GUID == item.GUID);
+                        if (item.Require && target == null) CheckGUIDUpdate(item);
+                        if (item.Version == null) continue;
+                        if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
+                    }
+
+
                     if (LateLoad(it))
                     {
 #if (DEBUG)
@@ -464,7 +475,9 @@ namespace Sync.Plugins
             else if (start == '^') converter = p => p == null || p.Value;
             else converter = p => p == null;
 
-            var va = a.Split('.').Select(k => int.Parse(k)).ToArray();
+            string ta = a.Substring(1);
+
+            var va = ta.Split('.').Select(k => int.Parse(k)).ToArray();
             var vb = b.Split('.').Select(k => int.Parse(k)).ToArray();
 
             for (int i = 0; i < va.Length; i++)
@@ -480,7 +493,7 @@ namespace Sync.Plugins
         {
             if (Updater.update.CheckUpdate(item.GUID))
             {
-                IO.CurrentIO.Write("Restart to apply plugins update");
+                SyncHost.Instance.RestartSync();
                 throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");
             }
             else
@@ -491,16 +504,6 @@ namespace Sync.Plugins
 
         private Plugin LoadPluginFormType(Type it)
         {
-            var deps = it.GetCustomAttributes<SyncPluginDependency>();
-
-            foreach (var item in deps)
-            {
-                var target = loadedList.Select(p=>p.GetCustomAttribute<SyncPluginID>()).FirstOrDefault(p =>p.GUID == item.GUID);
-                if (item.Require && target == null) CheckGUIDUpdate(item);
-                if (item.Version == null) continue;
-                if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
-            }
-
             object pluginTest = it.Assembly.CreateInstance(it.FullName);
             if (pluginTest == null)
             {

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
-    internal class InternalUpdate : Plugin
+    public class InternalUpdate : Plugin
     {
         [DataContract]
         public class UpdateData
@@ -51,23 +51,102 @@ namespace Sync.Tools
 
         private bool Plugins(Arguments arg)
         {
+            if (arg.Count == 0) return Help();
             switch (arg[0])
             {
-                case "help":
-                    IO.CurrentIO.Write("Help for 'plugins' command:");
-                    IO.CurrentIO.WriteHelp("install", "install [author] [name] Install plugin");
-                    IO.CurrentIO.WriteHelp("remove", "remove [author] [name] Remove plugin");
-                    IO.CurrentIO.WriteHelp("search", "search [keyword] Search plugins");
-                    IO.CurrentIO.WriteHelp("update", "Check update for Sync and Plugins");
-                    return true;
                 case "search":
                     return Search(arg[1]);
                 case "update":
                     return Update();
+                case "install":
+                    return Install(arg[1]);
+                case "list":
+                    return List();
+                case "remove":
+                    return Remove(arg[1]);
                 default:
-                    return false;
+                    return Help();
             }
 
+        }
+
+        private bool Help()
+        {
+            IO.CurrentIO.Write("Help for 'plugins' command:");
+            IO.CurrentIO.WriteHelp("install", "install [guid/name] Install plugin");
+            IO.CurrentIO.WriteHelp("remove", "remove [name] Remove plugin by name");
+            IO.CurrentIO.WriteHelp("search", "search [keyword] Search plugins");
+            IO.CurrentIO.WriteHelp("update", "Check update for Sync and Plugins");
+            IO.CurrentIO.WriteHelp("list", "List current installed plugins");
+            return true;
+        }
+
+        private bool List()
+        {
+            var list = getHoster().EnumPluings();
+            foreach (var item in list)
+            {
+                IO.CurrentIO.WriteColor("Name", ConsoleColor.Cyan, false, false);
+                IO.CurrentIO.WriteColor(item.Name.PadRight(25), ConsoleColor.White, false, false);
+                IO.CurrentIO.WriteColor("Author", ConsoleColor.DarkCyan, false, false);
+                IO.CurrentIO.WriteColor(item.Author.PadRight(20), ConsoleColor.White, false, false);
+                var info = item.GetType().GetCustomAttribute<SyncPluginID>();
+                IO.CurrentIO.WriteColor("Support Update:", ConsoleColor.DarkCyan, false, false);
+                if (info != null)
+                {
+                    IO.CurrentIO.WriteColor("Yes".PadRight(15), ConsoleColor.White, false, false);
+                    IO.CurrentIO.WriteColor("Ver:", ConsoleColor.DarkCyan, false, false);
+                    IO.CurrentIO.WriteColor(info.Version.PadRight(15), ConsoleColor.White, true, false);
+                }
+                else
+                {
+                    IO.CurrentIO.WriteColor("No", ConsoleColor.White, true, false);
+                }
+            }
+            return true;
+        }
+
+        private bool Remove(string name)
+        {
+            var type = getHoster().EnumPluings().FirstOrDefault(p => p.Name.Contains(name));
+            if(type == null)
+            {
+                IO.CurrentIO.WriteColor($"Plugin {name} not exist", ConsoleColor.Red);
+                return false;
+            }
+            else
+            {
+                var result = Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{name}")?[0];
+                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
+                if (File.Exists(target)) File.Delete(target);
+
+                RequireRestart("Remove done. Restart to apply effect");
+                return true;
+            }
+        }
+
+        private void RequireRestart(string msg)
+        {
+            IO.CurrentIO.WriteColor($"{msg}? (Y/N):", ConsoleColor.Green, false);
+            var result = IO.CurrentIO.ReadCommand();
+            if (result.ToLower().StartsWith("y")) SyncHost.Instance.RestartSync();
+        }
+
+        private bool Install(string guid)
+        {
+            if(CheckUpdate(guid))
+            {
+                RequireRestart("Install done. Restart to load plugin");
+                return true;
+            }
+            else
+            {
+                if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
+                {
+                    return CheckUpdate(datas[0].guid);
+                }
+                return false;
+            }
         }
 
         private bool Update()
@@ -80,7 +159,7 @@ namespace Sync.Tools
                     IO.CurrentIO.Write($"Fetch update: {item.Name} by {item.Author} [{item.getGuid()}]");
                     var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{item.getGuid()}");
                     var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
-                    if(MD5HashFile(target) != result.latestHash)
+                    if(MD5HashFile(target).ToLower() != result.latestHash)
                     {
                         IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
                         DownloadSingleFile(result.downloadUrl, target, item.Name);
@@ -97,6 +176,8 @@ namespace Sync.Tools
                 }
 
             }
+
+            RequireRestart("Update done. Restart to reload plugin");
             return true;
         }
 
@@ -107,7 +188,7 @@ namespace Sync.Tools
                 IO.CurrentIO.Write($"Fetch update: {guid}");
                 var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{guid}");
                 var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.downloadUrl));
-                if (File.Exists(target) && MD5HashFile(target) != result.latestHash)
+                if (!File.Exists(target) || MD5HashFile(target) != result.latestHash)
                 {
                     IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
                     DownloadSingleFile(result.downloadUrl, target, result.name);
@@ -150,6 +231,9 @@ namespace Sync.Tools
                     IO.CurrentIO.WriteColor(item.author.PadRight(15), ConsoleColor.White, false, false);
                     IO.CurrentIO.WriteColor("Description", ConsoleColor.DarkCyan, false, false);
                     IO.CurrentIO.WriteColor(item.description, ConsoleColor.White, true, false);
+                    IO.CurrentIO.WriteColor("GUID ", ConsoleColor.DarkCyan, false, false);
+                    IO.CurrentIO.WriteColor(item.guid.PadRight(32), ConsoleColor.White, true, false);
+                    IO.CurrentIO.WriteColor("===============", ConsoleColor.White, true, false);
                 }
                 return true;
             }
@@ -177,7 +261,7 @@ namespace Sync.Tools
         }
 
 
-        private void DownloadSingleFile(string dlUrl, string path, string name)
+        private bool DownloadSingleFile(string dlUrl, string path, string name)
         {
             try
             {
@@ -228,19 +312,18 @@ namespace Sync.Tools
                 if (File.Exists(path))
                 {
                     File.Delete(path);
-                    File.Copy(path + "_", path);
-                    File.Delete(path + "_");
                 }
 
+                File.Copy(path + "_", path);
+                File.Delete(path + "_");
+
                 IO.CurrentIO.Write($"[{name}] Done.");
+                return true;
             }
             catch (Exception e)
             {
-#if LOGGER
-                Logger.Error("Downloader", $"Error while {e.TargetSite.Name} : {e.Message}");
-                Logger.Error("Downloader", $"{dlUrl} Error");
-#endif
                 IO.CurrentIO.Write($"Error while {e.TargetSite.Name} : {e.Message}");
+                return false;
             }
         }
 
