@@ -270,13 +270,10 @@ namespace Sync.Plugins
                     if (asmList.Any(a => a.Location == file))
                         continue;
                     //Load assembly directly
-#if RELEASE || TEST_UPDATE
                     string temp = Path.Combine(cache, Path.GetFileName(file));
                     File.Copy(file, temp);
                     Assembly asm = Assembly.LoadFrom(temp);
-#else
-                    Assembly asm = Assembly.LoadFrom(file);
-#endif
+
                     asmList.Add(asm);
                 }
                 catch(Exception e)
