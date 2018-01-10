@@ -48,7 +48,7 @@ namespace Sync.Tools
         {
             this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p => {
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
-                addCmd("plugins", Plugins, "Install & Update Plugins online, to get help type 'plugins help'");
+                addCmd("plugins", Plugins, "Install & Update Plugins online, type 'plugins' to get help.");
             });
             Updater.update = this;
         }
@@ -112,7 +112,7 @@ namespace Sync.Tools
 
         private bool Remove(string name)
         {
-            var type = getHoster().EnumPluings().FirstOrDefault(p => p.Name.Contains(name));
+            var type = getHoster().EnumPluings().FirstOrDefault(p => p.Name.ToLower().Contains(name.ToLower()));
             if(type == null)
             {
                 IO.CurrentIO.WriteColor($"Plugin {name} not exist", ConsoleColor.Red);
@@ -270,7 +270,6 @@ namespace Sync.Tools
                 sb.Append(b[i].ToString("X2"));
             return sb.ToString();
         }
-
 
         private bool DownloadSingleFile(string dlUrl, string path, string name)
         {
