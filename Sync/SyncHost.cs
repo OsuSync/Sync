@@ -135,6 +135,12 @@ namespace Sync
 
         public void ExitSync()
         {
+            SaveSync();
+            Environment.Exit(0);
+        }
+
+        public void SaveSync()
+        {
             if (ClientWrapper.Client != null) ClientWrapper.Client?.StopWork();
             if (SourceWrapper.Source != null) SourceWrapper.Source?.Disconnect();
 
@@ -145,11 +151,11 @@ namespace Sync
 
             plugins.GetPluginList().ForEach(p => p.OnExit());
 
-            Environment.Exit(0);
         }
 
         public void RestartSync()
         {
+            SaveSync();
             Process.Start(Assembly.GetEntryAssembly().Location);
             Environment.Exit(0);
         }

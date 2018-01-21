@@ -30,7 +30,7 @@ namespace Sync.Command
         /// <param name="cmd">Command</param>
         public void invokeCmdString(string cmd)
         {
-            if (cmd.Length == 0) return;
+            if (cmd == null || cmd.Length == 0) return;
             string[] args = cmd.Split(" ".ToCharArray(), 2);
 
             if(args.Length < 1 )
