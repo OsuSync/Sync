@@ -16,5 +16,9 @@ namespace Sync.Tools
         /// Invoke when save configuration
         /// </summary>
         void onConfigurationSave();
+        /// <summary>
+        /// Detected change form files and reload values
+        /// </summary>
+        void onConfigurationReload();
     }
 }

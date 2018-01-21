@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -18,6 +19,24 @@ namespace Sync.Tools
             Source,
             Language,
             LoggerFile,
+        }
+
+        private static FileSystemWatcher watcher;
+
+        static ConfigurationIO()
+        {
+            watcher = new FileSystemWatcher(AppDomain.CurrentDomain.BaseDirectory);
+            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            watcher.EnableRaisingEvents = true;
+            watcher.Changed += (s, e) => {
+                if (PluginConfigurationManager.InSaving) return;
+                if (!e.Name.StartsWith("config.ini")) return;
+                foreach (var item in PluginConfigurationManager.ConfigurationSet)
+                {
+                    item.ReloadAll();
+                }
+                Plugins.PluginEvents.Instance.RaiseEventAsync(new Plugins.PluginEvents.ConfigurationChange());
+            };
         }
 
         [DllImport("kernel32")]

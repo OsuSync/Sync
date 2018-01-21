@@ -12,6 +12,7 @@ namespace Sync.Tools
     public sealed class ConfigurationElement
     {
         private string _cfg = string.Empty;
+        private PluginConfiuration parent;
         public ConfigurationElement()
         {
 
@@ -41,7 +42,7 @@ namespace Sync.Tools
     /// <summary>
     /// Plugins configuration service, create instance to get configuration service
     /// </summary>
-    public sealed class PluginConfiuration
+    internal sealed class PluginConfiuration
     {
         private Plugin instance;
         private IConfigurable config;
@@ -57,7 +58,7 @@ namespace Sync.Tools
             ForceSave();
         }
 
-        public void ForceLoad()
+        internal void ForceLoad()
         {
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
@@ -74,7 +75,25 @@ namespace Sync.Tools
             config.onConfigurationLoad();
         }
 
-        public void ForceSave()
+        internal void ForceReload()
+        {
+            foreach (PropertyInfo item in config.GetType().GetProperties())
+            {
+                if (item.PropertyType == typeof(ConfigurationElement))
+                {
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+
+                    if (!string.IsNullOrWhiteSpace(element))
+                    {
+                        item.SetValue(config, element);
+                    }
+                }
+            }
+            config.onConfigurationReload();
+        }
+
+
+        internal void ForceSave()
         {
             config.onConfigurationSave();
             foreach (PropertyInfo item in config.GetType().GetProperties())
@@ -93,6 +112,7 @@ namespace Sync.Tools
     public sealed class PluginConfigurationManager
     {
         internal static LinkedList<PluginConfigurationManager> ConfigurationSet = new LinkedList<PluginConfigurationManager>();
+        internal static bool InSaving = false;
         private List<PluginConfiuration> items;
         private Plugin instance;
         public PluginConfigurationManager(Plugin instance)
@@ -107,22 +127,32 @@ namespace Sync.Tools
             items.Add(new PluginConfiuration(instance, Config));
         }
 
+        internal void ReloadAll()
+        {
+            foreach (var item in items)
+            {
+                item.ForceReload();
+            }
+        }
+
         public void SaveAll()
         {
+            InSaving = true;
             foreach (var item in items)
             {
                 item.ForceSave();
             }
+            InSaving = false;
         }
 
-        public PluginConfiuration GetInstance(IConfigurable obj)
-        {
-            foreach (var item in items)
-            {
-                if (item.GetType() == obj.GetType()) return item;
-            }
-            return null;
-        }
+        //public PluginConfiuration GetInstance(IConfigurable obj)
+        //{
+        //    foreach (var item in items)
+        //    {
+        //        if (item.GetType() == obj.GetType()) return item;
+        //    }
+        //    return null;
+        //}
 
         ~PluginConfigurationManager () => SaveAll();
     }
