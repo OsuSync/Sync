@@ -111,6 +111,10 @@ namespace Sync.Plugins
             }
         }
 
+        public struct ConfigurationChange : IPluginEvent
+        {
+        }
+
         /// <summary>
         /// Fire when ready
         /// </summary>
@@ -468,8 +472,8 @@ namespace Sync.Plugins
             char start = a[0];
 
             Func<bool?, bool> converter;
-            if (start == 'v') converter = p => p == null || !p.Value;
-            else if (start == '^') converter = p => p == null || p.Value;
+            if (start == 'v') converter = p => p == null || p.Value;
+            else if (start == '^') converter = p => p == null || !p.Value;
             else converter = p => p == null;
 
             string ta = a.Substring(1);
