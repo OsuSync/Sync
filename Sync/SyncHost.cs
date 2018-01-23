@@ -135,8 +135,14 @@ namespace Sync
 
         public void ExitSync()
         {
-            SaveSync();
-            Environment.Exit(0);
+            try
+            {
+                SaveSync();
+            }
+            finally
+            {
+                Environment.Exit(0);
+            }
         }
 
         public void SaveSync()
@@ -155,7 +161,18 @@ namespace Sync
 
         public void RestartSync()
         {
-            SaveSync();
+            try
+            {
+                SaveSync();
+            }
+            finally
+            {
+                ForceRestartSync();
+            }
+        }
+
+        public void ForceRestartSync()
+        {
             Process.Start(Assembly.GetEntryAssembly().Location);
             Environment.Exit(0);
         }

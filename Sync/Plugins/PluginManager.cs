@@ -295,19 +295,30 @@ namespace Sync.Plugins
             allList = new List<Type>();
 
             //Load all plugins first
+
             foreach (Assembly asm in asmList)
             {
-                foreach (Type item in asm.GetExportedTypes())
+                try
                 {
-                    Type it = asm.GetType(item.FullName);
-                    if (it == null ||
-                        !it.IsClass || !it.IsPublic ||
-                        !typeof(Plugin).IsAssignableFrom(it) ||
-                        typeof(Plugin) == it)
-                        continue;
-                    allList.Add(it);
+                    foreach (Type item in asm.GetExportedTypes())
+                    {
+                        Type it = asm.GetType(item.FullName);
+                        if (it == null ||
+                            !it.IsClass || !it.IsPublic ||
+                            !typeof(Plugin).IsAssignableFrom(it) ||
+                            typeof(Plugin) == it)
+                            continue;
+                        allList.Add(it);
+                    }
+                }
+                catch(Exception e)
+                {
+                    //Not up to date
+                    IO.CurrentIO.WriteColor(String.Format(LANG_LoadPluginErr, asm.FullName, e.Message), ConsoleColor.Red);
+                    continue;
                 }
             }
+
 
             lazylist = allList.ToList();
             //looping add for resolve dependency
@@ -494,7 +505,7 @@ namespace Sync.Plugins
         {
             if (Updater.update.CheckUpdate(item.GUID))
             {
-                SyncHost.Instance.RestartSync();
+                SyncHost.Instance.ForceRestartSync();
                 throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");
             }
             else
