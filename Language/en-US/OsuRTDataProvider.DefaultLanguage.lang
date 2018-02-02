@@ -1,5 +1,5 @@
 [en-US]
-LANG_OSU_NOT_FOUND=[OsuRTDataProvider][ID:{0}]Not found osu!.exe process
+LANG_OSU_NOT_FOUND=[OsuRTDataProvider][ID:{0}]Cannot found osu!.exe process
 LANG_OSU_FOUND=[OsuRTDataProvider][ID:{0}]Found osu!.exe process
 LANG_INIT_PLAY_FINDER_FAILED=[OsuRTDataProvider][ID:{0}]Init PlayFinder Failed! Retry after {1} seconds
 LANG_INIT_PLAY_FINDER_SUCCESS=[OsuRTDataProvider][ID:{0}]Init PlayFinder Success!

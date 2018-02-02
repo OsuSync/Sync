@@ -1,5 +1,5 @@
 [en-US]
-LANG_HELP_BAN=ban user/id/regex message will be sent to irc
+LANG_HELP_BAN=ban user/id/regex ,message will be sent to irc
 LANG_HELP_UNBAN=unban user/id/regex
 LANG_HELP_WHITELIST=add user/id/regex to whitelist who can send message to irc
 LANG_HELP_REMOVE_WHITELIST=remove user/id/regex from whitelist
