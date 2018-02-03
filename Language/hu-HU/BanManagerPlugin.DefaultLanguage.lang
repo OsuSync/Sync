@@ -1,0 +1,8 @@
+[hu-HU]
+LANG_HELP_BAN=ban user/id/regex , felhasználó kitiltása, üzenet küldve lesz IRC-re is
+LANG_HELP_UNBAN=unban user/id/regex , felhasználó tiltásásnak feloldása
+LANG_HELP_WHITELIST=add user/id/regex felhasználó engedélylistához adása, akik tudnak IRC-re üzenetet küldeni
+LANG_HELP_REMOVE_WHITELIST=remove user/id/regex felhasználó engedélylistáról való levétele
+LANG_HELP_ACCESS=hozzáférési szint beállítása az IRC-en való üzenetküldéshez
+LANG_HELP_LIST=list whitelist(engedélylista) vagy banlist(tiltáslista)
+LANG_ERR_COMMAND=parancs hiba
