@@ -7,11 +7,13 @@ using static Sync.Tools.IO;
 using static Sync.Tools.DefaultI18n;
 using Sync.Client;
 using Sync.Source;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace Sync
 {
     /// <summary>
-    /// 程序Host类，用于管理和初始化各个模块的实例与可见性
+    /// A manager for global modules
     /// </summary>
     public class SyncHost
     {
@@ -26,10 +28,7 @@ namespace Sync
         private MessageDispatcher messages;
         private ClientManager clients;
         /// <summary>
-        /// 对程序集外不可见，不允许主程序外的程序初始化Host的实例
-        /// 
-        /// 因为在调用时会完成事件的通知，如果在构造函数中初始化程序，此时本类并未实例化完成。
-        /// 故分开实现。
+        /// Internal use only
         /// </summary>
         internal SyncHost()
         {
@@ -37,48 +36,40 @@ namespace Sync
         }
 
         /// <summary>
-        /// 调用即开始读取各种插件，只允许主程序的管理模块调用
+        /// Invoke to load plugins
         /// </summary>
         internal void Load()
         {
             CurrentIO.Write(LANG_Loading);
 
-            //初始化插件管理器，并初始化插件，让插件做准备工作
+            //Initial plugins manager
             plugins = new PluginManager();
             CurrentIO.WriteColor(String.Format(LANG_Plugins, plugins.LoadPlugins()), ConsoleColor.Green);
 
-            //初始化弹幕源
+            //Initial danmaku source
             sources = new SourceManager();
             CurrentIO.WriteColor(String.Format(LANG_Sources, plugins.LoadSources()), ConsoleColor.Green);
 
-            //挑选需要作为工作弹幕源的弹幕源
-            sourceWrapper = new SourceWorkWrapper(sources);
-            PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceWarpperEvent(sourceWrapper));
-
-            if (sourceWrapper.Source == null)
+            //select a danmaku source by config
+            try
+            {
+                sourceWrapper = new SourceWorkWrapper(sources);
+                PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceWarpperEvent(sourceWrapper));
+            }
+            catch
             {
                 CurrentIO.Write("");
                 CurrentIO.WriteColor(LANG_Error, ConsoleColor.Red);
+                CurrentIO.WriteColor("Press enter to continue", ConsoleColor.Red);
                 CurrentIO.ReadCommand();
-                throw new NullReferenceException(LANG_Error);
             }
 
-            //获得单例
+            //Get clients singleton
             clients = ClientManager.Instance;
             CurrentIO.WriteColor(String.Format(LANG_Client, plugins.LoadClients()), ConsoleColor.Green);
 
             clientWrapper = new ClientWorkWrapper(clients);
             PluginEvents.Instance.RaiseEvent(new PluginEvents.InitClientWarpperEvent(clientWrapper));
-
-            //if (Configuration.CoocAccount.Length == 0)
-            //{
-            //    CurrentIO.WriteColor(LANG_RqueireLogin, ConsoleColor.Red);
-            //    CurrentIO.WriteColor(LANG_AccountName, ConsoleColor.Green);
-            //    Configuration.CoocAccount = CurrentIO.ReadCommand();
-            //    CurrentIO.WriteColor(LANG_AccountPw, ConsoleColor.Green);
-            //    Configuration.CoocPassword = CurrentIO.ReadCommand();
-
-            //}
 
             commands = new CommandManager();
             CurrentIO.WriteColor(String.Format(LANG_Commands, plugins.LoadCommnads()), ConsoleColor.Green);
@@ -94,12 +85,12 @@ namespace Sync
         }
 
         /// <summary>
-        /// 程序集内可见的完全PluginManager类操作器
+        /// The internal PluginManager instance property
         /// </summary>
         internal PluginManager Plugins { get { return plugins; } }
 
         /// <summary>
-        /// 只读的Plugins列表
+        /// Read only plugins list
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Plugin> EnumPluings()
@@ -141,5 +132,49 @@ namespace Sync
         public SourceWorkWrapper SourceWrapper { get => sourceWrapper; }
 
         public ClientWorkWrapper ClientWrapper { get => clientWrapper; }
+
+        public void ExitSync()
+        {
+            try
+            {
+                SaveSync();
+            }
+            finally
+            {
+                Environment.Exit(0);
+            }
+        }
+
+        public void SaveSync()
+        {
+            if (ClientWrapper.Client != null) ClientWrapper.Client?.StopWork();
+            if (SourceWrapper.Source != null) SourceWrapper.Source?.Disconnect();
+
+            foreach (var item in PluginConfigurationManager.ConfigurationSet)
+            {
+                item.SaveAll();
+            }
+
+            plugins.GetPluginList().ForEach(p => p.OnExit());
+
+        }
+
+        public void RestartSync()
+        {
+            try
+            {
+                SaveSync();
+            }
+            finally
+            {
+                ForceRestartSync();
+            }
+        }
+
+        public void ForceRestartSync()
+        {
+            Process.Start(Assembly.GetEntryAssembly().Location);
+            Environment.Exit(0);
+        }
     }
 }

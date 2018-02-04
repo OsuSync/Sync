@@ -89,7 +89,7 @@ namespace Sync.Plugins
     /// <param name="event">the event fired you target handler</param>
     /// <returns></returns>
     public delegate void EventHandlerFunc<Event>(Event @event) where Event : IBaseEvent;
-
+    
     public class HandlerList : LinkedList<object>
     {
 

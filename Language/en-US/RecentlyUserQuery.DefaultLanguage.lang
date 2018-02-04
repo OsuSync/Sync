@@ -1,0 +1,11 @@
+[en-US]
+LANG_HELP=\nThis is a help for osu!irc common commands(in osu!irc please add "?" at the beginning of commands)\nrecently --status | Get the status of the current log (osu!irc unavailable)\nrecently --u <userName> | Get the <userName> history (Not recommended for osu!irc use)\nrecently --i <userId> | Get the <userId> history (Not recommended for osu!irc use)\nrecently | Get recent username and ID, ID can be used to perform actions like "?ban --i" (osu!irc supported)\nrecently --disable | Message logging disabled, all logs have been cleared (osu!irc supported)\nrecently --start | Start logging again (osu!irc supported)\nrecently --realloc <count> | Reallocate the capacity of the logs to store more logs (osu!irc supported)\nrecently --recently | Get recent user id\n
+LANG_MSG_STATUS=MessageRecord status: {0} | recordCount/Capacity : {1}/{2}
+LANG_RUNNING=running
+LANG_STOP=stopped
+LANG_MSG_DISABLE=Message logging disabled, all logs have been cleared
+LANG_MSG_START=Message logging has been started
+LANG_MSG_REALLOC_ERR=MessageRecord: Wrong instructions
+LANG_MSG_REALLOC=You can now log the message history for {0}
+LANG_MSG_NOTIMPLENT=Not implemented
+LANG_MSG_UNKNOWNCOMMAND=Unknown command.

@@ -26,9 +26,9 @@ namespace Sync.Plugins
 
         }
         /// <summary>
-        /// 简易实现直接传递弹幕消息
+        /// Send danmaku message to osu!IRC
         /// </summary>
-        /// <param name="danmaku">弹幕</param>
+        /// <param name="danmaku">Danmaku</param>
         public void onDanmaku(IBaseDanmakuEvent danmaku)
         {
             IMessageBase msg = new DanmakuMessage(danmaku);
@@ -36,10 +36,10 @@ namespace Sync.Plugins
         }
 
         /// <summary>
-        /// 简易实现的传递IRC消息
+        /// Send osu!irc message to damaku
         /// </summary>
-        /// <param name="user">发信人</param>
-        /// <param name="message">信息</param>
+        /// <param name="user">Sender</param>
+        /// <param name="message">Message</param>
         public void onIRC(StringElement user, StringElement message)
         {
             IMessageBase msg = new IRCMessage(user, message);
@@ -54,42 +54,37 @@ namespace Sync.Plugins
         }
 
         /// <summary>
-        /// 产生一个消息  
-        /// 该消息会被按顺序编译
+        /// Raise a message and pass to filter list
         /// </summary>
-        /// <param name="msgType">消息类型，此处传IOsu(来自IRC)和IDanmaku(来自弹幕)</param>
-        /// <param name="msg">具体消息实例</param>
         private void RaiseMessage(Type msgType, IMessageBase msg)
         {
             IMessageBase newMsg = msg;
 
-            //消息来自弹幕
+            //From danmaku
             if (msgType == typeof(ISourceDanmaku))
             {
                 filters.PassFilterDanmaku(ref newMsg);
-                //将消息过滤一遍插件之后，判断是否取消消息（消息是否由插件自行处理拦截）
                 if (newMsg.Cancel) return;
                 else
                 {
-                    //parent.GetIRC().sendRawMessage(Configuration.TargetIRC, newMsg.user + newMsg.message.RawText);
+                    //Send this danmaku message to osu!irc
                     MessageManager.PostIRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg);
                 }
                 return;
             }
 
-            //消息来自osu!IRC
+            //From osu!orc
             else if (msgType == typeof(ISourceClient))
             {
                 filters.PassFilterOSU(ref newMsg);
-                //同上
                 if (newMsg.Cancel) return;
                 else
                 {
-                    //发信用户为设置的目标IRC
+                    //Detect sender is osu!irc self
                     if (newMsg.User.RawText == SyncHost.Instance.ClientWrapper.Client.NickName)
                     {
-                        //则将消息发往Source源
-                        if(!SyncHost.Instance.SourceWrapper.Sendable)
+                        //Send message to danmaku source
+                        if (!SyncHost.Instance.SourceWrapper.Sendable)
                         {
                             IO.CurrentIO.WriteColor(DefaultI18n.LANG_SendNotReady, ConsoleColor.Red);
                         }
@@ -98,7 +93,7 @@ namespace Sync.Plugins
                             SyncHost.Instance.SourceWrapper.SendableSource.Send(newMsg);
                         }
                     }
-                    //其他用户则转发到目标IRC
+                    //Send message to irc if Not sender
                     else
                     {
                         MessageManager.PostIRCMessage(SyncHost.Instance.ClientWrapper.Client.NickName, newMsg);
@@ -108,7 +103,7 @@ namespace Sync.Plugins
                 return;
             }
 
-            //消息来自弹幕礼物
+            //From danmaku gift(subscribe or other gift)
             else if (msgType == typeof(ISourceGift))
             {
                 filters.PassFilterGift(ref newMsg);
@@ -119,7 +114,7 @@ namespace Sync.Plugins
                 }
             }
 
-            //观看人数变化
+            //The spectator count change
             else if (msgType == typeof(ISourceOnlineChange))
             {
                 filters.PassFilterOnlineChange(ref newMsg);
@@ -135,7 +130,7 @@ namespace Sync.Plugins
 
 
     /// <summary>
-    /// 消息管理器,管制消息的发送
+    /// Message limiter
     /// </summary>
     public class MessageManager
     {
@@ -145,6 +140,7 @@ namespace Sync.Plugins
             {
                 if (!msg.Message.RawText.StartsWith("?send"))
                     msg.Cancel = true;
+                msg.Message = new StringElement(msg.Message.RawText.TrimStart("?send".ToArray()));
             }
         }
 
@@ -162,15 +158,21 @@ namespace Sync.Plugins
         {
             set
             {
-                option = value;
                 if (option != value)
                 {
                     if (option == PeekOption.Only_Send_Command)
+                    {
                         filterManager.deleteFilter(sendFilter);
+                        IO.CurrentIO.WriteColor(DefaultI18n.LANG_MsgMgr_Free, ConsoleColor.Green);
+                    }
                     else if (value == PeekOption.Only_Send_Command)
+                    {
                         filterManager.AddFilter(sendFilter);
+                        IO.CurrentIO.WriteColor(DefaultI18n.LANG_MsgMgr_Limit, ConsoleColor.Green);
+                    }
+
                 }
-                isLimit = false;
+                option = value;
             }
             get
             {
@@ -274,7 +276,7 @@ namespace Sync.Plugins
 
             if (option == PeekOption.Auto)
             {
-                //判断是否超出限定
+                //Exceeded limit?
                 if (!isLimit && (float)sendCount / (60000.0f / time_inv) >= sendLimit_pre)
                 {
                     isLimit = true;
@@ -282,7 +284,7 @@ namespace Sync.Plugins
                     currentRecoverTime = 0;
                 }
 
-                //解禁时间
+                //unlimit time
                 currentRecoverTime += isLimit ? time_inv : 0;
                 if (currentRecoverTime >= recoverTime)
                 {

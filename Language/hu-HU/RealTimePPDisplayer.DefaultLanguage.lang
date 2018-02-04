@@ -1,0 +1,4 @@
+[hu-HU]
+UI_MENU_TOPMOST=Legnagyobb
+TEXT_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]PP File: {0}
+MMF_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]Memory Mapping File: {0}

@@ -4,18 +4,11 @@ using System.Reflection;
 
 namespace Sync.Plugins
 {
-
-    public interface IPlugin
-    {
-        string getName();
-        string getAuthor();
-    }
-
     public abstract class Plugin
     {
         public readonly string Name;
         public readonly string Author;
-        public BaseEventDispatcher<PluginEvents.IPluginEvent> EventBus { get => PluginEvents.Instance; }
+        public BaseEventDispatcher<IPluginEvent> EventBus { get => PluginEvents.Instance; }
 
         public Plugin(string Name, string Author)
         {
@@ -38,6 +31,11 @@ namespace Sync.Plugins
             return Author;
         }
 
+        public string getGuid()
+        {
+            return this.GetType().GetCustomAttribute<SyncPluginID>()?.GUID;
+        }
+
         public override string ToString()
         {
             return Name;
@@ -49,6 +47,11 @@ namespace Sync.Plugins
         }
 
         public virtual void OnEnable()
+        {
+
+        }
+
+        public virtual void OnExit()
         {
 
         }

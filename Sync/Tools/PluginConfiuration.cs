@@ -39,11 +39,9 @@ namespace Sync.Tools
     }
 
     /// <summary>
-    /// 配置文件类，实例化时传入插件类实例和继承配置文件的实例的类即可享受配置文件服务。
+    /// Plugins configuration service, create instance to get configuration service
     /// </summary>
-    /// <typeparam name="T">插件类</typeparam>
-    /// <typeparam name="U">配置文件类</typeparam>
-    public sealed class PluginConfiuration
+    internal sealed class PluginConfiuration
     {
         private Plugin instance;
         private IConfigurable config;
@@ -59,19 +57,42 @@ namespace Sync.Tools
             ForceSave();
         }
 
-        public void ForceLoad()
+        internal void ForceLoad()
         {
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    item.SetValue(config, (ConfigurationElement)ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name));
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+
+                    if (!string.IsNullOrWhiteSpace(element))
+                    {
+                        item.SetValue(config, element);
+                    }
                 }
             }
             config.onConfigurationLoad();
         }
 
-        public void ForceSave()
+        internal void ForceReload()
+        {
+            foreach (PropertyInfo item in config.GetType().GetProperties())
+            {
+                if (item.PropertyType == typeof(ConfigurationElement))
+                {
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+
+                    if (!string.IsNullOrWhiteSpace(element))
+                    {
+                        item.SetValue(config, element);
+                    }
+                }
+            }
+            config.onConfigurationReload();
+        }
+
+
+        internal void ForceSave()
         {
             config.onConfigurationSave();
             foreach (PropertyInfo item in config.GetType().GetProperties())
@@ -84,14 +105,20 @@ namespace Sync.Tools
         }
     }
 
+    /// <summary>
+    /// Configuration Manager
+    /// </summary>
     public sealed class PluginConfigurationManager
     {
+        internal static LinkedList<PluginConfigurationManager> ConfigurationSet = new LinkedList<PluginConfigurationManager>();
+        internal static bool InSaving = false;
         private List<PluginConfiuration> items;
         private Plugin instance;
         public PluginConfigurationManager(Plugin instance)
         {
             items = new List<PluginConfiuration>();
             this.instance = instance;
+            ConfigurationSet.AddLast(this);
         }
 
         public void AddItem(IConfigurable Config)
@@ -99,22 +126,32 @@ namespace Sync.Tools
             items.Add(new PluginConfiuration(instance, Config));
         }
 
+        internal void ReloadAll()
+        {
+            foreach (var item in items)
+            {
+                item.ForceReload();
+            }
+        }
+
         public void SaveAll()
         {
+            InSaving = true;
             foreach (var item in items)
             {
                 item.ForceSave();
             }
+            InSaving = false;
         }
 
-        public PluginConfiuration GetInstance(IConfigurable obj)
-        {
-            foreach (var item in items)
-            {
-                if (item.GetType() == obj.GetType()) return item;
-            }
-            return null;
-        }
+        //public PluginConfiuration GetInstance(IConfigurable obj)
+        //{
+        //    foreach (var item in items)
+        //    {
+        //        if (item.GetType() == obj.GetType()) return item;
+        //    }
+        //    return null;
+        //}
 
         ~PluginConfigurationManager () => SaveAll();
     }

@@ -3,7 +3,7 @@
 namespace Sync.Tools
 {
     /// <summary>
-    /// 该类提供直接对配置文件的读写
+    /// Default plugin confiuration
     /// </summary>
     public static class Configuration
     {
@@ -21,11 +21,17 @@ namespace Sync.Tools
             get => ReadConfig(DefaultConfig.Source);
             set => WriteConfig(DefaultConfig.Source, value);
         }
-        
+
         public static string Language
         {
             get => ReadConfig(DefaultConfig.Language);
             set => WriteConfig(DefaultConfig.Language, value);
+        }
+
+        public static string LoggerFile
+        {
+            get => ReadConfig(DefaultConfig.LoggerFile);
+            set => WriteConfig(DefaultConfig.LoggerFile, value);
         }
     }
 }

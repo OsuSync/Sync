@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Sync.Client
 {
     /// <summary>
-    /// Client instance switch and dispatch
+    /// A wrapper for Client instance switch and dispatch
     /// </summary>
     public class ClientWorkWrapper
     {

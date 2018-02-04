@@ -10,17 +10,18 @@ using Sync.Client;
 using Sync.Source;
 
 namespace Sync.Plugins
-{ 
+{
+
+    /// <summary>
+    /// A flag for plugin event type
+    /// </summary>
+    public interface IPluginEvent : IBaseEvent { }
+
     /// <summary>
     /// Base plugin events
     /// </summary>
-    public class PluginEvents : BaseEventDispatcher<PluginEvents.IPluginEvent>
+    public class PluginEvents : BaseEventDispatcher<IPluginEvent>
     {
-        /// <summary>
-        /// flag
-        /// </summary>
-        public interface IPluginEvent : IBaseEvent { }
-
         /// <summary>
         /// Fire when init plugin
         /// </summary>
@@ -110,6 +111,10 @@ namespace Sync.Plugins
             }
         }
 
+        public struct ConfigurationChange : IPluginEvent
+        {
+        }
+
         /// <summary>
         /// Fire when ready
         /// </summary>
@@ -129,105 +134,196 @@ namespace Sync.Plugins
         }
     }
 
+    /// <summary>
+    /// Plugins Manager
+    /// <para>Load plugins from Plugins foldere and Initial plugin</para>
+    /// </summary>
     public class PluginManager
     {
 
         List<Plugin> pluginList;
         private List<Assembly> asmList;
         private LinkedList<Type> loadedList;
+        private List<Type> allList;
         internal PluginManager()
         {
 
         }
 
+        /// <summary>
+        /// Raise global <see cref="PluginEvents.InitCommandEvent"/> to all plugin
+        /// </summary>
+        /// <returns>Return commands count</returns>
         internal int LoadCommnads()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.InitCommandEvent(SyncHost.Instance.Commands));
             return SyncHost.Instance.Commands.Dispatch.count;
         }
 
+        /// <summary>
+        /// Raise global <see cref="PluginEvents.InitSourceEvent"/> to all plugin
+        /// </summary>
+        /// <returns>Return source count</returns>
         internal int LoadSources()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.InitSourceEvent(SyncHost.Instance.Sources));
             return SyncHost.Instance.Sources.SourceList.Count();
         }
 
+        /// <summary>
+        /// Raise global <see cref="PluginEvents.InitFilterEvent"/> to all plugin
+        /// </summary>
+        /// <returns>Return filter count</returns>
         internal int LoadFilters()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.InitFilterEvent(SyncHost.Instance.Filters));
             return SyncHost.Instance.Filters.Count;
         }
 
+        /// <summary>
+        /// Raise global <see cref="PluginEvents.InitClientEvent"/> to all plugin
+        /// </summary>
+        /// <returns></returns>
         internal int LoadClients()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.InitClientEvent(SyncHost.Instance.Clients));
             return SyncHost.Instance.Clients.Count;
         }
 
+        /// <summary>
+        /// Raise global <see cref="PluginEvents.ProgramReadyEvent"/> to all plugin
+        /// </summary>
         internal void ReadySync()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.ProgramReadyEvent());
         }
 
-
+        /// <summary>
+        /// Get a <see cref="IEnumerable{T}"/> for plugin list
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Plugin> GetPlugins()
         {
             return pluginList;
         }
 
+
+        /// <summary>
+        /// Internal get plugin list
+        /// </summary>
+        /// <returns></returns>
+        internal List<Plugin> GetPluginList()
+        {
+            return pluginList;
+        }
+
+        /// <summary>
+        /// Raise a <see cref="PluginEvents.LoadCompleteEvent"/> to all plugin
+        /// </summary>
         internal void ReadyProgram()
         {
             PluginEvents.Instance.RaiseEvent(new PluginEvents.LoadCompleteEvent(SyncHost.Instance));
         }
 
+        /// <summary>
+        /// Initial and load all support Plugin in 'Plugins' folder
+        /// </summary>
+        /// <returns>Plugins count</returns>
         internal int LoadPlugins()
         {
+            //Combine search path
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
+            //Current plugins list
             pluginList = new List<Plugin>();
+            //Loaded assembly
             asmList = new List<Assembly>();
+
+            //Pre-add all assemblies in current AppDomain
             asmList.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+
+            //Plugin folder not exist, return
             if (!Directory.Exists(path)) return 0;
+            //Change directiory to Plugins
             Directory.SetCurrentDirectory(path);
 
+            var rootCache = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            try
+            {
+                Directory.Delete(rootCache, true);
+            }
+            catch { }
 
+            string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
+            if(Directory.Exists(cache))
+            {
+                Directory.Delete(cache, true);
+            }
+            Directory.CreateDirectory(cache);
+
+            new DirectoryInfo(rootCache)
+            {
+                Attributes = FileAttributes.Hidden
+            };
+
+            //Search all .dll files in directory(include sub directory)
             foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
             {
                 try
                 {
-                    if (asmList.Where(a => a.Location == file).Count() != 0)
+                    if (asmList.Any(a => a.Location == file))
                         continue;
-                    Assembly asm = Assembly.LoadFrom(file);
+                    //Load assembly directly
+                    string temp = Path.Combine(cache, Path.GetFileName(file));
+                    File.Copy(file, temp);
+                    Assembly asm = Assembly.LoadFrom(temp);
+
                     asmList.Add(asm);
                 }
                 catch(Exception e)
                 {
+                    //Not a .NET Assembly DLL
                     IO.CurrentIO.WriteColor(String.Format(LANG_LoadPluginErr, file, e.Message), ConsoleColor.Red);
                     continue;
                 }
             }
 
             loadedList = new LinkedList<Type>();
+
+            //To slove plugin dependency,
             List<Type> lazylist = new List<Type>();
+            allList = new List<Type>();
+
             //Load all plugins first
+
             foreach (Assembly asm in asmList)
             {
-                foreach (Type item in asm.GetExportedTypes())
+                try
                 {
-                    Type it = asm.GetType(item.FullName);
-                    if (it == null ||
-                        !it.IsClass || !it.IsPublic ||
-                        !typeof(Plugin).IsAssignableFrom(it) ||
-                        typeof(Plugin) == it)
-                        continue;
-                    lazylist.Add(it);
+                    foreach (Type item in asm.GetExportedTypes())
+                    {
+                        Type it = asm.GetType(item.FullName);
+                        if (it == null ||
+                            !it.IsClass || !it.IsPublic ||
+                            !typeof(Plugin).IsAssignableFrom(it) ||
+                            typeof(Plugin) == it)
+                            continue;
+                        allList.Add(it);
+                    }
+                }
+                catch(Exception e)
+                {
+                    //Not up to date
+                    IO.CurrentIO.WriteColor(String.Format(LANG_LoadPluginErr, asm.FullName, e.Message), ConsoleColor.Red);
+                    continue;
                 }
             }
 
+
+            lazylist = allList.ToList();
             //looping add for resolve dependency
             do
             {
-
                 lazylist = layerLoader(lazylist);
 
             } while (lazylist.Count != 0);
@@ -235,6 +331,12 @@ namespace Sync.Plugins
             return pluginList.Count;
         }
 
+        /// <summary>
+        /// Load plugins
+        /// <para>Load dependencies plugin first</para>
+        /// </summary>
+        /// <param name="asmList">All <see cref="T"/> : <see cref="Plugin"/></param>
+        /// <returns>Not loaded plugins</returns>
         private List<Type> layerLoader(IList<Type> asmList)
         {
             List<Type> nextLoad = new List<Type>();
@@ -243,7 +345,18 @@ namespace Sync.Plugins
                 try
                 {
 
-                    if (Check_Should_Late_Load(it))
+                    var deps = it.GetCustomAttributes<SyncPluginDependency>();
+
+                    foreach (var item in deps)
+                    {
+                        var target = allList.Select(p => p.GetCustomAttribute<SyncPluginID>())?.FirstOrDefault(p => p?.GUID == item.GUID);
+                        if (item.Require && target == null) CheckGUIDUpdate(item);
+                        if (item.Version == null) continue;
+                        if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
+                    }
+
+
+                    if (LateLoad(it))
                     {
 #if (DEBUG)
                         IO.CurrentIO.WriteColor($"Lazy load [{it.Name}]", ConsoleColor.Green);
@@ -274,36 +387,131 @@ namespace Sync.Plugins
             return nextLoad;
         }
 
-        private bool Check_Should_Late_Load(Type a)
+        private bool LateLoad(Type a)
         {
 
             SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
-            if (requireAttr == null)
+            SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
+            IEnumerable<SyncPluginDependency> deps = a.GetCustomAttributes<SyncPluginDependency>();
+            SyncPluginID pid = a.GetCustomAttribute<SyncPluginID>();
+            if(deps != null)
             {
-                return false;
+                foreach (var item in deps)
+                {
+                    if (loadedList.Any(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID)) continue;
+                    else
+                    {
+                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID), pid.GUID)) return false;
+                        else return true;
+                    }
+                }
             }
 
-            foreach (var item in requireAttr.RequirePluguins)
+            if (requireAttr != null)
             {
-                //Dependency was been loaded
-                if (loadedList.Contains(item)) continue;
-                else
+                foreach (var item in requireAttr.RequirePluguins)
                 {
+                    //Dependency was been loaded
+                    if (loadedList.Contains(item)) continue;
+                    else
+                    {
 
-                    //Check cycle reference
-                    if (Check_A_IS_Reference_TO_B(item, a)) return false;
-                    else return true;
+                        //Check cycle reference
+                        if (CheckIsReferenceTo(item, a)) return false;
+                        else return true;
+                    }
+                }
+            }
+            
+            if(softRequirePlugin != null)
+            {
+                foreach (var item in softRequirePlugin.RequirePluguins)
+                {
+                    Type s = allList.FirstOrDefault(p => p.Name == item);
+                    if (s == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (CheckIsReferenceTo(s, a)) return false;
+                        if (!loadedList.Contains(s)) return true;
+                    }
                 }
             }
 
             return false;
         }
 
-        private bool Check_A_IS_Reference_TO_B(Type a, Type b)
+        private bool CheckIsReferenceTo(Type a, string b)
+        {
+            var result = a.GetCustomAttributes<SyncPluginDependency>()?.Any(p => p.GUID == b);
+            if (result.HasValue) return result.Value;
+            else return false;
+        }
+
+        private bool CheckIsReferenceTo(Type a, Type b)
+        {
+            return CheckIsHardReferenceTo(a, b) || CheckIsSoftReferenceTo(a, b.Name);
+        }
+
+        private bool CheckIsHardReferenceTo(Type a, Type b)
         {
             SyncRequirePlugin refRequireCheck = a.GetCustomAttribute<SyncRequirePlugin>();
             if (refRequireCheck == null) return false;
             return refRequireCheck.RequirePluguins.Contains(b);
+        }
+
+        private bool CheckIsSoftReferenceTo(Type a, string b)
+        {
+            SyncSoftRequirePlugin refRequireCheck = a.GetCustomAttribute<SyncSoftRequirePlugin>();
+            if (refRequireCheck == null) return false;
+            return refRequireCheck.RequirePluguins.Contains(b);
+        }
+
+        /// <summary>
+        /// True if <paramref name="b"/> is satisfy for the require of <paramref name="a"/> 
+        /// </summary>
+        /// <param name="a">A version require</param>
+        /// <param name="b">Target version</param>
+        /// <returns></returns>
+        public static bool CompareVersion(string a, string b)
+        {
+            // v : less or equal
+            // x : must
+            // ^ : large or equal
+            char start = a[0];
+
+            Func<bool?, bool> converter;
+            if (start == 'v') converter = p => p == null || p.Value;
+            else if (start == '^') converter = p => p == null || !p.Value;
+            else converter = p => p == null;
+
+            string ta = a.Substring(1);
+
+            var va = ta.Split('.').Select(k => int.Parse(k)).ToArray();
+            var vb = b.Split('.').Select(k => int.Parse(k)).ToArray();
+
+            for (int i = 0; i < va.Length; i++)
+            {
+                bool val = va[i] > vb[i];
+                if (va[i] == vb[i]) continue;
+                else return converter(val);
+            }
+            return converter(null);
+        }
+
+        private void CheckGUIDUpdate(SyncPluginDependency item)
+        {
+            if (Updater.update.CheckUpdate(item.GUID))
+            {
+                SyncHost.Instance.ForceRestartSync();
+                throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");
+            }
+            else
+            {
+                throw new SyncMissingPluginException($"Can't install dependency plugin: {item.GUID}, version {item.Version}");
+            }
         }
 
         private Plugin LoadPluginFormType(Type it)
@@ -311,7 +519,7 @@ namespace Sync.Plugins
             object pluginTest = it.Assembly.CreateInstance(it.FullName);
             if (pluginTest == null)
             {
-                throw new NullReferenceException();
+                throw new NullReferenceException("Create instance fail!");
             }
 
             Plugin plugin = (Plugin)pluginTest;
@@ -324,8 +532,18 @@ namespace Sync.Plugins
         }
     }
 
+    public class SyncMissingPluginException : Exception
+    {
+        public SyncMissingPluginException(string msg) : base(msg) { }
+    }
+
+    public class SyncPluginOutdateException : Exception
+    {
+        public SyncPluginOutdateException(string msg) : base(msg) { }
+    }
+
     /// <summary>
-    /// Using this attribute when you want load some plugin before your plugin
+    /// Using this attribute when you want load some plugin before your plugin.
     /// </summary>
     public class SyncRequirePlugin : Attribute
     {
@@ -335,5 +553,40 @@ namespace Sync.Plugins
         {
             RequirePluguins = new List<Type>(types);
         }
+    }
+
+    /// <summary>
+    /// Using this attribute when you dependence some plugin without hard link.
+    /// </summary>
+    public class SyncSoftRequirePlugin : Attribute
+    {
+        public IReadOnlyList<string> RequirePluguins;
+        public SyncSoftRequirePlugin(params string[] types)
+        {
+            RequirePluguins = new List<string>(types);
+        }
+    }
+
+    public class SyncPluginID : Attribute
+    {
+        public string GUID { get; }
+        /// <summary>
+        /// Major.Minjor.Reversion
+        /// <para>e.g: 1.4.5</para>
+        /// </summary>
+        public string Version { get; }
+        public SyncPluginID(string GUID, string Version)
+        {
+            this.Version = Version;
+            this.GUID = GUID;
+        }
+    }
+
+    public class SyncPluginDependency : Attribute
+    {
+        public string GUID { get; }
+        public string Version { get; set; }
+        public bool Require { get; set; }
+        public SyncPluginDependency(string guid) => GUID = guid;
     }
 }

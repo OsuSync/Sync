@@ -77,6 +77,8 @@ namespace Sync.Tools
         public static LanguageElement LANG_Command = "命令";
         public static LanguageElement LANG_Command_Description = "描述";
 
+        public static LanguageElement LANG_MsgMgr_Limit = "当前消息管理器 开始 管制，只有?send命令的内容才会发送到irc频道";
+        public static LanguageElement LANG_MsgMgr_Free = "当前消息管理器 解除 管制,内容可以直接发送到irc频道";
         public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
 
     }
@@ -104,9 +106,14 @@ namespace Sync.Tools
         {
             return element.value;
         }
+
+        public override string ToString()
+        {
+            return value;
+        }
     }
     /// <summary>
-    /// 特定语言的I18n实现
+    /// I18n Manager
     /// </summary>
     public class I18n
     {
@@ -155,9 +162,9 @@ namespace Sync.Tools
         private I18n() { }
 
         /// <summary>
-        ///  实例化一个特定区域语言的I18n实例
+        ///  Constructor for initial one language
         /// </summary>
-        /// <param name="CultureName">指定区域</param>
+        /// <param name="CultureName">Cultura name</param>
         private I18n(string CultureName)
         {
             CurrentLanguage = CultureName;

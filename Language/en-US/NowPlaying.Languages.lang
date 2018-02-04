@@ -1,0 +1,15 @@
+[en-US]
+OSU_PATH_NOT_SET=osu! path is empty, program will search the running osu! instance.
+FIND_OSU_PATH=Can't find osu! path! {0:S}
+OSU_PATH_FAIL=Can't find osu! path, Detailed info is disabled.
+ERROR_WHILE_FIND_PATH=Error while searching osu! path {0:S}
+UNKNOWN_COMMAND=Unknown command {0:S}
+STATUS_PLAYING=Playing
+STATUS_EDITING=Editing
+STATUS_OTHER=Listening
+STATUS_TIP_INFO=I'm {0:S}{1:S}
+STATUS_TIP_INFO_WRAP=I'm {0:S}{1:S}
+ERROR_WHILE_SEARCH_MAP=Error while searching {0:S}-{1:S} [{2:S}] {3:S}
+CONSOLE_OUTPUT_RESULT=File:{0:S} ({1}ms) HP/CS/AR/OD: {2}{3}{4}{5}
+OUTPUT_RESULT=Current {0}:{1}
+CURRENT_IDLE=Currently idle

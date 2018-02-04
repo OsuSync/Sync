@@ -1,0 +1,15 @@
+[zh-CN]
+OSU_PATH_NOT_SET=未设置osu文件夹路径，将自行搜寻当前运行中的osu程序来自动设置
+FIND_OSU_PATH=找到osu路径! {0:S}
+OSU_PATH_FAIL=未设置osu文件夹路径，也没运行中的osu程序，无法使用此插件其他高级功能，请设置好路径并重新启动osuSync才能继续使用
+ERROR_WHILE_FIND_PATH=启用详细信息功能失败！ {0:S}
+UNKNOWN_COMMAND=无效的命令！{0:S}
+STATUS_PLAYING=玩
+STATUS_EDITING=做
+STATUS_OTHER=听
+STATUS_TIP_INFO=我在{0:S}{1:S}
+STATUS_TIP_INFO_WRAP=我在{0:S}{1:S}
+ERROR_WHILE_SEARCH_MAP=尝试检索{0:S}-{1:S} [{2:S}]时失败！{3:S}
+CONSOLE_OUTPUT_RESULT=文件{0:S} (时间: {1}) HP/CS/AR/OD: {2}{3}{4}{5}
+OUTPUT_RESULT=当前谱面{0}:{1}
+CURRENT_IDLE=当前没有在打图！

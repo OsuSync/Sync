@@ -9,7 +9,7 @@ using Sync.Tools;
 namespace Sync.Source
 {
     /// <summary>
-    /// Select source and check source is or not a senable source
+    /// A wrapper for select source and check source senable
     /// </summary>
     public class SourceWorkWrapper
     {
@@ -35,3 +35,4 @@ namespace Sync.Source
         public SendableSource SendableSource { get; internal set; }
     }
 }
+ 
