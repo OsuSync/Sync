@@ -15,6 +15,8 @@ namespace Sync.Tools
         /// </summary>
         public enum DefaultConfig
         {
+            EnableViewersChangedNotify,
+            EnableGiftChangedNotify,
             Client,
             Source,
             Language,
