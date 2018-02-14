@@ -2,6 +2,8 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
@@ -27,10 +29,19 @@ namespace Sync.Tools
         {
             watcher = new FileSystemWatcher(AppDomain.CurrentDomain.BaseDirectory);
             watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            watcher.Filter = "config.ini";
             watcher.EnableRaisingEvents = true;
             watcher.Changed += (s, e) => {
                 if (PluginConfigurationManager.InSaving) return;
-                if (!e.Name.StartsWith("config.ini")) return;
+
+                watcher.EnableRaisingEvents = false;
+                Task.Run(()=> {
+                    Thread.Sleep(500);
+                    watcher.EnableRaisingEvents = true;
+                });
+
+                Thread.Sleep(100);
+
                 foreach (var item in PluginConfigurationManager.ConfigurationSet)
                 {
                     item.ReloadAll();
