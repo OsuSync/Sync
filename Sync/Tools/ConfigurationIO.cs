@@ -29,10 +29,10 @@ namespace Sync.Tools
         {
             watcher = new FileSystemWatcher(AppDomain.CurrentDomain.BaseDirectory);
             watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
-            watcher.Filter = "config.ini";
             watcher.EnableRaisingEvents = true;
             watcher.Changed += (s, e) => {
                 if (PluginConfigurationManager.InSaving) return;
+                if (!e.Name.StartsWith("config.ini")) return;
 
                 watcher.EnableRaisingEvents = false;
                 Task.Run(()=> {
