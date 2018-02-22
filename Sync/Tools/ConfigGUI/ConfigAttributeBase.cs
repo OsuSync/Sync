@@ -43,12 +43,15 @@ namespace Sync.Tools.ConfigGUI
     public class ConfigListAttribute : ConfigAttributeBase
     {
         public string[] ValueList { get; set; }
+        public bool IgnoreCase { get; set; }
 
         public bool Check(string val)
         {
+            val = IgnoreCase ? val.ToLower() : val;
+
             if (ValueList?.Length == 0)
                 return false;
-            return ValueList.Where((str) => str == val).Count() != 0;
+            return ValueList.Where((str) => (IgnoreCase?str.ToLower():str)==val).Count() != 0;
         }
     }
 }
