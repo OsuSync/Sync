@@ -57,7 +57,7 @@ namespace Sync.Tools
             ForceSave();
         }
 
-        internal void ForceLoad()
+        internal void Load()
         {
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
@@ -65,29 +65,40 @@ namespace Sync.Tools
                 {
                     ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
 
-                    if (!string.IsNullOrWhiteSpace(element))
+                    if (!string.IsNullOrWhiteSpace(element) && CheckValueVaild(item, element))
                     {
                         item.SetValue(config, element);
                     }
                 }
             }
+        }
+
+        internal void ForceLoad()
+        {
+            Load();
             config.onConfigurationLoad();
+        }
+        
+        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
+        {
+            var v = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.ConfigAttributeBase));
+
+            switch (v)
+            {
+                case ConfigGUI.ConfigBoolAttribute bool_attr:
+                    return bool.TryParse(element, out _);
+                case ConfigGUI.ConfigIntegerAttribute int_attr:
+                    return int.TryParse(element, out int int_value)&&int_attr.Check(int_value);
+                case ConfigGUI.ConfigListAttribute list_attr:
+                    return list_attr.Check(element);
+                default:
+                    return true;
+            }
         }
 
         internal void ForceReload()
         {
-            foreach (PropertyInfo item in config.GetType().GetProperties())
-            {
-                if (item.PropertyType == typeof(ConfigurationElement))
-                {
-                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
-
-                    if (!string.IsNullOrWhiteSpace(element))
-                    {
-                        item.SetValue(config, element);
-                    }
-                }
-            }
+            Load();
             config.onConfigurationReload();
         }
 
