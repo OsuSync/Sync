@@ -56,7 +56,7 @@ namespace Sync.Tools
         {
             ForceSave();
         }
-
+        
         internal void Load()
         {
             foreach (PropertyInfo item in config.GetType().GetProperties())

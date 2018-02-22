@@ -27,6 +27,17 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
+    public class ConfigFloatAttribute : ConfigAttributeBase
+    {
+        public float MinValue { get; set; } = float.MinValue;
+        public float MaxValue { get; set; } = float.MaxValue;
+
+        public bool Check(float i)
+        {
+            return (MinValue <= i && i <= MaxValue);
+        }
+    }
+
     public class ConfigStringAttribute : ConfigAttributeBase { }
 
     public class ConfigListAttribute : ConfigAttributeBase
