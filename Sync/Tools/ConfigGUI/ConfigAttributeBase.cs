@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace Sync.Tools.ConfigGUI
     {
         public string Description { get; set; } = "No Description";
 
-        public string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
+        public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
         protected void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage,obj.ToString())}",ConsoleColor.Red);
     }
 
@@ -54,11 +55,29 @@ namespace Sync.Tools.ConfigGUI
 
         public bool Check(string val)
         {
-            val = IgnoreCase ? val.ToLower() : val;
+            var m_val = IgnoreCase ? val.ToLower() : val;
 
-            if (ValueList?.Length == 0)
-                return false;
-            return ValueList.Where((str) => (IgnoreCase?str.ToLower():str)==val).Count() != 0;
+            if ((ValueList?.Length != 0) && (ValueList.Where((str) => (IgnoreCase ? str.ToLower() : str) == m_val).Count() != 0))
+                return true;
+            CheckFailedNotify(val);
+            return false;
+        }
+    }
+
+    public class ConfigFilePathAttribute : ConfigAttributeBase
+    {
+        /// <summary>
+        /// 是否钦定这路径是否必须存在,通常用于读取配置文件
+        /// </summary>
+        public bool MustExsit { get; set; } = false;
+
+        public bool Check(string file_path)
+        {
+            if (MustExsit && File.Exists(file_path))
+                return true;
+
+            CheckFailedNotify(file_path);
+            return false;
         }
     }
 }

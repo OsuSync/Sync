@@ -91,6 +91,8 @@ namespace Sync.Tools
                     return int.TryParse(element, out int int_value)&&int_attr.Check(int_value);
                 case ConfigGUI.ConfigListAttribute list_attr:
                     return list_attr.Check(element);
+                case ConfigGUI.ConfigFilePathAttribute file_attr:
+                    return file_attr.Check(element);
                 default:
                     return true;
             }
