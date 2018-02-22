@@ -52,3 +52,7 @@ LANG_DOUYU_DANMAKU=Recive message: {0}:{1}
 LANG_DOUYU_GIFT=Gift
 LANG_BILIBILI_ONLINECHANGE=Online change: {0}
 LANG_COMMANDS_CLIENTUSERMSG=chatuser <username> <message> Send irc message to live with specified username
+LANG_OSUIRC_LOGIN_SUCCESS=Login succesfully.
+LANG_OSUIRC_LOGIN_FAILED=Try to reconnect to osu!irc failed,reason:{0}
+LANG_OSUIRC_NETWORK_INTERRUPTED=Network is interrupted,now try to reconnect.
+LANG_OSUIRC_RECIVER_FINISHED=Reciver thread is finished.

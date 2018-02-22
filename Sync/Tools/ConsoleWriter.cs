@@ -174,8 +174,8 @@ namespace Sync.Tools
         /// </summary>
         public void WriteStatus()
         {
-            WriteColor(SyncHost.Instance.SourceWrapper.Source?.Status.ToString(), ConsoleColor.Magenta);
-            WriteColor(SyncHost.Instance.ClientWrapper.Client?.CurrentStatus.ToString(), ConsoleColor.Magenta);
+            WriteColor("Source:"+SyncHost.Instance.SourceWrapper.Source?.Status.ToString(), ConsoleColor.Magenta);
+            WriteColor("Client:"+SyncHost.Instance.ClientWrapper.Client?.CurrentStatus.ToString(), ConsoleColor.Magenta);
         }
 
         /// <summary>

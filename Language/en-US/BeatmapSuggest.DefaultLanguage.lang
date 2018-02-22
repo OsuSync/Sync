@@ -1,0 +1,14 @@
+[en-US]
+LANG_GET_BEATMAP_FAILED=Get beatmap info {0} failed,message:{1}
+LANG_SUGGEST_MEG={0} want you to play the beatmap [{1} {2}] || [{3} dl] || [{4} mirror] or type"?dl"/"?dl all"
+LANG_NOT_FOUND_ERR=找不到匹配的内容或者id并不是有效的beatmapSetId Can't match infomation or param ID is invaild beatmapSetId
+LANG_UNKNOWN_TITLE=<unk title>
+LANG_GET_BEATMAP_TIME_OUT=Get beatmap info {0} time out,TaskStatus{1}
+LANG_INVAILD_ID=invaild id value {0}
+LANG_UNKOWN_PARAM=unknown param {0}
+LANG_ERROR_INFO_IMCOMPLETE=Incompletable infomation
+LANG_NO_API_KEY_NOFITY=there is no ApiKey in config.ini,please provide your osu!api_key for using.ApiKey address:https://osu.ppy.sh/p/api
+LANG_START_DOWNLOAD=Start to download beatmap:{0}
+LANG_FINISH_DOWNLOAD=Beatmap downloaded {0}
+LANG_FAILED_DOWNLOAD=Downloaded {0} failed,message {1}
+LANG_DOWNLOAD_TASK_COUNT=Start to download {0} beatmaps.

@@ -296,5 +296,20 @@ namespace Sync.Plugins
         {
             return RegisterEventHandler(typeof(EventType), handler);
         }
+
+        /// <summary>
+        /// Remove event handle
+        /// </summary>
+        /// <typeparam name="EventType">Event dispathcer</typeparam>
+        /// <typeparam name="Event">Target Event</typeparam>
+        /// <param name="handler">Handler</param>
+        public void RemoveEventHandler<EventType, Event>(EventHandlerFunc<Event> handler) where Event : IBaseEvent
+        {
+            if (dispatchers.TryGetValue(typeof(EventType),out Dispatcher dispatcher))
+            {
+                var list = dispatcher[typeof(Event)];
+                list.Remove(handler);
+            }
+        }
     }
 }
