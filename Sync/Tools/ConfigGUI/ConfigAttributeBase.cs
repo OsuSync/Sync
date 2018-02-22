@@ -9,7 +9,7 @@ namespace Sync.Tools.ConfigGUI
     [System.AttributeUsage(System.AttributeTargets.Property,AllowMultiple = false)]
     public abstract class ConfigAttributeBase:Attribute
     {
-        public string Description { get; set; }
+        public string Description { get; set; } = "No Description";
     }
 
     public class ConfigBoolAttribute : ConfigAttributeBase
@@ -42,8 +42,8 @@ namespace Sync.Tools.ConfigGUI
 
     public class ConfigListAttribute : ConfigAttributeBase
     {
-        public string[] ValueList { get; set; }
-        public bool IgnoreCase { get; set; }
+        public string[] ValueList { get; set; } = null;
+        public bool IgnoreCase { get; set; } = false;
 
         public bool Check(string val)
         {
