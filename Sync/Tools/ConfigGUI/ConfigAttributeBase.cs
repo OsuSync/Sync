@@ -10,6 +10,9 @@ namespace Sync.Tools.ConfigGUI
     public abstract class ConfigAttributeBase:Attribute
     {
         public string Description { get; set; } = "No Description";
+
+        public string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
+        protected void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage,obj.ToString())}",ConsoleColor.Red);
     }
 
     public class ConfigBoolAttribute : ConfigAttributeBase
@@ -23,7 +26,11 @@ namespace Sync.Tools.ConfigGUI
 
         public bool Check(int i)
         {
-            return (MinValue <= i && i <= MaxValue);
+            if (MinValue <= i && i <= MaxValue)
+                return true;
+
+            CheckFailedNotify(i);
+            return false;
         }
     }
 
