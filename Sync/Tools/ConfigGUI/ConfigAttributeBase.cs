@@ -73,11 +73,13 @@ namespace Sync.Tools.ConfigGUI
 
         public bool Check(string file_path)
         {
-            if (MustExsit && File.Exists(file_path))
-                return true;
+            if (MustExsit&&(!File.Exists(file_path)))
+            {
+                CheckFailedNotify(file_path);
+                return false;
+            }
 
-            CheckFailedNotify(file_path);
-            return false;
+            return true;
         }
     }
 }
