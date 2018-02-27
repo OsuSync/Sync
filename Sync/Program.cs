@@ -37,6 +37,8 @@ namespace Sync
 
                 SyncHost.Instance.Plugins.ReadySync();
 
+                if(Updater.IsUpdated) IO.CurrentIO.WriteColor("Sync already update!", ConsoleColor.Green);
+
                 string cmd = CurrentIO.ReadCommand();
                 while (true)
                 {

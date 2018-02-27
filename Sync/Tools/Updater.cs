@@ -40,6 +40,17 @@ namespace Sync.Tools
             public string fileName { get; set; }
         }
 
+        [DataContract]
+        public class SyncUpdate
+        {
+            [DataMember(Order = 0)]
+            public string versionHash { get; set; }
+            [DataMember(Order = 1)]
+            public string downloadURL { get; set; }
+            [DataMember(Order = 2)]
+            public string versionId { get; set; }
+        }
+
         public InternalUpdate() : base("Internal Updater", "Deliay")
         {
         }
@@ -68,6 +79,8 @@ namespace Sync.Tools
                     return List();
                 case "remove":
                     return Remove(arg[1]);
+                case "latest":
+                    return Latest();
                 default:
                     return Help();
             }
@@ -82,6 +95,20 @@ namespace Sync.Tools
             IO.CurrentIO.WriteHelp("search", "search [keyword] Search plugins");
             IO.CurrentIO.WriteHelp("update", "Check update for Sync and Plugins");
             IO.CurrentIO.WriteHelp("list", "List current installed plugins");
+            IO.CurrentIO.WriteHelp("latest", "Check latest Sync update");
+            return true;
+        }
+
+        internal bool Latest()
+        {
+            IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
+            var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
+            if (!File.Exists(Updater.CurrentFullSourceEXEPath) || MD5HashFile(Updater.CurrentFullSourceEXEPath) != result.versionHash)
+            {
+                IO.CurrentIO.Write($"Download: {result.downloadURL}...");
+                DownloadSingleFile(result.downloadURL, Updater.CurrentFullUpdateEXEPath, "Sync");
+                RequireRestart("Update downloaded. Restart to apply effect");
+            }
             return true;
         }
 
@@ -203,7 +230,7 @@ namespace Sync.Tools
                 if (!File.Exists(target) || MD5HashFile(target) != result.latestHash)
                 {
                     IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
-                    return DownloadSingleFile(result.downloadUrl, target, result.fileName); ;
+                    return DownloadSingleFile(result.downloadUrl, target, result.fileName);
                 }
                 else
                 {
@@ -277,6 +304,7 @@ namespace Sync.Tools
             {
                 //打开HTTP连接，获得文件长度
                 IO.CurrentIO.WriteColor($"Download {name} from {dlUrl}", ConsoleColor.Magenta);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
                 HttpWebRequest Myrq = (HttpWebRequest)WebRequest.Create(dlUrl);
                 HttpWebResponse myrp = (HttpWebResponse)Myrq.GetResponse();
                 long totalBytes = myrp.ContentLength;
@@ -364,11 +392,15 @@ namespace Sync.Tools
 
     static class Updater
     {
-        private const string SourceEXEName = "Sync.exe";
-        private const string UpdateEXEName = "Sync_update.exe";
-        private const string UpdateArg = "--update";
-        private static readonly string CurrentEXEName = Path.GetFileName(Process.GetCurrentProcess().Modules[0].FileName);
-        private static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+        public const string SourceEXEName = "Sync.exe";
+        public const string UpdateEXEName = "Sync_update.exe";
+        public const string UpdateArg = "--update";
+        public static readonly string CurrentEXEName = Path.GetFileName(Process.GetCurrentProcess().Modules[0].FileName);
+        public static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string CurrentFullEXEPath = Path.Combine(CurrentPath, CurrentEXEName);
+        public static readonly string CurrentFullSourceEXEPath = Path.Combine(CurrentPath, SourceEXEName);
+        public static readonly string CurrentFullUpdateEXEPath = Path.Combine(CurrentPath, UpdateEXEName);
+        public static bool IsUpdated = false;
         internal static InternalUpdate update;
 
         public static bool ApplyUpdate(string[] args)
@@ -377,24 +409,34 @@ namespace Sync.Tools
             {
                 if (args.Length > 0 && args[0] == UpdateArg)
                 {
-                    Process.GetProcesses().FirstOrDefault(p => p.MainModule.FileName.EndsWith(UpdateEXEName))?.Kill();
-                    File.Delete(Path.Combine(CurrentPath, UpdateEXEName));
+                    Process.GetProcessesByName(UpdateEXEName).FirstOrDefault(p => p.MainModule.FileName.Contains(CurrentFullUpdateEXEPath))?.Kill();
+                    File.Delete(CurrentFullUpdateEXEPath);
+                    IsUpdated = true;
                 }
-                else if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, UpdateEXEName)))
+                else if (File.Exists(CurrentFullUpdateEXEPath))
                 {
-                    Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, UpdateEXEName));
-                    return true;
+                    try
+                    {
+                        Process.Start(CurrentFullUpdateEXEPath);
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        File.Delete(Path.Combine(CurrentPath, UpdateEXEName));
+                        IO.CurrentIO.WriteColor($"Apply update fail! Can't launch ({e.Message})", ConsoleColor.Red);
+                        return false;
+                    }
                 }
             }
             else if (CurrentEXEName == UpdateEXEName)
             {
-                var dest = Path.Combine(CurrentPath, SourceEXEName);
-                Process.GetProcesses().FirstOrDefault(p => p.MainModule.FileName.EndsWith(SourceEXEName))?.Kill();
-                File.Delete(dest);
-                File.Copy(Path.Combine(CurrentPath, CurrentEXEName), dest);
-                Process.Start(dest, UpdateArg);
+                Process.GetProcessesByName(SourceEXEName).FirstOrDefault(p => p.MainModule.FileName.Contains(CurrentFullSourceEXEPath))?.Kill();
+                File.Delete(CurrentFullSourceEXEPath);
+                File.Copy(CurrentFullUpdateEXEPath, CurrentFullSourceEXEPath);
+                Process.Start(CurrentFullSourceEXEPath, UpdateArg);
                 return true;
             }
+
             return false;
         }
     }
