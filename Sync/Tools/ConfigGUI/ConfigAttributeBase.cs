@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Sync.Tools.ConfigGUI
     [System.AttributeUsage(System.AttributeTargets.Property,AllowMultiple = false)]
     public abstract class ConfigAttributeBase:Attribute
     {
+        public bool NeedRestart = false;
         public string Description { get; set; } = "No Description";
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
@@ -39,6 +41,7 @@ namespace Sync.Tools.ConfigGUI
     {
         public float MinValue { get; set; } = float.MinValue;
         public float MaxValue { get; set; } = float.MaxValue;
+        public float Step { get; set; } = 0.1F;
 
         public bool Check(float i)
         {
@@ -64,7 +67,22 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigPathAttributeAttribute : ConfigAttributeBase
+    public class ConfigColorAttribute : ConfigAttributeBase
+    {
+        public byte R,G,B,A;
+        
+        //#RRGGBBAA
+        public bool Check(string rgba)
+        {
+            return rgba[0]=='#'
+                && byte.TryParse(rgba.Substring(1, 2), NumberStyles.HexNumber, null, out var _)
+                && byte.TryParse(rgba.Substring(3, 2), NumberStyles.HexNumber, null, out var _)
+                && byte.TryParse(rgba.Substring(5, 2), NumberStyles.HexNumber, null, out var _)
+                && byte.TryParse(rgba.Substring(7, 2), NumberStyles.HexNumber, null, out var _);
+        }
+    }
+
+    public class ConfigPathAttribute : ConfigAttributeBase
     {
         /// <summary>
         /// 是否钦定这路径是否必须存在,通常用于读取配置文件
