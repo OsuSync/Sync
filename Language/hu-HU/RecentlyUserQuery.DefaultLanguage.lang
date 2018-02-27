@@ -1,0 +1,11 @@
+[hu-HU]
+LANG_HELP=\nEz egy súgó az osu!irc általános parancsaihoz(osu!irc-ben kérlek használj "?" elõtagot a parancso kelõtt)\nrecently --status | Jelenlegi üzenetelõzmény státuszának lekérdezése (osu!irc nem lehetséges)\nrecently --u <userName> | <userName> elõzményének lekérdezése (Nem ajánlott osu!irc használata)\nrecently --i <userId> | <userId> elõzményének lekérdezése (Nem ajánlott osu!irc használata)\nrecently | Felhasználónév és ID lekérdezése, az ID felhasználható parancsok végrehajtásához, például "?ban --i" (osu!irc támogatott)\nrecently --disable | Üzenetek mentésének kikapcsolás, összes üzenetelõzmény törölve (osu!irc támogatott)\nrecently --start | Üzenetek mentésének elkezdése (osu!irc támogatott)\nrecently --realloc <count> | Üzenetelõzmények tárhelyének újraellenõrzése több üzenet tárolásához (osu!irc támogatott)\nrecently --recently | Legutóbbi felhasználó ID lekérdezése\n
+LANG_MSG_STATUS=MessageRecord státusz: {0} | recordCount/Capacity : {1}/{2}
+LANG_RUNNING=futó
+LANG_STOP=leállított
+LANG_MSG_DISABLE=Üzenetek mentése letiltva, az összes tárolt üzenet elõzmény törölve
+LANG_MSG_START=Üzenetek mentése elkezdõdött
+LANG_MSG_REALLOC_ERR=MessageRecord: Rossz parancs
+LANG_MSG_REALLOC=Üzenetek lehetséges tárolási ideje: {0}
+LANG_MSG_NOTIMPLENT=Nincs beépítve
+LANG_MSG_UNKNOWNCOMMAND=Ismeretlen parancs.

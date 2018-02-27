@@ -33,5 +33,24 @@ namespace Sync.Tools
             get => ReadConfig(DefaultConfig.LoggerFile);
             set => WriteConfig(DefaultConfig.LoggerFile, value);
         }
+
+        public static bool EnableViewersChangedNotify
+        {
+            get{
+                var str = ReadConfig(DefaultConfig.EnableViewersChangedNotify);
+                return string.IsNullOrWhiteSpace(str)?true:bool.Parse(str);
+            }
+            set=> WriteConfig(DefaultConfig.LoggerFile, value.ToString());
+        }
+
+        public static bool EnableGiftChangedNotify
+        {
+            get
+            {
+                var str = ReadConfig(DefaultConfig.EnableGiftChangedNotify);
+                return string.IsNullOrWhiteSpace(str) ? true : bool.Parse(str);
+            }
+            set => WriteConfig(DefaultConfig.EnableGiftChangedNotify, value.ToString());
+        }
     }
 }

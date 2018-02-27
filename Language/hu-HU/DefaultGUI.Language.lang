@@ -1,0 +1,16 @@
+[hu-HU]
+UI_DISPLAY=Felület mutatása
+UI_TIPS_BOTIRC=BotIRC
+UI_TIPS_BOTIRC_PASS=IRC Jelszó
+UI_TIPS_STATUS=Státusz
+UI_TIPS_DANMAKU=LiveID
+UI_TIPS_OSU_IRC=osu!Chat
+UI_TIPS_TARGET_IRC=IRC cím
+UI_BOTTON_START=Indítás
+UI_BOTTON_STOP=Leállítás
+UI_BOTTON_LOGIN_DANMAKU=Platform bejelentkezés
+UI_BOTTON_SWITCH_CON=Váltás CMD felületre
+UI_BOTTON_EXIT=Kilépés
+UI_TIPS_LIVE_ID=LiveID
+UI_TIPS_LIVE_SOURCE=Platform
+UI_INFO_RESTART_REQ=Platform megváltoztatásához újraindítás szükséges. Újraindítod most?

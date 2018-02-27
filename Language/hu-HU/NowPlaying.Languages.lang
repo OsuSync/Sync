@@ -1,0 +1,15 @@
+[hu-HU]
+OSU_PATH_NOT_SET=osu! megadott elérési helye üres, a program próbálja megkeresni a futó osu! alkalmazást.
+FIND_OSU_PATH=osu! elérési helye nem található! {0:S}
+OSU_PATH_FAIL=osu! elérési helye nem található, Részletes információk letiltva.
+ERROR_WHILE_FIND_PATH=Hiba történt az osu! elérési helyének keresésekor {0:S}
+UNKNOWN_COMMAND=Ismeretlen parancs {0:S}
+STATUS_PLAYING=Játékban
+STATUS_EDITING=Szerkeszt
+STATUS_OTHER=Hallgatja
+STATUS_TIP_INFO=Én vagyok {0:S}{1:S}
+STATUS_TIP_INFO_WRAP=Én vagyok {0:S}{1:S}
+ERROR_WHILE_SEARCH_MAP=Hiba keresés közben {0:S}-{1:S} [{2:S}] {3:S}
+CONSOLE_OUTPUT_RESULT=Fájl:{0:S} ({1}ms) HP/CS/AR/OD: {2}{3}{4}{5}
+OUTPUT_RESULT=Jelenlegi {0}:{1}
+CURRENT_IDLE=Jelenleg tétlen

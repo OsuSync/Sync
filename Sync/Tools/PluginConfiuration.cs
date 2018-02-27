@@ -12,7 +12,6 @@ namespace Sync.Tools
     public sealed class ConfigurationElement
     {
         private string _cfg = string.Empty;
-        private PluginConfiuration parent;
         public ConfigurationElement()
         {
 
