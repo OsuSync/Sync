@@ -114,10 +114,16 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
+    public class ConfigFontAttribute : ConfigAttributeBase
+    {
+        public override bool Check(string value)
+        {
+            return true;
+        }
+    }
+
     public class ConfigColorAttribute : ConfigAttributeBase
     {
-        public byte R, G, B, A;
-
         //#RRGGBBAA
         public override bool Check(string rgba)
         {
