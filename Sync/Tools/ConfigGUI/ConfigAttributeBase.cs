@@ -11,8 +11,9 @@ namespace Sync.Tools.ConfigGUI
     [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple = false)]
     public abstract class ConfigAttributeBase : Attribute
     {
-        public bool NeedRestart = false;
+        public bool NeedRestart { get; set; } = false;
         public string Description { get; set; } = "No Description";
+        public bool NoCheck { get; set; } = true;
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
         public abstract bool Check(string value);

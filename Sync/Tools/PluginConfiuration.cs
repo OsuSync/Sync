@@ -60,8 +60,6 @@ namespace Sync.Tools
         
         internal void Load()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
@@ -74,7 +72,6 @@ namespace Sync.Tools
                     }
                 }
             }
-            IO.CurrentIO.WriteColor("ZZZZZZZZZZZ=>" + sw.ElapsedMilliseconds, ConsoleColor.Cyan);
         }
 
         internal void ForceLoad()
@@ -90,11 +87,12 @@ namespace Sync.Tools
             if (v == null)
                 return true;
 
-            if (!v.Check(element))
-            {
-                v.CheckFailedNotify(element);
-                return false;
-            }
+            if (v.NoCheck)
+                if (!v.Check(element))
+                {
+                    v.CheckFailedNotify(element);
+                    return false;
+                }
 
             return true;
         }
