@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,7 +59,7 @@ namespace Sync.Tools.ConfigGUI
 
     public class ConfigListAttribute : ConfigAttributeBase
     {
-        public string[] ValueList { get; set; } = new string[] { };
+        public virtual string[] ValueList { get; set; } = new string[] { };
 
         public bool IgnoreCase { get; set; } = false;
 
@@ -98,6 +99,18 @@ namespace Sync.Tools.ConfigGUI
         private bool ContainValue(string content)
         {
             return ValueList.Where((str) => (IgnoreCase ? str.ToLower() : str) == content).Count() != 0;
+        }
+    }
+
+    public class ConfigReflectListAttribute: ConfigListAttribute
+    {
+        public Type Type;
+        public string ValueListName;
+        public override string[] ValueList => Type.GetProperty(ValueListName, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) as string[];
+
+        public ConfigReflectListAttribute()
+        {
+            NoCheck = true;
         }
     }
 
