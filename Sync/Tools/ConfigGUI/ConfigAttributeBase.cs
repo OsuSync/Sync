@@ -15,11 +15,13 @@ namespace Sync.Tools.ConfigGUI
         public string Description { get; set; } = "No Description";
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
-        protected void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);
+        public abstract bool Check(string value);
+        public void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);
     }
 
     public class ConfigBoolAttribute : ConfigAttributeBase
     {
+        public override bool Check(string value) => true;
     }
 
     public class ConfigIntegerAttribute : ConfigAttributeBase
@@ -27,13 +29,11 @@ namespace Sync.Tools.ConfigGUI
         public int MinValue { get; set; } = int.MinValue;
         public int MaxValue { get; set; } = int.MaxValue;
 
-        public bool Check(int i)
+        public override bool Check(string i)
         {
-            if (MinValue <= i && i <= MaxValue)
-                return true;
-
-            CheckFailedNotify(i);
-            return false;
+            if (!int.TryParse(i, out int v))
+                return false;
+            return (MinValue <= v && v <= MaxValue);
         }
     }
 
@@ -41,30 +41,34 @@ namespace Sync.Tools.ConfigGUI
     {
         public float MinValue { get; set; } = float.MinValue;
         public float MaxValue { get; set; } = float.MaxValue;
-        public float Step { get; set; } = 0.1F;
 
-        public bool Check(float i)
+        public override bool Check(string o)
         {
-            return (MinValue <= i && i <= MaxValue);
+            if (!float.TryParse(o, out float v))
+                return false;
+            return (MinValue <= v && v <= MaxValue);
         }
     }
 
-    public class ConfigStringAttribute : ConfigAttributeBase { }
+    public class ConfigStringAttribute : ConfigAttributeBase
+    {
+        public override bool Check(string value) => true;
+    }
 
     public class ConfigListAttribute : ConfigAttributeBase
     {
-        public string[] ValueList { get; set; } = null;
+        public string[] ValueList { get; set; } = new string[] { };
 
         public bool IgnoreCase { get; set; } = false;
 
         public bool AllowMultiSelect { get; set; } = false;
         public char SplitSeparator { get; set; } = ',';
 
-        public bool Check(string val)
+        public override bool Check(string val)
         {
             var m_val = IgnoreCase ? val.ToLower() : val;
 
-            if ((ValueList?.Count != 0))
+            if ((ValueList.Length != 0))
             {
                 if (AllowMultiSelect)
                 {
@@ -101,7 +105,7 @@ namespace Sync.Tools.ConfigGUI
         public byte R, G, B, A;
 
         //#RRGGBBAA
-        public bool Check(string rgba)
+        public override bool Check(string rgba)
         {
             return rgba[0] == '#'
                 && byte.TryParse(rgba.Substring(1, 2), NumberStyles.HexNumber, null, out var _)
@@ -120,7 +124,7 @@ namespace Sync.Tools.ConfigGUI
 
         public bool IsFilePath { get; set; } = true;
 
-        public bool Check(string file_path)
+        public override  bool Check(string file_path)
         {
             if (MustExsit && (!(IsFilePath ? File.Exists(file_path) : Directory.Exists(file_path))))
             {

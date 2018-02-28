@@ -2,6 +2,7 @@
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -59,6 +60,8 @@ namespace Sync.Tools
         
         internal void Load()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
@@ -71,6 +74,7 @@ namespace Sync.Tools
                     }
                 }
             }
+            IO.CurrentIO.WriteColor("ZZZZZZZZZZZ=>" + sw.ElapsedMilliseconds, ConsoleColor.Cyan);
         }
 
         internal void ForceLoad()
@@ -81,23 +85,18 @@ namespace Sync.Tools
         
         private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
         {
-            var v = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.ConfigAttributeBase));
+            var v = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.ConfigAttributeBase)) as ConfigGUI.ConfigAttributeBase;
 
-            switch (v)
+            if (v == null)
+                return true;
+
+            if (!v.Check(element))
             {
-                case ConfigGUI.ConfigBoolAttribute bool_attr:
-                    return bool.TryParse(element, out _);
-                case ConfigGUI.ConfigIntegerAttribute int_attr:
-                    return int.TryParse(element, out int int_value)&&int_attr.Check(int_value);
-                case ConfigGUI.ConfigListAttribute list_attr:
-                    return list_attr.Check(element);
-                case ConfigGUI.ConfigPathAttribute file_attr:
-                    return file_attr.Check(element);
-                case ConfigGUI.ConfigColorAttribute color_attr:
-                    return color_attr.Check(element);
-                default:
-                    return true;
+                v.CheckFailedNotify(element);
+                return false;
             }
+
+            return true;
         }
 
         internal void ForceReload()
