@@ -87,7 +87,7 @@ namespace Sync.Tools
             if (v == null)
                 return true;
 
-            if (v.NoCheck)
+            if (!v.NoCheck)
                 if (!v.Check(element))
                 {
                     v.CheckFailedNotify(element);

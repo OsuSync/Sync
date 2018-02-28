@@ -13,7 +13,7 @@ namespace Sync.Tools.ConfigGUI
     {
         public bool NeedRestart { get; set; } = false;
         public string Description { get; set; } = "No Description";
-        public bool NoCheck { get; set; } = true;
+        public bool NoCheck { get; set; } = false;
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
         public abstract bool Check(string value);
