@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools.ConfigGUI
 {
-    [System.AttributeUsage(System.AttributeTargets.Property,AllowMultiple = false)]
-    public abstract class ConfigAttributeBase:Attribute
+    [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple = false)]
+    public abstract class ConfigAttributeBase : Attribute
     {
         public bool NeedRestart = false;
         public string Description { get; set; } = "No Description";
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
-        protected void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage,obj.ToString())}",ConsoleColor.Red);
+        protected void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);
     }
 
     public class ConfigBoolAttribute : ConfigAttributeBase
@@ -54,27 +54,56 @@ namespace Sync.Tools.ConfigGUI
     public class ConfigListAttribute : ConfigAttributeBase
     {
         public string[] ValueList { get; set; } = null;
+
         public bool IgnoreCase { get; set; } = false;
+
+        public bool AllowMultiSelect { get; set; } = false;
+        public char SplitSeparator { get; set; } = ',';
 
         public bool Check(string val)
         {
             var m_val = IgnoreCase ? val.ToLower() : val;
 
-            if ((ValueList?.Length != 0) && (ValueList.Where((str) => (IgnoreCase ? str.ToLower() : str) == m_val).Count() != 0))
-                return true;
-            CheckFailedNotify(val);
-            return false;
+            if ((ValueList?.Count != 0))
+            {
+                if (AllowMultiSelect)
+                {
+                    foreach (var str in m_val.Split(new[] { SplitSeparator }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (!ContainValue(m_val))
+                        {
+                            CheckFailedNotify(val);
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!ContainValue(m_val))
+                    {
+                        CheckFailedNotify(val);
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool ContainValue(string content)
+        {
+            return ValueList.Where((str) => (IgnoreCase ? str.ToLower() : str) == content).Count() != 0;
         }
     }
 
     public class ConfigColorAttribute : ConfigAttributeBase
     {
-        public byte R,G,B,A;
-        
+        public byte R, G, B, A;
+
         //#RRGGBBAA
         public bool Check(string rgba)
         {
-            return rgba[0]=='#'
+            return rgba[0] == '#'
                 && byte.TryParse(rgba.Substring(1, 2), NumberStyles.HexNumber, null, out var _)
                 && byte.TryParse(rgba.Substring(3, 2), NumberStyles.HexNumber, null, out var _)
                 && byte.TryParse(rgba.Substring(5, 2), NumberStyles.HexNumber, null, out var _)
@@ -93,7 +122,7 @@ namespace Sync.Tools.ConfigGUI
 
         public bool Check(string file_path)
         {
-            if (MustExsit&&(!(IsFilePath?File.Exists(file_path):Directory.Exists(file_path))))
+            if (MustExsit && (!(IsFilePath ? File.Exists(file_path) : Directory.Exists(file_path))))
             {
                 CheckFailedNotify(file_path);
                 return false;
