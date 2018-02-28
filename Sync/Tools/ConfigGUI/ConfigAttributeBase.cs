@@ -127,7 +127,8 @@ namespace Sync.Tools.ConfigGUI
         //#RRGGBBAA
         public override bool Check(string rgba)
         {
-            return rgba[0] == '#'
+            return rgba.Length==9
+                && rgba[0] == '#'
                 && byte.TryParse(rgba.Substring(1, 2), NumberStyles.HexNumber, null, out var _)
                 && byte.TryParse(rgba.Substring(3, 2), NumberStyles.HexNumber, null, out var _)
                 && byte.TryParse(rgba.Substring(5, 2), NumberStyles.HexNumber, null, out var _)
