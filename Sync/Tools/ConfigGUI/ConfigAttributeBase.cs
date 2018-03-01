@@ -43,6 +43,7 @@ namespace Sync.Tools.ConfigGUI
     {
         public float MinValue { get; set; } = float.MinValue;
         public float MaxValue { get; set; } = float.MaxValue;
+        public float Step { get; set; } = 1;
 
         public override bool Check(string o)
         {
