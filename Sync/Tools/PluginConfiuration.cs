@@ -25,7 +25,7 @@ namespace Sync.Tools
 
         public static implicit operator string(ConfigurationElement e)
         {
-            return e._cfg;
+            return e?._cfg??string.Empty;
         }
 
         public static implicit operator ConfigurationElement(string e)
