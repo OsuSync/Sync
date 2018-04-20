@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools.ConfigGUI
 {
-    public class GuiLanguageElement : LanguageElement
+    public struct GuiLanguageElement
     {
-        public GuiLanguageElement(string defaultVal) : base(defaultVal)
+        private LanguageElement element;
+
+        public GuiLanguageElement(string defaultVal)
         {
+            element = new LanguageElement(defaultVal);
         }
 
         public static implicit operator GuiLanguageElement(string val)
@@ -18,6 +21,11 @@ namespace Sync.Tools.ConfigGUI
         }
 
         public static implicit operator string(GuiLanguageElement element)
+        {
+            return element.ToString();
+        }
+
+        public override string ToString()
         {
             return element.ToString();
         }

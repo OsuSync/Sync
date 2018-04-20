@@ -89,7 +89,7 @@ namespace Sync.Tools
     {
     }
 
-    public class LanguageElement
+    public struct LanguageElement
     {
         private string value;
 
