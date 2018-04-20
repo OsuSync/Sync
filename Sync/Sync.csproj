@@ -104,8 +104,21 @@
     <Compile Include="Source\SourceBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Command\CommandDispatch.cs" />
+    <Compile Include="Tools\ConfigGUI\BoolAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\ColorAttribute.cs" />
     <Compile Include="Tools\ConfigGUI\ConfigAttributeBase.cs" />
+<<<<<<< Updated upstream
     <Compile Include="Tools\ConfigGUI\GuiLanguageElement.cs" />
+=======
+    <Compile Include="Tools\ConfigGUI\ConfigI18nAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\FloatAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\FontAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\IntegerAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\ListAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\PathAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\ReflectListAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\StringAttribute.cs" />
+>>>>>>> Stashed changes
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
