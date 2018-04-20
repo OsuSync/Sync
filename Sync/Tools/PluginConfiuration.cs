@@ -82,15 +82,15 @@ namespace Sync.Tools
         
         private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
         {
-            var v = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.BaseConfigurationAttribute)) as ConfigGUI.BaseConfigurationAttribute;
+            var config_attribute = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.BaseConfigurationAttribute)) as ConfigGUI.BaseConfigurationAttribute;
 
-            if (v == null)
+            if (config_attribute == null)
                 return true;
 
-            if (!v.NoCheck)
-                if (!v.Check(element))
+            if (!config_attribute.NoCheck)
+                if (!config_attribute.Check(element))
                 {
-                    v.CheckFailedNotify(element);
+                    config_attribute.CheckFailedNotify(element);
                     return false;
                 }
 

@@ -142,13 +142,13 @@ namespace Sync.Tools.ConfigGUI
         /// <summary>
         /// 是否钦定这路径是否必须存在,通常用于读取配置文件
         /// </summary>
-        public bool MustExsit { get; set; } = false;
+        public bool RequireExist { get; set; } = false;
 
-        public bool IsFilePath { get; set; } = true;
+        public bool IsDirectory { get; set; } = true;
 
         public override  bool Check(string file_path)
         {
-            if (MustExsit && (!(IsFilePath ? File.Exists(file_path) : Directory.Exists(file_path))))
+            if (RequireExist && (!(IsDirectory ? File.Exists(file_path) : Directory.Exists(file_path))))
             {
                 CheckFailedNotify(file_path);
                 return false;
