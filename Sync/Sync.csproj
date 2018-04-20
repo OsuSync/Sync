@@ -105,7 +105,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Command\CommandDispatch.cs" />
     <Compile Include="Tools\ConfigGUI\ConfigAttributeBase.cs" />
-    <Compile Include="Tools\ConfigGUI\ConfigI18nAttribute.cs" />
+    <Compile Include="Tools\ConfigGUI\GuiLanguageElement.cs" />
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
     <Compile Include="Tools\ConsoleWriter.cs" />
