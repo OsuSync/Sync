@@ -66,9 +66,17 @@ namespace Sync.Tools
                 {
                     ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
 
-                    if (!string.IsNullOrWhiteSpace(element) && CheckValueVaild(item, element))
+                    if (!string.IsNullOrWhiteSpace(element))
                     {
-                        item.SetValue(config, element);
+                        if (CheckValueVaild(item, element))
+                        {
+                            item.SetValue(config, element);
+                        }
+                    }
+                    else
+                    {
+                        //if not exsit,write to config.ini immediately
+                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
                     }
                 }
             }
