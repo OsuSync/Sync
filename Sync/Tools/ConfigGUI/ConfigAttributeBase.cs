@@ -21,12 +21,12 @@ namespace Sync.Tools.ConfigGUI
         public void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);
     }
 
-    public class ConfigBoolAttribute : BaseConfigurationAttribute
+    public class BoolAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value) => true;
     }
 
-    public class ConfigIntegerAttribute : BaseConfigurationAttribute
+    public class IntegerAttribute : BaseConfigurationAttribute
     {
         public int MinValue { get; set; } = int.MinValue;
         public int MaxValue { get; set; } = int.MaxValue;
@@ -39,7 +39,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigFloatAttribute : BaseConfigurationAttribute
+    public class FloatAttribute : BaseConfigurationAttribute
     {
         public float MinValue { get; set; } = float.MinValue;
         public float MaxValue { get; set; } = float.MaxValue;
@@ -53,12 +53,12 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigStringAttribute : BaseConfigurationAttribute
+    public class StringAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value) => true;
     }
 
-    public class ConfigListAttribute : BaseConfigurationAttribute
+    public class ListAttribute : BaseConfigurationAttribute
     {
         public virtual string[] ValueList { get; set; } = new string[] { };
 
@@ -103,19 +103,19 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigReflectListAttribute: ConfigListAttribute
+    public class ReflectListAttribute: ListAttribute
     {
         public Type Type;
         public string ValueListName;
         public override string[] ValueList => Type.GetProperty(ValueListName, BindingFlags.Static | BindingFlags.Public)?.GetValue(null) as string[];
 
-        public ConfigReflectListAttribute()
+        public ReflectListAttribute()
         {
             NoCheck = true;
         }
     }
 
-    public class ConfigFontAttribute : BaseConfigurationAttribute
+    public class FontAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value)
         {
@@ -123,7 +123,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigColorAttribute : BaseConfigurationAttribute
+    public class ColorAttribute : BaseConfigurationAttribute
     {
         //#RRGGBBAA
         public override bool Check(string rgba)
@@ -137,7 +137,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigPathAttribute : BaseConfigurationAttribute
+    public class PathAttribute : BaseConfigurationAttribute
     {
         /// <summary>
         /// 是否钦定这路径是否必须存在,通常用于读取配置文件
