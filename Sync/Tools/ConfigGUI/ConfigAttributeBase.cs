@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Sync.Tools.ConfigGUI
 {
     [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple = false)]
-    public abstract class ConfigAttributeBase : Attribute
+    public abstract class BaseConfigurationAttribute : Attribute
     {
         public bool NeedRestart { get; set; } = false;
         public string Description { get; set; } = "No Description";
@@ -21,12 +21,12 @@ namespace Sync.Tools.ConfigGUI
         public void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);
     }
 
-    public class ConfigBoolAttribute : ConfigAttributeBase
+    public class ConfigBoolAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value) => true;
     }
 
-    public class ConfigIntegerAttribute : ConfigAttributeBase
+    public class ConfigIntegerAttribute : BaseConfigurationAttribute
     {
         public int MinValue { get; set; } = int.MinValue;
         public int MaxValue { get; set; } = int.MaxValue;
@@ -39,7 +39,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigFloatAttribute : ConfigAttributeBase
+    public class ConfigFloatAttribute : BaseConfigurationAttribute
     {
         public float MinValue { get; set; } = float.MinValue;
         public float MaxValue { get; set; } = float.MaxValue;
@@ -53,12 +53,12 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigStringAttribute : ConfigAttributeBase
+    public class ConfigStringAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value) => true;
     }
 
-    public class ConfigListAttribute : ConfigAttributeBase
+    public class ConfigListAttribute : BaseConfigurationAttribute
     {
         public virtual string[] ValueList { get; set; } = new string[] { };
 
@@ -115,7 +115,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigFontAttribute : ConfigAttributeBase
+    public class ConfigFontAttribute : BaseConfigurationAttribute
     {
         public override bool Check(string value)
         {
@@ -123,7 +123,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigColorAttribute : ConfigAttributeBase
+    public class ConfigColorAttribute : BaseConfigurationAttribute
     {
         //#RRGGBBAA
         public override bool Check(string rgba)
@@ -137,7 +137,7 @@ namespace Sync.Tools.ConfigGUI
         }
     }
 
-    public class ConfigPathAttribute : ConfigAttributeBase
+    public class ConfigPathAttribute : BaseConfigurationAttribute
     {
         /// <summary>
         /// 是否钦定这路径是否必须存在,通常用于读取配置文件
