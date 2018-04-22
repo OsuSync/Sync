@@ -12,7 +12,7 @@ namespace Sync.Tools.ConfigGUI
     [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple = false)]
     public abstract class BaseConfigurationAttribute : Attribute
     {
-        public bool NeedRestart { get; set; } = false;
+        public bool RequireRestart { get; set; } = false;
         public string Description { get; set; } = "No Description";
         public bool NoCheck { get; set; } = false;
 
