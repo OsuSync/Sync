@@ -2,6 +2,7 @@
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -24,7 +25,7 @@ namespace Sync.Tools
 
         public static implicit operator string(ConfigurationElement e)
         {
-            return e._cfg;
+            return e?._cfg??string.Empty;
         }
 
         public static implicit operator ConfigurationElement(string e)
@@ -56,8 +57,8 @@ namespace Sync.Tools
         {
             ForceSave();
         }
-
-        internal void ForceLoad()
+        
+        internal void Load()
         {
             foreach (PropertyInfo item in config.GetType().GetProperties())
             {
@@ -67,27 +68,46 @@ namespace Sync.Tools
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
-                        item.SetValue(config, element);
+                        if (CheckValueVaild(item, element))
+                        {
+                            item.SetValue(config, element);
+                        }
+                    }
+                    else
+                    {
+                        //if not exsit,write to config.ini immediately
+                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
                     }
                 }
             }
+        }
+
+        internal void ForceLoad()
+        {
+            Load();
             config.onConfigurationLoad();
+        }
+        
+        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
+        {
+            var config_attribute = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.BaseConfigurationAttribute)) as ConfigGUI.BaseConfigurationAttribute;
+
+            if (config_attribute == null)
+                return true;
+
+            if (!config_attribute.NoCheck)
+                if (!config_attribute.Check(element))
+                {
+                    config_attribute.CheckFailedNotify(element);
+                    return false;
+                }
+
+            return true;
         }
 
         internal void ForceReload()
         {
-            foreach (PropertyInfo item in config.GetType().GetProperties())
-            {
-                if (item.PropertyType == typeof(ConfigurationElement))
-                {
-                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
-
-                    if (!string.IsNullOrWhiteSpace(element))
-                    {
-                        item.SetValue(config, element);
-                    }
-                }
-            }
+            Load();
             config.onConfigurationReload();
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sync.Tools.ConfigGUI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -187,6 +188,16 @@ namespace Sync.Tools
                         ConfigurationIO.IniWriteValue(LangFile, item.Name, value, CurrentLanguage);
                     }
                     item.SetValue(instance, new LanguageElement(value));
+                }
+                else if (item.FieldType.Equals(typeof(GuiLanguageElement)))
+                {
+                    string value = ConfigurationIO.IniReadValue(LangFile, item.Name, CurrentLanguage);
+                    if (value == "")
+                    {
+                        value = (GuiLanguageElement)item.GetValue(instance);
+                        ConfigurationIO.IniWriteValue(LangFile, item.Name, value, CurrentLanguage);
+                    }
+                    item.SetValue(instance, new GuiLanguageElement(value));
                 }
             }
         }
