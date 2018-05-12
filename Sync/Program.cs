@@ -1,6 +1,7 @@
 ﻿using Sync.Tools;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using static Sync.Tools.IO;
 
 namespace Sync
@@ -21,12 +22,28 @@ namespace Sync
             return true;
         }
 
+        static Mutex mutex = new Mutex(true, "{781d2da2-1b44-46d9-8b01-e1d59adc018b}");
+        private static bool ChechkOnceInstance()
+        {
+            if (mutex.WaitOne(TimeSpan.Zero, true))
+                return true;
+            else
+                return false;
+        }
+
         static void Main(string[] args)
         {
             SetConsoleCtrlHandler(cancelHandler, true);
             if (Updater.ApplyUpdate(args)) return;
  
             I18n.Instance.ApplyLanguage(new DefaultI18n());
+
+            if (!ChechkOnceInstance())
+            {
+                CurrentIO.WriteColor(DefaultI18n.LANG_Once_Instance, ConsoleColor.Red);
+                Console.ReadKey();
+                return;
+            }
 
             while (true)
             {
