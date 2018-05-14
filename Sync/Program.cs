@@ -23,27 +23,27 @@ namespace Sync
         }
 
         static Mutex mutex = new Mutex(true, "{781d2da2-1b44-46d9-8b01-e1d59adc018b}");
-        private static bool ChechkOnceInstance()
+        private static bool ChechkInstanceExist()
         {
             if (mutex.WaitOne(TimeSpan.Zero, true))
-                return true;
-            else
                 return false;
+            else
+                return true;
         }
 
         static void Main(string[] args)
         {
-            SetConsoleCtrlHandler(cancelHandler, true);
             if (Updater.ApplyUpdate(args)) return;
- 
             I18n.Instance.ApplyLanguage(new DefaultI18n());
 
-            if (!ChechkOnceInstance())
+            if (ChechkInstanceExist())
             {
-                CurrentIO.WriteColor(DefaultI18n.LANG_Once_Instance, ConsoleColor.Red);
+                CurrentIO.WriteColor(DefaultI18n.LANG_Instance_Exist, ConsoleColor.Red);
                 Console.ReadKey();
                 return;
             }
+
+            SetConsoleCtrlHandler(cancelHandler, true);
 
             while (true)
             {

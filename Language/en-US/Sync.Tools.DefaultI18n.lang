@@ -59,4 +59,4 @@ LANG_IRC_Connect_Timeout=Client connection failed£¬please check your internet co
 LANG_IRC_Ready=[Client] is ready!
 LANG_MsgMgr_Limit=Message limiter is toggled ON, the danmaku only with ?send prefix will be sent to irc
 LANG_MsgMgr_Free=Message limiter is toggled OFF.
-LANG_Once_Instance=Only one sync.exe at a time
+LANG_Instance_Exist=Only one sync.exe process at a time
