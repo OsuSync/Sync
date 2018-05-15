@@ -1,6 +1,7 @@
 ﻿using Sync.Plugins;
 using Sync.Tools;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -130,7 +131,7 @@ namespace Sync.Tools
     /// </summary>
     public sealed class PluginConfigurationManager
     {
-        internal static LinkedList<PluginConfigurationManager> ConfigurationSet = new LinkedList<PluginConfigurationManager>();
+        internal static ConcurrentBag<PluginConfigurationManager> ConfigurationSet = new ConcurrentBag<PluginConfigurationManager>();
         internal static bool InSaving = false;
         private List<PluginConfiuration> items;
         private Plugin instance;
@@ -138,7 +139,7 @@ namespace Sync.Tools
         {
             items = new List<PluginConfiuration>();
             this.instance = instance;
-            ConfigurationSet.AddLast(this);
+            ConfigurationSet.Add(this);
         }
 
         public void AddItem(IConfigurable Config)
