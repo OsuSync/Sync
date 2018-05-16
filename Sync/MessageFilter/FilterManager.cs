@@ -90,6 +90,9 @@ namespace Sync.Plugins
             foreach (var filter in filters[identify])
             {
                 filter.onMsg(ref msg);
+
+                if (msg.Cancel) //已经处理的就不用继续给后面的处理了
+                    break;
             }
 
             RaiseEventAsync(msg);
