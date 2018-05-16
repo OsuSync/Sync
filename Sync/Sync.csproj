@@ -94,6 +94,7 @@
     <Compile Include="MessageFilter\FilterBase.cs" />
     <Compile Include="Event\EventDispatcher.cs" />
     <Compile Include="MessageFilter\FilterManager.cs" />
+    <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />

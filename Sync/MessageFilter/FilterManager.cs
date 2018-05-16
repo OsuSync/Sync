@@ -57,8 +57,7 @@ namespace Sync.Plugins
                 }
             }
         }
-
-
+        
         public int Count { get { return filters.Sum(p => p.Value.Count); } }
 
         internal void PassFilterDanmaku(ref IMessageBase msg)
@@ -103,6 +102,7 @@ namespace Sync.Plugins
                 if(filters.ContainsKey(i))
                 {
                     filters[i].Add(filter);
+                    filters[i].Sort((a,b)=> ((int)b.GetFilterPriority())- ((int)a.GetFilterPriority()));
                 }
             }
         }
