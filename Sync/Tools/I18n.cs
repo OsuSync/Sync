@@ -135,13 +135,13 @@ namespace Sync.Tools
             {
                 if (instance == null)
                 {
-                    if(Configuration.Language == Configuration.DEFAULT_LANGUAGE || Configuration.Language.Length == 0)
+                    if(Configuration.Instance.Language == Configuration.DEFAULT_LANGUAGE || ((string)Configuration.Instance.Language).Length == 0)
                     {
                         instance = new I18n(CurrentSystemLang);
                     }
                     else
                     {
-                        instance = new I18n(Configuration.Language);
+                        instance = new I18n(Configuration.Instance.Language);
                     }
                 }
                 return instance;

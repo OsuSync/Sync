@@ -19,7 +19,7 @@ namespace Sync.Source
         public SourceWorkWrapper(SourceManager sources)
         {
             this.sources = sources;
-            Source = sources.SourceList.Where(p => p.Name == Configuration.Source).FirstOrDefault()??/*没有的话就默认第一个*/sources.SourceList.FirstOrDefault();
+            Source = sources.SourceList.Where(p => p.Name == Configuration.Instance.Source).FirstOrDefault()??/*没有的话就默认第一个*/sources.SourceList.FirstOrDefault();
             if(Source == null)
             {
                 IO.CurrentIO.WriteColor("没有任何弹幕接收源,请检查Plugins目录或使用\"plugins install DefaultPlugin\"来安装默认插件",ConsoleColor.Red);

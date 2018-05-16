@@ -217,12 +217,12 @@ namespace Sync.Tools
         StreamWriter logger;
         internal FileLoggerWriter()
         {
-            if(Configuration.LoggerFile == "")
+            if(Configuration.Instance.LoggerFile == "")
             {
-                Configuration.LoggerFile = @"Logs\\Log.{Date}.txt";
+                Configuration.Instance.LoggerFile = @"Logs\\Log.{Date}.txt";
             }
             string date = $"{DateTime.Now.ToShortDateString()}@{DateTime.Now.ToShortTimeString().Replace(":", "-")}";
-            string log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Configuration.LoggerFile.Replace("{Date}",date));
+            string log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ((string)Configuration.Instance.LoggerFile).Replace("{Date}",date));
             Directory.CreateDirectory(Path.GetDirectoryName(log));
 
             logger = new StreamWriter(File.Open(log, FileMode.OpenOrCreate, FileAccess.Write))

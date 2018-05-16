@@ -14,6 +14,7 @@ namespace Sync.Tools
     public sealed class ConfigurationElement
     {
         private string _cfg = string.Empty;
+
         public ConfigurationElement()
         {
 
@@ -38,6 +39,10 @@ namespace Sync.Tools
         {
             return _cfg;
         }
+
+        public bool ToBool() => _cfg.ToLower() == "true";
+        public int ToInt() => int.Parse(_cfg);
+        public float ToFloat() => float.Parse(_cfg);
     }
 
     /// <summary>

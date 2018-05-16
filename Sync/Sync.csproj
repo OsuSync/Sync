@@ -96,6 +96,8 @@
     <Compile Include="MessageFilter\FilterManager.cs" />
     <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
+    <Compile Include="Plugins\BuildInPlugin\InternalPlugin.cs" />
+    <Compile Include="Tools\Updater.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Source\SourceManager.cs" />
@@ -124,7 +126,6 @@
     <Compile Include="Tools\SyncIO\Logger.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />
-    <Compile Include="Tools\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
