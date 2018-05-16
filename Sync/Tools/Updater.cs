@@ -172,7 +172,7 @@ namespace Sync.Tools
             {
                 if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
                 {
-                    if (CheckUpdate(datas[0].guid))
+                    if (datas.Length==0||CheckUpdate(datas[0].guid))
                     {
                         RequireRestart("Install done. Restart to load plugin");
                         return true;
