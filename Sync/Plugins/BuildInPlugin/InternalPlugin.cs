@@ -171,6 +171,8 @@ namespace Sync.Plugins.BuildInPlugin
                 else if (arg.Count == 1) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], "");
                 else if (arg.Count == 2) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], arg[1]);
             }
+            else
+                IO.CurrentIO.WriteColor($"接收源 {SyncHost.Instance.SourceWrapper.Source?.GetType().Name} 并不支持发送功能", ConsoleColor.Red);
 
             return true;
         }
@@ -250,8 +252,9 @@ namespace Sync.Plugins.BuildInPlugin
 
         public bool stop(Arguments arg)
         {
-            if (SyncHost.Instance.ClientWrapper.Client != null) SyncHost.Instance.ClientWrapper.Client?.StopWork();
-            if (SyncHost.Instance.SourceWrapper.Source != null) SyncHost.Instance.SourceWrapper.Source?.Disconnect();
+            SyncHost.Instance.ClientWrapper.Client?.StopWork();
+            SyncHost.Instance.SourceWrapper.Source?.Disconnect();
+
             return true;
         }
 
