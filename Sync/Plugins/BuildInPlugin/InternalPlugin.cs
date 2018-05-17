@@ -136,7 +136,7 @@ namespace Sync.Plugins.BuildInPlugin
                     IO.CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
                 }
 
-                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client.ClientName), ConsoleColor.Green);
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client?.ClientName??"还没指定发送源"), ConsoleColor.Green);
             }
             else
             {
@@ -146,16 +146,20 @@ namespace Sync.Plugins.BuildInPlugin
             }
             return true;
         }
-        
+
         private bool disable(Arguments arg)
         {
-            foreach (var item in Sync.SyncHost.Instance.EnumPluings())
-            {
-                if (item.Name == arg[0])
+            if (arg.Count == 0)
+                IO.CurrentIO.WriteColor("还未钦定插件名称", ConsoleColor.Red);
+            else
+                foreach (var item in Sync.SyncHost.Instance.EnumPluings())
                 {
-                    item.OnDisable();
+                    if (item.Name == arg[0])
+                    {
+                        item.OnDisable();
+                        IO.CurrentIO.WriteColor("已禁用 "+ arg[0], ConsoleColor.Red);
+                    }
                 }
-            }
             return true;
         }
 
@@ -221,11 +225,24 @@ namespace Sync.Plugins.BuildInPlugin
 
         public bool start(Arguments arg)
         {
-            if (SyncHost.Instance.SourceWrapper.Source.Status == SourceStatus.CONNECTED_WORKING)
+            if (SyncHost.Instance.SourceWrapper.Source==null)
             {
-                IO.CurrentIO.Write(LANG_COMMANDS_START_ALREADY_RUN);
+                IO.CurrentIO.WriteColor("还未钦定任何一个接收源",ConsoleColor.Red);
                 return true;
             }
+
+            if (SyncHost.Instance.ClientWrapper.Client == null)
+            {
+                IO.CurrentIO.WriteColor("还未钦定任何一个发送源", ConsoleColor.Red);
+                return true;
+            }
+
+            if (SyncHost.Instance.SourceWrapper.Source.Status == SourceStatus.CONNECTED_WORKING)
+            {
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_START_ALREADY_RUN, ConsoleColor.Red);
+                return true;
+            }
+
             SyncHost.Instance.ClientWrapper?.Client?.StartWork();
             SyncHost.Instance.SourceWrapper?.Source?.Connect();
             return true;
