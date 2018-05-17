@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
@@ -83,8 +80,46 @@ namespace Sync.Tools
         public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
 
         public static LanguageElement LANG_Instance_Exist = "只能存在一个Sync进程";
-    }
 
+        //from default plugin
+        public static LanguageElement LANG_COMMANDS_LOGIN = "login <user> [pass] 登录到目标弹幕网站，启动弹幕发送功能";
+        public static LanguageElement LANG_COMMANDS_EXIT = "退出软件";
+        public static LanguageElement LANG_COMMANDS_CLEAR = "清空屏幕";
+        public static LanguageElement LANG_COMMANDS_STATUS = "获得当前连接状态属性";
+        public static LanguageElement LANG_COMMANDS_STOP = "停止当前连接";
+        public static LanguageElement LANG_COMMANDS_START = "开始同步";
+        public static LanguageElement LANG_COMMANDS_HELP = "打印帮助信息";
+        public static LanguageElement LANG_COMMANDS_SOURCEMSG = "danmaku <message> 发送弹幕测试";
+        public static LanguageElement LANG_COMMANDS_CLIENTMSG = "chat <message> 发送IRC信息测试";
+        public static LanguageElement LANG_COMMANDS_CLIENTUSERMSG = "chatuser <username> <message> 按照username名字发送IRC信息测试";
+        public static LanguageElement LANG_COMMANDS_SOURCES = "获得当前所有弹幕源列表";
+        public static LanguageElement LANG_COMMANDS_MSGMGR = "查看或者设置消息控制器相关内容,添加--help参数获取帮助";
+        public static LanguageElement LANG_COMMANDS_FILTERS = "列表所有当前可用消息过滤器";
+        public static LanguageElement LANG_COMMANDS_DISABLE = "向插件发送禁用消息 disable (插件名称)";
+        public static LanguageElement LANG_COMMANDS_SWITCH_CLIENT = "切换到指定Client实例，不带名称则为获取Client列表";
+        public static LanguageElement LANG_COMMANDS_SOURCELOGIN = "登录到弹幕源 sourcelogin [用户名] [密码]";
+        public static LanguageElement LANG_COMMANDS_RESTART = "重新启动应用程序";
+        public static LanguageElement LANG_COMMANDS_LANG = "lang [cultureName] Get/Set language";
+        public static LanguageElement LANG_COMMANDS_LISTLANG = "listlang [--all] List (supported/all) languages";
+        public static LanguageElement LANG_COMMANDS_FILTERS_ITEM = "过滤项";
+        public static LanguageElement LANG_COMMANDS_FILTERS_OBJ = "过滤器";
+        public static LanguageElement LANG_COMMANDS_CLIENT_NAME = "Client";
+        public static LanguageElement LANG_COMMANDS_CLIENT_AUTHOR = "作者";
+        public static LanguageElement LANG_COMMANDS_SOURCES_NAME = "弹幕源";
+        public static LanguageElement LANG_COMMANDS_SOURCES_AUTHOR = "作者";
+        public static LanguageElement LANG_COMMANDS_CURRENT = "当前设置为 {0:S}";
+        public static LanguageElement LANG_COMMANDS_DANMAKU_NOT_SUPPORT = @"提示：当前弹幕源不支持发送弹幕，请更换弹幕源！\n";
+        public static LanguageElement LANG_COMMANDS_CHAT_IRC_NOTCONNECT = "osu! irc 尚未连接，您还不能发送消息。";
+        public static LanguageElement LANG_COMMANDS_DANMAKU_REQUIRE_LOGIN = "你必须登录才能发送弹幕!";
+        public static LanguageElement LANG_COMMANDS_START_ALREADY_RUN = "同步实例已经在运行。";
+        public static LanguageElement LANG_COMMANDS_ARGUMENT_WRONG = "参数不正确";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_HELP = @"\n--status :查看当前消息管理器的信息\n--limit <数值> :是设置限制发送信息的等级，越低就越容易触发管控\n--option <名称> :是设置管控的方式，其中auto是自动管控，force_all强行全都发送,force_limit是仅发送使用?send命令的消息";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT = "限制中...";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_FREE = "无限制";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_STATUS = "MessageManager mode:{4:S},status:{0:D},queueCount/limitCount/recoverTime:{1}/{2}/{3}";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT_SPEED_SET = "设置限制发送速度等级为{0}";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT_STYPE_SET = "设置消息管理器的管制方式为{0}";
+    }
 
     public interface I18nProvider
     {
@@ -114,15 +149,16 @@ namespace Sync.Tools
             return value;
         }
     }
+
     /// <summary>
     /// I18n Manager
     /// </summary>
     public class I18n
     {
         public static string CurrentSystemLang { get => System.Globalization.CultureInfo.CurrentCulture.Name; }
-        string Base { get => AppDomain.CurrentDomain.BaseDirectory; }
+        private string Base { get => AppDomain.CurrentDomain.BaseDirectory; }
         public string LangFolder { get => Path.Combine(Base, "Language"); }
-        public string SelectLangFolder {  get => Path.Combine(LangFolder, CurrentLanguage); }
+        public string SelectLangFolder { get => Path.Combine(LangFolder, CurrentLanguage); }
         public string CurrentLanguage;
 
         private static I18n instance;
@@ -135,7 +171,7 @@ namespace Sync.Tools
             {
                 if (instance == null)
                 {
-                    if(Configuration.Instance.Language == Configuration.DEFAULT_LANGUAGE || ((string)Configuration.Instance.Language).Length == 0)
+                    if (Configuration.Instance.Language == Configuration.DEFAULT_LANGUAGE || ((string)Configuration.Instance.Language).Length == 0)
                     {
                         instance = new I18n(CurrentSystemLang);
                     }
@@ -161,7 +197,9 @@ namespace Sync.Tools
             }
         }
 
-        private I18n() { }
+        private I18n()
+        {
+        }
 
         /// <summary>
         ///  Constructor for initial one language
@@ -180,7 +218,7 @@ namespace Sync.Tools
             string LangFile = Path.Combine(SelectLangFolder, instance.GetType().FullName) + ".lang";
             foreach (FieldInfo item in instance.GetType().GetFields())
             {
-                if(item.FieldType.Equals(typeof(LanguageElement)))
+                if (item.FieldType.Equals(typeof(LanguageElement)))
                 {
                     string value = ConfigurationIO.IniReadValue(LangFile, item.Name, CurrentLanguage);
                     if (value == "")
@@ -202,7 +240,5 @@ namespace Sync.Tools
                 }
             }
         }
-
-
     }
 }

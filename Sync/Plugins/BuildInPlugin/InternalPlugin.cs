@@ -3,16 +3,20 @@ using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using static Sync.Tools.DefaultI18n;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Sync.Source;
+using Sync.MessageFilter;
 
 namespace Sync.Plugins.BuildInPlugin
 {
@@ -70,12 +74,309 @@ namespace Sync.Plugins.BuildInPlugin
             this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p => {
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
                 addCmd("plugins", Plugins, "Install & Update Plugins online, type 'plugins' to get help.");
+                BindCommondCommand(p.Commands.Dispatch);
             });
 
             Updater.update = this;
         }
 
         #region Command Execute
+
+        #region Commond Command
+
+        private void BindCommondCommand(CommandDispatch dispatch)
+        {
+            dispatch.bind("restart", restart, LANG_COMMANDS_RESTART);
+            dispatch.bind("stop", stop, LANG_COMMANDS_STOP);
+            dispatch.bind("start", start, LANG_COMMANDS_START);
+            dispatch.bind("status", status, LANG_COMMANDS_STATUS);
+            dispatch.bind("sourcemsg", sourcemsg, LANG_COMMANDS_SOURCEMSG);
+            dispatch.bind("clientmsg", clientmsg, LANG_COMMANDS_CLIENTMSG);
+
+            dispatch.bind("clientusermsg", chatuser, LANG_COMMANDS_CLIENTUSERMSG);
+            dispatch.bind("disable", disable, LANG_COMMANDS_DISABLE);
+            dispatch.bind("client", switchclient, LANG_COMMANDS_SWITCH_CLIENT);
+            dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_SOURCELOGIN);
+
+            dispatch.bind("clear", clear, LANG_COMMANDS_CLEAR);
+            
+            dispatch.bind("help", help, LANG_COMMANDS_HELP);
+            dispatch.bind("listlang", languages, LANG_COMMANDS_LISTLANG);
+
+            dispatch.bind("lang", language, LANG_COMMANDS_LANG);
+            dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
+            dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
+            dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
+            
+        }
+
+        public bool listsource(Arguments arg)
+        {
+            foreach (SourceBase src in SyncHost.Instance.Sources.SourceList)
+            {
+                IO.CurrentIO.WriteColor("", ConsoleColor.Gray, false);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_NAME, ConsoleColor.Cyan, false, false);
+                IO.CurrentIO.WriteColor(src.Name.PadRight(18), ConsoleColor.White, false, false);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_AUTHOR, ConsoleColor.DarkCyan, false, false);
+                IO.CurrentIO.WriteColor(src.Author, ConsoleColor.White, true, false);
+            }
+            return true;
+        }
+
+        private bool switchclient(Arguments arg)
+        {
+            if (arg.Count == 0)
+            {
+                foreach (var item in SyncHost.Instance.Clients.Clients)
+                {
+                    IO.CurrentIO.WriteColor("", ConsoleColor.Gray, false);
+                    IO.CurrentIO.WriteColor(LANG_COMMANDS_CLIENT_NAME, ConsoleColor.Cyan, false, false);
+                    IO.CurrentIO.WriteColor(item.ClientName.PadRight(18), ConsoleColor.White, false, false);
+                    IO.CurrentIO.WriteColor(LANG_COMMANDS_CLIENT_AUTHOR, ConsoleColor.DarkCyan, false, false);
+                    IO.CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
+                }
+
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client.ClientName), ConsoleColor.Green);
+            }
+            else
+            {
+                if (SyncHost.Instance.Clients.Clients.FirstOrDefault(p => p.ClientName == arg[0]) == null) return false;
+                Configuration.Instance.Client = arg[0];
+                SyncHost.Instance.ClientWrapper.ResetClient();
+            }
+            return true;
+        }
+        
+        private bool disable(Arguments arg)
+        {
+            foreach (var item in Sync.SyncHost.Instance.EnumPluings())
+            {
+                if (item.Name == arg[0])
+                {
+                    item.OnDisable();
+                }
+            }
+            return true;
+        }
+
+        private bool sourcelogin(Arguments arg)
+        {
+            if (SyncHost.Instance.SourceWrapper.Sendable)
+            {
+                if (arg.Count == 0) SyncHost.Instance.SourceWrapper.SendableSource.Login("", "");
+                else if (arg.Count == 1) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], "");
+                else if (arg.Count == 2) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], arg[1]);
+            }
+
+            return true;
+        }
+
+        public bool clientmsg(Arguments arg)
+        {
+            if (arg.Count == 0 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            {
+                IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
+                return true;
+            }
+
+            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage("Console", string.Join(" ", arg)));
+            return true;
+
+        }
+
+        public bool chatuser(Arguments arg)
+        {
+            if (arg.Count < 1 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            {
+                IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
+            }
+            string message = "";
+            for (int i = 1; i < arg.Count; i++)
+                message += arg[i] + " ";
+            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
+            return true;
+
+        }
+
+        public bool sourcemsg(Arguments arg)
+        {
+            if (SyncHost.Instance.SourceWrapper.Sendable)
+            {
+                if (SyncHost.Instance.SourceWrapper.SendableSource.SendStatus)
+                {
+                    SyncHost.Instance.SourceWrapper.SendableSource.Send(new IRCMessage(string.Empty, string.Join("", arg)));
+                    return true;
+                }
+                else
+                {
+                    IO.CurrentIO.Write(LANG_COMMANDS_DANMAKU_REQUIRE_LOGIN);
+                }
+            }
+            else
+            {
+                IO.CurrentIO.Write(LANG_COMMANDS_DANMAKU_NOT_SUPPORT);
+            }
+            return true;
+        }
+
+        public bool start(Arguments arg)
+        {
+            if (SyncHost.Instance.SourceWrapper.Source.Status == SourceStatus.CONNECTED_WORKING)
+            {
+                IO.CurrentIO.Write(LANG_COMMANDS_START_ALREADY_RUN);
+                return true;
+            }
+            SyncHost.Instance.ClientWrapper?.Client?.StartWork();
+            SyncHost.Instance.SourceWrapper?.Source?.Connect();
+            return true;
+        }
+
+        public bool stop(Arguments arg)
+        {
+            if (SyncHost.Instance.ClientWrapper.Client != null) SyncHost.Instance.ClientWrapper.Client?.StopWork();
+            if (SyncHost.Instance.SourceWrapper.Source != null) SyncHost.Instance.SourceWrapper.Source?.Disconnect();
+            return true;
+        }
+
+        public bool status(Arguments arg)
+        {
+            IO.CurrentIO.WriteStatus();
+            return true;
+        }
+
+        public bool language(Arguments arg)
+        {
+            if (arg.Count == 0)
+            {
+                CultureInfo info = CultureInfo.GetCultureInfo(I18n.Instance.CurrentLanguage);
+                IO.CurrentIO.WriteColor(string.Format("Current culture: {0:S}\t{1:S}", info.Name, info.NativeName), ConsoleColor.Yellow);
+                return true;
+            }
+            else if (arg.Count == 1)
+            {
+                try
+                {
+                    CultureInfo info = CultureInfo.GetCultureInfo(arg[0]);
+                    Configuration.Instance.Language = arg[0];
+                    IO.CurrentIO.WriteColor(string.Format("Success switch to {1:S}({0:S})", arg[0], info.NativeName), ConsoleColor.Green);
+                    return true;
+                }
+                catch (CultureNotFoundException)
+                {
+                    IO.CurrentIO.WriteColor("Culture not found! Please specify other culture name.", ConsoleColor.Red);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public bool clear(Arguments arg)
+        {
+            IO.CurrentIO.Clear();
+            IO.CurrentIO.WriteWelcome();
+            return true;
+        }
+
+        public bool help(Arguments arg)
+        {
+            IO.CurrentIO.WriteHelp();
+            return true;
+        }
+
+        public bool msgmgr(Arguments arg)
+        {
+            int value = 0;
+
+            if (arg.Count == 0)
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_ARGUMENT_WRONG, ConsoleColor.Red);
+            else
+            {
+                switch (arg[0].Trim())
+                {
+                    case "--help":
+                        IO.CurrentIO.WriteColor(LANG_COMMANDS_MSGMGR_HELP, ConsoleColor.Yellow);
+                        break;
+                    case "--status":
+                        IO.CurrentIO.WriteColor(String.Format(LANG_COMMANDS_MSGMGR_STATUS, (string)(MessageManager.IsLimit ? LANG_COMMANDS_MSGMGR_LIMIT : LANG_COMMANDS_MSGMGR_FREE), MessageManager.CurrentQueueCount, MessageManager.LimitLevel, MessageManager.RecoverTime, MessageManager.Option.ToString()), ConsoleColor.Yellow);
+                        break;
+                    case "--limit":
+                        if (arg.Count == 2 && Int32.TryParse(arg[1].Trim(), out value))
+                        {
+                            MessageManager.LimitLevel = value;
+                            IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_MSGMGR_LIMIT_SPEED_SET, MessageManager.LimitLevel), ConsoleColor.Yellow);
+                        }
+                        else
+                            IO.CurrentIO.WriteColor(LANG_COMMANDS_ARGUMENT_WRONG, ConsoleColor.Red);
+                        break;
+
+                    case "--option":
+                        if (arg.Count == 2)
+                        {
+                            switch (arg[1].Trim().ToLower())
+                            {
+                                case "auto":
+                                    MessageManager.Option = MessageManager.PeekOption.Auto;
+                                    break;
+                                case "force_all":
+                                    MessageManager.Option = MessageManager.PeekOption.Force_All;
+                                    break;
+                                case "force_limit":
+                                    MessageManager.Option = MessageManager.PeekOption.Only_Send_Command;
+                                    break;
+                            }
+                            IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_MSGMGR_LIMIT_STYPE_SET, MessageManager.Option.ToString()), ConsoleColor.Yellow);
+                        }
+                        else
+                            IO.CurrentIO.WriteColor(LANG_COMMANDS_ARGUMENT_WRONG, ConsoleColor.Red);
+                        break;
+                }
+            }
+            return true;
+        }
+
+        public bool languages(Arguments arg)
+        {
+            if (arg.Count > 0 && arg[0] == "--all")
+            {
+                foreach (var item in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                {
+                    IO.CurrentIO.WriteColor(string.Format("CultureName: {0:S}\t{1:S}", item.Name, item.NativeName), ConsoleColor.Yellow);
+                }
+            }
+            else
+            {
+                foreach (var item in System.IO.Directory.EnumerateDirectories(I18n.Instance.LangFolder))
+                {
+                    string name = item.Substring(item.LastIndexOf('\\') + 1);
+                    IO.CurrentIO.WriteColor(string.Format("CultureName: {0:S}\t{1:S}", name, CultureInfo.GetCultureInfo(name).NativeName), ConsoleColor.Yellow);
+                }
+            }
+            return true;
+        }
+
+        private bool restart(Arguments arg)
+        {
+            Process.Start(Assembly.GetEntryAssembly().Location);
+            Environment.Exit(0);
+            return true;
+        }
+
+        private bool filters(Arguments arg)
+        {
+            foreach (var item in SyncHost.Instance.Filters.GetFiltersEnum())
+            {
+                IO.CurrentIO.WriteColor("", ConsoleColor.Gray, false);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_FILTERS_ITEM, ConsoleColor.Cyan, false, false);
+                IO.CurrentIO.WriteColor(item.Key.Name.PadRight(22), ConsoleColor.White, false, false);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_FILTERS_OBJ, ConsoleColor.DarkCyan, false, false);
+                IO.CurrentIO.WriteColor(item.Value.GetType().Name, ConsoleColor.White, true, false);
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Update Command
 
         private bool Plugins(Arguments arg)
         {
@@ -254,8 +555,10 @@ namespace Sync.Plugins.BuildInPlugin
 
         #endregion
 
+        #endregion
+
         #region Update Tool
-        
+
         private void RequireRestart(string msg)
         {
             IO.CurrentIO.WriteColor($"{msg}? (Y/N):", ConsoleColor.Green, false);
