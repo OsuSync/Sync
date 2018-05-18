@@ -173,7 +173,7 @@ namespace Sync
 
         public void ForceRestartSync()
         {
-            Process.Start(Assembly.GetEntryAssembly().Location);
+            Process.Start(Assembly.GetEntryAssembly().Location,"--delay-initialize=3");
             Environment.Exit(0);
         }
     }

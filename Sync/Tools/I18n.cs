@@ -82,6 +82,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_MsgMgr_Free = "当前消息管理器 解除 管制,内容可以直接发送到irc频道";
         public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
 
+        public static LanguageElement LANG_Instance_Exist = "只能存在一个Sync进程";
     }
 
 

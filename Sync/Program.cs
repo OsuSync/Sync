@@ -1,6 +1,7 @@
 ﻿using Sync.Tools;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using static Sync.Tools.IO;
 
 namespace Sync
@@ -23,30 +24,49 @@ namespace Sync
 
         static void Main(string[] args)
         {
-            SetConsoleCtrlHandler(cancelHandler, true);
             if (Updater.ApplyUpdate(args)) return;
- 
             I18n.Instance.ApplyLanguage(new DefaultI18n());
 
-            while (true)
+            for (int i = 0; i < args.Length; i++)
             {
-                SyncHost.Instance = new SyncHost();
-                SyncHost.Instance.Load();
-
-                CurrentIO.WriteWelcome();
-
-                SyncHost.Instance.Plugins.ReadySync();
-
-                if(Updater.IsUpdated) IO.CurrentIO.WriteColor("Sync already update!", ConsoleColor.Green);
-
-                string cmd = CurrentIO.ReadCommand();
-                while (true)
+                if (args[i].StartsWith("--delay-initialize"))
                 {
-                    SyncHost.Instance.Commands.invokeCmdString(cmd);
-                    cmd = CurrentIO.ReadCommand();
+                    var p = args[i].Split('=');
+                    Thread.Sleep(TimeSpan.ParseExact(p[1], "%s", null));
                 }
             }
 
+            SetConsoleCtrlHandler(cancelHandler, true);
+
+            using (Mutex mutex = new Mutex(true, "Global\\{781d2da2-1b44-46d9-8b01-e1d59adc018b}"))
+            {
+                //Check sync.exe is run
+                if (!mutex.WaitOne(TimeSpan.Zero, false))
+                {
+                    CurrentIO.WriteColor(DefaultI18n.LANG_Instance_Exist, ConsoleColor.Red);
+                    Console.ReadKey();
+                    return;
+                }
+
+                while (true)
+                {
+                    SyncHost.Instance = new SyncHost();
+                    SyncHost.Instance.Load();
+
+                    CurrentIO.WriteWelcome();
+
+                    SyncHost.Instance.Plugins.ReadySync();
+
+                    if (Updater.IsUpdated) IO.CurrentIO.WriteColor("Sync already update!", ConsoleColor.Green);
+
+                    string cmd = CurrentIO.ReadCommand();
+                    while (true)
+                    {
+                        SyncHost.Instance.Commands.invokeCmdString(cmd);
+                        cmd = CurrentIO.ReadCommand();
+                    }
+                }
+            }
         }
 
     }

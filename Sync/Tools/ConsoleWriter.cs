@@ -219,9 +219,13 @@ namespace Sync.Tools
         {
             if(Configuration.LoggerFile == "")
             {
-                Configuration.LoggerFile = "Log.txt";
+                Configuration.LoggerFile = @"Logs\\Log.{Date}.txt";
             }
-            logger = new StreamWriter(File.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Configuration.LoggerFile), FileMode.OpenOrCreate, FileAccess.Write))
+            string date = $"{DateTime.Now.ToShortDateString()}@{DateTime.Now.ToShortTimeString().Replace(":", "-")}";
+            string log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Configuration.LoggerFile.Replace("{Date}",date));
+            Directory.CreateDirectory(Path.GetDirectoryName(log));
+
+            logger = new StreamWriter(File.Open(log, FileMode.OpenOrCreate, FileAccess.Write))
             { AutoFlush = true };
 
 
