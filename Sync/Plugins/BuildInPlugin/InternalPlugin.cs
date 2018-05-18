@@ -150,14 +150,14 @@ namespace Sync.Plugins.BuildInPlugin
         private bool disable(Arguments arg)
         {
             if (arg.Count == 0)
-                IO.CurrentIO.WriteColor("还未钦定插件名称", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(LANG_NO_PLUGIN_SELECT, ConsoleColor.Red);
             else
                 foreach (var item in Sync.SyncHost.Instance.EnumPluings())
                 {
                     if (item.Name == arg[0])
                     {
                         item.OnDisable();
-                        IO.CurrentIO.WriteColor("已禁用 "+ arg[0], ConsoleColor.Red);
+                        IO.CurrentIO.WriteColor(LANG_PLUGIN_DISABLED + arg[0], ConsoleColor.Red);
                     }
                 }
             return true;
@@ -172,7 +172,7 @@ namespace Sync.Plugins.BuildInPlugin
                 else if (arg.Count == 2) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], arg[1]);
             }
             else
-                IO.CurrentIO.WriteColor($"接收源 {SyncHost.Instance.SourceWrapper.Source?.GetType().Name} 并不支持发送功能", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_SOURCE_NOT_SUPPORT_SEND,SyncHost.Instance.SourceWrapper.Source?.GetType().Name), ConsoleColor.Red);
 
             return true;
         }
@@ -229,13 +229,13 @@ namespace Sync.Plugins.BuildInPlugin
         {
             if (SyncHost.Instance.SourceWrapper.Source==null)
             {
-                IO.CurrentIO.WriteColor("还未钦定任何一个接收源",ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_START_NO_SOURCE, ConsoleColor.Red);
                 return true;
             }
 
             if (SyncHost.Instance.ClientWrapper.Client == null)
             {
-                IO.CurrentIO.WriteColor("还未钦定任何一个发送源", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(LANG_COMMANDS_START_NO_CLIENT, ConsoleColor.Red);
                 return true;
             }
 
@@ -269,7 +269,7 @@ namespace Sync.Plugins.BuildInPlugin
             if (arg.Count == 0)
             {
                 CultureInfo info = CultureInfo.GetCultureInfo(I18n.Instance.CurrentLanguage);
-                IO.CurrentIO.WriteColor(string.Format("Current culture: {0:S}\t{1:S}", info.Name, info.NativeName), ConsoleColor.Yellow);
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT_LANG, info.Name, info.NativeName), ConsoleColor.Yellow);
                 return true;
             }
             else if (arg.Count == 1)
@@ -278,12 +278,12 @@ namespace Sync.Plugins.BuildInPlugin
                 {
                     CultureInfo info = CultureInfo.GetCultureInfo(arg[0]);
                     Configuration.Instance.Language = arg[0];
-                    IO.CurrentIO.WriteColor(string.Format("Success switch to {1:S}({0:S})", arg[0], info.NativeName), ConsoleColor.Green);
+                    IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_LANG_SWITCHED, arg[0], info.NativeName), ConsoleColor.Green);
                     return true;
                 }
                 catch (CultureNotFoundException)
                 {
-                    IO.CurrentIO.WriteColor("Culture not found! Please specify other culture name.", ConsoleColor.Red);
+                    IO.CurrentIO.WriteColor(LANG_COMMANDS_LANG_NOT_FOUND, ConsoleColor.Red);
                     return false;
                 }
             }
@@ -440,18 +440,18 @@ namespace Sync.Plugins.BuildInPlugin
                     }
                     else
                     {
-                        IO.CurrentIO.Write($"{result.name} Up-to-date");
+                        IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST,result.name));
                     }
                 }
                 catch (Exception e)
                 {
-                    IO.CurrentIO.Write($"Can't find plugin [{item.Name}] update :  {e.TargetSite.Name} : {e.Message}");
+                    IO.CurrentIO.Write(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message));
                     continue;
                 }
 
             }
 
-            RequireRestart("Update done. Restart to reload plugin");
+            RequireRestart(LANG_UPDATE_DONE);
             return true;
         }
 
@@ -486,7 +486,7 @@ namespace Sync.Plugins.BuildInPlugin
         {
             if (CheckUpdate(guid))
             {
-                RequireRestart("Install done. Restart to load plugin");
+                RequireRestart(LANG_INSTALL_DONE);
                 return true;
             }
             else
@@ -495,7 +495,7 @@ namespace Sync.Plugins.BuildInPlugin
                 {
                     if (datas.Length == 0 || CheckUpdate(datas[0].guid))
                     {
-                        RequireRestart("Install done. Restart to load plugin");
+                        RequireRestart(LANG_INSTALL_DONE);
                         return true;
                     }
                     else return false;
@@ -509,7 +509,7 @@ namespace Sync.Plugins.BuildInPlugin
             var type = getHoster().EnumPluings().FirstOrDefault(p => p.Name.ToLower().Contains(name.ToLower()));
             if (type == null)
             {
-                IO.CurrentIO.WriteColor($"Plugin {name} not exist", ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_PLUGIN_NOT_FOUND,name), ConsoleColor.Red);
                 return false;
             }
             else
@@ -518,7 +518,7 @@ namespace Sync.Plugins.BuildInPlugin
                 var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", Path.GetFileName(result.fileName));
                 if (File.Exists(target)) File.Delete(target);
 
-                RequireRestart("Remove done. Restart to apply effect");
+                RequireRestart(LANG_REMOVE_DONE);
                 return true;
             }
         }
@@ -600,13 +600,13 @@ namespace Sync.Plugins.BuildInPlugin
                 }
                 else
                 {
-                    IO.CurrentIO.Write($"{result.name} Up-to-date");
+                    IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST, result.name));
                     return false;
                 }
             }
             catch (Exception e)
             {
-                IO.CurrentIO.Write($"Can't find plugin [{guid}] update :  {e.TargetSite.Name} : {e.Message}");
+                IO.CurrentIO.Write(string.Format(LANG_UPDATE_CHECK_ERROR,guid, e.TargetSite.Name,e.Message));
                 return false;
             }
         }

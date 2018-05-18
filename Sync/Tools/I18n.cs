@@ -119,6 +119,24 @@ namespace Sync.Tools
         public static LanguageElement LANG_COMMANDS_MSGMGR_STATUS = "MessageManager mode:{4:S},status:{0:D},queueCount/limitCount/recoverTime:{1}/{2}/{3}";
         public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT_SPEED_SET = "设置限制发送速度等级为{0}";
         public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT_STYPE_SET = "设置消息管理器的管制方式为{0}";
+
+        public static LanguageElement LANG_COMMANDS_START_NO_SOURCE = "还未钦定任何一个接收源";
+        public static LanguageElement LANG_COMMANDS_START_NO_CLIENT = "还未钦定任何一个发送源";
+        public static LanguageElement LANG_COMMANDS_CURRENT_LANG = "当前语言: {0:S}\t{1:S}";
+        public static LanguageElement LANG_COMMANDS_LANG_SWITCHED = "成功切换语言至 {1:S}({0:S})";
+        public static LanguageElement LANG_COMMANDS_LANG_NOT_FOUND = "切换语言失败,请检查语言代码参数是否正确";
+
+        public static LanguageElement LANG_UPDATE_DONE = "更新完成,是否重启软件";
+        public static LanguageElement LANG_INSTALL_DONE = "下载完成,是否重启软件";
+        public static LanguageElement LANG_PLUGIN_NOT_FOUND = "插件 {0} 不存在";
+        public static LanguageElement LANG_REMOVE_DONE = "删除成功,是否重启软件";
+        public static LanguageElement LANG_VERSION_LATEST = "{0} 已是最新";
+        public static LanguageElement LANG_UPDATE_CHECK_ERROR = "无法根据 [{0}] 检查更新 :  {1} : {2}";
+        public static LanguageElement LANG_UPDATE_ERROR = "无法更新 :  {0} : {1}";
+
+        public static LanguageElement LANG_SOURCE_NOT_SUPPORT_SEND = "接收源 {0} 并不支持发送功能";
+        public static LanguageElement LANG_NO_PLUGIN_SELECT = "还未钦定插件名称";
+        public static LanguageElement LANG_PLUGIN_DISABLED = "已禁用 ";
     }
 
     public interface I18nProvider
