@@ -69,8 +69,6 @@ namespace Sync.Plugins.BuildInPlugin
         {
             config = new PluginConfigurationManager(this);
 
-            config.AddItem(Configuration.Instance);
-
             this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p => {
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
                 addCmd("plugins", Plugins, "Install & Update Plugins online, type 'plugins' to get help.");

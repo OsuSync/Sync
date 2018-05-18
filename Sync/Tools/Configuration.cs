@@ -1,4 +1,5 @@
-﻿using static Sync.Tools.ConfigurationIO;
+﻿using Sync.Plugins.BuildInPlugin;
+using static Sync.Tools.ConfigurationIO;
 
 namespace Sync.Tools
 {
@@ -37,13 +38,16 @@ namespace Sync.Tools
         }
 
         static Configuration instance;
+        static PluginConfigurationManager config;
 
         public static Configuration Instance
         {
             get {
                 if (instance==null)
                 {
+                    config = new PluginConfigurationManager(typeof(InternalPlugin).Name);
                     instance = new Configuration();
+                    config.AddItem(instance);
                 }
                 return instance;
             }

@@ -50,11 +50,17 @@ namespace Sync.Tools
     /// </summary>
     internal sealed class PluginConfiuration
     {
-        private Plugin instance;
+        private string name;
         private IConfigurable config;
-        public PluginConfiuration(Plugin instance, IConfigurable config)
+
+        public PluginConfiuration(Plugin instance, IConfigurable config):this(instance.Name, config)
         {
-            this.instance = instance;
+
+        }
+
+        public PluginConfiuration(string name, IConfigurable config)
+        {
+            this.name = name;
             this.config = config;
             ForceLoad();
         }
@@ -70,7 +76,7 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
@@ -82,7 +88,7 @@ namespace Sync.Tools
                     else
                     {
                         //if not exsit,write to config.ini immediately
-                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
+                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), name + "." + config.GetType().Name);
                     }
                 }
             }
@@ -125,7 +131,7 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
+                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), name + "." + config.GetType().Name);
                 }
             }
         }
@@ -139,17 +145,23 @@ namespace Sync.Tools
         internal static ConcurrentBag<PluginConfigurationManager> ConfigurationSet = new ConcurrentBag<PluginConfigurationManager>();
         internal static bool InSaving = false;
         private List<PluginConfiuration> items;
-        private Plugin instance;
-        public PluginConfigurationManager(Plugin instance)
+
+        private string name;
+
+        public PluginConfigurationManager(Plugin plugin):this(plugin.Name)
+        {
+        }
+
+        public PluginConfigurationManager(string name)
         {
             items = new List<PluginConfiuration>();
-            this.instance = instance;
+            this.name = name;
             ConfigurationSet.Add(this);
         }
 
         public void AddItem(IConfigurable Config)
         {
-            items.Add(new PluginConfiuration(instance, Config));
+            items.Add(new PluginConfiuration(name, Config));
         }
 
         internal void ReloadAll()
