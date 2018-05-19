@@ -84,6 +84,7 @@ namespace Sync.Plugins.BuildInPlugin
 
         private void BindCommondCommand(CommandDispatch dispatch)
         {
+            dispatch.bind("exit", exit, LANG_COMMANDS_EXIT);
             dispatch.bind("restart", restart, LANG_COMMANDS_RESTART);
             dispatch.bind("stop", stop, LANG_COMMANDS_STOP);
             dispatch.bind("start", start, LANG_COMMANDS_START);
@@ -369,6 +370,14 @@ namespace Sync.Plugins.BuildInPlugin
                     IO.CurrentIO.WriteColor(string.Format("CultureName: {0:S}\t{1:S}", name, CultureInfo.GetCultureInfo(name).NativeName), ConsoleColor.Yellow);
                 }
             }
+            return true;
+        }
+
+        public bool exit(Arguments arg)
+        {
+            stop(arg);
+            SyncHost.Instance.ExitSync();
+            IO.CurrentIO.Write(LANG_COMMANDS_EXIT_DONE);
             return true;
         }
 

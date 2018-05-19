@@ -112,3 +112,4 @@ LANG_SOURCE_NOT_SUPPORT_SEND=The source {0} not support message sending.
 LANG_NO_PLUGIN_SELECT=It need a plugin name for disable.
 LANG_PLUGIN_DISABLED=Disabled.
 LANG_COMMANDS_CLIENTUSERMSG=chatuser <username> <message> send message as username for irc test
+LANG_COMMANDS_EXIT_DONE=Exit action execution done, please close the window.

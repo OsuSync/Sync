@@ -92,6 +92,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_COMMANDS_SOURCEMSG = "danmaku <message> 发送弹幕测试";
         public static LanguageElement LANG_COMMANDS_CLIENTMSG = "chat <message> 发送IRC信息测试";
         public static LanguageElement LANG_COMMANDS_CLIENTUSERMSG = "chatuser <username> <message> 按照username名字发送IRC信息测试";
+        public static LanguageElement LANG_COMMANDS_EXIT_DONE = "退出操作已完成，如果窗口还未关闭，您可以强制关闭。";
         public static LanguageElement LANG_COMMANDS_SOURCES = "获得当前所有弹幕源列表";
         public static LanguageElement LANG_COMMANDS_MSGMGR = "查看或者设置消息控制器相关内容,添加--help参数获取帮助";
         public static LanguageElement LANG_COMMANDS_FILTERS = "列表所有当前可用消息过滤器";
