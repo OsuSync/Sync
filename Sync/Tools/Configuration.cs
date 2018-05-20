@@ -1,12 +1,11 @@
 ﻿using Sync.Plugins.BuildInPlugin;
-using static Sync.Tools.ConfigurationIO;
 
 namespace Sync.Tools
 {
     /// <summary>
     /// Default plugin confiuration
     /// </summary>
-    public class Configuration:IConfigurable
+    public class Configuration : IConfigurable
     {
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
@@ -20,30 +19,28 @@ namespace Sync.Tools
 
         public ConfigurationElement EnableViewersChangedNotify { get; set; } = "False";
 
-        public ConfigurationElement EnableGiftChangedNotify { get; set; }= "False";
+        public ConfigurationElement EnableGiftChangedNotify { get; set; } = "False";
 
         public void onConfigurationLoad()
         {
-
         }
 
         public void onConfigurationReload()
         {
-
         }
 
         public void onConfigurationSave()
         {
-
         }
 
-        static Configuration instance;
-        static PluginConfigurationManager config;
+        private static Configuration instance;
+        private static PluginConfigurationManager config;
 
         public static Configuration Instance
         {
-            get {
-                if (instance==null)
+            get
+            {
+                if (instance == null)
                 {
                     config = new PluginConfigurationManager(typeof(InternalPlugin).Name);
                     instance = new Configuration();

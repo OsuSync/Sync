@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Tools
@@ -16,17 +12,22 @@ namespace Sync.Tools
 
     public interface ISyncConsoleWriter : ISyncOutput, ISyncInput
     {
-
     }
 
-    public interface ISyncOutput 
+    public interface ISyncOutput
     {
         void Write(string msg, bool newline = true, bool time = true);
+
         void WriteColor(string text, ConsoleColor color, bool newline = true, bool time = true);
+
         void WriteHelp(string cmd, string desc);
+
         void WriteHelp();
+
         void WriteStatus();
+
         void WriteWelcome();
+
         void Clear();
     }
 
@@ -80,7 +81,7 @@ namespace Sync.Tools
             CurrentIO.SetInput(specIO);
             CurrentIO.AddOutput(specIO);
         }
-        
+
         public static void SetIO(ISyncConsoleWriter specIO)
         {
             CurrentIO.SetInput(specIO);
@@ -120,6 +121,7 @@ namespace Sync.Tools
             wait = true;
             return Console.ReadLine();
         }
+
         /// <summary>
         /// Write a message to console
         /// </summary>
@@ -147,6 +149,7 @@ namespace Sync.Tools
                + ms
                + (newline ? "\n" : ""));
         }
+
         /// <summary>
         /// Write a message with color
         /// </summary>
@@ -159,6 +162,7 @@ namespace Sync.Tools
             Write(text, newline, time);
             Console.ResetColor();
         }
+
         /// <summary>
         /// Write a formated help message
         /// </summary>
@@ -169,13 +173,14 @@ namespace Sync.Tools
             WriteColor(cmd.PadRight(10), ConsoleColor.Cyan, false, false);
             WriteColor(desc, ConsoleColor.White, true, false);
         }
+
         /// <summary>
         /// Write current work status
         /// </summary>
         public void WriteStatus()
         {
-            WriteColor("Source:"+SyncHost.Instance.SourceWrapper.Source?.Status.ToString(), ConsoleColor.Magenta);
-            WriteColor("Client:"+SyncHost.Instance.ClientWrapper.Client?.CurrentStatus.ToString(), ConsoleColor.Magenta);
+            WriteColor("Source:" + SyncHost.Instance.SourceWrapper.Source?.Status.ToString(), ConsoleColor.Magenta);
+            WriteColor("Client:" + SyncHost.Instance.ClientWrapper.Client?.CurrentStatus.ToString(), ConsoleColor.Magenta);
         }
 
         /// <summary>
@@ -188,6 +193,7 @@ namespace Sync.Tools
 
             Write(LANG_Help);
         }
+
         /// <summary>
         /// Write all commands
         /// </summary>
@@ -201,8 +207,8 @@ namespace Sync.Tools
             }
             WriteHelp("======", "======");
             Write("", true, false);
-
         }
+
         /// <summary>
         /// Clear screen
         /// </summary>
@@ -214,21 +220,20 @@ namespace Sync.Tools
 
     public class FileLoggerWriter : ISyncOutput
     {
-        StreamWriter logger;
+        private StreamWriter logger;
+
         internal FileLoggerWriter()
         {
-            if(Configuration.Instance.LoggerFile == "")
+            if (Configuration.Instance.LoggerFile == "")
             {
                 Configuration.Instance.LoggerFile = @"Logs\\Log.{Date}.txt";
             }
             string date = $"{DateTime.Now.ToShortDateString()}@{DateTime.Now.ToShortTimeString().Replace(":", "-")}";
-            string log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ((string)Configuration.Instance.LoggerFile).Replace("{Date}",date));
+            string log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ((string)Configuration.Instance.LoggerFile).Replace("{Date}", date));
             Directory.CreateDirectory(Path.GetDirectoryName(log));
 
             logger = new StreamWriter(File.Open(log, FileMode.OpenOrCreate, FileAccess.Write))
             { AutoFlush = true };
-
-
         }
 
         public void Clear()

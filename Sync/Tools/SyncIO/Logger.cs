@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sync.Tools
 {
@@ -15,7 +11,7 @@ namespace Sync.Tools
 
     public class Logger
     {
-        static ConsoleColor[] LOGTYPE_COLORS = new[]
+        private static ConsoleColor[] LOGTYPE_COLORS = new[]
         {
             ConsoleColor.Green,
             ConsoleColor.Yellow,
@@ -32,16 +28,18 @@ namespace Sync.Tools
         }
 
         public void Log(string message, LogType type) => output?.WriteColor($"[{prefix}]{message}", LOGTYPE_COLORS[(int)type]);
+
         public void LogInfomation(string message) => Log(message, LogType.Infomation);
+
         public void LogWarning(string message) => Log(message, LogType.Warning);
+
         public void LogError(string message) => Log(message, LogType.Error);
     }
 
     public class Logger<T> : Logger
     {
-        public Logger(ISyncOutput output=null) : base(typeof(T).Name, output)
+        public Logger(ISyncOutput output = null) : base(typeof(T).Name, output)
         {
-
         }
     }
 }

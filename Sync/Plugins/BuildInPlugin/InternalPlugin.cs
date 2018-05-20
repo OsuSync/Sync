@@ -1,4 +1,6 @@
 ﻿using Sync.Command;
+using Sync.MessageFilter;
+using Sync.Source;
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
@@ -9,14 +11,11 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using static Sync.Tools.DefaultI18n;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Sync.Source;
-using Sync.MessageFilter;
+using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Plugins.BuildInPlugin
 {
@@ -29,18 +28,25 @@ namespace Sync.Plugins.BuildInPlugin
         {
             [DataMember(Order = 0)]
             public int id { get; set; }
+
             [DataMember(Order = 1)]
             public string name { get; set; }
+
             [DataMember(Order = 2)]
             public string author { get; set; }
+
             [DataMember(Order = 3)]
             public string latestHash { get; set; }
+
             [DataMember(Order = 4)]
             public string downloadUrl { get; set; }
+
             [DataMember(Order = 5)]
             public string description { get; set; }
+
             [DataMember(Order = 6)]
             public string guid { get; set; }
+
             [DataMember(Order = 7)]
             public string fileName { get; set; }
         }
@@ -50,26 +56,28 @@ namespace Sync.Plugins.BuildInPlugin
         {
             [DataMember(Order = 0)]
             public string versionHash { get; set; }
+
             [DataMember(Order = 1)]
             public string downloadURL { get; set; }
+
             [DataMember(Order = 2)]
             public string versionId { get; set; }
         }
 
-        #endregion
+        #endregion Updater Decleare
 
-        PluginConfigurationManager config;
+        private PluginConfigurationManager config;
 
         public InternalPlugin() : base("InternalPlugin", "OsuSync")
         {
-
         }
 
         public override void OnEnable()
         {
             config = new PluginConfigurationManager(this);
 
-            this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p => {
+            this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p =>
+            {
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
                 addCmd("plugins", Plugins, "Install & Update Plugins online, type 'plugins' to get help.");
                 BindCommondCommand(p.Commands.Dispatch);
@@ -98,7 +106,7 @@ namespace Sync.Plugins.BuildInPlugin
             dispatch.bind("sourcelogin", sourcelogin, LANG_COMMANDS_SOURCELOGIN);
 
             dispatch.bind("clear", clear, LANG_COMMANDS_CLEAR);
-            
+
             dispatch.bind("help", help, LANG_COMMANDS_HELP);
             dispatch.bind("listlang", languages, LANG_COMMANDS_LISTLANG);
 
@@ -106,7 +114,6 @@ namespace Sync.Plugins.BuildInPlugin
             dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
             dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
             dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
-            
         }
 
         public bool listsource(Arguments arg)
@@ -135,7 +142,7 @@ namespace Sync.Plugins.BuildInPlugin
                     IO.CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
                 }
 
-                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client?.ClientName??"还没指定发送源"), ConsoleColor.Green);
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client?.ClientName ?? "还没指定发送源"), ConsoleColor.Green);
             }
             else
             {
@@ -171,7 +178,7 @@ namespace Sync.Plugins.BuildInPlugin
                 else if (arg.Count == 2) SyncHost.Instance.SourceWrapper.SendableSource.Login(arg[0], arg[1]);
             }
             else
-                IO.CurrentIO.WriteColor(string.Format(LANG_SOURCE_NOT_SUPPORT_SEND,SyncHost.Instance.SourceWrapper.Source?.GetType().Name), ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_SOURCE_NOT_SUPPORT_SEND, SyncHost.Instance.SourceWrapper.Source?.GetType().Name), ConsoleColor.Red);
 
             return true;
         }
@@ -186,7 +193,6 @@ namespace Sync.Plugins.BuildInPlugin
 
             SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage("Console", string.Join(" ", arg)));
             return true;
-
         }
 
         public bool chatuser(Arguments arg)
@@ -200,7 +206,6 @@ namespace Sync.Plugins.BuildInPlugin
                 message += arg[i] + " ";
             SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
             return true;
-
         }
 
         public bool sourcemsg(Arguments arg)
@@ -226,7 +231,7 @@ namespace Sync.Plugins.BuildInPlugin
 
         public bool start(Arguments arg)
         {
-            if (SyncHost.Instance.SourceWrapper.Source==null)
+            if (SyncHost.Instance.SourceWrapper.Source == null)
             {
                 IO.CurrentIO.WriteColor(LANG_COMMANDS_START_NO_SOURCE, ConsoleColor.Red);
                 return true;
@@ -315,9 +320,11 @@ namespace Sync.Plugins.BuildInPlugin
                     case "--help":
                         IO.CurrentIO.WriteColor(LANG_COMMANDS_MSGMGR_HELP, ConsoleColor.Yellow);
                         break;
+
                     case "--status":
                         IO.CurrentIO.WriteColor(String.Format(LANG_COMMANDS_MSGMGR_STATUS, (string)(MessageManager.IsLimit ? LANG_COMMANDS_MSGMGR_LIMIT : LANG_COMMANDS_MSGMGR_FREE), MessageManager.CurrentQueueCount, MessageManager.LimitLevel, MessageManager.RecoverTime, MessageManager.Option.ToString()), ConsoleColor.Yellow);
                         break;
+
                     case "--limit":
                         if (arg.Count == 2 && Int32.TryParse(arg[1].Trim(), out value))
                         {
@@ -336,9 +343,11 @@ namespace Sync.Plugins.BuildInPlugin
                                 case "auto":
                                     MessageManager.Option = MessageManager.PeekOption.Auto;
                                     break;
+
                                 case "force_all":
                                     MessageManager.Option = MessageManager.PeekOption.Force_All;
                                     break;
+
                                 case "force_limit":
                                     MessageManager.Option = MessageManager.PeekOption.Only_Send_Command;
                                     break;
@@ -401,7 +410,7 @@ namespace Sync.Plugins.BuildInPlugin
             return true;
         }
 
-        #endregion
+        #endregion Commond Command
 
         #region Update Command
 
@@ -412,16 +421,22 @@ namespace Sync.Plugins.BuildInPlugin
             {
                 case "search":
                     return Search(arg[1]);
+
                 case "update":
                     return Update();
+
                 case "install":
                     return Install(arg[1]);
+
                 case "list":
                     return List();
+
                 case "remove":
                     return Remove(arg[1]);
+
                 case "latest":
                     return Latest();
+
                 default:
                     return Help();
             }
@@ -447,7 +462,7 @@ namespace Sync.Plugins.BuildInPlugin
                     }
                     else
                     {
-                        IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST,result.name));
+                        IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST, result.name));
                     }
                 }
                 catch (Exception e)
@@ -455,7 +470,6 @@ namespace Sync.Plugins.BuildInPlugin
                     IO.CurrentIO.Write(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message));
                     continue;
                 }
-
             }
 
             RequireRestart(LANG_UPDATE_DONE);
@@ -488,7 +502,7 @@ namespace Sync.Plugins.BuildInPlugin
             }
             return false;
         }
-        
+
         private bool Install(string guid)
         {
             if (CheckUpdate(guid))
@@ -516,7 +530,7 @@ namespace Sync.Plugins.BuildInPlugin
             var type = getHoster().EnumPluings().FirstOrDefault(p => p.Name.ToLower().Contains(name.ToLower()));
             if (type == null)
             {
-                IO.CurrentIO.WriteColor(string.Format(LANG_PLUGIN_NOT_FOUND,name), ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_PLUGIN_NOT_FOUND, name), ConsoleColor.Red);
                 return false;
             }
             else
@@ -580,9 +594,9 @@ namespace Sync.Plugins.BuildInPlugin
             return true;
         }
 
-        #endregion
+        #endregion Update Command
 
-        #endregion
+        #endregion Command Execute
 
         #region Update Tool
 
@@ -613,7 +627,7 @@ namespace Sync.Plugins.BuildInPlugin
             }
             catch (Exception e)
             {
-                IO.CurrentIO.Write(string.Format(LANG_UPDATE_CHECK_ERROR,guid, e.TargetSite.Name,e.Message));
+                IO.CurrentIO.Write(string.Format(LANG_UPDATE_CHECK_ERROR, guid, e.TargetSite.Name, e.Message));
                 return false;
             }
         }
@@ -657,7 +671,6 @@ namespace Sync.Plugins.BuildInPlugin
                 IO.CurrentIO.WriteHelp(name, totalBytes.ToString());
                 //判断是否存在已经下载的文件，如果存在，且长度相等，则直接解压
 
-
                 if (File.Exists(path + "_")) File.Delete(path + "_");       //如果存在目标缓存文件，就删掉它
 
                 Stream st = myrp.GetResponseStream();                       //获得http流
@@ -686,7 +699,6 @@ namespace Sync.Plugins.BuildInPlugin
                         updateDownloadByte = totalDownloadedByte;           //更新已经计算速度的数据位置
                         IO.CurrentIO.WriteHelp($"{downloadspeed.ToString()}Byte/s", $"{totalDownloadedByte.ToString()}Byte OK");//UI更新
                     }
-
                 }
 
                 IO.CurrentIO.WriteHelp($"{downloadspeed.ToString()}Byte/s", $"{totalDownloadedByte.ToString()}Byte OK");//UI更新
@@ -734,6 +746,6 @@ namespace Sync.Plugins.BuildInPlugin
             }
         }
 
-        #endregion
+        #endregion Update Tool
     }
 }
