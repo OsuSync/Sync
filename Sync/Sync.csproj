@@ -99,6 +99,9 @@
     <Compile Include="Plugins\BuildInPlugin\Commands\CommonCommand.cs" />
     <Compile Include="Plugins\BuildInPlugin\Commands\PluginCommand.cs" />
     <Compile Include="Plugins\BuildInPlugin\InternalPlugin.cs" />
+    <Compile Include="Tools\SyncIO\FileLoggerWriter.cs" />
+    <Compile Include="Tools\SyncIO\IOWrapper.cs" />
+    <Compile Include="Tools\SyncIO\NConsoleWriter.cs" />
     <Compile Include="Tools\Updater.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
