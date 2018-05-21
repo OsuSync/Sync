@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sync.Plugins;
 using Sync.Tools;
+using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Source
 {
@@ -19,10 +20,10 @@ namespace Sync.Source
         public SourceWorkWrapper(SourceManager sources)
         {
             this.sources = sources;
-            Source = sources.SourceList.Where(p => p.Name == Configuration.Instance.Source).FirstOrDefault()??/*没有的话就默认第一个*/sources.SourceList.FirstOrDefault();
+            Source = sources.SourceList.Where(p => p.Name == Configuration.Instance.Source).FirstOrDefault()??sources.SourceList.FirstOrDefault();/*没有的话就默认第一个*/
             if(Source == null)
             {
-                IO.CurrentIO.WriteColor("没有任何弹幕接收源,请检查Plugins目录或使用\"plugins install DefaultPlugin\"来安装默认插件",ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(LANG_NO_ANY_SOURCE, ConsoleColor.Red);
             }
             if (Source is SendableSource)
             {

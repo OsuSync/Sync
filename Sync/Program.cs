@@ -39,7 +39,7 @@ namespace Sync
             SetConsoleCtrlHandler(cancelHandler, true);
 
             using (Mutex mutex = new Mutex(true, "Global\\{781d2da2-1b44-46d9-8b01-e1d59adc018b}"))
-            {
+            {   
                 //Check sync.exe is run
                 if (!mutex.WaitOne(TimeSpan.Zero, false))
                 {
@@ -57,7 +57,7 @@ namespace Sync
 
                     SyncHost.Instance.Plugins.ReadySync();
 
-                    if (Updater.IsUpdated) IO.CurrentIO.WriteColor("Sync already update!", ConsoleColor.Green);
+                    if (Updater.IsUpdated) IO.CurrentIO.WriteColor("Sync is already up to date!", ConsoleColor.Green);
 
                     string cmd = CurrentIO.ReadCommand();
                     while (true)

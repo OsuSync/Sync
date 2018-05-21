@@ -1,16 +1,15 @@
 ﻿using Sync.Command;
-using Sync.Plugins.BuildInPlugin.Commands;
-using Sync.Tools;
+using Sync.Plugins;
 using System;
 
-namespace Sync.Plugins.BuildInPlugin
+namespace Sync.Tools.Builtin
 {
     public class InternalPlugin : Plugin
     {
         private PluginConfigurationManager config;
 
-        private CommonCommand common_command = new CommonCommand();
-        private PluginCommand plugin_command = new PluginCommand();
+        private CommonCommand commonCommand = new CommonCommand();
+        private PluginCommand pluginCommand = new PluginCommand();
 
         public InternalPlugin() : base("InternalPlugin", "OsuSync")
         {
@@ -23,13 +22,13 @@ namespace Sync.Plugins.BuildInPlugin
             this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p =>
             {
                 Func<string, CommandDelegate, string, bool> addCmd = p.Commands.Dispatch.bind;
-                addCmd("plugins", plugin_command.Plugins, "Install & Update Plugins online, type 'plugins' to get help.");
-                common_command.BindCommondCommand(p.Commands.Dispatch);
+                addCmd("plugins", pluginCommand.Plugins, "Install & Update Plugins online, type 'plugins' to get help.");
+                commonCommand.BindCommondCommand(p.Commands.Dispatch);
             });
 
             Updater.update = this;
         }
 
-        public bool CheckUpdate(string guid) => plugin_command.CheckUpdate(guid);
+        internal bool CheckUpdate(string guid) => pluginCommand.CheckUpdate(guid);
     }
 }

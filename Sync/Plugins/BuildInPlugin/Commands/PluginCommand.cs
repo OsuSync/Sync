@@ -1,4 +1,5 @@
 ﻿using Sync.Command;
+using Sync.Plugins;
 using Sync.Tools;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ using System.Security.Cryptography;
 using System.Text;
 using static Sync.Tools.DefaultI18n;
 
-namespace Sync.Plugins.BuildInPlugin.Commands
+namespace Sync.Tools.Builtin
 {
     public sealed class PluginCommand
     {
@@ -243,8 +244,6 @@ namespace Sync.Plugins.BuildInPlugin.Commands
             return true;
         }
 
-        #region Update Tool
-
         private void RequireRestart(string msg)
         {
             IO.CurrentIO.WriteColor($"{msg}? (Y/N):", ConsoleColor.Green, false);
@@ -390,7 +389,5 @@ namespace Sync.Plugins.BuildInPlugin.Commands
                 return false;
             }
         }
-
-        #endregion Update Tool
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Sync.Command;
 using Sync.MessageFilter;
+using Sync.Plugins;
 using Sync.Source;
 using Sync.Tools;
 using System;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using static Sync.Tools.DefaultI18n;
 
-namespace Sync.Plugins.BuildInPlugin.Commands
+namespace Sync.Tools.Builtin
 {
     public sealed class CommonCommand
     {

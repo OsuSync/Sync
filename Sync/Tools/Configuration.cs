@@ -1,4 +1,4 @@
-﻿using Sync.Plugins.BuildInPlugin;
+﻿using Sync.Tools.Builtin;
 
 namespace Sync.Tools
 {
@@ -9,9 +9,9 @@ namespace Sync.Tools
     {
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
-        public ConfigurationElement Client { get; set; } = "OsuBotTransferClient";
+        public ConfigurationElement Client { get; set; } = "";
 
-        public ConfigurationElement Source { get; set; } = "Bilibili";
+        public ConfigurationElement Source { get; set; } = "";
 
         public ConfigurationElement Language { get; set; } = "zh-CN";
 

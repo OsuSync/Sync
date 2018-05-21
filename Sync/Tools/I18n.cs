@@ -138,6 +138,8 @@ namespace Sync.Tools
         public static LanguageElement LANG_SOURCE_NOT_SUPPORT_SEND = "接收源 {0} 并不支持发送功能";
         public static LanguageElement LANG_NO_PLUGIN_SELECT = "还未钦定插件名称";
         public static LanguageElement LANG_PLUGIN_DISABLED = "已禁用 ";
+
+        public static LanguageElement LANG_NO_ANY_SOURCE = "没有任何弹幕接收源,请检查Plugins目录或使用\"plugins install DefaultPlugin\"来安装默认插件";
     }
 
     public interface I18nProvider
@@ -190,7 +192,7 @@ namespace Sync.Tools
             {
                 if (instance == null)
                 {
-                    if (Configuration.Instance.Language == Configuration.DEFAULT_LANGUAGE || ((string)Configuration.Instance.Language).Length == 0)
+                    if (Configuration.Instance.Language == Configuration.DEFAULT_LANGUAGE || Configuration.Instance.Language.ToString().Length == 0)
                     {
                         instance = new I18n(CurrentSystemLang);
                     }
@@ -259,5 +261,7 @@ namespace Sync.Tools
                 }
             }
         }
+
+        public override string ToString() => $"CurrentLanguage={CurrentLanguage}";
     }
 }

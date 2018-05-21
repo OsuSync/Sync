@@ -51,14 +51,15 @@ namespace Sync.Tools
     internal sealed class PluginConfiuration
     {
         private string name;
+        private Plugin instance;
         private IConfigurable config;
 
         public PluginConfiuration(Plugin instance, IConfigurable config):this(instance.Name, config)
         {
-
+            this.instance = instance;
         }
 
-        public PluginConfiuration(string name, IConfigurable config)
+        internal PluginConfiuration(string name, IConfigurable config)
         {
             this.name = name;
             this.config = config;
@@ -145,14 +146,15 @@ namespace Sync.Tools
         internal static ConcurrentBag<PluginConfigurationManager> ConfigurationSet = new ConcurrentBag<PluginConfigurationManager>();
         internal static bool InSaving = false;
         private List<PluginConfiuration> items;
-
+        private Plugin instance;
         private string name;
 
         public PluginConfigurationManager(Plugin plugin):this(plugin.Name)
         {
+            instance = plugin;
         }
 
-        public PluginConfigurationManager(string name)
+        internal PluginConfigurationManager(string name)
         {
             items = new List<PluginConfiuration>();
             this.name = name;
