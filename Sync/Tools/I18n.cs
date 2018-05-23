@@ -79,7 +79,6 @@ namespace Sync.Tools
         public static LanguageElement LANG_MsgMgr_Free = "当前消息管理器 解除 管制,内容可以直接发送到irc频道";
         public static LanguageElement LANG_Plugin_Cycle_Reference = "发现插件之间的循环引用关系，插件 {0:S} 将不会按照开发者指定的依赖关系进行加载";
 
-        public static LanguageElement LANG_Instance_Exist = "只能存在一个Sync进程";
 
         //from default plugin
         public static LanguageElement LANG_COMMANDS_LOGIN = "login <user> [pass] 登录到目标弹幕网站，启动弹幕发送功能";
@@ -140,6 +139,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_PLUGIN_DISABLED = "已禁用 ";
 
         public static LanguageElement LANG_NO_ANY_SOURCE = "没有任何弹幕接收源,请检查Plugins目录或使用\"plugins install DefaultPlugin\"来安装默认插件";
+        public static LanguageElement LANG_Instance_Exist = "只能存在一个Sync进程，等待上一个Sync结束";
     }
 
     public interface I18nProvider
