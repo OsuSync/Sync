@@ -96,9 +96,9 @@
     <Compile Include="MessageFilter\FilterManager.cs" />
     <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
-    <Compile Include="Plugins\BuildInPlugin\Commands\CommonCommand.cs" />
-    <Compile Include="Plugins\BuildInPlugin\Commands\PluginCommand.cs" />
-    <Compile Include="Plugins\BuildInPlugin\InternalPlugin.cs" />
+    <Compile Include="Tools\Builtin\CommonCommand.cs" />
+    <Compile Include="Tools\Builtin\PluginCommand.cs" />
+    <Compile Include="Tools\Builtin\InternalPlugin.cs" />
     <Compile Include="Tools\SyncIO\FileLoggerWriter.cs" />
     <Compile Include="Tools\SyncIO\IOWrapper.cs" />
     <Compile Include="Tools\SyncIO\NConsoleWriter.cs" />
