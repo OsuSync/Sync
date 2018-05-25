@@ -14,7 +14,7 @@ namespace Sync.Source
     /// </summary>
     public abstract class SendableSource : SourceBase
     {
-        public bool SendStatus { get; private set; } = false;
+        public bool SendStatus { get; protected set; } = false;
         public SendableSource(string Name, string Author) : base(Name, Author)
         {
         }
