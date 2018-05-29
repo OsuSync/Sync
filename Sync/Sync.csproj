@@ -96,6 +96,7 @@
     <Compile Include="MessageFilter\FilterManager.cs" />
     <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
+    <Compile Include="MessageFilter\MessageManager.cs" />
     <Compile Include="Tools\Builtin\CommonCommand.cs" />
     <Compile Include="Tools\Builtin\PluginCommand.cs" />
     <Compile Include="Tools\Builtin\InternalPlugin.cs" />

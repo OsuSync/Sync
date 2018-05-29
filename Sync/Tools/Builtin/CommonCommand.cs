@@ -292,6 +292,10 @@ namespace Sync.Tools.Builtin
                     case "force_limit":
                         MessageManager.Option = MessageManager.PeekOption.Only_Send_Command;
                         break;
+
+                    case "disable_all":
+                        MessageManager.Option = MessageManager.PeekOption.Disable_All;
+                        break;
                 }
                 IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_MSGMGR_LIMIT_STYPE_SET, MessageManager.Option.ToString()), ConsoleColor.Yellow);
             }
