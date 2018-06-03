@@ -69,7 +69,9 @@ namespace Sync
                 WaitLastSyncExit(mmf);
 
                 Init(args);
-                
+
+                CurrentIO.WriteWelcome();
+
                 while (true)
                 {
                     var cmd = CurrentIO.ReadCommand();  
@@ -80,25 +82,23 @@ namespace Sync
 
         static void Init(string[] args)
         {
-            //检查更新
+            //Update check
             if (Updater.ApplyUpdate(args))
                 return;
 
-            //初始化I18n
+            //Initialize I18n
             I18n.Instance.ApplyLanguage(new DefaultI18n());
 
-            //添加控制台窗口关闭事件捕捉
+            //Add Console close event handler
             SetConsoleCtrlHandler(cancelHandler, true);
 
-            //初始化Sync核心
+            //Initialize Sync core
             SyncHost.Instance = new SyncHost();
             SyncHost.Instance.Load();
 
-            CurrentIO.WriteWelcome();
-
             SyncHost.Instance.Plugins.ReadySync();
 
-            //Sync本体更新检查
+            //Sync program update check
             if (Updater.IsUpdated)
                 IO.CurrentIO.WriteColor("Sync is already up to date!", ConsoleColor.Green);
 
