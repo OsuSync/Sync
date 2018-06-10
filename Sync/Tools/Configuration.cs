@@ -42,7 +42,7 @@ namespace Sync.Tools
             {
                 if (instance == null)
                 {
-                    config = new PluginConfigurationManager(typeof(InternalPlugin).Name);
+                    config = new PluginConfigurationManager("Sync");
                     instance = new Configuration();
                     config.AddItem(instance);
                 }
