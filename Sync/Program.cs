@@ -19,7 +19,7 @@ namespace Sync
         private static bool HandlerRoutine(int CtrlType)
         {
             CurrentIO.Write("Exiting...");
-            SyncHost.Instance.SaveSync();
+            SyncHost.Instance?.SaveSync();
             CurrentIO.Write("Saved.");
             Program.SetConsoleCtrlHandler(Program.cancelHandler, false);
             return true;
