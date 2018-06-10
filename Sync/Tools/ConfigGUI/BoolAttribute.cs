@@ -8,6 +8,6 @@ namespace Sync.Tools.ConfigGUI
 {
     public class BoolAttribute : BaseConfigurationAttribute
     {
-        public override bool Check(string value) => true;
+        public override bool Check(string value) => bool.TryParse(value,out _);
     }
 }

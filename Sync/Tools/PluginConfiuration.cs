@@ -1,6 +1,7 @@
 ﻿using Sync.Plugins;
 using Sync.Tools;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Sync.Tools
     public sealed class ConfigurationElement
     {
         private string _cfg = string.Empty;
+
         public ConfigurationElement()
         {
 
@@ -37,6 +39,10 @@ namespace Sync.Tools
         {
             return _cfg;
         }
+
+        public bool ToBool() => _cfg.ToLower() == "true";
+        public int ToInt() => int.Parse(_cfg);
+        public float ToFloat() => float.Parse(_cfg);
     }
 
     /// <summary>
@@ -44,11 +50,18 @@ namespace Sync.Tools
     /// </summary>
     internal sealed class PluginConfiuration
     {
+        private string name;
         private Plugin instance;
         private IConfigurable config;
-        public PluginConfiuration(Plugin instance, IConfigurable config)
+
+        public PluginConfiuration(Plugin instance, IConfigurable config):this(instance.Name, config)
         {
             this.instance = instance;
+        }
+
+        internal PluginConfiuration(string name, IConfigurable config)
+        {
+            this.name = name;
             this.config = config;
             ForceLoad();
         }
@@ -64,7 +77,7 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationElement element = ConfigurationIO.Read(item.Name, instance.Name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
+                    ConfigurationElement element = ConfigurationIO.Read(item.Name, name + "." + config.GetType().Name/*,item.GetValue(config).ToString()*/);
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
@@ -76,7 +89,7 @@ namespace Sync.Tools
                     else
                     {
                         //if not exsit,write to config.ini immediately
-                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
+                        ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), name + "." + config.GetType().Name);
                     }
                 }
             }
@@ -119,7 +132,7 @@ namespace Sync.Tools
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
-                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), instance.Name + "." + config.GetType().Name);
+                    ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), name + "." + config.GetType().Name);
                 }
             }
         }
@@ -130,20 +143,27 @@ namespace Sync.Tools
     /// </summary>
     public sealed class PluginConfigurationManager
     {
-        internal static LinkedList<PluginConfigurationManager> ConfigurationSet = new LinkedList<PluginConfigurationManager>();
+        internal static ConcurrentBag<PluginConfigurationManager> ConfigurationSet = new ConcurrentBag<PluginConfigurationManager>();
         internal static bool InSaving = false;
         private List<PluginConfiuration> items;
         private Plugin instance;
-        public PluginConfigurationManager(Plugin instance)
+        private string name;
+
+        public PluginConfigurationManager(Plugin plugin):this(plugin.Name)
+        {
+            instance = plugin;
+        }
+
+        internal PluginConfigurationManager(string name)
         {
             items = new List<PluginConfiuration>();
-            this.instance = instance;
-            ConfigurationSet.AddLast(this);
+            this.name = name;
+            ConfigurationSet.Add(this);
         }
 
         public void AddItem(IConfigurable Config)
         {
-            items.Add(new PluginConfiuration(instance, Config));
+            items.Add(new PluginConfiuration(name, Config));
         }
 
         internal void ReloadAll()

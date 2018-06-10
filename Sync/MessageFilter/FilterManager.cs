@@ -31,13 +31,13 @@ namespace Sync.Plugins
             
             SourceEvents.Instance.BindEvent<BaseOnlineCountEvent>(evt =>
             {
-                if (Configuration.EnableViewersChangedNotify)
+                if (Configuration.Instance.EnableViewersChangedNotify.ToBool())
                     SyncHost.Instance.Messages.RaiseMessage<ISourceOnlineChange>(new OnlineChangeMessage(evt.Count));
             });
 
             SourceEvents.Instance.BindEvent<IBaseGiftEvent>(evt =>
             {
-                if (Configuration.EnableGiftChangedNotify)
+                if (Configuration.Instance.EnableGiftChangedNotify.ToBool())
                     SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new GiftMessage(evt));
             });
         }
@@ -57,8 +57,7 @@ namespace Sync.Plugins
                 }
             }
         }
-
-
+        
         public int Count { get { return filters.Sum(p => p.Value.Count); } }
 
         internal void PassFilterDanmaku(ref IMessageBase msg)
@@ -91,6 +90,9 @@ namespace Sync.Plugins
             foreach (var filter in filters[identify])
             {
                 filter.onMsg(ref msg);
+
+                if (msg.Cancel) //已经处理的就不用继续给后面的处理了
+                    break;
             }
 
             RaiseEventAsync(msg);
@@ -103,6 +105,7 @@ namespace Sync.Plugins
                 if(filters.ContainsKey(i))
                 {
                     filters[i].Add(filter);
+                    filters[i].Sort((a,b)=> ((int)b.GetFilterPriority())- ((int)a.GetFilterPriority()));
                 }
             }
         }

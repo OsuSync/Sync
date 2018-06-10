@@ -1,56 +1,53 @@
-﻿using static Sync.Tools.ConfigurationIO;
+﻿using Sync.Tools.Builtin;
 
 namespace Sync.Tools
 {
     /// <summary>
     /// Default plugin confiuration
     /// </summary>
-    public static class Configuration
+    public class Configuration : IConfigurable
     {
-
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
-        public static string Client
+        public ConfigurationElement Client { get; set; } = "";
+
+        public ConfigurationElement Source { get; set; } = "";
+
+        public ConfigurationElement Language { get; set; } = "zh-CN";
+
+        public ConfigurationElement LoggerFile { get; set; } = "Log.txt";
+
+        public ConfigurationElement EnableViewersChangedNotify { get; set; } = "False";
+
+        public ConfigurationElement EnableGiftChangedNotify { get; set; } = "False";
+
+        public void onConfigurationLoad()
         {
-            get => ReadConfig(DefaultConfig.Client);
-            set => WriteConfig(DefaultConfig.Client, value);
-        }
-        
-        public static string Source
-        {
-            get => ReadConfig(DefaultConfig.Source);
-            set => WriteConfig(DefaultConfig.Source, value);
         }
 
-        public static string Language
+        public void onConfigurationReload()
         {
-            get => ReadConfig(DefaultConfig.Language);
-            set => WriteConfig(DefaultConfig.Language, value);
         }
 
-        public static string LoggerFile
+        public void onConfigurationSave()
         {
-            get => ReadConfig(DefaultConfig.LoggerFile);
-            set => WriteConfig(DefaultConfig.LoggerFile, value);
         }
 
-        public static bool EnableViewersChangedNotify
-        {
-            get{
-                var str = ReadConfig(DefaultConfig.EnableViewersChangedNotify);
-                return string.IsNullOrWhiteSpace(str)?true:bool.Parse(str);
-            }
-            set=> WriteConfig(DefaultConfig.LoggerFile, value.ToString());
-        }
+        private static Configuration instance;
+        private static PluginConfigurationManager config;
 
-        public static bool EnableGiftChangedNotify
+        public static Configuration Instance
         {
             get
             {
-                var str = ReadConfig(DefaultConfig.EnableGiftChangedNotify);
-                return string.IsNullOrWhiteSpace(str) ? true : bool.Parse(str);
+                if (instance == null)
+                {
+                    config = new PluginConfigurationManager("Sync");
+                    instance = new Configuration();
+                    config.AddItem(instance);
+                }
+                return instance;
             }
-            set => WriteConfig(DefaultConfig.EnableGiftChangedNotify, value.ToString());
         }
     }
 }

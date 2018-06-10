@@ -27,7 +27,7 @@ namespace Sync.Client
         /// </summary>
         public void ResetClient()
         {
-            DefaultClient client = clients.Clients.FirstOrDefault(p => p.ClientName == Configuration.Client);
+            DefaultClient client = clients.Clients.FirstOrDefault(p => p.ClientName == Configuration.Instance.Client);
 
             if (Client != null && Client != client)
             {

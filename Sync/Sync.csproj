@@ -94,7 +94,16 @@
     <Compile Include="MessageFilter\FilterBase.cs" />
     <Compile Include="Event\EventDispatcher.cs" />
     <Compile Include="MessageFilter\FilterManager.cs" />
+    <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
+    <Compile Include="MessageFilter\MessageManager.cs" />
+    <Compile Include="Tools\Builtin\CommonCommand.cs" />
+    <Compile Include="Tools\Builtin\PluginCommand.cs" />
+    <Compile Include="Tools\Builtin\InternalPlugin.cs" />
+    <Compile Include="Tools\SyncIO\FileLoggerWriter.cs" />
+    <Compile Include="Tools\SyncIO\IOWrapper.cs" />
+    <Compile Include="Tools\SyncIO\NConsoleWriter.cs" />
+    <Compile Include="Tools\Updater.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Source\SourceManager.cs" />
@@ -117,12 +126,12 @@
     <Compile Include="Tools\ConfigGUI\StringAttribute.cs" />
     <Compile Include="Tools\Configuration.cs" />
     <Compile Include="Tools\ConfigurationIO.cs" />
-    <Compile Include="Tools\ConsoleWriter.cs" />
+    <Compile Include="Tools\SyncIO\ConsoleWriter.cs" />
     <Compile Include="Tools\I18n.cs" />
     <Compile Include="Tools\IConfigurable.cs" />
+    <Compile Include="Tools\SyncIO\Logger.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />
-    <Compile Include="Tools\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
