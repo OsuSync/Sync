@@ -6,7 +6,7 @@ namespace Sync.Tools.Builtin
 {
     public class InternalPlugin : Plugin
     {
-        private PluginConfigurationManager config;
+        //private PluginConfigurationManager config;
 
         private CommonCommand commonCommand = new CommonCommand();
         private PluginCommand pluginCommand = new PluginCommand();
@@ -17,7 +17,7 @@ namespace Sync.Tools.Builtin
 
         public override void OnEnable()
         {
-            config = new PluginConfigurationManager(this);
+            //config = new PluginConfigurationManager(this);
 
             this.EventBus.BindEvent<PluginEvents.InitCommandEvent>(p =>
             {

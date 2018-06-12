@@ -1,4 +1,5 @@
 ﻿using Sync.Tools.Builtin;
+using Sync.Tools.ConfigGUI;
 
 namespace Sync.Tools
 {
@@ -9,16 +10,21 @@ namespace Sync.Tools
     {
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
+        [ClientList]
         public ConfigurationElement Client { get; set; } = "";
 
+        [SourceList]
         public ConfigurationElement Source { get; set; } = "";
 
         public ConfigurationElement Language { get; set; } = "zh-CN";
 
+        [Path(IsDirectory = false)]
         public ConfigurationElement LoggerFile { get; set; } = "Log.txt";
 
+        [Bool]
         public ConfigurationElement EnableViewersChangedNotify { get; set; } = "False";
 
+        [Bool]
         public ConfigurationElement EnableGiftChangedNotify { get; set; } = "False";
 
         public void onConfigurationLoad()
