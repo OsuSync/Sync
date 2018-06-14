@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools.ConfigGUI
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Property, AllowMultiple = false)]
     public class HideAttribute : Attribute
     {
     }
