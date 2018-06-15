@@ -12,20 +12,10 @@ namespace Sync.Tools.ConfigGUI
     class ClientListAttribute : ListAttribute
     {
         public override string[] ValueList => ClientManager.Instance.Clients.Select(c=>c.ClientName).ToArray();
-
-        public ClientListAttribute()
-        {
-            NoCheck = true;
-        }
     }
 
     class SourceListAttribute : ListAttribute
     {
         public override string[] ValueList => SyncHost.Instance.Sources.SourceList.Select(s => s.Name).ToArray();
-
-        public SourceListAttribute()
-        {
-            NoCheck = true;
-        }
     }
 }
