@@ -150,6 +150,26 @@ namespace Sync.MessageFilter
             }
         }
 
+        public static void SetOption(string opt_name)
+        {
+            switch (opt_name.ToLower().Trim())
+            {
+                case "only_send_command":
+                    Option = PeekOption.Only_Send_Command;
+                    break;
+                case "disable_all":
+                    Option = PeekOption.Disable_All;
+                    break;
+                case "force_all":
+                    Option = PeekOption.Force_All;
+                    break;
+                case "auto":
+                default:
+                    Option = PeekOption.Auto;
+                    break;
+            }
+        }
+
         public delegate void SendMessageAction(string userName, string message);
 
         public static void SetSendMessageAction(SendMessageAction action)
