@@ -29,7 +29,7 @@ namespace Sync.Tools
         [Bool]
         public ConfigurationElement EnableGiftChangedNotify { get; set; } = "False";
 
-        [List(ValueList =new []{"auto","force_all", "only_send_command", "disable_all"},IgnoreCase =true)]
+        [List(ValueList =new []{"Auto","ForceAll", "OnlySendCommand", "DisableAll"},IgnoreCase =true)]
         public ConfigurationElement MessageManagerDefaultOption { get; set; } = "Auto";
         
         public void onConfigurationLoad()
