@@ -13,8 +13,9 @@ namespace Sync.Tools.ConfigGUI
     public abstract class BaseConfigurationAttribute : Attribute
     {
         public bool RequireRestart { get; set; } = false;
-        public string Description { get; set; } = "No Description";
-        public bool NoCheck { get; set; } = false;
+
+        public bool Hide { get; set; }
+        public bool NoCheck { get; set; }
 
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
         public abstract bool Check(string value);

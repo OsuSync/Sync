@@ -101,6 +101,7 @@
     <Compile Include="Tools\ConfigGUI\ClientAndSourceAttribute.cs" />
     <Compile Include="Tools\Builtin\PluginCommand.cs" />
     <Compile Include="Tools\Builtin\InternalPlugin.cs" />
+    <Compile Include="Tools\ConfigGUI\ConfigurationHolderAttribute.cs" />
     <Compile Include="Tools\SyncIO\FileLoggerWriter.cs" />
     <Compile Include="Tools\SyncIO\IOWrapper.cs" />
     <Compile Include="Tools\SyncIO\NConsoleWriter.cs" />
@@ -116,7 +117,7 @@
     <Compile Include="Command\CommandDispatch.cs" />
     <Compile Include="Tools\ConfigGUI\BoolAttribute.cs" />
     <Compile Include="Tools\ConfigGUI\ColorAttribute.cs" />
-    <Compile Include="Tools\ConfigGUI\ConfigAttributeBase.cs" />
+    <Compile Include="Tools\ConfigGUI\BaseConfigurationAttribute.cs" />
     <Compile Include="Tools\ConfigGUI\GuiLanguageElement.cs" />
     <Compile Include="Tools\ConfigGUI\FloatAttribute.cs" />
     <Compile Include="Tools\ConfigGUI\FontAttribute.cs" />

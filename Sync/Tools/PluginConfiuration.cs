@@ -1,5 +1,6 @@
 ﻿using Sync.Plugins;
 using Sync.Tools;
+using Sync.Tools.ConfigGUI;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -73,7 +74,10 @@ namespace Sync.Tools
         
         internal void Load()
         {
-            foreach (PropertyInfo item in config.GetType().GetProperties())
+            var configType = config.GetType();
+            var holderAttribute = configType.GetCustomAttribute<ConfigurationHolderAttribute>();
+
+            foreach (PropertyInfo item in configType.GetProperties())
             {
                 if (item.PropertyType == typeof(ConfigurationElement))
                 {
@@ -81,14 +85,14 @@ namespace Sync.Tools
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
-                        if (CheckValueVaild(item, element))
+                        if (CheckValueVaild(item, element, holderAttribute))
                         {
                             item.SetValue(config, element);
                         }
                     }
                     else
                     {
-                        //if not exsit,write to config.ini immediately
+                        //if not exist,write to config.ini immediately
                         ConfigurationIO.Write(item.Name, (ConfigurationElement)item.GetValue(config), name + "." + config.GetType().Name);
                     }
                 }
@@ -101,17 +105,18 @@ namespace Sync.Tools
             config.onConfigurationLoad();
         }
         
-        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
+        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element, ConfigurationHolderAttribute classHolder)
         {
-            var config_attribute = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.BaseConfigurationAttribute)) as ConfigGUI.BaseConfigurationAttribute;
+            var configAttribute = info.GetCustomAttribute<BaseConfigurationAttribute>();
+            bool noCheck = configAttribute?.NoCheck ?? classHolder?.NoCheck ?? true;
 
-            if (config_attribute == null)
+            if (configAttribute == null)
                 return true;
 
-            if (!config_attribute.NoCheck)
-                if (!config_attribute.Check(element))
+            if (!noCheck)
+                if (!configAttribute.Check(element))
                 {
-                    config_attribute.CheckFailedNotify(element);
+                    configAttribute.CheckFailedNotify(element);
                     return false;
                 }
 
