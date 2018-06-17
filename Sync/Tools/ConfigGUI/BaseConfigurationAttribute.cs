@@ -14,6 +14,9 @@ namespace Sync.Tools.ConfigGUI
     {
         public bool RequireRestart { get; set; } = false;
 
+        public bool Hide { get; set; }
+        public bool NoCheck { get; set; }
+
         public virtual string CheckFailedFormatMessage { get; set; } = "Parse error:{0}";
         public abstract bool Check(string value);
         public void CheckFailedNotify(object obj) => IO.CurrentIO.WriteColor($"[Config]{string.Format(CheckFailedFormatMessage, obj.ToString())}", ConsoleColor.Red);

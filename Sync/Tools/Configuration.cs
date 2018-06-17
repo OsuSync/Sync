@@ -10,12 +10,10 @@ namespace Sync.Tools
     {
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
-        [ConfigurationHolder(NoCheck = true)]
-        [ClientList]
+        [ClientList(NoCheck = true)]
         public ConfigurationElement Client { get; set; } = "";
 
-        [ConfigurationHolder(NoCheck = true)]
-        [SourceList]
+        [SourceList(NoCheck = true)]
         public ConfigurationElement Source { get; set; } = "";
 
         public ConfigurationElement Language { get; set; } = "zh-CN";

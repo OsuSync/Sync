@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sync.Tools.ConfigGUI
 {
-    [System.AttributeUsage(System.AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
     public class ConfigurationHolderAttribute:Attribute
     {
         public bool Hide { get; set; } = false;
