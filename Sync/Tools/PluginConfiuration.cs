@@ -75,7 +75,7 @@ namespace Sync.Tools
         internal void Load()
         {
             var configType = config.GetType();
-            var holder_attr = configType.GetCustomAttribute<ConfigurationHolderAttribute>();
+            var holderAttribute = configType.GetCustomAttribute<ConfigurationHolderAttribute>();
 
             foreach (PropertyInfo item in configType.GetProperties())
             {
@@ -85,7 +85,7 @@ namespace Sync.Tools
 
                     if (!string.IsNullOrWhiteSpace(element))
                     {
-                        if (CheckValueVaild(item, element, holder_attr))
+                        if (CheckValueVaild(item, element, holderAttribute))
                         {
                             item.SetValue(config, element);
                         }
@@ -105,18 +105,18 @@ namespace Sync.Tools
             config.onConfigurationLoad();
         }
         
-        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element, ConfigurationHolderAttribute class_holder)
+        private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element, ConfigurationHolderAttribute classHolder)
         {
-            var config_attribute = info.GetCustomAttribute<BaseConfigurationAttribute>();
-            bool no_check = config_attribute?.NoCheck ?? class_holder?.NoCheck ?? true;
+            var configAttribute = info.GetCustomAttribute<BaseConfigurationAttribute>();
+            bool noCheck = configAttribute?.NoCheck ?? classHolder?.NoCheck ?? true;
 
-            if (config_attribute == null)
+            if (configAttribute == null)
                 return true;
 
-            if (!no_check)
-                if (!config_attribute.Check(element))
+            if (!noCheck)
+                if (!configAttribute.Check(element))
                 {
-                    config_attribute.CheckFailedNotify(element);
+                    configAttribute.CheckFailedNotify(element);
                     return false;
                 }
 
