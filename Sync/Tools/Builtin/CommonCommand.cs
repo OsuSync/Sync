@@ -279,24 +279,8 @@ namespace Sync.Tools.Builtin
         {
             if (arg.Count == 2)
             {
-                switch (arg[1].Trim().ToLower())
-                {
-                    case "auto":
-                        MessageManager.Option = MessageManager.PeekOption.Auto;
-                        break;
+                MessageManager.SetOption(arg[1].Trim());
 
-                    case "force_all":
-                        MessageManager.Option = MessageManager.PeekOption.ForceAll;
-                        break;
-
-                    case "force_limit":
-                        MessageManager.Option = MessageManager.PeekOption.OnlySendCommand;
-                        break;
-
-                    case "disable_all":
-                        MessageManager.Option = MessageManager.PeekOption.DisableAll;
-                        break;
-                }
                 IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_MSGMGR_LIMIT_STYPE_SET, MessageManager.Option.ToString()), ConsoleColor.Yellow);
             }
             else

@@ -1,7 +1,5 @@
 ﻿using Sync.MessageFilter;
-using Sync.Tools.Builtin;
 using Sync.Tools.ConfigGUI;
-using System;
 
 namespace Sync.Tools
 {
@@ -29,9 +27,9 @@ namespace Sync.Tools
         [Bool]
         public ConfigurationElement EnableGiftChangedNotify { get; set; } = "False";
 
-        [List(ValueList =new []{"Auto","ForceAll", "OnlySendCommand", "DisableAll"},IgnoreCase =true)]
+        [List(ValueList = new[] { "Auto", "ForceAll", "OnlySendCommand", "DisableAll" }, IgnoreCase = true)]
         public ConfigurationElement MessageManagerDefaultOption { get; set; } = "Auto";
-        
+
         public void onConfigurationLoad()
         {
             MessageManager.SetOption(MessageManagerDefaultOption);
