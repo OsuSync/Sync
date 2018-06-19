@@ -103,7 +103,7 @@ namespace Sync.Tools
         
         private bool CheckValueVaild(PropertyInfo info, ConfigurationElement element)
         {
-            var config_attribute = Attribute.GetCustomAttribute(info, typeof(ConfigGUI.BaseConfigurationAttribute)) as ConfigGUI.BaseConfigurationAttribute;
+            var config_attribute = Attribute.GetCustomAttribute(info, typeof(ConfigurationAttribute.BaseConfigurationAttribute)) as ConfigurationAttribute.BaseConfigurationAttribute;
 
             if (config_attribute == null)
                 return true;

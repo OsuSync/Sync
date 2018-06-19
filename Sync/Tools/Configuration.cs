@@ -1,5 +1,5 @@
 ﻿using Sync.MessageFilter;
-using Sync.Tools.ConfigGUI;
+using Sync.Tools.ConfigurationAttribute;
 
 namespace Sync.Tools
 {
