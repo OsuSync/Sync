@@ -98,9 +98,11 @@
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
     <Compile Include="MessageFilter\MessageManager.cs" />
     <Compile Include="Tools\Builtin\CommonCommand.cs" />
+    <Compile Include="Tools\ConfigurationAttribute\BaseConfigurationAttribute.cs" />
     <Compile Include="Tools\ConfigurationAttribute\ClientAndSourceAttribute.cs" />
     <Compile Include="Tools\Builtin\PluginCommand.cs" />
     <Compile Include="Tools\Builtin\InternalPlugin.cs" />
+    <Compile Include="Tools\ConfigurationAttribute\ConfigurationHolderAttribute.cs" />
     <Compile Include="Tools\SyncIO\FileLoggerWriter.cs" />
     <Compile Include="Tools\SyncIO\IOWrapper.cs" />
     <Compile Include="Tools\SyncIO\NConsoleWriter.cs" />
@@ -116,7 +118,6 @@
     <Compile Include="Command\CommandDispatch.cs" />
     <Compile Include="Tools\ConfigurationAttribute\BoolAttribute.cs" />
     <Compile Include="Tools\ConfigurationAttribute\ColorAttribute.cs" />
-    <Compile Include="Tools\ConfigurationAttribute\ConfigAttributeBase.cs" />
     <Compile Include="Tools\ConfigurationAttribute\GuiLanguageElement.cs" />
     <Compile Include="Tools\ConfigurationAttribute\FloatAttribute.cs" />
     <Compile Include="Tools\ConfigurationAttribute\FontAttribute.cs" />
