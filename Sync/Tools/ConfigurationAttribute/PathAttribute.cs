@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sync.Tools.ConfigGUI
+namespace Sync.Tools.ConfigurationAttribute
 {
     public class PathAttribute : BaseConfigurationAttribute
     {

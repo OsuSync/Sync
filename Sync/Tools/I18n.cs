@@ -1,4 +1,4 @@
-﻿using Sync.Tools.ConfigGUI;
+﻿using Sync.Tools.ConfigurationAttribute;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -113,7 +113,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_COMMANDS_DANMAKU_REQUIRE_LOGIN = "你必须登录才能发送弹幕!";
         public static LanguageElement LANG_COMMANDS_START_ALREADY_RUN = "同步实例已经在运行。";
         public static LanguageElement LANG_COMMANDS_ARGUMENT_WRONG = "参数不正确";
-        public static LanguageElement LANG_COMMANDS_MSGMGR_HELP = @"\n--status :查看当前消息管理器的信息\n--limit <数值> :是设置限制发送信息的等级，越低就越容易触发管控\n--option <名称> :是设置管控的方式，其中auto是自动管控，force_all强行全都发送,force_limit是仅发送使用?send命令的消息";
+        public static LanguageElement LANG_COMMANDS_MSGMGR_HELP = @"\n--status :查看当前消息管理器的信息\n--limit <数值> :是设置限制发送信息的等级，越低就越容易触发管控\n--option <名称> :是设置管控的方式，其中Auto是自动管控，ForceAll强行全都发送,ForceLimit是仅发送使用?send命令的消息,DisableAll是拦截任何管道内的信息";
         public static LanguageElement LANG_COMMANDS_MSGMGR_LIMIT = "限制中...";
         public static LanguageElement LANG_COMMANDS_MSGMGR_FREE = "无限制";
         public static LanguageElement LANG_COMMANDS_MSGMGR_STATUS = "MessageManager mode:{4:S},status:{0:D},queueCount/limitCount/recoverTime:{1}/{2}/{3}";

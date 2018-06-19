@@ -1,13 +1,13 @@
 ﻿using Sync.Client;
 using Sync.Plugins;
-using Sync.Tools.ConfigGUI;
+using Sync.Tools.ConfigurationAttribute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sync.Tools.ConfigGUI
+namespace Sync.Tools.ConfigurationAttribute
 {
     class ClientListAttribute : ListAttribute
     {

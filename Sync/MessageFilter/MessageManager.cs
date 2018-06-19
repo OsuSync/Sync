@@ -89,14 +89,14 @@ namespace Sync.MessageFilter
             {
                 switch (Option)
                 {
-                    case PeekOption.Force_All://还要过滤可能存在的?前缀
+                    case PeekOption.ForceAll://还要过滤可能存在的?前缀
                         break;
 
-                    case PeekOption.Disable_All:
+                    case PeekOption.DisableAll:
                         msg.Cancel = true;
                         return;
 
-                    case PeekOption.Only_Send_Command:
+                    case PeekOption.OnlySendCommand:
                         if (!msg.Message.RawText.StartsWith("?send"))
                         {
                             msg.Cancel = true;
@@ -123,9 +123,9 @@ namespace Sync.MessageFilter
 
         public enum PeekOption
         {
-            Force_All,
-            Disable_All,
-            Only_Send_Command,
+            ForceAll,
+            DisableAll,
+            OnlySendCommand,
             Auto
         }
 
@@ -148,6 +148,14 @@ namespace Sync.MessageFilter
 
                 sendCount++;
             }
+        }
+
+        public static void SetOption(string optionName)
+        {
+            if (Enum.TryParse(optionName, true, out PeekOption peekOption))
+                Option = peekOption;
+            else
+                Option = PeekOption.Auto;
         }
 
         public delegate void SendMessageAction(string userName, string message);

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sync.Tools.ConfigGUI
+namespace Sync.Tools.ConfigurationAttribute
 {
     [System.AttributeUsage(System.AttributeTargets.Property, AllowMultiple = false)]
     public abstract class BaseConfigurationAttribute : Attribute
