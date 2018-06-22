@@ -97,9 +97,13 @@
     <Compile Include="MessageFilter\FilterPriorityAttribute.cs" />
     <Compile Include="MessageFilter\MessageDispatcher.cs" />
     <Compile Include="MessageFilter\MessageManager.cs" />
+    <Compile Include="Tools\StartupArgument.cs" />
+    <Compile Include="Tools\StartupHelper.cs" />
     <Compile Include="Tools\Builtin\CommonCommand.cs" />
     <Compile Include="Tools\ConfigurationAttribute\BaseConfigurationAttribute.cs" />
     <Compile Include="Tools\ConfigurationAttribute\ClientAndSourceAttribute.cs" />
+    <Compile Include="Tools\CommandParser.cs" />
+    <Compile Include="Tools\ConfigGUI\ClientAndSourceAttribute.cs" />
     <Compile Include="Tools\Builtin\PluginCommand.cs" />
     <Compile Include="Tools\Builtin\InternalPlugin.cs" />
     <Compile Include="Tools\ConfigurationAttribute\ConfigurationHolderAttribute.cs" />
