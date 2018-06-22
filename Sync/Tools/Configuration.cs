@@ -6,7 +6,7 @@ namespace Sync.Tools
     /// <summary>
     /// Default plugin confiuration
     /// </summary>
-    public class Configuration : IConfigurable
+    public class DefaultConfiguration : IConfigurable
     {
         public const string DEFAULT_LANGUAGE = "LocalSettings";
 
@@ -45,21 +45,12 @@ namespace Sync.Tools
             MessageManagerDefaultOption = MessageManager.Option.ToString();
         }
 
-        private static Configuration instance;
-        private static PluginConfigurationManager config;
-
-        public static Configuration Instance
+        public static readonly DefaultConfiguration Instance = new DefaultConfiguration();
+        private static readonly PluginConfigurationManager config = new PluginConfigurationManager("Sync");
+        static DefaultConfiguration()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    config = new PluginConfigurationManager("Sync");
-                    instance = new Configuration();
-                    config.AddItem(instance);
-                }
-                return instance;
-            }
+            config.AddItem(Instance);
         }
+
     }
 }
