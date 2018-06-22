@@ -14,7 +14,7 @@ namespace Sync.Tools
     {
         public const string SourceEXEName = "Sync.exe";
         public const string UpdateEXEName = "Sync_update.exe";
-        public const string UpdateArg = "--update";
+        public const string UpdateArg = "-u";
         public static readonly string CurrentEXEName = Path.GetFileName(Process.GetCurrentProcess().Modules[0].FileName);
         public static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
         public static readonly string CurrentFullEXEPath = Path.Combine(CurrentPath, CurrentEXEName);
@@ -23,11 +23,11 @@ namespace Sync.Tools
         public static bool IsUpdated = false;
         internal static InternalPlugin update;
 
-        public static bool ApplyUpdate(string[] args)
+        public static bool ApplyUpdate(bool needUpdate)
         {
             if (CurrentEXEName == SourceEXEName)
             {
-                if (args.Length > 0 && args[0] == UpdateArg)
+                if (needUpdate)
                 {
                     Process.GetProcessesByName(UpdateEXEName).FirstOrDefault(p => p.MainModule.FileName.Contains(CurrentFullUpdateEXEPath))?.Kill();
                     File.Delete(CurrentFullUpdateEXEPath);
