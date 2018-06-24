@@ -72,7 +72,7 @@ namespace Sync.Tools.Builtin
             else
             {
                 if (SyncHost.Instance.Clients.Clients.FirstOrDefault(p => p.ClientName == arg[0]) == null) return false;
-                Configuration.Instance.Client = arg[0];
+                DefaultConfiguration.Instance.Client = arg[0];
                 SyncHost.Instance.ClientWrapper.ResetClient();
             }
             return true;
@@ -220,7 +220,7 @@ namespace Sync.Tools.Builtin
                 try
                 {
                     CultureInfo info = CultureInfo.GetCultureInfo(arg[0]);
-                    Configuration.Instance.Language = arg[0];
+                    DefaultConfiguration.Instance.Language = arg[0];
                     IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_LANG_SWITCHED, arg[0], info.NativeName), ConsoleColor.Green);
                     return true;
                 }

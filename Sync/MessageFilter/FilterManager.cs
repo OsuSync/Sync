@@ -31,13 +31,13 @@ namespace Sync.Plugins
             
             SourceEvents.Instance.BindEvent<BaseOnlineCountEvent>(evt =>
             {
-                if (Configuration.Instance.EnableViewersChangedNotify.ToBool())
+                if (DefaultConfiguration.Instance.EnableViewersChangedNotify.ToBool())
                     SyncHost.Instance.Messages.RaiseMessage<ISourceOnlineChange>(new OnlineChangeMessage(evt.Count));
             });
 
             SourceEvents.Instance.BindEvent<IBaseGiftEvent>(evt =>
             {
-                if (Configuration.Instance.EnableGiftChangedNotify.ToBool())
+                if (DefaultConfiguration.Instance.EnableGiftChangedNotify.ToBool())
                     SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new GiftMessage(evt));
             });
         }

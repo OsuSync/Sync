@@ -20,7 +20,7 @@ namespace Sync.Source
         public SourceWorkWrapper(SourceManager sources)
         {
             this.sources = sources;
-            Source = sources.SourceList.Where(p => p.Name == Configuration.Instance.Source).FirstOrDefault()??sources.SourceList.FirstOrDefault();/*没有的话就默认第一个*/
+            Source = sources.SourceList.Where(p => p.Name == DefaultConfiguration.Instance.Source).FirstOrDefault()??sources.SourceList.FirstOrDefault();/*没有的话就默认第一个*/
             if(Source == null)
             {
                 IO.CurrentIO.WriteColor(LANG_NO_ANY_SOURCE, ConsoleColor.Red);
