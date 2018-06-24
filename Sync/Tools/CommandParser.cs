@@ -44,7 +44,7 @@ namespace Sync.Tools
         {
             if (value.StartsWith("--"))
             {
-                ParseArgumentFullArgs(value.Substring(2));
+                ParseArgumentFullArgs(value.TrimStart().TrimEnd());
             }
             else if (value.StartsWith("-"))
             {
