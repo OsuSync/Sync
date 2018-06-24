@@ -37,39 +37,39 @@ namespace Sync.Tools
                 using (var reader = new BinaryReader(syncViewStream))
                 {
                     pid = reader.ReadInt32();
-                }
 
-                if (pid != 0)
-                {
-                    var oldSync = Process.GetProcesses().FirstOrDefault((proc) => proc.Id == pid);
-                    if (oldSync != null)
+                    if (pid != 0)
                     {
-                        if (forceExit)
+                        var oldSync = Process.GetProcesses().FirstOrDefault((proc) => proc.Id == pid);
+                        if (oldSync != null)
                         {
-                            oldSync.Kill();
-                        }
-                        else
-                        {
-                            CurrentIO.WriteColor(DefaultI18n.LANG_Instance_Exist, ConsoleColor.Red);
-                            int limit = 50, current = 0;
-                            while (oldSync.WaitForExit(100))
-                            {
-                                current++;
-                                if (current > limit) break;
-                            }
-
-                            if (!oldSync.WaitForExit(100))
+                            if (forceExit)
                             {
                                 oldSync.Kill();
                             }
+                            else
+                            {
+                                CurrentIO.WriteColor(DefaultI18n.LANG_Instance_Exist, ConsoleColor.Red);
+                                int limit = 50, current = 0;
+                                while (oldSync.WaitForExit(100))
+                                {
+                                    current++;
+                                    if (current > limit) break;
+                                }
+
+                                if (!oldSync.WaitForExit(100))
+                                {
+                                    oldSync.Kill();
+                                }
+                            }
                         }
                     }
-                }
 
-                using (var writer = new BinaryWriter(syncViewStream))
-                {
-                    writer.Seek(0, SeekOrigin.Begin);
-                    writer.Write(Process.GetCurrentProcess().Id);
+                    using (var writer = new BinaryWriter(syncViewStream))
+                    {
+                        writer.Seek(0, SeekOrigin.Begin);
+                        writer.Write(Process.GetCurrentProcess().Id);
+                    }
                 }
             }
         }
@@ -84,9 +84,10 @@ namespace Sync.Tools
 
         static void InitSync()
         {
-            //Update check
+
+            //Apply update
             if (Updater.ApplyUpdate(NeedUpdateSync))
-                return;
+                Environment.Exit(0);
 
             //Initialize I18n
             I18n.Instance.ApplyLanguage(new DefaultI18n());
@@ -98,11 +99,16 @@ namespace Sync.Tools
             SyncHost.Instance = new SyncHost();
             SyncHost.Instance.Load();
 
+            //Sync ready message to all plugins
             SyncHost.Instance.Plugins.ReadySync();
+
+            //Check update
+            if (DefaultConfiguration.Instance.CheckUpdateOnStartup.ToBool())
+                Updater.update.Latest();
 
             //Sync program update check
             if (Updater.IsUpdated)
-                IO.CurrentIO.WriteColor("Sync is already up to date!", ConsoleColor.Green);
+                CurrentIO.WriteColor("Sync is already up to date!", ConsoleColor.Green);
 
         }
 
