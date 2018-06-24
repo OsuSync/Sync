@@ -113,4 +113,4 @@ LANG_NO_PLUGIN_SELECT=Must specify a plugin name
 LANG_PLUGIN_DISABLED=Disabled
 LANG_COMMANDS_CLIENTUSERMSG=chatuser <username> <message> send message as username for irc test
 LANG_COMMANDS_EXIT_DONE=Exit action execution done, please close the window.
-LANG_NO_ANY_SOURCE="There is no any source, please check Plugin folder or input 'plugins install DefaultPlugin' to install plugin for default sources."
+LANG_NO_ANY_SOURCE="There is no source available, please check Plugin folder or input 'plugins install DefaultPlugin' to install plugin for default sources."

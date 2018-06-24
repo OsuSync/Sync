@@ -14,14 +14,14 @@ namespace Sync.Tools
     {
         public const string SourceEXEName = "Sync.exe";
         public const string UpdateEXEName = "Sync_update.exe";
-        public const string UpdateArg = "-u";
+        public const string UpdateArg = "--update";
         public static readonly string CurrentEXEName = Path.GetFileName(Process.GetCurrentProcess().Modules[0].FileName);
         public static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
         public static readonly string CurrentFullEXEPath = Path.Combine(CurrentPath, CurrentEXEName);
         public static readonly string CurrentFullSourceEXEPath = Path.Combine(CurrentPath, SourceEXEName);
         public static readonly string CurrentFullUpdateEXEPath = Path.Combine(CurrentPath, UpdateEXEName);
         public static bool IsUpdated = false;
-        internal static InternalPlugin update;
+        internal static PluginCommand update;
 
         public static bool ApplyUpdate(bool needUpdate)
         {

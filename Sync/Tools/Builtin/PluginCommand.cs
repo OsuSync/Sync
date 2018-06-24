@@ -17,7 +17,7 @@ using static Sync.Tools.DefaultI18n;
 
 namespace Sync.Tools.Builtin
 {
-    public sealed class PluginCommand
+    internal sealed class PluginCommand
     {
         #region Updater Decleare
 
@@ -312,7 +312,8 @@ namespace Sync.Tools.Builtin
                 HttpWebRequest Myrq = (HttpWebRequest)WebRequest.Create(dlUrl);
                 HttpWebResponse myrp = (HttpWebResponse)Myrq.GetResponse();
                 long totalBytes = myrp.ContentLength;
-                IO.CurrentIO.WriteHelp(name, totalBytes.ToString());
+                string convertdTotal = (totalBytes / 1024).ToString("0.00");
+                IO.CurrentIO.WriteHelp(name, $"Total: {convertdTotal} KB");
                 //判断是否存在已经下载的文件，如果存在，且长度相等，则直接解压
 
                 if (File.Exists(path + "_")) File.Delete(path + "_");       //如果存在目标缓存文件，就删掉它
@@ -341,11 +342,9 @@ namespace Sync.Tools.Builtin
                         downloadspeed = totalDownloadedByte - updateDownloadByte;                   //这段时间已经下载的数据量
                         time.Restart();                                     //计时器重新开始计时
                         updateDownloadByte = totalDownloadedByte;           //更新已经计算速度的数据位置
-                        IO.CurrentIO.WriteHelp($"{downloadspeed.ToString()}Byte/s", $"{totalDownloadedByte.ToString()}Byte OK");//UI更新
+                        IO.CurrentIO.WriteHelp($"{(downloadspeed / 1024).ToString("0.0")}KB/s", $"{(totalDownloadedByte / 1024).ToString("0.0")}/{convertdTotal} KB");//UI更新
                     }
                 }
-
-                IO.CurrentIO.WriteHelp($"{downloadspeed.ToString()}Byte/s", $"{totalDownloadedByte.ToString()}Byte OK");//UI更新
 
                 so.Close();
                 st.Close();

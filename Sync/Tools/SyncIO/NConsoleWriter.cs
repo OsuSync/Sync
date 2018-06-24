@@ -13,7 +13,7 @@ namespace Sync.Tools
         /// <returns>Input chars</returns>
         public string ReadCommand()
         {
-            WriteColor("", ConsoleColor.Green, false, false);
+            WriteColor(">", ConsoleColor.Green, false, false);
             wait = true;
             return Console.ReadLine();
         }

@@ -12,17 +12,13 @@ namespace Sync.Tools
         string[] args;
         List<Action<T>> parsedArgumentActions = new List<Action<T>>();
         List<Action<T>> parsedExecuteActions = new List<Action<T>>();
-        Dictionary<char, Func<string, Action<T>>> parseArgumentBinder;
-        Dictionary<char, Func<string, Action<T>>> parseActionBinder;
+        Dictionary<string, Func<string, Action<T>>> parseArgumentBinder;
+        Dictionary<string, Func<string, Action<T>>> parseActionBinder;
         int parseSharedIndex = 0;
-        internal CommandParser(string[] args)
+        internal CommandParser(string[] args) : this(args, new Dictionary<string, Func<string, Action<T>>>(), new Dictionary<string, Func<string, Action<T>>>())
         {
-            this.args = args;
-            this.parseArgumentBinder = new Dictionary<char, Func<string, Action<T>>>();
-            this.parseActionBinder = new Dictionary<char, Func<string, Action<T>>>();
-            ParseCommands();
         }
-        internal CommandParser(string[] args, Dictionary<char, Func<string, Action<T>>> arguments, Dictionary<char, Func<string, Action<T>>> actions)
+        internal CommandParser(string[] args, Dictionary<string, Func<string, Action<T>>> arguments, Dictionary<string, Func<string, Action<T>>> actions)
         {
             this.args = args;
             this.parseArgumentBinder = arguments;
@@ -39,14 +35,18 @@ namespace Sync.Tools
                     ParseStringBlock($"{item} ");
                 }
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-                System.Console.WriteLine("Wrong argument");
+                Console.WriteLine("Wrong argument");
             }
         }
         private void ParseStringBlock(string value)
         {
-            if (value.StartsWith("-"))
+            if (value.StartsWith("--"))
+            {
+                ParseArgumentFullArgs(value.Substring(2));
+            }
+            else if (value.StartsWith("-"))
             {
                 ParseArgumentArgs(value.Substring(1));
             }
@@ -55,11 +55,15 @@ namespace Sync.Tools
                 ParseExecuteArgs(value);
             }
         }
+        private void ParseArgumentFullArgs(string value)
+        {
+            parsedArgumentActions.Add(parseArgumentBinder[value](value));
+        }
         private void ParseArgumentArgs(string value)
         {
             for (parseSharedIndex = 0; parseSharedIndex < value.Length - 1; parseSharedIndex++)
             {
-                parsedArgumentActions.Add(parseArgumentBinder[value[parseSharedIndex]](value));
+                parsedArgumentActions.Add(parseArgumentBinder[value.Substring(parseSharedIndex, 1)](value));
 
             }
         }
@@ -67,7 +71,7 @@ namespace Sync.Tools
         {
             if (value.Length > 0)
             {
-                parsedExecuteActions.Add(parseActionBinder[value[0]](value));
+                parsedExecuteActions.Add(parseActionBinder[value.Substring(0, 1)](value));
             }
         }
         #region ParseTools

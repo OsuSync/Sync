@@ -26,7 +26,7 @@ namespace Sync.Tools.Builtin
                 commonCommand.BindCommondCommand(p.Commands.Dispatch);
             });
 
-            Updater.update = this;
+            Updater.update = this.pluginCommand;
         }
 
         internal bool CheckUpdate(string guid) => pluginCommand.CheckUpdate(guid);
