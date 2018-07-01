@@ -12,7 +12,7 @@ namespace Sync.Tools
         {
             if (DefaultConfiguration.Instance.LogDirectory == "")
             {
-                DefaultConfiguration.Instance.LogDirectory = @"Logs\\";
+                DefaultConfiguration.Instance.LogDirectory = @"Logs\";
             }
 
             if(DefaultConfiguration.Instance.LogFilename == "")
