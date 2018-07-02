@@ -17,11 +17,11 @@ namespace Sync.Tools
 
             if(DefaultConfiguration.Instance.LogFilename == "")
             {
-                DefaultConfiguration.Instance.LogFilename = "Log-{Date}.txt";
+                DefaultConfiguration.Instance.LogFilename = "Log-{0}.txt";
             }
 
-            string date = $"{DateTime.Now.ToString().Replace(" ","@").Replace(":", ".")}";
-            string log = Path.Combine(DefaultConfiguration.Instance.LogDirectory, DefaultConfiguration.Instance.LogFilename).Replace("{Date}", date);
+            string date = DateTime.Now.ToString("yyyy-MM-dd@hh.mm.ss");
+            string log = string.Format(Path.Combine(DefaultConfiguration.Instance.LogDirectory, DefaultConfiguration.Instance.LogFilename), date);
             if (!Path.IsPathRooted(log))
                 log = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,log);
             Directory.CreateDirectory(Path.GetDirectoryName(log));
