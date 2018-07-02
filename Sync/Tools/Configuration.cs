@@ -22,7 +22,7 @@ namespace Sync.Tools
         public ConfigurationElement LogDirectory { get; set; } = @"Logs\";
 
         [String]
-        public ConfigurationElement LogFilename { get; set; } = @"Log-{Date}.txt";
+        public ConfigurationElement LogFilename { get; set; } = @"Log-{0}.txt";
 
         [Bool]
         public ConfigurationElement EnableViewersChangedNotify { get; set; } = "False";
