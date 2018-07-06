@@ -61,6 +61,12 @@ namespace Sync.Tools
         /// Config path
         /// </summary>
         public readonly static string ConfigFile = AppDomain.CurrentDomain.BaseDirectory + "config.ini";
+
+        /// <summary>
+        /// The ini read buffer(thread safe)
+        /// </summary>
+        private readonly static ThreadLocal<StringBuilder> iniReadBuffer = new ThreadLocal<StringBuilder>(()=>new StringBuilder(65535));
+
         /// <summary>
         /// Read value
         /// </summary>
@@ -69,9 +75,9 @@ namespace Sync.Tools
         /// <returns>Value</returns>
         internal static string IniReadValue(string FilePath, string key, string column = "config")
         {
-            StringBuilder temp = new StringBuilder(2048);
-            GetPrivateProfileString(column, key, "", temp, 2048, FilePath);
-            return temp.ToString();
+            StringBuilder temp = iniReadBuffer.Value;
+            int length = GetPrivateProfileString(column, key, "", temp, 65535, FilePath);
+            return temp.ToString(0,length);
         }
 
         internal static bool IniWriteValue(string FilePath, string key, string value, string column = "config")
