@@ -18,8 +18,11 @@ namespace Sync.Tools
 
         public ConfigurationElement Language { get; set; } = "zh-CN";
 
-        [Path(IsDirectory = false)]
-        public ConfigurationElement LoggerFile { get; set; } = "Log.txt";
+        [Path(IsDirectory = true)]
+        public ConfigurationElement LogDirectory { get; set; } = @"Logs\";
+
+        [String]
+        public ConfigurationElement LogFilename { get; set; } = @"Log-{0}.txt";
 
         [Bool]
         public ConfigurationElement EnableViewersChangedNotify { get; set; } = "False";

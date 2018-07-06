@@ -1,0 +1,10 @@
+[en-us]
+BUTTON_OPEN=Open
+BUTTON_BROWSE=Browse
+BUTTON_FONT=Font
+BUTTON_COLOR=Color
+WINDOW_TITLE=Config
+BUTTON_SAVE=Save
+LABEL_SAVED=Saved!
+LABEL_SAVED_SAVING=Saving...
+WINDOW_TITLE_REQUIRE_RESTART=Some settings restart to take effect
