@@ -76,8 +76,8 @@ namespace Sync.Tools
         internal static string IniReadValue(string FilePath, string key, string column = "config")
         {
             StringBuilder temp = iniReadBuffer.Value;
-            int length = GetPrivateProfileString(column, key, "", temp, 65535, FilePath);
-            return temp.ToString(0,length);
+            GetPrivateProfileString(column, key, "", temp, 65535, FilePath);
+            return temp.ToString();
         }
 
         internal static bool IniWriteValue(string FilePath, string key, string value, string column = "config")
