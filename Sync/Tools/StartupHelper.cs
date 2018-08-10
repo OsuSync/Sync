@@ -104,7 +104,7 @@ namespace Sync.Tools
 
             //Check update
             if (DefaultConfiguration.Instance.CheckUpdateOnStartup.ToBool())
-                Updater.update.Latest();
+                Updater.update.SyncUpdateCheck();
 
             //Sync program update check
             if (Updater.IsUpdated)

@@ -29,6 +29,6 @@ namespace Sync.Tools.Builtin
             Updater.update = this.pluginCommand;
         }
 
-        internal bool CheckUpdate(string guid) => pluginCommand.CheckUpdate(guid);
+        internal bool CheckUpdate(string guid) => pluginCommand.InternalUpdate(guid,true);
     }
 }

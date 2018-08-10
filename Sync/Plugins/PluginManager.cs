@@ -503,7 +503,7 @@ namespace Sync.Plugins
 
         private void CheckGUIDUpdate(SyncPluginDependency item)
         {
-            if (Updater.update.CheckUpdate(item.GUID))
+            if (Updater.update.InternalUpdate(item.GUID,true))
             {
                 SyncHost.Instance.ForceRestartSync();
                 throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");

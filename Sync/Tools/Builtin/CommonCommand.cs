@@ -302,7 +302,7 @@ namespace Sync.Tools.Builtin
             if (arg.Count > 0 && arg[0] == "--all")
             {
                 foreach (var item in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-                {
+                {   
                     IO.CurrentIO.WriteColor(string.Format("CultureName: {0:S}\t{1:S}", item.Name, item.NativeName), ConsoleColor.Yellow);
                 }
             }
