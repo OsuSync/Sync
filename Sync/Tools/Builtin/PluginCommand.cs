@@ -73,7 +73,13 @@ namespace Sync.Tools.Builtin
                     return Search(arg[1]);
 
                 case "update":
-                    return Update();
+                        if (arg.Count>1)
+                        {
+                            var part_plugin_name = arg[1];
+                            return Update(part_plugin_name,arg.Any(a => a == "--no_ask"));
+                        }
+                        else
+                            return Update(arg.Any(a=>a=="--no_ask"));
 
                 case "install":
                     return Install(arg[1]);
@@ -92,34 +98,58 @@ namespace Sync.Tools.Builtin
             }
         }
 
-        private bool Update()
+        private bool InternalUpdate(string plugin_name,string plugin_author,string plugin_guid)
+        {
+            try
+            {
+                IO.CurrentIO.Write($"Fetch update: {plugin_name} by {plugin_author} [{plugin_guid}]");
+                var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{plugin_guid}");
+                var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", result.fileName);
+                
+                if (MD5HashFile(target).ToLower() != result.latestHash)
+                {
+                    IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
+
+                    if (!DownloadSingleFile(result.downloadUrl, target, result.fileName))
+                    {
+                        throw new Exception("Download update files failed!");
+                    }
+                }
+                else
+                {
+                    IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST, result.name));
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                IO.CurrentIO.WriteColor(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message), ConsoleColor.Red);
+                return false;
+            }
+        }
+
+        private bool Update(bool no_ask = false)
         {
             IEnumerable<Plugin> plugins = SyncHost.Instance.EnumPluings();
             foreach (var item in plugins)
             {
-                try
-                {
-                    IO.CurrentIO.Write($"Fetch update: {item.Name} by {item.Author} [{item.getGuid()}]");
-                    var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{item.getGuid()}");
-                    var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", result.fileName);
-                    if (MD5HashFile(target).ToLower() != result.latestHash)
-                    {
-                        IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
-                        if (!DownloadSingleFile(result.downloadUrl, target, result.fileName))
-                        {
-                            IO.CurrentIO.WriteColor("Download Failed!", ConsoleColor.Red);
-                        }
-                    }
-                    else
-                    {
-                        IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST, result.name));
-                    }
-                }
-                catch (Exception e)
-                {
-                    IO.CurrentIO.Write(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message));
-                    continue;
-                }
+                InternalUpdate(item.Name, item.Author, item.getGuid());
+            }
+
+            RequireRestart(LANG_UPDATE_DONE);
+            return true;
+        }
+
+        private bool Update(string part_plugin_name,bool no_ask=false)
+        {
+            IEnumerable<Plugin> plugins =from plugin in SyncHost.Instance.EnumPluings()
+                                         where plugin.Name.ToLower().Contains(part_plugin_name.ToLower())
+                                         select plugin;
+
+            foreach (var item in plugins)
+            {
+                InternalUpdate(item.Name, item.Author, item.getGuid());
             }
 
             RequireRestart(LANG_UPDATE_DONE);
@@ -379,12 +409,12 @@ namespace Sync.Tools.Builtin
                     File.Delete(zip);
                 }
 
-                IO.CurrentIO.Write($"[{name}] Done.");
+                IO.CurrentIO.WriteColor($"[{name}] Done.", ConsoleColor.Green);
                 return true;
             }
             catch (Exception e)
             {
-                IO.CurrentIO.Write($"Error while {e.TargetSite.Name} : {e.Message}");
+                IO.CurrentIO.WriteColor($"Error while {e.TargetSite.Name} : {e.Message}",ConsoleColor.Red);
                 return false;
             }
         }
