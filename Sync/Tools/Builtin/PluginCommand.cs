@@ -265,25 +265,34 @@ namespace Sync.Tools.Builtin
             return true;
         }
 
-        internal bool SyncUpdateCheck(bool download=false)
+        internal bool SyncUpdateCheck(bool download = false)
         {
-            IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
-            var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
-
-            if (!File.Exists(Updater.CurrentFullSourceEXEPath) || MD5HashFile(Updater.CurrentFullSourceEXEPath) != result.versionHash)
+            try
             {
-                if (download)
+
+                IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
+                var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
+
+                if (!File.Exists(Updater.CurrentFullSourceEXEPath) || MD5HashFile(Updater.CurrentFullSourceEXEPath) != result.versionHash)
                 {
-                    IO.CurrentIO.Write($"Download: {result.downloadURL}...");
-                    DownloadSingleFile(result.downloadURL, Updater.CurrentFullUpdateEXEPath, "Sync");
-                    RequireRestart("Update downloaded. Restart to apply effect");
+                    if (download)
+                    {
+                        IO.CurrentIO.Write($"Download: {result.downloadURL}...");
+                        DownloadSingleFile(result.downloadURL, Updater.CurrentFullUpdateEXEPath, "Sync");
+                        RequireRestart("Update downloaded. Restart to apply effect");
+                    }
+                    else
+                        IO.CurrentIO.WriteColor($"There is a new version Sync! please visit https://github.com/OsuSync/Sync/releases/latest " +
+                            $", you can type \"plugins latest\" in Sync for automatically updating self.", ConsoleColor.Cyan);
                 }
                 else
-                    IO.CurrentIO.WriteColor($"There is a new version Sync! please visit https://github.com/OsuSync/Sync/releases/latest " +
-                        $", you can type \"plugins latest\" in Sync for automatically updating self.", ConsoleColor.Cyan);
+                    IO.CurrentIO.WriteColor("Sync update check done.Enjoy~", ConsoleColor.Cyan);
             }
-            else
-                IO.CurrentIO.WriteColor("Sync update check done.Enjoy~", ConsoleColor.Cyan);
+            catch (Exception e)
+            {
+                IO.CurrentIO.WriteColor("Fetch Sync update info failed,please check your network if it can able to connect http://sync.mcbaka.com/", ConsoleColor.Red);
+                return false;
+            }
             return true;
         }
 
