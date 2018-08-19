@@ -147,8 +147,8 @@ namespace Sync
 
         public void SaveSync()
         {
-            if (ClientWrapper.Client != null) ClientWrapper.Client?.StopWork();
-            if (SourceWrapper.Source != null) SourceWrapper.Source?.Disconnect();
+            ClientWrapper?.Client?.StopWork();
+            SourceWrapper?.Source?.Disconnect();
 
             foreach (var item in PluginConfigurationManager.ConfigurationSet)
             {
