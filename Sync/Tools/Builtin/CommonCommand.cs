@@ -133,7 +133,11 @@ namespace Sync.Tools.Builtin
                 return true;
             }
 
-            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage("Console", string.Join(" ", arg)));
+            SyncHost.Instance.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage()
+            {
+                User = "Console",
+                Message = string.Join(" ", arg)
+            });
             return true;
         }
 
@@ -146,7 +150,11 @@ namespace Sync.Tools.Builtin
 
             var message = string.Join(" ",arg.Skip(1));
 
-            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
+            SyncHost.Instance.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage()
+            {
+                User = arg[0].Trim(),
+                Message = message
+            });
             return true;
         }
 
