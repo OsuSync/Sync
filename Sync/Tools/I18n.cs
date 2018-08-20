@@ -130,7 +130,7 @@ namespace Sync.Tools
         public static LanguageElement LANG_INSTALL_DONE = "下载完成,是否重启软件";
         public static LanguageElement LANG_PLUGIN_NOT_FOUND = "插件 {0} 不存在";
         public static LanguageElement LANG_REMOVE_DONE = "删除成功,是否重启软件";
-        public static LanguageElement LANG_VERSION_LATEST = "{0} 已是最新";
+        public static LanguageElement LANG_VERSION_LATEST_OR_CANEL = "{0} 已是最新,或者已被用户取消更新操作";
         public static LanguageElement LANG_UPDATE_CHECK_ERROR = "无法根据 [{0}] 检查更新 :  {1} : {2}";
         public static LanguageElement LANG_UPDATE_ERROR = "无法更新 :  {0} : {1}";
 

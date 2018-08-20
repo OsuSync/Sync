@@ -98,12 +98,20 @@ namespace Sync.Tools.Builtin
             }
         }
 
+        private bool AskAgreeUpdate(UpdateData data)
+        {
+            IO.CurrentIO.WriteColor($"----------------\nplugin {data.name} have a new version!\nFile hash:{data.latestHash}\nDownload? (Y/N):", ConsoleColor.Green,false);
+            var result = IO.CurrentIO.ReadCommand();
+            return result.ToLower() == "y";
+        }
+
         public bool ShouldDownloadUpdate(UpdateData update_data,string current_file_path,bool no_ask)
         {
             //todo : version compare
 
             var current_file_hash = MD5HashFile(current_file_path).ToLower();
-            return !File.Exists(current_file_path) || current_file_hash !=update_data.latestHash;
+
+            return ((!File.Exists(current_file_path) || current_file_hash != update_data.latestHash) && AskAgreeUpdate(update_data));
         }
 
         internal bool InternalUpdate(string plugin_guid, bool no_ask)
@@ -125,7 +133,7 @@ namespace Sync.Tools.Builtin
                 }
                 else
                 {
-                    IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST, result.name));
+                    IO.CurrentIO.Write(string.Format(LANG_VERSION_LATEST_OR_CANEL, result.name));
                 }
 
                 return true;
