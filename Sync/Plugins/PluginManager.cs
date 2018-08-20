@@ -252,10 +252,13 @@ namespace Sync.Plugins
             {
                 Directory.Delete(rootCache, true);
             }
-            catch { }
+            catch
+            {
+
+            }
 
             string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
-            if(Directory.Exists(cache))
+            if (Directory.Exists(cache))
             {
                 Directory.Delete(cache, true);
             }
@@ -265,6 +268,9 @@ namespace Sync.Plugins
             {
                 Attributes = FileAttributes.Hidden
             };
+
+            //error extra notify mark
+            bool got_locked_error = false;
 
             //Search all .dll files in directory(include sub directory)
             foreach (string file in Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories))
@@ -280,14 +286,20 @@ namespace Sync.Plugins
 
                     asmList.Add(asm);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     //Not a .NET Assembly DLL
                     IO.CurrentIO.WriteColor(String.Format(LANG_LoadPluginErr, file, e.Message), ConsoleColor.Red);
-                    continue;
+
+                    if (e.Message.Contains("0x80131515"))
+                        got_locked_error = true;
                 }
             }
 
+            if (got_locked_error)
+                IO.CurrentIO.WriteColor(String.Format("Opps,It seems your plugin dll files were locked by System.\n" +
+                               "Please view https://osu.ppy.sh/forum/t/685031/start=37 and https://osu.ppy.sh/forum/t/685031/start=24 to solve problem."), ConsoleColor.Red);
+            
             loadedList = new LinkedList<Type>();
 
             //To slove plugin dependency,
@@ -311,7 +323,7 @@ namespace Sync.Plugins
                         allList.Add(it);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     //Not up to date
                     IO.CurrentIO.WriteColor(String.Format(LANG_LoadPluginErr, asm.FullName, e.Message), ConsoleColor.Red);
@@ -344,7 +356,6 @@ namespace Sync.Plugins
             {
                 try
                 {
-
                     var deps = it.GetCustomAttributes<SyncPluginDependency>();
 
                     foreach (var item in deps)
@@ -354,7 +365,6 @@ namespace Sync.Plugins
                         if (item.Version == null) continue;
                         if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
                     }
-
 
                     if (LateLoad(it))
                     {
@@ -366,7 +376,6 @@ namespace Sync.Plugins
                         //Lazy load this plugin at next time
                         continue;
                     }
-
 
                     //no dependencies or dependencies all was loaded
                     if (!it.IsSubclassOf(typeof(Plugin))) continue;
@@ -394,7 +403,7 @@ namespace Sync.Plugins
             SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
             IEnumerable<SyncPluginDependency> deps = a.GetCustomAttributes<SyncPluginDependency>();
             SyncPluginID pid = a.GetCustomAttribute<SyncPluginID>();
-            if(deps != null)
+            if (deps != null)
             {
                 foreach (var item in deps)
                 {
@@ -422,8 +431,8 @@ namespace Sync.Plugins
                     }
                 }
             }
-            
-            if(softRequirePlugin != null)
+
+            if (softRequirePlugin != null)
             {
                 foreach (var item in softRequirePlugin.RequirePluguins)
                 {
@@ -503,7 +512,7 @@ namespace Sync.Plugins
 
         private void CheckGUIDUpdate(SyncPluginDependency item)
         {
-            if (Updater.update.InternalUpdate(item.GUID,true))
+            if (Updater.update.InternalUpdate(item.GUID, true))
             {
                 SyncHost.Instance.ForceRestartSync();
                 throw new SyncPluginOutdateException($"Need restart application to update {item.GUID}");
