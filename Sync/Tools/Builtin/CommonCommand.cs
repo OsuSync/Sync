@@ -124,7 +124,7 @@ namespace Sync.Tools.Builtin
 
         private bool clientmsg(Arguments arg)
         {
-            if (arg.Count == 0 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            if (arg.Count == 0 || (SyncHost.Instance.ClientWrapper.Client.CurrentStatus != SourceStatus.CONNECTED_WORKING))
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
                 return true;
@@ -136,13 +136,13 @@ namespace Sync.Tools.Builtin
 
         private bool chatuser(Arguments arg)
         {
-            if (arg.Count < 1 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            if (arg.Count < 1 || (SyncHost.Instance.ClientWrapper.Client.CurrentStatus != SourceStatus.CONNECTED_WORKING))
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
             }
-            string message = "";
-            for (int i = 1; i < arg.Count; i++)
-                message += arg[i] + " ";
+
+            var message = string.Join(" ",arg.Skip(1));
+
             SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
             return true;
         }
