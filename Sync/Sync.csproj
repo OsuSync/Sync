@@ -136,6 +136,8 @@
     <Compile Include="Tools\SyncIO\Logger.cs" />
     <Compile Include="Tools\PluginConfiuration.cs" />
     <Compile Include="Tools\StringElement.cs" />
+    <Compile Include="Tools\Utils\ConfigurationHelper.cs" />
+    <Compile Include="Tools\Utils\PluginsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

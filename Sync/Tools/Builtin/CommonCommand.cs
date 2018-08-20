@@ -37,7 +37,7 @@ namespace Sync.Tools.Builtin
 
             dispatch.bind("lang", language, LANG_COMMANDS_LANG);
             dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
-            dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
+            dispatch.bind("source", listsource, LANG_COMMANDS_SOURCES);
             dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
         }
 
@@ -51,6 +51,9 @@ namespace Sync.Tools.Builtin
                 IO.CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_AUTHOR, ConsoleColor.DarkCyan, false, false);
                 IO.CurrentIO.WriteColor(src.Author, ConsoleColor.White, true, false);
             }
+
+            IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper?.Client?.ClientName ?? "还没指定接收源"), ConsoleColor.Green);
+
             return true;
         }
 
@@ -67,7 +70,7 @@ namespace Sync.Tools.Builtin
                     IO.CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
                 }
 
-                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client?.ClientName ?? "还没指定发送源"), ConsoleColor.Green);
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.SourceWrapper?.Source?.Name ?? "还没指定发送源"), ConsoleColor.Green);
             }
             else
             {
@@ -165,7 +168,7 @@ namespace Sync.Tools.Builtin
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_DANMAKU_NOT_SUPPORT);
             }
-            return true;
+            return false;
         }
 
         private bool start(Arguments arg)
