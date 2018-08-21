@@ -1,6 +1,5 @@
 ﻿using Sync.Command;
 using Sync.Plugins;
-using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,13 +72,13 @@ namespace Sync.Tools.Builtin
                     return Search(arg[1]);
 
                 case "update":
-                        if (arg.Count>1)
-                        {
-                            var part_plugin_name = arg[1];
-                            return Update(part_plugin_name,arg.Any(a => a == "--no_ask"));
-                        }
-                        else
-                            return Update(arg.Any(a=>a=="--no_ask"));
+                    if (arg.Count > 1)
+                    {
+                        var part_plugin_name = arg[1];
+                        return Update(part_plugin_name, arg.Any(a => a == "--no_ask"));
+                    }
+                    else
+                        return Update(arg.Any(a => a == "--no_ask"));
 
                 case "install":
                     return Install(arg[1]);
@@ -100,12 +99,12 @@ namespace Sync.Tools.Builtin
 
         private bool AskAgreeUpdate(UpdateData data)
         {
-            IO.CurrentIO.WriteColor($"----------------\nplugin {data.name} have a new version!\nFile hash:{data.latestHash}\nDownload? (Y/N):", ConsoleColor.Green,false);
+            IO.CurrentIO.WriteColor($"----------------\nplugin {data.name} have a new version!\nFile hash:{data.latestHash}\nDownload? (Y/N):", ConsoleColor.Green, false);
             var result = IO.CurrentIO.ReadCommand();
             return result.ToLower() == "y";
         }
 
-        public bool ShouldDownloadUpdate(UpdateData update_data,string current_file_path,bool no_ask)
+        public bool ShouldDownloadUpdate(UpdateData update_data, string current_file_path, bool no_ask)
         {
             //todo : version compare
 
@@ -146,14 +145,14 @@ namespace Sync.Tools.Builtin
             return false;
         }
 
-        internal void InternalUpdate(IEnumerable<Plugin> update_plugins,bool no_ask)
+        internal void InternalUpdate(IEnumerable<Plugin> update_plugins, bool no_ask)
         {
             foreach (var item in update_plugins)
             {
                 InternalUpdate(item.getGuid(), no_ask);
             }
 
-            if (update_plugins.Count()!=0)
+            if (update_plugins.Count() != 0)
                 RequireRestart(LANG_UPDATE_DONE);
         }
 
@@ -166,15 +165,15 @@ namespace Sync.Tools.Builtin
             return true;
         }
 
-        private bool Update(string part_plugin_name,bool no_ask=false)
+        private bool Update(string part_plugin_name, bool no_ask = false)
         {
             if (string.IsNullOrWhiteSpace(part_plugin_name))
                 return Update(no_ask);
 
-            IEnumerable<Plugin> plugins =from plugin in SyncHost.Instance.EnumPluings()
-                                         where plugin.Name.ToLower().Contains(part_plugin_name.ToLower())
-                                         select plugin;
-            
+            IEnumerable<Plugin> plugins = from plugin in SyncHost.Instance.EnumPluings()
+                                          where plugin.Name.ToLower().Contains(part_plugin_name.ToLower())
+                                          select plugin;
+
             InternalUpdate(plugins, no_ask);
 
             return true;
@@ -209,7 +208,7 @@ namespace Sync.Tools.Builtin
 
         private bool Install(string guid)
         {
-            if (InternalUpdate(guid,true))
+            if (InternalUpdate(guid, true))
             {
                 RequireRestart(LANG_INSTALL_DONE);
                 return true;
@@ -218,7 +217,7 @@ namespace Sync.Tools.Builtin
             {
                 if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
                 {
-                    if (datas.Length == 0 || InternalUpdate(datas[0].guid,true))
+                    if (datas.Length == 0 || InternalUpdate(datas[0].guid, true))
                     {
                         RequireRestart(LANG_INSTALL_DONE);
                         return true;
@@ -277,7 +276,6 @@ namespace Sync.Tools.Builtin
         {
             try
             {
-
                 IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
                 var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
 
@@ -431,7 +429,7 @@ namespace Sync.Tools.Builtin
             }
             catch (Exception e)
             {
-                IO.CurrentIO.WriteColor($"Error while {e.TargetSite.Name} : {e.Message}",ConsoleColor.Red);
+                IO.CurrentIO.WriteColor($"Error while {e.TargetSite.Name} : {e.Message}", ConsoleColor.Red);
                 return false;
             }
         }

@@ -1,17 +1,16 @@
-﻿using Sync.Tools;
+﻿using Sync.Client;
+using Sync.Command;
+using Sync.Source;
+using Sync.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 using static Sync.Tools.DefaultI18n;
-using Sync.Command;
-using Sync.Client;
-using Sync.Source;
 
 namespace Sync.Plugins
 {
-
     /// <summary>
     /// A flag for plugin event type
     /// </summary>
@@ -28,83 +27,98 @@ namespace Sync.Plugins
         public struct InitPluginEvent : IPluginEvent
         {
             public Plugin Plugin { get; private set; }
+
             public InitPluginEvent(Plugin plugin)
             {
                 this.Plugin = plugin;
             }
         }
+
         /// <summary>
         /// Fire when init source
         /// </summary>
         public struct InitSourceEvent : IPluginEvent
         {
             public SourceManager Sources { get; private set; }
+
             public InitSourceEvent(SourceManager source)
             {
                 Sources = source;
             }
         }
+
         /// <summary>
         /// Fire when init filter
         /// </summary>
         public struct InitFilterEvent : IPluginEvent
         {
             public FilterManager Filters { get; private set; }
+
             public InitFilterEvent(FilterManager filters)
             {
                 Filters = filters;
             }
         }
+
         /// <summary>
         /// Fire when init command
         /// </summary>
         public struct InitCommandEvent : IPluginEvent
         {
             public CommandManager Commands { get; private set; }
+
             public InitCommandEvent(CommandManager commands)
             {
                 Commands = commands;
             }
         }
+
         /// <summary>
         /// Fire when init clients
         /// </summary>
         public struct InitClientEvent : IPluginEvent
         {
             public ClientManager Clients { get; private set; }
+
             public InitClientEvent(ClientManager clients)
             {
                 Clients = clients;
             }
         }
+
         /// <summary>
         /// Fire when init source warpper
         /// </summary>
         public struct InitSourceWarpperEvent : IPluginEvent
         {
             public SourceWorkWrapper SourceWrapper { get; private set; }
+
             public InitSourceWarpperEvent(SourceWorkWrapper wrapper)
             {
                 SourceWrapper = wrapper;
             }
         }
+
         /// <summary>
         /// Fire when init client warpper
         /// </summary>
         public struct InitClientWarpperEvent : IPluginEvent
         {
             public ClientWorkWrapper ClientWrapper { get; private set; }
+
             public InitClientWarpperEvent(ClientWorkWrapper wrapper)
             {
                 ClientWrapper = wrapper;
             }
         }
+
         /// <summary>
         /// Fire when load complete
         /// </summary>
         public struct LoadCompleteEvent : IPluginEvent
         {
             public SyncHost Host { get; private set; }
+
             public LoadCompleteEvent(SyncHost host)
             {
                 Host = host;
@@ -128,6 +142,7 @@ namespace Sync.Plugins
         }
 
         public static readonly PluginEvents Instance = new PluginEvents();
+
         private PluginEvents()
         {
             EventDispatcher.Instance.RegisterNewDispatcher(GetType());
@@ -140,14 +155,13 @@ namespace Sync.Plugins
     /// </summary>
     public class PluginManager
     {
-
-        List<Plugin> pluginList;
+        private List<Plugin> pluginList;
         private List<Assembly> asmList;
         private LinkedList<Type> loadedList;
         private List<Type> allList;
+
         internal PluginManager()
         {
-
         }
 
         /// <summary>
@@ -207,7 +221,6 @@ namespace Sync.Plugins
             return pluginList;
         }
 
-
         /// <summary>
         /// Internal get plugin list
         /// </summary>
@@ -254,7 +267,6 @@ namespace Sync.Plugins
             }
             catch
             {
-
             }
 
             string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
@@ -299,7 +311,7 @@ namespace Sync.Plugins
             if (got_locked_error)
                 IO.CurrentIO.WriteColor(String.Format("Opps,It seems your plugin dll files were locked by System.\n" +
                                "Please view https://osu.ppy.sh/forum/t/685031/start=37 and https://osu.ppy.sh/forum/t/685031/start=24 to solve problem."), ConsoleColor.Red);
-            
+
             loadedList = new LinkedList<Type>();
 
             //To slove plugin dependency,
@@ -331,13 +343,11 @@ namespace Sync.Plugins
                 }
             }
 
-
             lazylist = allList.ToList();
             //looping add for resolve dependency
             do
             {
                 lazylist = layerLoader(lazylist);
-
             } while (lazylist.Count != 0);
 
             return pluginList.Count;
@@ -384,7 +394,6 @@ namespace Sync.Plugins
                         LoadPluginFormType(it);
                         loadedList.AddLast(it);
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -398,7 +407,6 @@ namespace Sync.Plugins
 
         private bool LateLoad(Type a)
         {
-
             SyncRequirePlugin requireAttr = a.GetCustomAttribute<SyncRequirePlugin>();
             SyncSoftRequirePlugin softRequirePlugin = a.GetCustomAttribute<SyncSoftRequirePlugin>();
             IEnumerable<SyncPluginDependency> deps = a.GetCustomAttributes<SyncPluginDependency>();
@@ -424,7 +432,6 @@ namespace Sync.Plugins
                     if (loadedList.Contains(item)) continue;
                     else
                     {
-
                         //Check cycle reference
                         if (CheckIsReferenceTo(item, a)) return false;
                         else return true;
@@ -479,7 +486,7 @@ namespace Sync.Plugins
         }
 
         /// <summary>
-        /// True if <paramref name="b"/> is satisfy for the require of <paramref name="a"/> 
+        /// True if <paramref name="b"/> is satisfy for the require of <paramref name="a"/>
         /// </summary>
         /// <param name="a">A version require</param>
         /// <param name="b">Target version</param>
@@ -543,12 +550,16 @@ namespace Sync.Plugins
 
     public class SyncMissingPluginException : Exception
     {
-        public SyncMissingPluginException(string msg) : base(msg) { }
+        public SyncMissingPluginException(string msg) : base(msg)
+        {
+        }
     }
 
     public class SyncPluginOutdateException : Exception
     {
-        public SyncPluginOutdateException(string msg) : base(msg) { }
+        public SyncPluginOutdateException(string msg) : base(msg)
+        {
+        }
     }
 
     /// <summary>
@@ -570,6 +581,7 @@ namespace Sync.Plugins
     public class SyncSoftRequirePlugin : Attribute
     {
         public IReadOnlyList<string> RequirePluguins;
+
         public SyncSoftRequirePlugin(params string[] types)
         {
             RequirePluguins = new List<string>(types);
@@ -579,11 +591,13 @@ namespace Sync.Plugins
     public class SyncPluginID : Attribute
     {
         public string GUID { get; }
+
         /// <summary>
         /// Major.Minjor.Reversion
         /// <para>e.g: 1.4.5</para>
         /// </summary>
         public string Version { get; }
+
         public SyncPluginID(string GUID, string Version)
         {
             this.Version = Version;
@@ -596,6 +610,7 @@ namespace Sync.Plugins
         public string GUID { get; }
         public string Version { get; set; }
         public bool Require { get; set; }
+
         public SyncPluginDependency(string guid) => GUID = guid;
     }
 }
