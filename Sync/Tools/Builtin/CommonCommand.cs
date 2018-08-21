@@ -37,7 +37,7 @@ namespace Sync.Tools.Builtin
 
             dispatch.bind("lang", language, LANG_COMMANDS_LANG);
             dispatch.bind("msgmgr", msgmgr, LANG_COMMANDS_MSGMGR);
-            dispatch.bind("sources", listsource, LANG_COMMANDS_SOURCES);
+            dispatch.bind("source", listsource, LANG_COMMANDS_SOURCES);
             dispatch.bind("filters", filters, LANG_COMMANDS_FILTERS);
         }
 
@@ -51,6 +51,9 @@ namespace Sync.Tools.Builtin
                 IO.CurrentIO.WriteColor(LANG_COMMANDS_SOURCES_AUTHOR, ConsoleColor.DarkCyan, false, false);
                 IO.CurrentIO.WriteColor(src.Author, ConsoleColor.White, true, false);
             }
+
+            IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper?.Client?.ClientName ?? "还没指定接收源"), ConsoleColor.Green);
+
             return true;
         }
 
@@ -67,7 +70,7 @@ namespace Sync.Tools.Builtin
                     IO.CurrentIO.WriteColor(item.Author, ConsoleColor.White, true, false);
                 }
 
-                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.ClientWrapper.Client?.ClientName ?? "还没指定发送源"), ConsoleColor.Green);
+                IO.CurrentIO.WriteColor(string.Format(LANG_COMMANDS_CURRENT, SyncHost.Instance.SourceWrapper?.Source?.Name ?? "还没指定发送源"), ConsoleColor.Green);
             }
             else
             {
@@ -124,26 +127,34 @@ namespace Sync.Tools.Builtin
 
         private bool clientmsg(Arguments arg)
         {
-            if (arg.Count == 0 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            if (arg.Count == 0 || (SyncHost.Instance.ClientWrapper.Client.CurrentStatus != SourceStatus.CONNECTED_WORKING))
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
                 return true;
             }
 
-            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage("Console", string.Join(" ", arg)));
+            SyncHost.Instance.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage()
+            {
+                User = "Console",
+                Message = string.Join(" ", arg)
+            });
             return true;
         }
 
         private bool chatuser(Arguments arg)
         {
-            if (arg.Count < 1 || (SyncHost.Instance.SourceWrapper.SendableSource != null && SyncHost.Instance.SourceWrapper.SendableSource.SendStatus == false))
+            if (arg.Count < 1 || (SyncHost.Instance.ClientWrapper.Client.CurrentStatus != SourceStatus.CONNECTED_WORKING))
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_CHAT_IRC_NOTCONNECT);
             }
-            string message = "";
-            for (int i = 1; i < arg.Count; i++)
-                message += arg[i] + " ";
-            SyncHost.Instance.Messages.RaiseMessage<ISourceClient>(new IRCMessage(arg[0].Trim(), message));
+
+            var message = string.Join(" ",arg.Skip(1));
+
+            SyncHost.Instance.Messages.RaiseMessage<ISourceDanmaku>(new DanmakuMessage()
+            {
+                User = arg[0].Trim(),
+                Message = message
+            });
             return true;
         }
 
@@ -165,7 +176,7 @@ namespace Sync.Tools.Builtin
             {
                 IO.CurrentIO.Write(LANG_COMMANDS_DANMAKU_NOT_SUPPORT);
             }
-            return true;
+            return false;
         }
 
         private bool start(Arguments arg)
@@ -302,7 +313,7 @@ namespace Sync.Tools.Builtin
             if (arg.Count > 0 && arg[0] == "--all")
             {
                 foreach (var item in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
-                {
+                {   
                     IO.CurrentIO.WriteColor(string.Format("CultureName: {0:S}\t{1:S}", item.Name, item.NativeName), ConsoleColor.Yellow);
                 }
             }
