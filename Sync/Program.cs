@@ -1,11 +1,7 @@
-﻿using Sync.Tools;
+﻿using SharpRaven;
+using Sync.Tools;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
 using System.Threading;
-using static Sync.Tools.IO;
 
 namespace Sync
 {
@@ -13,7 +9,16 @@ namespace Sync
     {
         static void Main(string[] args)
         {
-            (new StartupHelper(args)).Start();
+            try
+            {
+                (new StartupHelper(args)).Start();
+            }
+            catch (Exception e)
+            {
+                SentryHelper.Instance.RepoterError(e);
+                Thread.Sleep(2000);
+                Environment.Exit(1);
+            }
         }
     }
 }
