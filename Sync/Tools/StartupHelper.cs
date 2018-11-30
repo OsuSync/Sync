@@ -51,7 +51,7 @@ namespace Sync.Tools
                             {
                                 CurrentIO.WriteColor(DefaultI18n.LANG_Instance_Exist, ConsoleColor.Red);
                                 int limit = 50, current = 0;
-                                while (oldSync.WaitForExit(100))
+                                while (!oldSync.WaitForExit(100))
                                 {
                                     current++;
                                     if (current > limit) break;
@@ -71,14 +71,6 @@ namespace Sync.Tools
                         writer.Write(Process.GetCurrentProcess().Id);
                     }
                 }
-            }
-        }
-        private void PerLuanchChecker(bool forceStart)
-        {
-            //Check sync.exe is run
-            using (var syncMappedFile = MemoryMappedFile.CreateOrOpen(SYNC_GUID, 4))
-            {
-                SyncInstanceLocker(syncMappedFile, forceStart);
             }
         }
 
@@ -122,15 +114,19 @@ namespace Sync.Tools
 
         internal void Start()
         {
-            PerLuanchChecker(ForceStart);
-
-            InitSync();
-            CurrentIO.WriteWelcome();
-
-            while (true)
+            //Check sync.exe is run
+            using (var syncMappedFile = MemoryMappedFile.CreateOrOpen(SYNC_GUID, 4))
             {
-                var cmd = CurrentIO.ReadCommand();
-                SyncHost.Instance.Commands.invokeCmdString(cmd);
+                SyncInstanceLocker(syncMappedFile, ForceStart);
+
+                InitSync();
+                CurrentIO.WriteWelcome();
+
+                while (true)
+                {
+                    var cmd = CurrentIO.ReadCommand();
+                    SyncHost.Instance.Commands.invokeCmdString(cmd);
+                }
             }
         }
     }
