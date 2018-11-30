@@ -9,16 +9,15 @@ namespace Sync
     {
         static void Main(string[] args)
         {
-            try
-            {
-                (new StartupHelper(args)).Start();
-            }
-            catch (Exception e)
-            {
-                SentryHelper.Instance.RepoterError(e);
-                Thread.Sleep(2000);
-                Environment.Exit(1);
-            }
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            (new StartupHelper(args)).Start();
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            SentryHelper.Instance.RepoterError(e.ExceptionObject as Exception);
+            Thread.Sleep(2000);
+            Environment.Exit(1);
         }
     }
 }

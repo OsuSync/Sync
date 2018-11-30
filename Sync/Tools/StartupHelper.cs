@@ -109,7 +109,7 @@ namespace Sync.Tools
             //Sync program update check
             if (Updater.IsUpdated)
                 CurrentIO.WriteColor("Sync is already up to date!", ConsoleColor.Green);
-            
+
         }
 
         public static bool ForceStart { get; internal set; }

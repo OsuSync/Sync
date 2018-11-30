@@ -35,9 +35,9 @@ namespace Sync.Tools
         private RavenClient ravenClient = new RavenClient("https://955afb316e2c4a2eaa4070c18071b0c0@sentry.io/1276032");
         private Dictionary<Plugins.Plugin, object> registedErrorReporter = new Dictionary<Plugins.Plugin, object>();
 #if SyncRelease
-        private const bool isNotInDebugger = true;
+        private const bool notInDebugger = true;
 #else
-        private const bool isNotInDebugger = false;
+        private const bool notInDebugger = false;
 #endif
         private SentryHelper()
         {
@@ -65,9 +65,9 @@ namespace Sync.Tools
             ravenClient.Logger = logger;
             ravenClient.Release = version;
             var error = new SentryEvent(e);
-            if (isNotInDebugger)
+            if (notInDebugger)
             {
-                Console.WriteLine("Opps! You seem occur a error! We was captured this error and repote to developers");
+                Console.WriteLine("Opps! You seem occur a error! We was captured this error and repoting to developers");
                 ravenClient.Capture(error);
             }
             else
