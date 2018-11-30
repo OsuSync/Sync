@@ -60,14 +60,15 @@ namespace Sync.Tools
             }
         }
 
-        internal void Error(string logger, string version, Exception e)
+        internal void Error(string logger, string version, Exception e, bool silent = false)
         {
             ravenClient.Logger = logger;
             ravenClient.Release = version;
             var error = new SentryEvent(e);
             if (notInDebugger)
             {
-                Console.WriteLine("Opps! You seem occur a error! We was captured this error and repoting to developers");
+                if (!silent)
+                    Console.WriteLine("Opps! You seem occur a error! We was captured this error and repoting to developers");
                 ravenClient.Capture(error);
             }
             else
@@ -81,7 +82,7 @@ namespace Sync.Tools
             }
         }
 
-        internal void RepoterError(Exception e) => Error("Sync", Assembly.GetEntryAssembly().GetName().Version.ToString(), e);
+        internal void RepoterError(Exception e, bool silent = false) => Error("Sync", Assembly.GetEntryAssembly().GetName().Version.ToString(), e, silent);
 
         internal static readonly SentryHelper Instance = new SentryHelper();
     }

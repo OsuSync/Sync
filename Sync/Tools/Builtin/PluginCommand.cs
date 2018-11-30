@@ -221,15 +221,23 @@ namespace Sync.Tools.Builtin
 
         internal bool Latest()
         {
-            IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
-            var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
-            if (!File.Exists(Updater.CurrentFullSourceEXEPath) || MD5HashFile(Updater.CurrentFullSourceEXEPath) != result.versionHash)
+            try
             {
-                IO.CurrentIO.Write($"Download: {result.downloadURL}...");
-                DownloadSingleFile(result.downloadURL, Updater.CurrentFullUpdateEXEPath, "Sync");
-                RequireRestart("Update downloaded. Restart to apply effect");
+                IO.CurrentIO.WriteColor("Fetch Sync update..", ConsoleColor.Cyan);
+                var result = Serializer<SyncUpdate>($"http://sync.mcbaka.com/api/Update/latest");
+                if (!File.Exists(Updater.CurrentFullSourceEXEPath) || MD5HashFile(Updater.CurrentFullSourceEXEPath) != result.versionHash)
+                {
+                    IO.CurrentIO.Write($"Download: {result.downloadURL}...");
+                    DownloadSingleFile(result.downloadURL, Updater.CurrentFullUpdateEXEPath, "Sync");
+                    RequireRestart("Update downloaded. Restart to apply effect");
+                }
+                return true;
             }
-            return true;
+            catch (Exception e)
+            {
+                SentryHelper.Instance.RepoterError(e, true);
+                return false;
+            }
         }
 
         private bool Help()
