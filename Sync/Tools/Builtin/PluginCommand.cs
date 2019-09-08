@@ -47,6 +47,9 @@ namespace Sync.Tools.Builtin
 
             [DataMember(Order = 7)]
             public string fileName { get; set; }
+
+            [DataMember(Order = 7)]
+            public string version { get; set; }
         }
 
         [DataContract]
@@ -259,14 +262,21 @@ namespace Sync.Tools.Builtin
             if (result.ToLower().StartsWith("y")) SyncHost.Instance.RestartSync();
         }
 
-        internal bool CheckUpdate(string guid)
+        internal bool CheckUpdate(string guid, string version = null)
         {
             try
             {
                 IO.CurrentIO.Write($"Fetch update: {guid}");
                 var result = Serializer<UpdateData>($"http://sync.mcbaka.com/api/Update/plugin/{guid}");
                 var target = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins", result.fileName);
-                if (!File.Exists(target) || MD5HashFile(target) != result.latestHash)
+                if (version != null && result.version != null)
+                {
+                    if (!PluginManager.CompareVersion(version, result.version))
+                    {
+                        throw new Exception($"No version match require: {version}, latest is {result.version}");
+                    }
+                }
+                if (!File.Exists(target) || (MD5HashFile(target) != result.latestHash))
                 {
                     IO.CurrentIO.Write($"Download: {result.downloadUrl}...");
                     return DownloadSingleFile(result.downloadUrl, target, result.fileName);

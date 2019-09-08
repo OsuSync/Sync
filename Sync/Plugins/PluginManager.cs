@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Linq;
 using static Sync.Tools.DefaultI18n;
 using Sync.Command;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition;
+using Sync.Tools.Builtin;
 using Sync.Client;
 using Sync.Source;
 
@@ -145,6 +148,8 @@ namespace Sync.Plugins
         private List<Assembly> asmList;
         private LinkedList<Type> loadedList;
         private List<Type> allList;
+        [ImportMany(typeof(Plugin))]
+        private IEnumerable<Plugin> _mefPlugins { get; set; }
         internal PluginManager()
         {
 
@@ -231,6 +236,7 @@ namespace Sync.Plugins
         /// <returns>Plugins count</returns>
         internal int LoadPlugins()
         {
+
             //Combine search path
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
 
@@ -295,7 +301,6 @@ namespace Sync.Plugins
             allList = new List<Type>();
 
             //Load all plugins first
-
             foreach (Assembly asm in asmList)
             {
                 try
@@ -308,6 +313,7 @@ namespace Sync.Plugins
                             !typeof(Plugin).IsAssignableFrom(it) ||
                             typeof(Plugin) == it)
                             continue;
+                        if (it.GetCustomAttribute<ExportAttribute>() != null) continue;
                         allList.Add(it);
                     }
                 }
@@ -319,6 +325,19 @@ namespace Sync.Plugins
                 }
             }
 
+            // Load Mef plugin
+            var catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new AssemblyCatalog(typeof(InternalPlugin).Assembly));
+            catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
+            var container = new CompositionContainer(catalog);
+            //将部件（part）和宿主程序添加到组合容器
+            container.ComposeParts(this);
+
+            foreach (var plugin in _mefPlugins)
+            {
+                InitialPlugin(plugin);
+                allList.Add(plugin.GetType());
+            }
 
             lazylist = allList.ToList();
             //looping add for resolve dependency
@@ -329,6 +348,18 @@ namespace Sync.Plugins
             } while (lazylist.Count != 0);
 
             return pluginList.Count;
+        }
+
+        private bool checkPluginCanLoad(Type it)
+        {
+            var deps = it.GetCustomAttributes<SyncPluginDependency>();
+
+            foreach (var item in deps)
+            {
+                var target = allList.Select(p => p.GetCustomAttribute<SyncPluginID>())?.FirstOrDefault(p => p?.GUID == item.GUID);
+                if (item.Require && target == null && !CompareVersion(item.Version, target.Version)) return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -342,6 +373,7 @@ namespace Sync.Plugins
             List<Type> nextLoad = new List<Type>();
             foreach (Type it in asmList)
             {
+                if (loadedList.Contains(it)) continue;
                 try
                 {
 
@@ -354,8 +386,7 @@ namespace Sync.Plugins
                         if (item.Version == null) continue;
                         if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
                     }
-
-
+                    
                     if (LateLoad(it))
                     {
 #if (DEBUG)
@@ -373,7 +404,6 @@ namespace Sync.Plugins
                     else
                     {
                         LoadPluginFormType(it);
-                        loadedList.AddLast(it);
                     }
 
                 }
@@ -525,10 +555,17 @@ namespace Sync.Plugins
             Plugin plugin = (Plugin)pluginTest;
             IO.CurrentIO.WriteColor(String.Format(LANG_LoadingPlugin, plugin.Name), ConsoleColor.White);
 
+            InitialPlugin(plugin);
+
+            return plugin;
+        }
+
+        private void InitialPlugin(Plugin plugin)
+        {
             pluginList.Add(plugin);
             plugin.OnEnable();
             PluginEvents.Instance.RaiseEventAsync(new PluginEvents.InitPluginEvent(plugin));
-            return plugin;
+            loadedList.AddLast(plugin.GetType());
         }
     }
 
@@ -589,4 +626,5 @@ namespace Sync.Plugins
         public bool Require { get; set; }
         public SyncPluginDependency(string guid) => GUID = guid;
     }
+    
 }

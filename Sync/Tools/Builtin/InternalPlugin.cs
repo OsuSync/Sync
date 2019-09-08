@@ -1,9 +1,12 @@
 ﻿using Sync.Command;
 using Sync.Plugins;
 using System;
+using System.ComponentModel;
+using System.ComponentModel.Composition;
 
 namespace Sync.Tools.Builtin
 {
+    [Export(typeof(Plugin))]
     public class InternalPlugin : Plugin
     {
         //private PluginConfigurationManager config;
