@@ -380,6 +380,7 @@ namespace Sync.Plugins
                 catch (Exception e)
                 {
                     IO.CurrentIO.WriteColor(String.Format(LANG_NotPluginErr, it.Name, e.Message), ConsoleColor.Red);
+                    IO.CurrentIO.WriteColor(e.StackTrace, ConsoleColor.Red);
                     continue;
                 }
             }
@@ -401,7 +402,7 @@ namespace Sync.Plugins
                     if (loadedList.Any(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID)) continue;
                     else
                     {
-                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID), pid.GUID)) return false;
+                        if (CheckIsReferenceTo(allList.FirstOrDefault(p => p.GetCustomAttribute<SyncPluginID>()?.GUID == item.GUID), pid?.GUID)) return false;
                         else return true;
                     }
                 }
