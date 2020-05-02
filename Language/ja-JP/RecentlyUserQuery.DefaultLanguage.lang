@@ -1,0 +1,11 @@
+[ja-JP]
+LANG_HELP=\nosu!IRCのコマンドヘルプです(osu!IRCではコマンドの先頭に ? を追加してください)\nrecently --status | 現在のステータスログを取得します(osu!IRCでは使用不可)\nrecently --u <ユーザー名> | <ユーザー名>の履歴を取得します(osu!IRCでの使用は非推奨)\nrecently --i <ユーザーID> | <ユーザーID>の履歴を取得します(osu!IRCでの使用は非推奨)\nrecently | 最近のユーザー名とIDを取得し、IDを使用して ?ban --i などのコマンドを実行できます(osu!IRCに対応)\nrecently --disable | メッセージログの出力を無効にし、すべてのログを削除します(osu!IRCに対応)\nrecently --start | 再度ログの出力を開始します(osu!IRCに対応)\nrecently --realloc <カウント> | ログの容量を再割り当てしてログを保存する容量を多くします(osu!IRCに対応)\nrecently --recently | 最近のユーザーIDを取得します\n
+LANG_MSG_STATUS=メッセージ記録のステータス: {0} | 記録回数/容量 : {1}/{2}
+LANG_RUNNING=稼働中
+LANG_STOP=停止中
+LANG_MSG_DISABLE=メッセージログの出力が無効になりすべてのログが消去されました
+LANG_MSG_START=メッセージログの出力が開始されました
+LANG_MSG_REALLOC_ERR=メッセージ記録: 命令に間違いがあります
+LANG_MSG_REALLOC={0} のメッセージ履歴をログに出力できるようになりました
+LANG_MSG_NOTIMPLENT=実装されていません
+LANG_MSG_UNKNOWNCOMMAND=コマンドが見つかりません

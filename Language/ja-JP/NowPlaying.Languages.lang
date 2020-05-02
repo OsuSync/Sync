@@ -1,0 +1,15 @@
+[ja-JP]
+OSU_PATH_NOT_SET=osu!のパスが設定されていません、実行中のosu!のインスタンスを検索します
+FIND_OSU_PATH=osu!のパスが見つけることができません！ {0:S}
+OSU_PATH_FAIL=osu!のパスが見つけることができません、詳細情報の表示は無効になっています。
+ERROR_WHILE_FIND_PATH=osu!のパスを検索中にエラーが発生しました {0:S}
+UNKNOWN_COMMAND=コマンドが見つかりません {0:S}
+STATUS_PLAYING=プレイ中
+STATUS_EDITING=編集中
+STATUS_OTHER=再生中
+STATUS_TIP_INFO=私は {0:S}{1:S}
+STATUS_TIP_INFO_WRAP=私は {0:S}{1:S}
+ERROR_WHILE_SEARCH_MAP={0:S}-{1:S} [{2:S}] {3:S} の検索中にエラーが発生しました
+CONSOLE_OUTPUT_RESULT=ファイル:{0:S} ({1}ms) HP/CS/AR/OD: {2} / {3} / {4} / {5}
+OUTPUT_RESULT=現在 {0}:{1}
+CURRENT_IDLE=現在待機中

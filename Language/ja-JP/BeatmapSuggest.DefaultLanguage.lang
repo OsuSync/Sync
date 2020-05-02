@@ -1,0 +1,14 @@
+[ja-JP]
+LANG_GET_BEATMAP_FAILED={0} ビートマップの情報の取得に失敗しました。エラーメッセージ: {1}
+LANG_SUGGEST_MEG={0} ビートマップをプレイしたい場合 [{1} {2}] || [{3} dl] || [{4} mirror] か ?dl か ?dl all と入力してください
+LANG_NOT_FOUND_ERR=beatmapSetIDの情報と一致しないかパラメーターIDが無効なbeatmapSetIDです
+LANG_UNKNOWN_TITLE=<不明のタイトル>
+LANG_GET_BEATMAP_TIME_OUT=ビートマップ情報を取得します {0}秒後タイムアウト タスクステータス: {1}
+LANG_INVAILD_ID={0} は無効なIDです
+LANG_UNKOWN_PARAM={0} パラメーターは見つかりませんでした
+LANG_ERROR_INFO_IMCOMPLETE=不完全な情報
+LANG_NO_API_KEY_NOFITY=config.iniにosu!APIキーがありません。使用するためにosu!APIキーを設定してください (osu!APIキーはここから取得できます: https://osu.ppy.sh/p/api )
+LANG_START_DOWNLOAD=ビートマップのダウンロードを開始します: {0}
+LANG_FINISH_DOWNLOAD={0} ビートマップをダウンロードしました
+LANG_FAILED_DOWNLOAD={0} のダウンロードに失敗しました。エラーメッセージ: {1}
+LANG_DOWNLOAD_TASK_COUNT={0} 個のビートマップのダウンロードを開始します
