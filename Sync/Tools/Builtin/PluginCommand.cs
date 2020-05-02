@@ -299,6 +299,7 @@ namespace Sync.Tools.Builtin
                 IO.CurrentIO.WriteColor("Fetch Sync update info failed,please check your network if it can able to connect http://sync.mcbaka.com/", ConsoleColor.Red);
                 return false;
             }
+            return true;
         }
 
         private bool Help()
