@@ -255,26 +255,42 @@ namespace Sync.Plugins
             //Pre-add all assemblies in current AppDomain
             asmList.AddRange(AppDomain.CurrentDomain.GetAssemblies());
 
-            //Plugin folder not exist, return
-            if (!Directory.Exists(path)) return 0;
+            //create Plugins folder if not exist
+            if (!Directory.Exists(path)) 
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                    IO.CurrentIO.WriteColor($"Created default Plugins folder : {path}", ConsoleColor.Green);
+                }
+                catch (Exception e)
+                {
+                    IO.CurrentIO.WriteColor($"Create default Plugins folder ({path}) failed : {e.Message} ", ConsoleColor.Yellow);
+                }
+            }
+
             //Change directiory to Plugins
             Directory.SetCurrentDirectory(path);
 
+            //create cache folder
             var rootCache = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
+            string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
+
             try
             {
                 Directory.Delete(rootCache, true);
-            }
-            catch
-            {
-            }
 
-            string cache = Path.Combine(rootCache, $"cache_{(new Random()).Next().ToString("x8")}");
-            if (Directory.Exists(cache))
-            {
-                Directory.Delete(cache, true);
+                if (Directory.Exists(cache))
+                {
+                    Directory.Delete(cache, true);
+                }
+                Directory.CreateDirectory(cache);
             }
-            Directory.CreateDirectory(cache);
+            catch (Exception e)
+            {
+                IO.CurrentIO.WriteColor($"Create temporary cache folder ({cache}) failed : {e.Message} ", ConsoleColor.Yellow);
+                throw e;
+            }
 
             new DirectoryInfo(rootCache)
             {

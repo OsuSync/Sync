@@ -18,6 +18,11 @@ namespace Sync.Tools.Builtin
 {
     internal sealed class PluginCommand
     {
+        #region SingleInstance
+        private static PluginCommand instance = null;
+        internal static PluginCommand Instance => instance ?? (instance = new PluginCommand());
+        #endregion
+
         #region Updater Decleare
 
         [DataContract]
