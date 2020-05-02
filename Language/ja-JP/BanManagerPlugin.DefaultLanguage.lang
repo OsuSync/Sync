@@ -1,0 +1,8 @@
+[ja-JP]
+LANG_HELP_BAN=ban user/id/regex ,メッセージはIRCに送信されます
+LANG_HELP_UNBAN=unban user/id/regex
+LANG_HELP_WHITELIST=add user/id/regex でIRCにメッセージを送信できるホワイトリストに追加します
+LANG_HELP_REMOVE_WHITELIST=remove user/id/regex でホワイトリストから削除
+LANG_HELP_ACCESS=IRCにメッセージを送信するためのアクセスレベルを設定する
+LANG_HELP_LIST=ホワイトリスト・BANリスト
+LANG_ERR_COMMAND=コマンドエラー

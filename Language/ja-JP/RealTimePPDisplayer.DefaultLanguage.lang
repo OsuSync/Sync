@@ -1,0 +1,4 @@
+[ja-JP]
+UI_MENU_TOPMOST=最上位
+TEXT_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]PP ファイル: {0}
+MMF_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]メモリーマッピングファイル: {0}
