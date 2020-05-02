@@ -299,7 +299,6 @@ namespace Sync.Tools.Builtin
                 IO.CurrentIO.WriteColor("Fetch Sync update info failed,please check your network if it can able to connect http://sync.mcbaka.com/", ConsoleColor.Red);
                 return false;
             }
-            return true;
         }
 
         private bool Help()
@@ -415,7 +414,11 @@ namespace Sync.Tools.Builtin
                             IO.CurrentIO.WriteHelp(entry.FullName, entry.Length.ToString());
                             try
                             {
-                                entry.ExtractToFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entry.FullName), true);
+                                string fileFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, entry.FullName);
+                                string directoryName = Path.GetDirectoryName(fileFullName);
+                                if (!Directory.Exists(directoryName))
+                                    Directory.CreateDirectory(directoryName);
+                                entry.ExtractToFile(fileFullName, true);
                             }
                             catch { }
                         }

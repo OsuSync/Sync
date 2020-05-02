@@ -16,7 +16,7 @@ namespace Sync.Tools
         [SourceList(NoCheck = true)]
         public ConfigurationElement Source { get; set; } = "";
 
-        public ConfigurationElement Language { get; set; } = "zh-CN";
+        public ConfigurationElement Language { get; set; } = "";
 
         [Path(IsDirectory = true)]
         public ConfigurationElement LogDirectory { get; set; } = @"Logs\";

@@ -74,15 +74,17 @@ namespace Sync.Tools
             }
         }
 
+        static void PreInitSync()
+        {
+            //Initialize I18n
+            I18n.Instance.ApplyLanguage(new DefaultI18n());
+        }
+
         static void InitSync()
         {
-
             //Apply update
             if (Updater.ApplyUpdate(NeedUpdateSync))
                 Environment.Exit(0);
-
-            //Initialize I18n
-            I18n.Instance.ApplyLanguage(new DefaultI18n());
 
             //Add Console close event handler
             SetConsoleCtrlHandler(cancelHandler, true);
@@ -114,9 +116,10 @@ namespace Sync.Tools
 
         internal void Start()
         {
+            //Check sync.exe is run
             using (var syncMappedFile = MemoryMappedFile.CreateOrOpen(SYNC_GUID, 4))
             {
-                //Check sync.exe is run
+                PreInitSync();
                 SyncInstanceLocker(syncMappedFile, ForceStart);
 
                 InitSync();

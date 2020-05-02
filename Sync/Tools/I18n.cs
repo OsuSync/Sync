@@ -195,6 +195,7 @@ namespace Sync.Tools
                     if (DefaultConfiguration.Instance.Language == DefaultConfiguration.DEFAULT_LANGUAGE || DefaultConfiguration.Instance.Language.ToString().Length == 0)
                     {
                         instance = new I18n(CurrentSystemLang);
+                        DefaultConfiguration.Instance.Language = CurrentSystemLang;
                     }
                     else
                     {

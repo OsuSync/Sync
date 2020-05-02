@@ -1,11 +1,7 @@
-﻿using Sync.Tools;
+﻿using SharpRaven;
+using Sync.Tools;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
 using System.Threading;
-using static Sync.Tools.IO;
 
 namespace Sync
 {
@@ -13,7 +9,15 @@ namespace Sync
     {
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             (new StartupHelper(args)).Start();
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            SentryHelper.Instance.RepoterError(e.ExceptionObject as Exception);
+            Thread.Sleep(2000);
+            Environment.Exit(1);
         }
     }
 }
