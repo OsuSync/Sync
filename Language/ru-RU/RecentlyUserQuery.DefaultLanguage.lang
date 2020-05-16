@@ -1,0 +1,11 @@
+[ru-RU]
+LANG_HELP=\nЭто помощь для основных команд osu!irc (В osu!irc добавьте, пожалуйста, "?" в начале команды)\nrecently --status | Получить статус текущего лога (недоступно в osu!irc)\nrecently --u <userName> | Получить историю <userName> (Не рекомендуется для использования в osu!irc)\nrecently --i <userId> | Получить историю <userId> (Не рекомендуется для использования в osu!irc)\nrecently | Получить последний ник и ID, ID может быть использован для выполнения таких действий, как "?ban --i" (поддерживается в osu!irc)\nrecently --disable | Ведение лога сообщений отключено, все логи очищены (поддерживается в osu!irc)\nrecently --start | Начать запись снова (поддерживается в osu!irc)\nrecently --realloc <count> | Перераспределить емкость логов, чтобы хранить больше логов (поддерживается в osu!irc)\nrecently --recently | Получить id последнего пользователя\n
+LANG_MSG_STATUS=Статус MessageRecord: {0} | recordCount/Вместимость : {1}/{2}
+LANG_RUNNING=запущен
+LANG_STOP=остановлен
+LANG_MSG_DISABLE=Отключить ведения лога и очистить все логи
+LANG_MSG_START=Ведение лога сообщений запущено
+LANG_MSG_REALLOC_ERR=MessageRecord: Неверные инструкции
+LANG_MSG_REALLOC=Теперь вы можете войти в историю сообщений для {0}
+LANG_MSG_NOTIMPLENT=Не реализовано
+LANG_MSG_UNKNOWNCOMMAND=Неизвестная команда.

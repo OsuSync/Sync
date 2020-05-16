@@ -1,0 +1,8 @@
+[ru-RU]
+LANG_HELP_BAN=забанить пользователя/id/regex ,уведомление будет отправлено в irc
+LANG_HELP_UNBAN=разбанить пользователя/id/regex
+LANG_HELP_WHITELIST=добавить пользователя/id/regex в белый список, чтобы он мог отправлять сообщения в irc
+LANG_HELP_REMOVE_WHITELIST=удалить пользователя/id/regex из белого списка
+LANG_HELP_ACCESS=установить уровень доступа для отправки сообщений в irc
+LANG_HELP_LIST=показать белый список или список банов
+LANG_ERR_COMMAND=ошибка команды
