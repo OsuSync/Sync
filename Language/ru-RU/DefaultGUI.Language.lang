@@ -1,0 +1,16 @@
+[ru-RU]
+UI_DISPLAY=Показать UI
+UI_TIPS_BOTIRC=BotIRC
+UI_TIPS_BOTIRC_PASS=Пароль к IRC
+UI_TIPS_STATUS=Статус
+UI_TIPS_DANMAKU=LiveID
+UI_TIPS_OSU_IRC=osu!Chat
+UI_TIPS_TARGET_IRC=ToIRC
+UI_BOTTON_START=Старт
+UI_BOTTON_STOP=Стоп
+UI_BOTTON_LOGIN_DANMAKU=Исходный логин
+UI_BOTTON_SWITCH_CON=переключиться на CMD UI
+UI_BOTTON_EXIT=Выйти
+UI_TIPS_LIVE_ID=LiveID
+UI_TIPS_LIVE_SOURCE=Источник
+UI_INFO_RESTART_REQ=Изменение источника будет применено после перезапуска Sync. Перезагрузить сейчас?

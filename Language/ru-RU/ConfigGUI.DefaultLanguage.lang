@@ -1,0 +1,15 @@
+[ru-RU]
+BUTTON_OPEN=Открыть
+BUTTON_BROWSE=Открыть
+BUTTON_FONT=Шрифт
+BUTTON_COLOR=Цвет
+WINDOW_TITLE=Настройки
+WINDOW_TITLE_REQUIRE_RESTART=Для работы некоторых настроек нужен перезапуск
+BUTTON_SAVE=Сохранить
+LABEL_SAVED=Сохранено!
+LABEL_SAVED_SAVING=Сохранение...
+COMMAND_LINE_HINT=[ConfigGUI]Введите "config" чтобы открыть панель настроек.
+TRAY_HIDE_SHOW=Скрыть/Показать
+TRAY_CONFIG=Настройки
+TRAY_OPEN_SYNC_FOLDER=Папка Sync
+TRAY_EXIT=Выйти

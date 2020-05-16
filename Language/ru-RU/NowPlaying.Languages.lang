@@ -1,0 +1,15 @@
+[ru-RU]
+OSU_PATH_NOT_SET=Путь к osu! пустой, программа будет искать запущенный процесс osu!.
+FIND_OSU_PATH=Не удалось найти путь к osu! {0:S}
+OSU_PATH_FAIL=Не удалось найти путь к osu!, детальная информация отключена.
+ERROR_WHILE_FIND_PATH=Ошибка при поиске пути к osu! {0:S}
+UNKNOWN_COMMAND=Неизвестная команда {0:S}
+STATUS_PLAYING=В игре
+STATUS_EDITING=Редактирование
+STATUS_OTHER=Прослушивание
+STATUS_TIP_INFO=Я {0:S} {1:S}
+STATUS_TIP_INFO_WRAP=Я {0:S} {1:S}
+ERROR_WHILE_SEARCH_MAP=Ошибка при поиске {0:S}-{1:S} [{2:S}] {3:S}
+CONSOLE_OUTPUT_RESULT=Файл:{0:S} ({1}ms) HP/CS/AR/OD: {2}{3}{4}{5}
+OUTPUT_RESULT=Текущий {0}:{1}
+CURRENT_IDLE=Сейчас в режиме ожидания

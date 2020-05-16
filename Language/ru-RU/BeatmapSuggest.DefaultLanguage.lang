@@ -1,0 +1,14 @@
+[ru-RU]
+LANG_GET_BEATMAP_FAILED=Получение информации о битмапе {0} не удалось,сообщение: {1}
+LANG_SUGGEST_MEG={0} хочет, чтобы вы сыграли битмапу [{1} {2}] || [{3} dl] || [{4} mirror] или ввели"?dl"/"?dl all"
+LANG_NOT_FOUND_ERR=Не удается сопоставить информацию или параметр ID - неверный beatmapSetID
+LANG_UNKNOWN_TITLE=<unk title>
+LANG_GET_BEATMAP_TIME_OUT=Время получения информации о карте {0} вышло,TaskStatus{1}
+LANG_INVAILD_ID=неверное значение id {0}
+LANG_UNKOWN_PARAM=неизвестный параметр {0}
+LANG_ERROR_INFO_IMCOMPLETE=недостаточно информации
+LANG_NO_API_KEY_NOFITY=Нет ApiKey в файле config.ini, пожалуйста, введите ваш osu!api_key для использования. Адрес ApiKey:https://osu.ppy.sh/p/api
+LANG_START_DOWNLOAD=Начало загрузки битмапы: {0}
+LANG_FINISH_DOWNLOAD=Битмапа загружена {0}
+LANG_FAILED_DOWNLOAD=Загрузка {0} не удалась,сообщение: {1}
+LANG_DOWNLOAD_TASK_COUNT=Начало загрузки {0} карт.
