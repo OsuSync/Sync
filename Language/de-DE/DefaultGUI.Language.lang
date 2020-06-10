@@ -1,0 +1,16 @@
+[de-DE]
+UI_DISPLAY=Öffne die UI
+UI_TIPS_BOTIRC=BotIRC
+UI_TIPS_BOTIRC_PASS=IRC Passwort
+UI_TIPS_STATUS=Status
+UI_TIPS_DANMAKU=LiveID
+UI_TIPS_OSU_IRC=osu!Chat
+UI_TIPS_TARGET_IRC=ToIRC
+UI_BOTTON_START=Start
+UI_BOTTON_STOP=Stop
+UI_BOTTON_LOGIN_DANMAKU=Source Login
+UI_BOTTON_SWITCH_CON=Wechsel zur command-line-interface UI
+UI_BOTTON_EXIT=Beende
+UI_TIPS_LIVE_ID=LiveID
+UI_TIPS_LIVE_SOURCE=Quelle
+UI_INFO_RESTART_REQ=Um die Änderung des Livestreams zu übernehmen, muss Sync neugestartet werden. Starte jetzt neu? 
