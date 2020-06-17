@@ -1,0 +1,4 @@
+[de-DE]
+UI_MENU_TOPMOST=Oberste
+TEXT_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]PP Datei: {0}
+MMF_MODE_OUTPUT_PATH_FORMAT=[RealTimePPDisplayer]Speicherzuordnungsdatei: {0}

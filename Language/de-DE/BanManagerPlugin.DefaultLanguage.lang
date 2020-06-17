@@ -1,0 +1,8 @@
+[de-DE]
+LANG_HELP_BAN=Sperre Benutzer/ID/Regex ,Nachrichten werden über IRC versendet.
+LANG_HELP_UNBAN=Entsperre Benutzer/ID/Regex.
+LANG_HELP_WHITELIST=Füge Benutzer/ID/Regex zur Whitelist hinzu, um das versenden von Nachrichten über IRC zu ermöglichen.
+LANG_HELP_REMOVE_WHITELIST=Entferne Benutzer/ID/Regex aus der Whitelist.
+LANG_HELP_ACCESS=Setze Berechtigungen zum Versenden von Nachrichten über IRC.
+LANG_HELP_LIST=Liste die Whitelist oder die Sperrliste auf.
+LANG_ERR_COMMAND=Befehlsfehler.

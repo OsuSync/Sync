@@ -1,0 +1,15 @@
+[de-DE]
+OSU_PATH_NOT_SET=osu! Pfad ist leer. Die Anwendung sucht nach einer laufenden osu! Instanz.
+FIND_OSU_PATH=Kann den osu! Pfad nicht finden: {0:S}
+OSU_PATH_FAIL=Kann den osu! Pfad nicht finden. Weitere Informationen versteckt.
+ERROR_WHILE_FIND_PATH=Fehler bei der Suche nach dem osu! Pfad {0:S}
+UNKNOWN_COMMAND=Unbekannter Befehl {0:S}
+STATUS_PLAYING=Spiele
+STATUS_EDITING=Bearbeite
+STATUS_OTHER=Höre
+STATUS_TIP_INFO=Ich bin {0:S}{1:S}
+STATUS_TIP_INFO_WRAP=Ich bin {0:S}{1:S}
+ERROR_WHILE_SEARCH_MAP=Fehler bei der Suche nach {0:S}-{1:S} [{2:S}] {3:S}
+CONSOLE_OUTPUT_RESULT=Datei:{0:S} ({1}ms) HP/CS/AR/OD: {2}{3}{4}{5}
+OUTPUT_RESULT=Aktuell {0}:{1}
+CURRENT_IDLE=Aktuell im Lehrlauf

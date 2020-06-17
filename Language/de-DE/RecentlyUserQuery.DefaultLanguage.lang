@@ -1,0 +1,11 @@
+[de-DE]
+LANG_HELP=\nDies ist eine Hilfe für IRC Befehle. Hänge dazu ein "?" am Anfang der Nachrichten ein.\nrecently --status | Rufe den Status des aktuellen Protokolls ab (osu! IRC nicht verfügbar)\n recently --u <Benutzername> | Rufe <Benutzername> Protokoll ab (Nicht empfohlen für osu! IRC Verwendung)\n recently --i <BenutzerID> | Rufe <Benutzername> Protokoll ab  (Nicht empfohlen für osu! IRC Verwendung)\n recently | Rufe den aktuellen Benutzernamen und die ID ab. Die ID kann verwendet für Aktionen wie "?ban --i" (osu! IRC unterstützt) verwendet werden\nrecently --disable | Nachrichtenprotokollierung deaktiviert. Alle Protokolle werden gelöscht (osu! IRC unterstützt)\recently --start | Protokollierung erneut starten (osu! IRC unterstützt)\recently  --realloc <Kapazität> | Kapazität der Protokolle neu zuweisen, um mehr Protokolle zu speichern (osu! IRC unterstützt)\recently --recently | Aktuelle Benutzer-ID ermitteln.
+LANG_MSG_STATUS=MessageRecord Status: {0} | recordCount/Kapazität: {1}/{2}
+LANG_RUNNING=Läuft
+LANG_STOP=Angehalten
+LANG_MSG_DISABLE=Nachrichtenprotokollierung deaktiviert, alle Protokolle wurden gelöscht.
+LANG_MSG_START=Die Nachrichtenprotokollierung wurde gestartet.
+LANG_MSG_REALLOC_ERR=MessageRecord: Falsche Anweisungen.
+LANG_MSG_REALLOC=Sie können jetzt den Nachrichtenverlauf für {0} protokollieren.
+LANG_MSG_NOTIMPLENT=Nicht implementiert.
+LANG_MSG_UNKNOWNCOMMAND=Unbekannter Befehl.

@@ -1,0 +1,10 @@
+[de-DE]
+BUTTON_OPEN=Öffne
+BUTTON_BROWSE=Durchsuche
+BUTTON_FONT=Schriftart
+BUTTON_COLOR=Farbe
+WINDOW_TITLE=Konfiguration
+BUTTON_SAVE=Speichere
+LABEL_SAVED=Gespeichert!
+LABEL_SAVED_SAVING=Speichere...
+WINDOW_TITLE_REQUIRE_RESTART=Bitte starten sie neu um einige Einstellungen zu übernehmen.

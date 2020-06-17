@@ -1,0 +1,14 @@
+[de-DE]
+LANG_GET_BEATMAP_FAILED=Erhalten von Beatmap Metadaten {0} schlug fehl,Fehlermeldung: {1}.
+LANG_SUGGEST_MEG={0} fordert dich auf, folgende Beatmap zu spielen [{1} {2}] || [{3} herunterladen] || [{4} Verweis] oder werwende "?dl"/"?dl all".
+LANG_NOT_FOUND_ERR=Es kann kein passender Inhalt gefunden werden oder die BeatmapSet ID ist ungültig.
+LANG_UNKNOWN_TITLE=<Unbekannter Titel>
+LANG_GET_BEATMAP_TIME_OUT=Zeitüberschreitung beim erhalten des Beatmap Titel {0}, Aufgabenstatus{1}.
+LANG_INVAILD_ID=Ungültige ID {0}.
+LANG_UNKOWN_PARAM=Unbekannter Parameter {0}.
+LANG_ERROR_INFO_IMCOMPLETE=Unvollständige Informationen.
+LANG_NO_API_KEY_NOFITY=Der osu!api Schlüssel-eintrag fehlt in der Konfigurationsdatei config.ini. Bitte vervollständige diesen mit Hilfe von https://osu.ppy.sh/p/api
+LANG_START_DOWNLOAD=Der Download der Beatmap {0} hat begonnen.
+LANG_FINISH_DOWNLOAD=Der Download der Beatmap {0} wurde abgeschlossen.
+LANG_FAILED_DOWNLOAD=Der Downloaded der Beatmap {0} schlug fehl, Fehlermeldung: {1}.
+LANG_DOWNLOAD_TASK_COUNT=Der Download von {0} Beatmaps hat begonnen.
