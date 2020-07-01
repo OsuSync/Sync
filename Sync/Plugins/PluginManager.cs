@@ -279,7 +279,11 @@ namespace Sync.Plugins
             try
             {
                 Directory.Delete(rootCache, true);
+                Directory.CreateDirectory(rootCache);
+            } catch { }
 
+            try
+            {
                 if (Directory.Exists(cache))
                 {
                     Directory.Delete(cache, true);
@@ -294,7 +298,7 @@ namespace Sync.Plugins
 
             new DirectoryInfo(rootCache)
             {
-                Attributes = FileAttributes.Hidden
+                Attributes = FileAttributes.Normal
             };
 
             //error extra notify mark
