@@ -112,10 +112,11 @@ namespace Sync.Tools.Builtin
         public bool ShouldDownloadUpdate(UpdateData update_data, string current_file_path, bool no_ask)
         {
             //todo : version compare
+            if (!File.Exists(current_file_path)) { return true; }
 
             var current_file_hash = MD5HashFile(current_file_path).ToLower();
 
-            return ((!File.Exists(current_file_path) || current_file_hash != update_data.latestHash) && AskAgreeUpdate(update_data));
+            return (current_file_hash != update_data.latestHash) && AskAgreeUpdate(update_data);
         }
 
         internal bool InternalUpdate(string plugin_guid, bool no_ask)
@@ -144,7 +145,7 @@ namespace Sync.Tools.Builtin
             }
             catch (Exception e)
             {
-                IO.CurrentIO.WriteColor(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message), ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message), ConsoleColor.Yellow);
             }
 
             return false;
@@ -211,6 +212,20 @@ namespace Sync.Tools.Builtin
             return false;
         }
 
+        internal bool InstallByKeyword(string keyword, bool requireRestart = true)
+        {
+            if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{keyword}") is UpdateData[] datas)
+            {
+                if (datas.Length == 0 || InternalUpdate(datas[0].guid, true))
+                {
+                    if (requireRestart) RequireRestart(LANG_INSTALL_DONE);
+                    return true;
+                }
+                else return false;
+            }
+            return false;
+        }
+
         private bool Install(string guid)
         {
             if (InternalUpdate(guid, true))
@@ -220,16 +235,7 @@ namespace Sync.Tools.Builtin
             }
             else
             {
-                if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
-                {
-                    if (datas.Length == 0 || InternalUpdate(datas[0].guid, true))
-                    {
-                        RequireRestart(LANG_INSTALL_DONE);
-                        return true;
-                    }
-                    else return false;
-                }
-                return false;
+                return InstallByKeyword(guid);
             }
         }
 
