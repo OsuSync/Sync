@@ -145,7 +145,7 @@ namespace Sync.Tools.Builtin
             }
             catch (Exception e)
             {
-                IO.CurrentIO.WriteColor(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message), ConsoleColor.Red);
+                IO.CurrentIO.WriteColor(string.Format(LANG_UPDATE_ERROR, e.TargetSite.Name, e.Message), ConsoleColor.Yellow);
             }
 
             return false;
