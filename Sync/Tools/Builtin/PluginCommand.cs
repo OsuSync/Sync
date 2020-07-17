@@ -112,10 +112,11 @@ namespace Sync.Tools.Builtin
         public bool ShouldDownloadUpdate(UpdateData update_data, string current_file_path, bool no_ask)
         {
             //todo : version compare
+            if (!File.Exists(current_file_path)) { return true; }
 
             var current_file_hash = MD5HashFile(current_file_path).ToLower();
 
-            return ((!File.Exists(current_file_path) || current_file_hash != update_data.latestHash) && AskAgreeUpdate(update_data));
+            return (current_file_hash != update_data.latestHash) && AskAgreeUpdate(update_data);
         }
 
         internal bool InternalUpdate(string plugin_guid, bool no_ask)
