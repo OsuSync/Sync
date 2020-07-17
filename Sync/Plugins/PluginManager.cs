@@ -355,6 +355,10 @@ namespace Sync.Plugins
                         allList.Add(it);
                     }
                 }
+                catch (FileNotFoundException e)
+                {
+                    CheckUnknownDependency(e.FileName.Substring(0, e.FileName.IndexOf(",") - 1));
+                }
                 catch (Exception e)
                 {
                     //Not up to date
@@ -386,14 +390,23 @@ namespace Sync.Plugins
             {
                 try
                 {
-                    var deps = it.GetCustomAttributes<SyncPluginDependency>();
+                    var hardDeps = it.GetCustomAttributes<SyncPluginDependency>();
 
-                    foreach (var item in deps)
+                    foreach (var item in hardDeps)
                     {
                         var target = allList.Select(p => p.GetCustomAttribute<SyncPluginID>())?.FirstOrDefault(p => p?.GUID == item.GUID);
                         if (item.Require && target == null) CheckGUIDUpdate(item);
                         if (item.Version == null) continue;
                         if (!CompareVersion(item.Version, target.Version)) CheckGUIDUpdate(item);
+                    }
+
+                    var softDeps = it.GetCustomAttributes<SyncSoftRequirePlugin>();
+                    foreach (var item in softDeps)
+                    {
+                        foreach (var dep in item.RequirePluguins)
+                        {
+                            if (!allList.Any(p => p.Name.Contains(dep) || dep.Contains(p.Name))) CheckUnknownDependency(dep);
+                        }
                     }
 
                     if (LateLoad(it))
@@ -536,6 +549,19 @@ namespace Sync.Plugins
                 else return converter(val);
             }
             return converter(null);
+        }
+
+        private void CheckUnknownDependency(string name)
+        {
+            if (Updater.update.InstallByKeyword(name, false))
+            {
+                SyncHost.Instance.ForceRestartSync();
+                throw new SyncPluginOutdateException($"Need restart application to update {name}");
+            }
+            else
+            {
+                throw new SyncMissingPluginException($"Can't install dependency plugin: {name}");
+            }
         }
 
         private void CheckGUIDUpdate(SyncPluginDependency item)

@@ -212,6 +212,20 @@ namespace Sync.Tools.Builtin
             return false;
         }
 
+        internal bool InstallByKeyword(string keyword, bool requireRestart = true)
+        {
+            if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{keyword}") is UpdateData[] datas)
+            {
+                if (datas.Length == 0 || InternalUpdate(datas[0].guid, true))
+                {
+                    if (requireRestart) RequireRestart(LANG_INSTALL_DONE);
+                    return true;
+                }
+                else return false;
+            }
+            return false;
+        }
+
         private bool Install(string guid)
         {
             if (InternalUpdate(guid, true))
@@ -221,16 +235,7 @@ namespace Sync.Tools.Builtin
             }
             else
             {
-                if (Serializer<UpdateData[]>($"http://sync.mcbaka.com/api/Update/search/{guid}") is UpdateData[] datas)
-                {
-                    if (datas.Length == 0 || InternalUpdate(datas[0].guid, true))
-                    {
-                        RequireRestart(LANG_INSTALL_DONE);
-                        return true;
-                    }
-                    else return false;
-                }
-                return false;
+                return InstallByKeyword(guid);
             }
         }
 
