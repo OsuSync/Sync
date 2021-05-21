@@ -318,6 +318,15 @@ namespace Sync.Plugins
 
                     asmList.Add(asm);
                 }
+                catch (BadImageFormatException)
+                {
+                    /*
+                     * Do not output anything when the file is not a
+                     * .Net assembly.
+                     * This can reduces unnecessary output when
+                     * unmanaged assembly is needed.
+                     */
+                }
                 catch (Exception e)
                 {
                     //Not a .NET Assembly DLL
